@@ -1,0 +1,52 @@
+.header {
+  width: 98%;
+  background-color: rgb(63, 81, 181);
+  display: flex;
+  padding: 0 10px 0 10px;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.hyfIcon {
+  width: 70px;
+  height: 70px;
+  border-radius: 40%;
+}
+.nav {
+  flex: 2;
+  margin-left: 20px;
+}
+
+.list {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.list > * {
+  list-style: none;
+}
+
+.item {
+  text-align: center;
+  font-size: 1.5em;
+  width: 100px;
+  display: block;
+  height: 100%;
+  padding: 20px;
+  color: white;
+  text-decoration: none;
+}
+
+.item:hover {
+  background: rgb(123, 142, 252);
+}
+
+.userIcon {
+  width: 70px;
+  height: 70px;
+  border-radius: 40%;
+}
