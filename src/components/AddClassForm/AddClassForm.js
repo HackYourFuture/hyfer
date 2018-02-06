@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 
 import styles from '../../assets/styles/addClassForm.css';
-import Button from '../Helpers/Button/Button';
-import InputField from '../Helpers/InputField/InputField';
+import Button from '../../Helpers/Button/Button';
+import InputField from '../../Helpers//InputField/InputField';
 
 @inject('timelineStore')
 @observer

@@ -5,9 +5,9 @@ import Modal from 'react-responsive-modal';
 
 import styles from '../../assets/styles/timeline.css';
 import loader from '../../assets/images/loader.gif';
-import ModuleReadme from '../ModuleReadme/ModuleReadme';
-import Button from '../Helpers/Button/Button';
-import AddClassForm from '../AddClassForm/AddClassForm';
+import ModuleReadme from '../../components/ModuleReadme/ModuleReadme';
+import Button from '../../Helpers/Button/Button';
+import AddClassForm from '../../components/AddClassForm/AddClassForm';
 
 console.log(styles.modalToggler);
 const options = {

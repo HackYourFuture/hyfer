@@ -6,6 +6,23 @@ import styles from '../../assets/styles/header.css';
 
 export default class Header extends Component {
   render() {
+    let user = null;
+    if (!localStorage.token) {
+      user = (
+        <div className={styles.signInWrapper}>
+          <div className={styles.visitorWrapper}>
+            <span className={styles.visitor}>Visitor</span>
+          </div>
+          <div className={styles.signButtonWrapper}>
+            <a href="/auth/github" className={styles.signInButton}>
+              Sign in
+            </a>
+          </div>
+        </div>
+      );
+    } else {
+      user = <img src="TODO:" alt="user icon" className={styles.userIcon} />;
+    }
     return (
       <header className={styles.header}>
         <a href="http://hackyourfuture.net/">
@@ -18,23 +35,35 @@ export default class Header extends Component {
         <nav className={styles.nav}>
           <ul className={styles.list}>
             <li>
-              <NavLink className={styles.item} to="/timeline">
+              <NavLink
+                className={styles.item}
+                activeClassName={styles.activeNav}
+                to="/timeline"
+              >
                 Timeline
               </NavLink>
             </li>
             <li>
-              <NavLink className={styles.item} to="/modules">
+              <NavLink
+                className={styles.item}
+                activeClassName={styles.activeNav}
+                to="/modules"
+              >
                 Modlues
               </NavLink>
             </li>
             <li>
-              <NavLink className={styles.item} to="/users">
+              <NavLink
+                className={styles.item}
+                activeClassName={styles.activeNav}
+                to="/users"
+              >
                 Users
               </NavLink>
             </li>
           </ul>
         </nav>
-        <img src="TODO:" alt="user icon" className={styles.userIcon} />
+        {user}
       </header>
     );
   }
