@@ -1,0 +1,24 @@
+.modalToggler {
+  border: none;
+  margin: none;
+  padding: 10px;
+  color: white;
+  background-color: rgb(63, 81, 181);
+  float: right;
+  margin: 0 1rem 1rem 0;
+  cursor: pointer;
+  transition: all 1s ease;
+}
+
+.modalToggler:active {
+  transform: scale(0.6);
+}
+
+.modal {
+  width: 50vw;
+}
+
+.loader {
+  display: block;
+  margin: 0 auto;
+}
