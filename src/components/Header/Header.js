@@ -1,13 +1,22 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
+import { inject, observer } from 'mobx-react';
 
 import hyfIcon from '../../assets/images/icon.png';
 import styles from '../../assets/styles/header.css';
 
+@inject('uiStore')
+@observer
 export default class Header extends Component {
+  componentDidMount = () => {
+    if (localStorage.token && !this.props.uiStore.isLoggedIn) {
+      this.props.uiStore.getUserInfo();
+    }
+  };
+
   render() {
     let user = null;
-    if (!localStorage.token) {
+    if (!this.props.uiStore.isLoggedIn) {
       user = (
         <div className={styles.signInWrapper}>
           <div className={styles.visitorWrapper}>
@@ -21,7 +30,8 @@ export default class Header extends Component {
         </div>
       );
     } else {
-      user = <img src="TODO:" alt="user icon" className={styles.userIcon} />;
+      const imgUrl = this.props.uiStore.profileImgUrl;
+      user = <img src={imgUrl} alt="user icon" className={styles.userIcon} />;
     }
     return (
       <header className={styles.header}>
@@ -36,27 +46,30 @@ export default class Header extends Component {
           <ul className={styles.list}>
             <li>
               <NavLink
+                exact
+                to="/timeline"
                 className={styles.item}
                 activeClassName={styles.activeNav}
-                to="/timeline"
               >
                 Timeline
               </NavLink>
             </li>
             <li>
               <NavLink
+                exact
+                to="/modules"
                 className={styles.item}
                 activeClassName={styles.activeNav}
-                to="/modules"
               >
                 Modlues
               </NavLink>
             </li>
             <li>
               <NavLink
+                exact
+                to="/users"
                 className={styles.item}
                 activeClassName={styles.activeNav}
-                to="/users"
               >
                 Users
               </NavLink>

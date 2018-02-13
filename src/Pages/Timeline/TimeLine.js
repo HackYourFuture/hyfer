@@ -17,24 +17,33 @@ const options = {
   dataAttributes: 'all'
 };
 
-@inject('timelineStore', 'moduleInfoStore')
+@inject('timelineStore', 'moduleInfoStore', 'uiStore')
 @observer
 export default class TimeLine extends Component {
   componentDidMount() {
     this.props.timelineStore.getItems();
+    if (localStorage.token && !this.props.uiStore.isLoggedIn) {
+      this.props.uiStore.getUserInfo();
+    }
   }
 
   render() {
     const { items, groups } = this.props.timelineStore;
+    let btn;
+    if (this.props.uiStore.isATeacher) {
+      btn = (
+        <Button
+          onClick={this.props.timelineStore.handleToggleModal}
+          className={styles.modalToggler}
+        >
+          Add a class
+        </Button>
+      );
+    }
     if (items.length !== 0) {
       return (
         <main>
-          <Button
-            onClick={this.props.timelineStore.handleToggleModal}
-            className={styles.modalToggler}
-          >
-            Add a class
-          </Button>
+          {btn}
           <Modal
             classNames={{ modal: styles.modal }}
             open={this.props.timelineStore.isModalOpen}

@@ -3,7 +3,7 @@ import { Provider } from 'mobx-react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 
 import './assets/styles/app.css';
-import { timelineStore, moduleInfoStore } from './store/index'; // STORE YOUR STORES AROUND HERE
+import { timelineStore, moduleInfoStore, uiStore } from './store/index'; // STORE YOUR STORES AROUND HERE
 import Header from './components/Header/Header';
 import TimeLine from './Pages/Timeline/TimeLine';
 import Footer from './components/Footer/Footer';
@@ -17,6 +17,7 @@ class App extends Component {
         <Provider // ADD TOU NEEDED STORES HERE
           timelineStore={timelineStore}
           moduleInfoStore={moduleInfoStore}
+          uiStore={uiStore}
         >
           <React.Fragment>
             <Header />
