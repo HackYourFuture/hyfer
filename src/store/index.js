@@ -1,5 +1,5 @@
 import ModuleInfoStore from './ModuleInfoStore';
-import TimelineStore from './TimelineStore';
+import TimelineStore from './TimeLineStore';
 import UiStore from './UiStore';
 
 // stores
@@ -18,3 +18,4 @@ export const MODAL_STATE_CHANGED = 'MODAL_STATE_CHANGED';
 export const LOGIN_STATE_CHANGED = 'LOGIN_STATE_CHANGED';
 export const ISTEACHER_STATE_CHANGED = 'ISTEACHER_STATE_CHANGED';
 export const AVATAR_URL_CHANGED = 'AVATAR_CHANGED';
+export const ALL_SUNDAYS_CHANGED = 'ALL_SUNDAYS_CHANGED';
