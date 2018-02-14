@@ -1,22 +1,47 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
-import { inject, observer } from 'mobx-react';
 
 import hyfIcon from '../../assets/images/icon.png';
 import styles from '../../assets/styles/header.css';
+import {
+  uiStore,
+  AVATAR_URL_CHANGED,
+  ISTEACHER_STATE_CHANGED,
+  LOGIN_STATE_CHANGED
+} from '../../store';
 
-@inject('uiStore')
-@observer
 export default class Header extends Component {
+  state = {
+    isLoggedIn: false,
+    isATeacher: false,
+    avatarUrl: null
+  };
+
   componentDidMount = () => {
-    if (localStorage.token && !this.props.uiStore.isLoggedIn) {
-      this.props.uiStore.getUserInfo();
+    uiStore.subscribe(mergedData => {
+      switch (mergedData.type) {
+        case AVATAR_URL_CHANGED:
+          this.setState({ avatarUrl: mergedData.payload.avatarUrl });
+          break;
+        case LOGIN_STATE_CHANGED:
+          this.setState({ isLoggedIn: mergedData.payload.isLoggedIn });
+          break;
+        case ISTEACHER_STATE_CHANGED:
+          this.setState({ isATeacher: mergedData.payload.isATeacher });
+          break;
+        default:
+          break;
+      }
+    });
+
+    if (localStorage.token) {
+      uiStore.getUserInfo();
     }
   };
 
   render() {
     let user = null;
-    if (!this.props.uiStore.isLoggedIn) {
+    if (!this.state.isLoggedIn) {
       user = (
         <div className={styles.signInWrapper}>
           <div className={styles.visitorWrapper}>
@@ -30,8 +55,10 @@ export default class Header extends Component {
         </div>
       );
     } else {
-      const imgUrl = this.props.uiStore.profileImgUrl;
-      user = <img src={imgUrl} alt="user icon" className={styles.userIcon} />;
+      const { avatarUrl } = this.state;
+      user = (
+        <img src={avatarUrl} alt="user icon" className={styles.userIcon} />
+      );
     }
     return (
       <header className={styles.header}>

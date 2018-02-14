@@ -1,18 +1,15 @@
 import React, { Component } from 'react';
-// import { observer, inject } from 'mobx-react';
 import ReactHtmlParser from 'react-html-parser';
 
 import styles from '../../assets/styles/moduleReadme.css';
 import {
-  moduleInfoStoreNoMobx,
+  moduleInfoStore,
   READ_ME_CHANGED,
   REPO_NAME_CHANGED
 } from '../../store';
 
 const BASE_URL = 'https://github.com/HackYourFuture';
 
-// @inject('moduleInfoStore')
-// @observer
 export default class ModuleInfo extends Component {
   state = {
     readme: null,
@@ -20,7 +17,7 @@ export default class ModuleInfo extends Component {
   };
 
   componentDidMount = () => {
-    moduleInfoStoreNoMobx.subscribe(mergedData => {
+    moduleInfoStore.subscribe(mergedData => {
       if (mergedData.type === REPO_NAME_CHANGED) {
         this.setState({ repoName: mergedData.payload.repoName });
       } else if (mergedData.type === READ_ME_CHANGED) {
@@ -42,7 +39,6 @@ export default class ModuleInfo extends Component {
       content = <h1>This module has no github repositroy</h1>;
     } else {
       // A module  is clicked and it has a repo => FETCH IT!
-      moduleInfoStoreNoMobx.getReadme();
       content = (
         <div className={styles.readmeContiner}>{ReactHtmlParser(readme)}</div>
       );
@@ -56,18 +52,6 @@ export default class ModuleInfo extends Component {
 
     return (
       <div className={styles.infoContainer}>
-        <button
-          onClick={() => {
-            moduleInfoStoreNoMobx.setState({
-              type: REPO_NAME_CHANGED,
-              payload: {
-                repoName: 'Javascript'
-              }
-            });
-          }}
-        >
-          Click me and see what happens
-        </button>
         {linkToRepo}
         {content}
       </div>
