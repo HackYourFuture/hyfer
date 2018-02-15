@@ -129,6 +129,8 @@ export default function() {
         end: moment(item.ending_date).format('YYYY-MM-DD'),
         content: item.module_name,
         group: item.group_name,
+        group_id: item.id,
+        running_module_id: item.running_module_id,
         className: item.module_name.split(' ').join('_'),
         git_repo: item.git_repo
       };

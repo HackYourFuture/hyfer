@@ -1,16 +1,22 @@
 import React from 'react';
 import StudentWithWeeks from './StudentWithWeeks';
 import styles from '../../assets/styles/attendance.css';
+import AttendObs from '../../store/AttendanceStore';
 
 export default class Attendance extends React.Component{
-    
-    state = {
-        history: [],
-        keys: [],
-    }; 
+
+    componentWillMount = () => {
+        this.subscription = AttendObs.subscribe(state => {
+            this.setState(state);
+        })
+    };
 
     componentDidMount = () => {
         this.getHistory();
+    };
+
+    componentWillUnmount() {
+        AttendObs.unsubscribe()
     };
 
     render(){
@@ -21,11 +27,11 @@ export default class Attendance extends React.Component{
 
     renderAttendant(){
 
-        const obj = this.state.history
-        const keys = this.getKeys();
+        const obj = AttendObs.get('history')
+        const keys = AttendObs.get('keys');
 
         //this will render students list 
-        const user = this.state.keys.map((student) =>
+        const user = keys.map((student) =>
             <div className={styles.Attendant} key={student}>
                 <div className={styles.AttendantName}>
                     <h3>{student}</h3>
@@ -34,17 +40,17 @@ export default class Attendance extends React.Component{
                 obj={obj}
                 keys={keys}/>
             </div>
-            
         );
         return user;
     };
 
-    //this fetch with patch method will get the history from api 
-    //later we need a function to get the actual syndays , module-id and class-id
-    getHistory = () => {
-        var sundays = {sundays: ["2016/11/06", "2016/11/13", "2016/11/20"]};
+	getHistory = () => {
+        let baseUrl = 'http://localhost:3005/api/history/';
+        let sundays = {sundays: ["2016/11/06", "2016/11/13", "2016/11/20"]};
+        let moduleId = 751;
+        let classId = 45;
 
-        fetch('http://localhost:3005/api/history/751/45', {
+        fetch(`${baseUrl}${moduleId}/${classId}`, {
             method: 'PATCH', 
             body: JSON.stringify(sundays),
             headers: {
@@ -54,17 +60,6 @@ export default class Attendance extends React.Component{
         .then(response => response.json())
         .then(response => {
             const keys = Object.keys(response)
-            this._students = {}
-            for (const student of keys) {
-            for (const val of response[student]) {
-                const obj = {
-                _full_name: val.full_name,
-                _date: val.date,
-                _attendance: val.attendance,
-                _homework: val.homework
-                }
-            }
-            }
             this.setHistory(response);
             this.setKeys(keys);
         })
@@ -72,21 +67,15 @@ export default class Attendance extends React.Component{
     };
 
     setHistory(history){
-        this.setState({
+        AttendObs.setState({
             history: history,
         });
     };
 
-    
     setKeys(keys){
-        this.setState({
+        AttendObs.setState({
             keys: keys,
         });
-    };
-
-    getKeys(){
-        const keys = this.state.keys
-        return keys;
     };
 };
 
