@@ -80,16 +80,15 @@ export default function() {
       group_name: className,
       starting_date: date.toISOString()
     };
-    console.log(body);
 
     fetch(`${BASE_URL}/api/groups`, {
       method: 'POST',
       headers: {
-        'Conetent-Type': 'application/json'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(body)
     }).then(res => {
-      console.log(res);
+      getTimelineItems();
       handleToggleModal();
     });
   };
