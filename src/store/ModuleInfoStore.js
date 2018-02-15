@@ -67,16 +67,10 @@ export default function() {
     // it is a promise because it is being used in the getReadme function and that one won't wait
     let repoName = null;
     const target = clickEvent.event.target;
-<<<<<<< HEAD
     const dataset = clickEvent.event.target.parentNode.parentNode.dataset;
     // const git_repo = target.parentNode.parentNode.dataset.git_repo;
     const { start, end, git_repo } = dataset;
     _getSundays(start, end);
-=======
-    const gitRepoDataField = target.parentNode.parentNode.dataset.git_repo;
-    console.log(target.parentNode.parentNode.dataset)
-    const noRepoAlternative = 'NOREPO'; // alternative name for if a module doesn't have a repo
->>>>>>> added attendance component and added observable
     if (target.className !== 'vis-item-content') return; // if the selected element is not the wanted one
 
     // if the selected element doesn't have a repo
