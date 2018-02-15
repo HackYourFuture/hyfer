@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from '../../assets/styles/users.css';
 
 export default class User extends React.Component {
     
@@ -8,10 +9,10 @@ export default class User extends React.Component {
     render(){
         
         return (
-        <li className="user">
-            <img className="user-avatar" src={`https://avatars.githubusercontent.com/${this.props.username}`} 
+        <li className={styles.user}>
+            <img className={styles.userAvatar} src={`https://avatars.githubusercontent.com/${this.props.username}`} 
                  onError={(e)=>{e.target.src=`https://api.adorable.io/avatars/100/${this.props.full_name}`}}/>
-            <div className ="user-name">{this.props.full_name}</div>
+            <div className ={styles.userName}>{this.props.full_name}</div>
             <div>{this.props.group_name}</div>
             <div>{this.props.role}</div>
             <div>{this.props.register_date}</div>

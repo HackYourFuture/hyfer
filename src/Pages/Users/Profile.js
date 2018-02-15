@@ -1,6 +1,6 @@
 import React from 'react';
 //import store from '../../store/UserStore';
-import '../../assets/styles/profile.css';
+import styles from '../../assets/styles/profile.css';
 
 /* 
 Only the static part of the profile page has done yet, still can be upgraded..
@@ -14,10 +14,10 @@ export default class Profile extends React.Component {
         
         return (
         
-        <div className="sc-edprofile">
+        <div className={styles.profilePage}>
             <h1>Edit Profile</h1>
-            <div className="sc-container">
-              <input className="profile-name" type="text" placeholder="Name" />
+            <div className={styles.profileContainer}>
+              <input className={styles.profileName} type="text" placeholder="Name" />
               <select>
                 <option value="" disabled selected hidden>Role</option>
                 <option value="">Teacher</option>
@@ -37,8 +37,8 @@ export default class Profile extends React.Component {
               <input type="text" placeholder="FreeCodeCamp Username" />
               <input type="tel" placeholder="Mobile" />
               
-              <input className="sc-reset" type="submit" value="Reset" />
-              <input className="sc-save" type="submit" value="Save" />
+              <input className={styles.resetProfile} type="submit" value="Reset" />
+              <input className={styles.saveProfile} type="submit" value="Save" />
             </div>
         </div>    
 

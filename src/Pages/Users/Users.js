@@ -61,15 +61,15 @@ export default class Users extends React.Component {
     }
  
 
-    
+
     // There 2 different focus, one is SEARCH input and rendering each USERS in the API
     render() {
         return (
 
-            <div className="filter-list">
-                <input className="user-list-input" type="text" placeholder="lookup someone" onChange={this.filterList}/>
+            <div className={styles.filterList}>
+                <input className={styles.userListInput} type="text" placeholder="lookup someone" onChange={this.filterList}/>
                 
-                <ul className = "user-list">
+                <ul className = {styles.userList}>
                         {store.state.users.map((user, i) => (                        
                                 <React.Fragment key={user.id}>
                                     <User   full_name = {user.full_name}

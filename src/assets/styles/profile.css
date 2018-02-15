@@ -8,7 +8,7 @@ html {
   }
   
 
-.sc-edprofile {
+.profilePage {
   background: #f0f0f0;
   width: 800px;
   margin: 0 auto;
@@ -18,7 +18,7 @@ html {
   -webkit-transition: opacity 1s;
 }
 
-.sc-edprofile h1 {
+.profilePage h1 {
     background: #3399cc;
     padding: 20px 0;
     font-size: 140%;
@@ -27,15 +27,15 @@ html {
     color: #fff;
   }
 
-.sc-edprofile .sc-container {
+.profilePage .profileContainer {
   background: #f0f0f0;
   padding: 6% 4%;
 }
 
-.sc-edprofile input[type="email"],
-.sc-edprofile input[type="text"],
-.sc-edprofile input[type="tel"],
-.sc-edprofile input[type="password"], .sc-edprofile select, .sc-edprofile textarea {
+.profilePage input[type="email"],
+.profilePage input[type="text"],
+.profilePage input[type="tel"],
+.profilePage input[type="password"], .profilePage select, .profilePage textarea {
   width: 100%;
   background: #fff;
   margin-bottom: 4%;
@@ -46,15 +46,15 @@ html {
   color: #555;
 }
 
-.sc-edprofile select {
+.profilePage select {
     width: 100%;
   }
 
-.sc-edprofile textarea {
+.profilePage textarea {
     height: 100px;
   }
 
-.sc-edprofile input[type="submit"] {
+.profilePage input[type="submit"] {
   width: 100%;
   background: #3399cc;
   border: 0;
@@ -67,10 +67,10 @@ html {
   -webkit-transition: background .3s;
 }
 
-.sc-edprofile input[type="submit"]:hover {
+.profilePage input[type="submit"]:hover {
   background: #2288bb;
 }
 
-.sc-reset{
+.resetProfile{
     background: #662344;
 }
