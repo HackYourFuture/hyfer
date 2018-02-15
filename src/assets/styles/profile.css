@@ -1,0 +1,76 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,700);
+
+html {
+    box-sizing: border-box;
+  }
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+  
+
+.profilePage {
+  background: #f0f0f0;
+  width: 800px;
+  margin: 0 auto;
+  margin-top: 8px;
+  margin-bottom: 2%;
+  transition: opacity 1s;
+  -webkit-transition: opacity 1s;
+}
+
+.profilePage h1 {
+    background: #3399cc;
+    padding: 20px 0;
+    font-size: 140%;
+    font-weight: 300;
+    text-align: center;
+    color: #fff;
+  }
+
+.profilePage .profileContainer {
+  background: #f0f0f0;
+  padding: 6% 4%;
+}
+
+.profilePage input[type="email"],
+.profilePage input[type="text"],
+.profilePage input[type="tel"],
+.profilePage input[type="password"], .profilePage select, .profilePage textarea {
+  width: 100%;
+  background: #fff;
+  margin-bottom: 4%;
+  border: 1px solid #ccc;
+  padding: 4%;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 95%;
+  color: #555;
+}
+
+.profilePage select {
+    width: 100%;
+  }
+
+.profilePage textarea {
+    height: 100px;
+  }
+
+.profilePage input[type="submit"] {
+  width: 100%;
+  background: #3399cc;
+  border: 0;
+  padding: 4%;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 100%;
+  color: #fff;
+  cursor: pointer;
+  transition: background .3s;
+  -webkit-transition: background .3s;
+}
+
+.profilePage input[type="submit"]:hover {
+  background: #2288bb;
+}
+
+.resetProfile{
+    background: #662344;
+}
