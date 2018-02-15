@@ -1,26 +1,86 @@
-import { observable, action, useStrict, runInAction } from 'mobx';
 import moment from 'moment';
 
-useStrict(true);
+import {
+  TIMELINE_GROUPS_CHANGED,
+  TIMELINE_ITEMS_CHANGED,
+  MODAL_STATE_CHANGED
+} from './';
+
 const BASE_URL = 'http://localhost:3005';
 
-export default class TimelineStore {
-  @observable items = [];
-  @observable groups = [];
-  @observable isModalOpen = false;
+export default function() {
+  let _observers = [];
+  let _data = {};
 
-  @action
-  handleToggleModal = () => {
-    this.isModalOpen = !this.isModalOpen;
+  const subscribe = observer => {
+    _observers.push(observer);
   };
 
-  // FIXME: NOT WORKING MAYBE API CONFIG THING
-  @action
-  handleAddClass = (className, startingDate) => {
+  const unsubscribe = observer => {
+    _observers = _observers.filter(item => item !== observer);
+  };
+
+  const isSubscribed = observer => {
+    return _observers.includes(observer);
+  };
+
+  const setState = merge => {
+    let old = {};
+    for (let changedItemKey in merge.payload) {
+      if (_data.hasOwnProperty(changedItemKey)) {
+        old[changedItemKey] = merge.payload[changedItemKey];
+      }
+      _data[changedItemKey] = merge.payload[changedItemKey];
+    }
+
+    _observers.forEach(observer => observer(merge, old));
+  };
+
+  const getState = () => {
+    return _data;
+  };
+
+  // Normal methodes will be changing the state
+
+  const handleToggleModal = () => {
+    const currentModalState = _data.isModalOpen || false;
+    setState({
+      type: MODAL_STATE_CHANGED,
+      payload: {
+        isModalOpen: !currentModalState
+      }
+    });
+  };
+
+  const getTimelineItems = () => {
+    fetch(`${BASE_URL}/api/timeline`)
+      .then(res => res.json())
+      .then(resJson => {
+        const groups = _extractGroups(resJson);
+        const items = _extractItems(resJson, groups);
+        setState({
+          type: TIMELINE_GROUPS_CHANGED,
+          payload: {
+            groups: groups
+          }
+        });
+
+        setState({
+          type: TIMELINE_ITEMS_CHANGED,
+          payload: {
+            items: items
+          }
+        });
+      });
+  };
+
+  const handleAddClass = (className, startingDate) => {
+    const date = new Date(startingDate);
     const body = {
       group_name: className,
-      starting: startingDate
+      starting_date: date.toISOString()
     };
+    console.log(body);
 
     fetch(`${BASE_URL}/api/groups`, {
       method: 'POST',
@@ -28,33 +88,26 @@ export default class TimelineStore {
         'Conetent-Type': 'application/json'
       },
       body: JSON.stringify(body)
-    }).then(res => console.log(res));
+    }).then(res => {
+      console.log(res);
+      handleToggleModal();
+    });
   };
 
-  @action
-  getItems = () => {
-    fetch(`${BASE_URL}/api/timeline`)
-      .then(res => res.json())
-      .then(resJson => {
-        runInAction(() => {
-          this.groups = this.extractGroups(resJson);
-          this.items = this.extractItems(resJson);
-        });
-      });
-  };
+  // Helper methods
 
-  extractGroups(data) {
+  const _extractGroups = data => {
     const allGroups = Object.keys(data).map(item => {
       return {
         id: item
       };
     });
     return allGroups;
-  }
+  };
 
-  extractItems(data) {
+  const _extractItems = (data, groups) => {
     let allItems = [];
-    this.groups.forEach(group => {
+    groups.forEach(group => {
       const items = data[group.id];
       items.sort((a, b) => a.position - b.position); // make sure it is sorted
 
@@ -77,8 +130,19 @@ export default class TimelineStore {
         content: item.module_name,
         group: item.group_name,
         className: item.module_name.split(' ').join('_'),
-        git_repo: item.git_repo // data attributes don't accept capital letters
+        git_repo: item.git_repo
       };
     });
-  }
+  };
+
+  return {
+    subscribe,
+    unsubscribe,
+    isSubscribed,
+    getState,
+    setState,
+    getTimelineItems,
+    handleToggleModal,
+    handleAddClass
+  };
 }

@@ -1,22 +1,35 @@
 import React, { Component } from 'react';
-import { observer, inject } from 'mobx-react';
 import ReactHtmlParser from 'react-html-parser';
 
 import styles from '../../assets/styles/moduleReadme.css';
+import {
+  moduleInfoStore,
+  READ_ME_CHANGED,
+  REPO_NAME_CHANGED
+} from '../../store';
 
 const BASE_URL = 'https://github.com/HackYourFuture';
 
-@inject('moduleInfoStore')
-@observer
 export default class ModuleInfo extends Component {
-  sendRequestReadme = () => {
-    this.props.moduleInfoStore.getInfo();
+  state = {
+    readme: null,
+    repoName: null
+  };
+
+  componentDidMount = () => {
+    moduleInfoStore.subscribe(mergedData => {
+      if (mergedData.type === REPO_NAME_CHANGED) {
+        this.setState({ repoName: mergedData.payload.repoName });
+      } else if (mergedData.type === READ_ME_CHANGED) {
+        this.setState({ readme: mergedData.payload.readme });
+      }
+    });
   };
 
   render() {
-    const { repoName, readme } = this.props.moduleInfoStore;
+    const { repoName, readme } = this.state;
     let linkToRepo = null; // filled conditionally
-    let content = null; // filled conditionally
+    let content = readme ? readme : null;
 
     if (!repoName) {
       //repo is null => nothing is clicked yet
@@ -26,7 +39,6 @@ export default class ModuleInfo extends Component {
       content = <h1>This module has no github repositroy</h1>;
     } else {
       // A module  is clicked and it has a repo => FETCH IT!
-      this.sendRequestReadme();
       content = (
         <div className={styles.readmeContiner}>{ReactHtmlParser(readme)}</div>
       );

@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
-import { inject, observer } from 'mobx-react';
 
 import styles from '../../assets/styles/addClassForm.css';
 import Button from '../../Helpers/Button/Button';
 import InputField from '../../Helpers//InputField/InputField';
+import { timelineStore } from '../../store/';
 
-@inject('timelineStore')
-@observer
 export default class AddClassForm extends Component {
   state = {
     toBeAddedClass: '',
-    toBeAddedDate: new Date()
+    toBeAddedDate: ''
   };
 
   handleChangeClassName = newClass => {
@@ -18,6 +16,7 @@ export default class AddClassForm extends Component {
   };
 
   handleChangeStartDate = newDate => {
+    console.log(newDate);
     this.setState({
       toBeAddedDate: newDate
     });
@@ -25,7 +24,9 @@ export default class AddClassForm extends Component {
 
   handleAddClass = () => {
     const { toBeAddedClass, toBeAddedDate } = this.state;
-    this.props.timelineStore.handleAddClass(toBeAddedClass, toBeAddedDate);
+    if (toBeAddedClass !== '' && toBeAddedDate !== '') {
+      timelineStore.handleAddClass(toBeAddedClass, toBeAddedDate);
+    }
   };
   render() {
     return (
