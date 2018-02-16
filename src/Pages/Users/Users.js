@@ -31,12 +31,14 @@ export default class Users extends React.Component {
     
 
     // fetch the users data from API
+    // mounts to the <users> state
     loadUsers(){
         fetch("http://localhost:3000/api/users")
         .then(res => res.json())
         .then(json => {
             store.setState({
-                users: json
+                users: json,
+                filteredUsers: json
             });
             return;
         })
@@ -45,9 +47,10 @@ export default class Users extends React.Component {
         })
     }
 
-    //evethandler for SEARCH, there is a problem working on it.
-    //it filters, but doesnt re-show the eleminated users..
-    // may be need to carry the handlers to a different component.
+    //evethandler for SEARCH, there problem has fixed.
+    //it filters properly now, it filters for only user.username, it can be upgraded
+    //the function first equates the updatedList to the "users-state" which contains all users,
+    //then filters the list and equates that list the other state "filteredUsers-state", and renders that list
     filterList = function(event){
         var updatedList = store.state.users;
         console.log(updatedList)
@@ -56,7 +59,7 @@ export default class Users extends React.Component {
             event.target.value.toLowerCase()) !== -1;
         });
         store.setState({
-            users: updatedList
+            filteredUsers: updatedList
         });
     }
  
@@ -70,7 +73,7 @@ export default class Users extends React.Component {
                 <input className={styles.userListInput} type="text" placeholder="lookup someone" onChange={this.filterList}/>
                 
                 <ul className = {styles.userList}>
-                        {store.state.users.map((user, i) => (                        
+                        {store.state.filteredUsers.map((user, i) => (                        
                                 <React.Fragment key={user.id}>
                                     <User   full_name = {user.full_name}
                                             group_name = {user.group_name}
