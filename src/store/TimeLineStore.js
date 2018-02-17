@@ -80,16 +80,15 @@ export default function() {
       group_name: className,
       starting_date: date.toISOString()
     };
-    console.log(body);
 
     fetch(`${BASE_URL}/api/groups`, {
       method: 'POST',
       headers: {
-        'Conetent-Type': 'application/json'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(body)
     }).then(res => {
-      console.log(res);
+      getTimelineItems();
       handleToggleModal();
     });
   };
@@ -129,6 +128,8 @@ export default function() {
         end: moment(item.ending_date).format('YYYY-MM-DD'),
         content: item.module_name,
         group: item.group_name,
+        group_id: item.id,
+        running_module_id: item.running_module_id,
         className: item.module_name.split(' ').join('_'),
         git_repo: item.git_repo
       };

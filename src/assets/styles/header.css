@@ -1,20 +1,29 @@
+body{margin: 0px;
+padding: 0px;
+box-sizing: border-box;
+font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
 .header {
-  width: 98%;
+  width: 100%;
   background-color: rgb(63, 81, 181);
   display: flex;
   padding: 0 10px 0 10px;
   justify-content: space-between;
   margin-bottom: 2rem;
+  height: 55px;
+  font-size: 10px;
 }
 
 .hyfIcon {
-  width: 70px;
-  height: 70px;
-  border-radius: 40%;
+  height: 50px;
+  margin-left: 30px;
 }
 .nav {
   flex: 5;
   margin-left: 20px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
 }
 
 .list {
@@ -35,7 +44,7 @@
   font-size: 1.5em;
   width: 100px;
   display: block;
-  padding: 20px;
+  padding: 20px 15px 15px 5px;
   color: white;
   text-decoration: none;
 }

@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import ComponentTimeLine from 'react-visjs-timeline';
 import Modal from 'react-responsive-modal';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+
 
 import styles from '../../assets/styles/timeline.css';
 import loader from '../../assets/images/loader.gif';
 import ModuleReadme from '../../components/ModuleReadme/ModuleReadme';
+import Attendance from '../../components/Attendance/Attendance';
 import Button from '../../Helpers/Button/Button';
 import AddClassForm from '../../components/AddClassForm/AddClassForm';
 import {
@@ -94,7 +97,20 @@ export default class TimeLine extends Component {
             options={options}
             groups={[...groups]}
           />
-          <ModuleReadme />
+          <Tabs>
+            <TabList className={styles.tabs}>
+              <Tab className={styles.tab}>Readme</Tab>
+              <Tab className={styles.tab}>Attendance</Tab>
+            </TabList>
+          
+            <TabPanel>
+              <ModuleReadme />
+            </TabPanel>
+
+            <TabPanel>
+              <Attendance />
+            </TabPanel>
+          </Tabs>
         </main>
       );
     } else {

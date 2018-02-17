@@ -42,6 +42,7 @@
     "react-html-parser": "^2.0.2",
     "react-responsive-modal": "^2.0.0",
     "react-router-dom": "^4.2.2",
+    "react-tabs": "^2.2.1",
     "react-visjs-timeline": "^1.4.0",
     "style-loader": "0.19.0",
     "sw-precache-webpack-plugin": "0.11.4",
