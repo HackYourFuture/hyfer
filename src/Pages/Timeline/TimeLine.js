@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import ComponentTimeLine from 'react-visjs-timeline';
-import Modal from 'react-responsive-modal';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
-
+import Modal from '../../Helpers/Modal/Modal';
 import styles from '../../assets/styles/timeline.css';
 import loader from '../../assets/images/loader.gif';
 import ModuleReadme from '../../components/ModuleReadme/ModuleReadme';
@@ -25,7 +24,8 @@ const options = {
   width: '100%',
   stack: false,
   showCurrentTime: true,
-  dataAttributes: 'all'
+  dataAttributes: 'all',
+  editable: true
 };
 
 export default class TimeLine extends Component {
@@ -86,8 +86,8 @@ export default class TimeLine extends Component {
           {btn}
           <Modal
             classNames={{ modal: styles.modal }}
-            open={this.state.isModalOpen}
-            onClose={timelineStore.handleToggleModal}
+            isOpen={this.state.isModalOpen}
+            handleToggleModal={timelineStore.handleToggleModal}
           >
             <AddClassForm />
           </Modal>
@@ -102,7 +102,7 @@ export default class TimeLine extends Component {
               <Tab className={styles.tab}>Readme</Tab>
               <Tab className={styles.tab}>Attendance</Tab>
             </TabList>
-          
+
             <TabPanel>
               <ModuleReadme />
             </TabPanel>

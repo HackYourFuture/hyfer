@@ -40,7 +40,6 @@
     "react-dev-utils": "^5.0.0",
     "react-dom": "^16.2.0",
     "react-html-parser": "^2.0.2",
-    "react-responsive-modal": "^2.0.0",
     "react-router-dom": "^4.2.2",
     "react-tabs": "^2.2.1",
     "react-visjs-timeline": "^1.4.0",
