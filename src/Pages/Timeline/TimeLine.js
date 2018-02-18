@@ -24,7 +24,8 @@ const options = {
   width: '100%',
   stack: false,
   showCurrentTime: true,
-  dataAttributes: 'all'
+  dataAttributes: 'all',
+  editable: true
 };
 
 export default class TimeLine extends Component {
