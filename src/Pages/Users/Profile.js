@@ -16,8 +16,8 @@ export default class Profile extends React.Component {
         
         <div className={styles.profilePage}>
             <h1>Edit Profile</h1>
-            <div className={styles.profileContainer}>
-              <input className={styles.profileName} type="text" placeholder="Name" />
+            <div className={`${styles.profileContainer}`}>
+              <input className={styles.profileName} type="text" placeholder="Name " />
               <select>
                 <option value="" disabled selected hidden>Role</option>
                 <option value="">Teacher</option>

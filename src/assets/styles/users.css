@@ -21,6 +21,7 @@ html {
   }
   
   .user{  
+    position: relative;
     color: rgba(0,0,0,0.54);
     background-color: rgb(255,255,255);
     border-radius: 2px;
@@ -43,6 +44,21 @@ html {
     color: rgba(0,0,0,0.87);
     font-size: 1.2em;
   }
+
+  .editUser{
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    font-size: 16px;
+    -webkit-transition: background-color 1s ease-out;
+    -moz-transition: background-color 1s ease-out;
+    -o-transition: background-color 1s ease-out;
+    transition: background-color 1s ease-out;
+  }
+  .editUser:hover { 
+    background-color: rgb(190, 190, 187);
+    
+}
   
   @media only screen and (min-width:600px)and (max-width:1000px){
     .user{
