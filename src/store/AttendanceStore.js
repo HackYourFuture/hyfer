@@ -4,8 +4,7 @@ function AttendObs() {
 
 	// State
     this.state = {
-        history: [],
-        keys: [],
+       
     }; 
 
 	this.setState = (merge) => {

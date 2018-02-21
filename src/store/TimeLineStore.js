@@ -101,6 +101,7 @@ export default function() {
         id: item
       };
     });
+    console.log(data)
     return allGroups;
   };
 
@@ -130,6 +131,7 @@ export default function() {
         group: item.group_name,
         group_id: item.id,
         running_module_id: item.running_module_id,
+        duration: item.duration,
         className: item.module_name.split(' ').join('_'),
         git_repo: item.git_repo
       };
