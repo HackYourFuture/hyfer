@@ -50,7 +50,7 @@ export default class Profile extends React.Component {
         
         <div className={styles.profilePage}>
             <h1>Edit Profile</h1>
-            <div className={`${styles.profileContainer}`}>
+            <div className={styles.profileContainer}>
               <input className={styles.profileName} 
                      type="text" value={store.state.full_name} 
                      placeholder="Name " 
@@ -59,14 +59,14 @@ export default class Profile extends React.Component {
               <select value={store.state.role} 
                       onChange={(e)=> {store.setState({role: e.target.value});
               }}>
-                <option value="guest" disabled selected hidden>Role</option>
+                <option value="guest" disabled hidden>Role</option>
                 <option value="teacher">Teacher</option>
                 <option value="student">Student</option>
               </select>
               <select value={store.state.group_name} 
                       onChange={(e)=> {store.setState({group_name: e.target.value});
               }}>
-                <option value="" disabled selected hidden>Class</option>
+                <option value="" disabled hidden>Class</option>
                 <option value="Class 6">Class 6</option>
                 <option value="Class 7">Class 7</option>
                 <option value="Class 8">Class 8</option>
