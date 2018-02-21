@@ -13,9 +13,7 @@ export default class StudentWithWeeks extends React.Component{
 
     render(){
         return(
-            
             this.renderWeeks()
-            
         )
     };
 

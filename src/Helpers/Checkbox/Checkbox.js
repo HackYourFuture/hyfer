@@ -3,18 +3,6 @@ import styles from '../../assets/styles/attendance.css';
 
 export default class Checkbox extends React.Component{
 
-    // state={
-    //     isChecked: false,
-    // }
-
-    // toggleCheckboxChange = event => {
-    //     event.preventDefault();
-    //     console.log('checkbox clicked')
-    //     this.setState({
-    //         isChecked: true,
-    //     })
-    // };
-
     render(){
         return(
             <div className={styles.Checkbox}>
@@ -40,15 +28,5 @@ export default class Checkbox extends React.Component{
             </div>
         );
     };
-
-    // handletest = event => {
-
-    //     //var name = event.target.name;
-    //     this.props.onChange(event.target.name);
-
-    // };
-    //burslav copy
-    //burslav
-    //onChange={() => this.props.onChange(this.props.duration)}
 };
 
