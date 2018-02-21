@@ -92,7 +92,8 @@ export default class TimeLine extends Component {
             <AddClassForm />
           </Modal>
           <ComponentTimeLine
-            clickHandler={moduleInfoStore.getReadme}
+            // clickHandler={moduleInfoStore.getReadme}
+            clickHandler={moduleInfoStore.getHistory}
             items={[...items]}
             options={options}
             groups={[...groups]}
@@ -108,7 +109,9 @@ export default class TimeLine extends Component {
             </TabPanel>
 
             <TabPanel>
-              <Attendance />
+              <div>
+                <Attendance />
+              </div>
             </TabPanel>
           </Tabs>
         </main>
