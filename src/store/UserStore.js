@@ -6,7 +6,20 @@ class store {
 
 	state = {
         users: [],
-        filteredUsers: []            
+		filteredUsers: [],
+
+		id:[],
+		username:[],
+		full_name: [],
+		role: [],
+		register_date: [],
+		slack_username: [],
+		freecodecamp_username: [],
+		email: [],
+		mobile: [],
+		group_id: [],
+		group_name: []
+		           
     }; 
 
 	setState(updates) {
