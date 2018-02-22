@@ -53,7 +53,7 @@ export default function() {
   };
 
   const getTimelineItems = () => {
-    fetch(`/api/timeline`)
+    fetch(`${BASE_URL}/api/timeline`)
       .then(res => res.json())
       .then(resJson => {
         const groups = _extractGroups(resJson);
