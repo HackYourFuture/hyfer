@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import ReactHtmlParser from 'react-html-parser';
+import AttendObs from '../../store/AttendanceStore';
+
 
 import styles from '../../assets/styles/moduleReadme.css';
 import {
@@ -13,7 +15,7 @@ const BASE_URL = 'https://github.com/HackYourFuture';
 export default class ModuleInfo extends Component {
   state = {
     readme: null,
-    repoName: null
+    repoName: null,
   };
 
   componentDidMount = () => {
@@ -22,7 +24,7 @@ export default class ModuleInfo extends Component {
         this.setState({ repoName: mergedData.payload.repoName });
       } else if (mergedData.type === READ_ME_CHANGED) {
         this.setState({ readme: mergedData.payload.readme });
-      }
+      }console.log('state in module info', this.state)
     });
   };
 
