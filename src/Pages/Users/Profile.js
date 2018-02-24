@@ -21,14 +21,15 @@ export default class Profile extends React.Component {
       "id": store.state.id,
       "username": store.state.username,
       "full_name": store.state.full_name,
+      "group_name": store.state.group_name,
       "role": store.state.role,
       "register_date": store.state.register_date,
+      "email": store.state.email,
       "slack_username": store.state.slack_username,
       "freecodecamp_username": store.state.freecodecamp_username,
-      "email": store.state.email,
       "mobile": store.state.mobile,
-      "group_id": store.state.group_id,
-      "group_name": store.state.group_name
+      "group_id": store.state.group_id
+      
     }
 
     fetch(`http://localhost:3005/api/user/${store.state.id}`, {
