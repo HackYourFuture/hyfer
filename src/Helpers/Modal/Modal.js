@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 
 import classes from '../../assets/styles/modal.css';
 
-export default class Modal extends Component {
+export default class Modal1 extends Component {
   render() {
     const { isOpen, handleToggleModal } = this.props;
     const backdrop = isOpen ? (
