@@ -9,12 +9,11 @@ class moduleServiceBack {
 		})
 		.catch(error => {
             console.log(error)
-           // throw new Error('Server error!')
+            throw new Error('Server error!')
 		})
     }
 
     saveModules(modules , callBack) {
-        
         fetch(`${api_url}/modules`, {
               method: 'PATCH',
               headers: {
@@ -31,6 +30,23 @@ class moduleServiceBack {
             throw new Error('Server error!')
         })
     }
+    // addModule(moduleName, repoName, repoUrl, duration){
+    //     const body = {
+    //         module_name: moduleName,
+    //         git_repo: repoName,
+    //         git_url: repoUrl,
+    //         default_duration: duration
+    //     };
+        
+        
+    //     fetch(`${BASE_URL}/modules`, {
+    //         method: 'POST',
+    //         headers: {
+    //           'Conetent-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify(body)
+    //       }).then(res => console.log(res));
+    // };
 }
 
 var ModuleServiceBack = new moduleServiceBack()
