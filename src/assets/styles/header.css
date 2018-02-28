@@ -83,7 +83,7 @@ font-family: Roboto, "Helvetica Neue", sans-serif;
   text-align: center;
   background-color: white;
   color: rgb(50, 73, 204);
-  border-radius: 10%;
+  border-radius: 5px;
   box-shadow: 0 2px 10px;
   transition: all 1s ease;
 }
