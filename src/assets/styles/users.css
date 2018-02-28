@@ -59,11 +59,10 @@ html {
 .editUser:hover { 
   background-color: rgb(190, 190, 187);
   
-}
-
-@media only screen and (min-width:600px)and (max-width:1000px){
-  .user{
-      min-width:45%;
+  .userName{
+    color: rgba(119, 119, 119, 0.87);
+    font-size: 1.2em;
+    margin-left: 10px;
   }
 }  
 
@@ -98,6 +97,20 @@ html {
   border-radius: 4px;
 }
 
+  .editUser button {
+    background-color: rgb(223, 224, 224); /* Green */
+    border: none;
+    color: rgb(104, 100, 100);
+    padding: 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
 svg{
-height: 15px;
+  height: 15px;
 }
