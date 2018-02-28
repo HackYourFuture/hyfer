@@ -35,15 +35,17 @@ h3{display: inline-block;
 }
 
 .Title{display: block;
-border: 1px solid black;
-clear: both;
-text-align: center;
+  border-bottom: 1px solid black;
+  clear: both;
+  text-align:left;
+  margin: 0 10% 0 10%
 }
 
 .message{display: block;
   clear: both;
   text-align: center;
   margin: 20px;
+
 }
   
 .buttons{

@@ -105,7 +105,9 @@ export default class TimeLine extends Component {
             </TabList>
 
             <TabPanel>
-              <ModuleReadme />
+              <div>
+                <ModuleReadme />
+              </div>
             </TabPanel>
 
             <TabPanel>
