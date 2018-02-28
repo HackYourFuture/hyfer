@@ -23,8 +23,7 @@
     margin:0;
 }
 .moduleItem{
-    padding: 0.5em 1em;
-    /*margin: 1vh 0;*/
+    padding: 0.5em 0;
     border-radius: .3em;
     font-size: 1.1em;
     color: white;
@@ -61,30 +60,202 @@
  .moduleButton:hover {
     background-color: rgba(60, 60, 140, 0.92);
 }
-/* .popup_module {
+
+.moduleMenu{
+    position: absolute;
+    left:0;
+    top:5px;
+    padding: 4px 0;
+    margin: 0;
+    border-radius: 2px;
+    
+    background-color: rgb(255,255,255);
+    z-index: 10;
+    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+    cursor: default;
+    opacity: 1;
+    transition: 0.5s;
+    visibility: hidden;
+    min-width: 100px;
+}
+.moduleMenu li{
+    height: 50px;
+}
+.moduleMenu li.menuSep{
+    margin-top: 4px;
+    margin-bottom: 4px;
+    height: 1px;
+    background-color: rgba(0,0,0,0.11);
+}
+.moduleMenu button{
+    text-align: left;
+    width: 100%;
+    height: 100%;
+    padding-left:15px;
+    padding-right:15px;
+    box-sizing: border-box;
+    cursor: pointer;
+    vertical-align: middle;
+    border: 0;
+    background: transparent;
+    font-size: 0.85em;
+    font-weight: normal;
+    transition: 0.3s ease-in-out;
+    color: rgba(0,0,0,0.54);
+}
+.moduleMenu button:disabled {
+    cursor: default;
+}
+.moduleMenu button:hover{
+    background-color: rgba(158,158,158,0.2);
+}
+.moduleMenu li md-icon{
+    font-size: 24px;
+    vertical-align: middle;
+    margin-right:10px;
+}
+
+.menuOverlay{
     position: fixed;
-    width: 80%;
-    height: 90%;
+    z-index: 9;
     top: 0;
+    bottom: 0;
     left: 0;
     right: 0;
-    bottom: 0;
-    margin: 0 auto;
-    background-color: rgba(255,255,255, 0.8);
-}
-.popup_header {
-     
-    color: wheat;
-
+    cursor: default;
+    display: none;
 }
 
-.popup_input {
+.moduleItemContent md-icon{
+    vertical-align: middle;
+}
+.moduleItemContent md-icon:hover{
+    opacity: 0.5;
+}
+
+
+.ModuleRow {
+    font-size: 1em;
+    position: relative;
+    margin:40px 0;
+}
+.ModuleRow input[type=text] {
+    display: block;
+    width:100%;
+    padding: 5px 0px;
+    height:30px;
+    box-sizing: border-box;
+    border-width: 0 0 1px 0;
+    border-style: solid;
+}
+.ModuleRow label {
+    width:100%;
+    color: #999;
+    pointer-events:none;
+    transform-origin: left top;
+    position: absolute;
+    top:5px;
+    left:0;
+    z-index: 1;
+    line-height: 20px;
+    transition: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.ModuleRow label.focus{
+    color:#3e43cc;
+    transform: translateY(-20px) scale(0.75);
+}
+.ModuleRow input[type=text].focus{
+    border-color: #3e43cc;
+    border-width: 0 0 2px 0;
+}
+.ModuleRow label.notEmpty{
+    transform: translateY(-20px) scale(0.75);
+}
+.ModuleRow label.error{
+    color:#DD2C00;
+}
+.ModuleRow input[type=text].error {
+    border-color: #DD2C00;
+}
+.ModuleRow input[type=color] {
+    
+    width:25px;
+    padding: 0;
+    height:25px;
+    border:0;
+    position: absolute;
+    top:0;
+    right:0;
+}
+.checkBoxContainer{
+    cursor: pointer;
     display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 20%;
+}
+.checkBox{
+    box-sizing: border-box;
+    transition: 240ms;
+    position: relative;
+    width: 20px;
+    height: 20px;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 2px;
+    border-color: rgba(0,0,0,0.54);  
+}
+.checked{
+    border-color: transparent;
+    background-color: #3e43cc;
+}
+.checked::after
+{
+    box-sizing: border-box;
+    transform: rotate(45deg);
+    position: absolute;
+    left: 4.66667px;
+    top: 0.22222px;
+    width: 6.66667px;
+    height: 13.33333px;
+    border-width: 2px;
+    border-style: solid;
+    border-top: 0;
+    border-left: 0;
+    border-color: rgba(255,255,255,0.87);
+    content: '';
+}
+.checkBoxLabel{
+    padding-left:10px;
+}
+.textButton{
+    
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+    color: rgb(255,255,255);
+    text-align: center;
+    border-radius: 2px;
+    border: 0;
+    padding: 0 6px;
+    white-space: nowrap;
+    min-width: 88px;
+    line-height: 36px;
+    cursor: pointer;
+    transition: background-color 0.4s;
+}
+.cancelButton{
+    background-color: rgb(244,81,30);
+    float:left;
+}
+.cancelButton:hover{
+    background-color:#c5380a;
 }
 
-.popup_button {
+.addButton{
+    background-color: #3e43cc;
+    float:right;
+}
+.addButton:hover{
+    background-color:#1f2176;
+}
 
-} */
+.textButton:disabled{
+    background-color:#777777;
+    cursor: default;
+}
