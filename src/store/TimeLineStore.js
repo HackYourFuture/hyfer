@@ -101,7 +101,6 @@ export default function() {
         id: item
       };
     });
-    console.log(data)
     return allGroups;
   };
 

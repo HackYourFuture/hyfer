@@ -7,6 +7,8 @@ import {
     HISTORY_CHANGED
 } from '../../store';
 
+const stack = [];
+
 export default class Attendance extends React.Component{
 
     state = {
@@ -32,9 +34,9 @@ export default class Attendance extends React.Component{
                     group_name: mergedData.payload.group_name,
                     repoName: mergedData.payload.repoName,
                     running_module_id: mergedData.payload.running_module_id,
-                })
+                })                
             }
-        })       
+        })
     };
 
     render(){
@@ -80,6 +82,12 @@ export default class Attendance extends React.Component{
                      onClick={this.onSave}
                     >save</button>
 
+                    <button className={styles.undo}
+                     disabled={!this.state.edit_Mode}
+                     name="cancel"
+                     onClick={this.undo}
+                    >undo</button>
+
                     <button className={styles.cancel}
                      disabled={!this.state.edit_Mode}
                      name="cancel"
@@ -100,7 +108,6 @@ export default class Attendance extends React.Component{
 
     handleCheckboxChange = ( student, event ) => {
 
-        const { history } = this.state
         const week = event.target.id;
         const name = event.target.name; //attendance or homework
         // edit_mode will active the save and cancel buttons
@@ -108,17 +115,31 @@ export default class Attendance extends React.Component{
             edit_Mode : true,
         })
 
+        stack.push(student, week, name);
+
+        this.makeChange(student, week, name);
+
+    }
+
+    makeChange = (student, week, name) => {
+
+        const { history } = this.state;
+    
         const changeValue=(v)=>{
             if (v === 0) {
                 return 1
             } else if (v === 1) {
                 return 0
             }
-        }
+        };
 
         // change in history object
         history[student][week][name] = changeValue(history[student][week][name])
-    }
+
+        this.setState({
+            history: history,
+        })
+    };
 
     onSave = () => {
 
@@ -132,14 +153,33 @@ export default class Attendance extends React.Component{
             'Content-Type': 'application/json',
             }, 
           })
-          .then(response => response.json())
-          .then(response => {console.log(response)})
-          .catch(err => console.log(err))
+        .then(response => response.json())
+        .catch(err => console.log(err))
 
-        this.onCancel()  
-    }
+        this.setState({
+            edit_Mode: null,
+        }) 
+    };
 
     onCancel = () => {
-        this.setState({edit_Mode: false})
+
+        for (let i = 0; i < stack.length; i++) { 
+            this.undo();
+        };
     }
+
+    undo = () => {
+        const toUndo = stack.slice(-3);
+        stack.splice(-3, 3);
+        const student = toUndo[0];
+        const week = toUndo[1];
+        const name = toUndo[2];
+
+        if ( stack.length === 0 ) {
+            this.setState({
+                edit_Mode: null,
+            })
+        };
+        this.makeChange(student, week, name);
+    };
 };

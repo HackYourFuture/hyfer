@@ -18,21 +18,22 @@ function AttendObs() {
         for (var f of this.observers){
 			f(merge, old);
 		};
+		//console.log('state setted')
 	};
 	
 	this.get = (k) => {
-		console.log('notified');
+		//console.log('notified');
 		return this.state[k];
 	};
 	
 	this.subscribe = (f) => {
 		this.observers.push(f);
-		console.log('subscribed');
+		//console.log('subscribed');
     };
 
 	this.unsubscribe = (f) => {
 		this.observers = this.observers.filter(e => e !== f);
-		console.log('unsubscribed');
+		//console.log('unsubscribed');
 
 	};
 };
