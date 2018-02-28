@@ -1,77 +1,235 @@
-import React, { Component } from 'react';
-import ReactDom from 'react-dom';
-import ModuleObservable from './ModuleObservable';
+import React from 'react';
 import style from  '../../assets/styles/modules.css';
-import Button from '../../Helpers/Button/Button';
+import ModalDialog from '../../components/ModalDialog';
+
 
 export default class ModuleForm extends React.Component {
 
     
     constructor(props){
         super(props);
-        this.state = {ModuleName: '', RepoName: '', RepoUrl: '', Duration: 0, Color: '', Optional: false};
+        this.state = {ModuleId: '' , ModuleName: '', RepoName: '', RepoUrl: '', Duration: '', Color: '', Optional: false , focusId:'' , errorIds:[]};
+    }
+
+    componentDidMount = () => {
+        const module = this.props.module
+        if(module){
+            this.setState({
+                ModuleId : module.id,
+                ModuleName: module.module_name, 
+                RepoName: module.git_repo, 
+                RepoUrl: module.git_url,  
+                Duration: module.default_duration,  
+                Color: module.color,  
+                Optional: module.optional===1?true:false , 
+                focusId:'' , 
+                errorIds:[]})  
+        }
+        else{
+            this.resetForm()
+        }
+    }
+
+    onFocus = (e) => {
+        this.setState({focusId: e.target.id});
+    }
+    onBlur = (e) => {
+        this.setState({focusId: ''});
     }
     
+    inputChanged = (e) => {
+        const id = e.target.id
+        const val = e.target.value
+        this.setState({[id] : val});
+        this.validateInput( id , val)
 
-    handelChange_1(e) {
-        this.setState({ModuleName: e.target.value});
     }
 
-    handelChange_2(e) {
-        this.setState({RepoName: e.target.value});
+    validateInput( id , val){
+        if(id === "RepoUrl"){
+            if(val !== "" && !this.isURL(val)){
+                this.RegError(id)
+            }
+            else{
+                this.UnRegError(id)
+            }
+        }
+        if(id === "Duration"){
+            if(val !== "" && (isNaN(val) || val <= 0 || val > 6)){
+                
+                this.RegError(id)
+            }
+            else{
+                this.UnRegError(id)
+            }
+        }
+        if(id === "Color"){
+            if(val !== "" && !this.isColor(val) ){
+                
+                this.RegError(id)
+            }
+            else{
+                this.UnRegError(id)
+            }
+        }
     }
 
-    handelChange_3(e) {
-        this.setState({RepoUrl: e.target.value});
+    isFormValidate(){
+        if(this.state.errorIds.length === 0 && 
+            this.state.ModuleName !== '' && 
+            this.state.RepoName !== '' && 
+            this.state.RepoUrl !== '' &&
+            this.state.Duration !== '' &&
+            this.state.Color !== ''
+        ){
+            return true
+        }
+        else{
+            return false
+        }
     }
 
-    handelChange_4(e) {
-        this.setState({Duration: e.target.value});
+    resetForm(){
+        this.setState({ModuleId: '' , ModuleName: '', RepoName: '', RepoUrl: '', Duration: '', Color: '', Optional: false , focusId:'' , errorIds:[]});
     }
 
-    handelChange_5(e) {
-        this.setState({Color: e.target.value});
+    RegError(id){
+        if(!this.state.errorIds.includes(id)){
+            this.setState({errorIds : [...this.state.errorIds , id]});
+        }
     }
 
-    handelChange_6(e) {
-        this.setState({Optional: !this.state.Optional});
+    UnRegError(id){
+        this.setState({errorIds : 
+            this.state.errorIds.filter(function(item) { 
+                return item !== id
+            })
+        });
     }
-   
 
-    addMod(){
+    isURL(str) {
+        return  /^(https?|ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(str);
+    }
+
+    isColor(val){
+        //return /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(val)
+        return /^#[0-9A-F]{6}$/i.test(val)
+    }
+
+    colorChanged = (e) => {
+        this.setState({Color : e.target.value});
+        this.UnRegError("Color")
+    }
+
+    optionalToggle = (e)=> {
+        this.setState({Optional : !this.state.Optional});
+    }
+
+    addModule = (e) => {
         let module = {};
+        module.id = this.state.ModuleId;
         module.module_name = this.state.ModuleName;
         module.git_repo = this.state.RepoName;
         module.git_url = this.state.RepoUrl;
         module.default_duration = this.state.Duration;
         module.color = this.state.Color;
         if(this.state.Optional){
-            module.Optional = 1;
+            module.optional = 1;
         }
         else {
-            module.Optional = 0;
+            module.optional = 0;
         }
-        this.props.Add(module);
+        this.props.onAdd(module);
+        this.props.onCancel();
+
+        if(!this.props.module)
+            this.resetForm()
     }
+    
     render() {
         return (
-            <form>
-              <div className={style.popup_module}>
-                <h1 className={style.popup_header}>{this.props.text}</h1>
-                <div className={style.popup_input}>
-                  <input type='text' placeholder='Module Name' onChange={this.handelChange_1.bind(this)}/>
-                  <input type='text' placeholder='Repo Name' onChange={this.handelChange_2.bind(this)}/>
-                  <input type='text' placeholder='Repo URL' onChange={this.handelChange_3.bind(this)}/>
-                  <input type='text' placeholder='Duration' onChange={this.handelChange_4.bind(this)}/>
-                  <input type='color' placeholder='Color' onChange={this.handelChange_5.bind(this)}/>
-                  <label><input type='checkbox' onChange={this.handelChange_6.bind(this)}/>Optional</label>
+            <ModalDialog visible={this.props.visible} closeClicked={this.props.onCancel} title={this.props.title}>
+                <div>
+                    <div className={style.ModuleRow}>
+                        <label htmlFor="ModuleName" className={`
+                        ${this.state.focusId ==="ModuleName"?style.focus:''} 
+                        ${this.state.ModuleName !==""?style.notEmpty:''} 
+                        ${this.state.errorIds.includes("ModuleName")?style.error:''}`} >Module Name</label>
+                        
+                        <input id="ModuleName" type='text' className={`
+                        ${this.state.focusId ==="ModuleName"?style.focus:''} 
+                        ${this.state.errorIds.includes("ModuleName")?style.error:''}`}
+                        onChange={this.inputChanged} onBlur={this.onBlur} onFocus={this.onFocus}
+                        value={this.state.ModuleName} />
+                    </div>
+
+                    <div className={style.ModuleRow}>
+                        <label htmlFor="RepoName" className={`
+                        ${this.state.focusId ==="RepoName"?style.focus:''} 
+                        ${this.state.RepoName !==""?style.notEmpty:''} 
+                        ${this.state.errorIds.includes("RepoName")?style.error:''}`} >Repo Name</label>
+                        
+                        <input id="RepoName" type='text' className={`
+                        ${this.state.focusId ==="RepoName"?style.focus:''} 
+                        ${this.state.errorIds.includes("RepoName")?style.error:''}`}
+                        onChange={this.inputChanged} onBlur={this.onBlur} onFocus={this.onFocus}
+                        value={this.state.RepoName} />
+                    </div>
+
+                    <div className={style.ModuleRow}>
+                        <label htmlFor="RepoUrl" className={`
+                        ${this.state.focusId ==="RepoUrl"?style.focus:''} 
+                        ${this.state.RepoUrl !==""?style.notEmpty:''} 
+                        ${this.state.errorIds.includes("RepoUrl")?style.error:''}`} >Repo Url</label>
+                        
+                        <input id="RepoUrl" type='text' className={`
+                        ${this.state.focusId ==="RepoUrl"?style.focus:''} 
+                        ${this.state.errorIds.includes("RepoUrl")?style.error:''}`}
+                        onChange={this.inputChanged} onBlur={this.onBlur} onFocus={this.onFocus}
+                        value={this.state.RepoUrl} />
+                    </div>
+
+                    <div className={style.ModuleRow}>
+                        <label htmlFor="Duration" className={`
+                        ${this.state.focusId ==="Duration"?style.focus:''} 
+                        ${this.state.Duration !==""?style.notEmpty:''} 
+                        ${this.state.errorIds.includes("Duration")?style.error:''}`} >Duration</label>
+                        
+                        <input id="Duration" type='text' className={`
+                        ${this.state.focusId ==="Duration"?style.focus:''} 
+                        ${this.state.errorIds.includes("Duration")?style.error:''}`}
+                        onChange={this.inputChanged} onBlur={this.onBlur} onFocus={this.onFocus}
+                        value={this.state.Duration} />
+                    </div>
+
+                    <div className={style.ModuleRow}>
+                        <label htmlFor="Color" className={`
+                        ${this.state.focusId ==="Color"?style.focus:''} 
+                        ${this.state.Color !==""?style.notEmpty:''} 
+                        ${this.state.errorIds.includes("Color")?style.error:''}`} >Color</label>
+                        
+                        <input id="Color" type='text' className={`
+                        ${this.state.focusId ==="Color"?style.focus:''} 
+                        ${this.state.errorIds.includes("Color")?style.error:''}`}
+                        onChange={this.inputChanged} onBlur={this.onBlur} onFocus={this.onFocus}
+                        value={this.state.Color}/>
+                        <input type="color" value={this.state.Color} onChange={this.colorChanged} />
+                    </div>
+
+                    <div className={style.ModuleRow}>
+                        <div className={style.checkBoxContainer} onClick={this.optionalToggle}>
+                            <div className={`${style.checkBox} ${this.state.Optional?style.checked:""}`} ></div>
+                            <div className={style.checkBoxLabel}>Optional</div>
+                        </div>
+                    </div>
+
+                    <div className={style.ModuleRow}>
+                        <button className={`${style.textButton} ${style.cancelButton}`} onClick={this.props.onCancel}>CANCEL</button>
+                        <button className={`${style.textButton} ${style.addButton}`} disabled={!this.isFormValidate()} onClick={this.addModule}>{this.props.actionName}</button>
+                    </div>
+
                 </div>
-                <div className={style.popup_button}>  
-                  <Button onClick={this.props.Cansel}>CANSEL</Button>
-                  <Button onClick={this.addMod.bind(this)}>ADD</Button>
-                </div>
-              </div>
-            </form>
+            </ModalDialog>
           );
     }
 }

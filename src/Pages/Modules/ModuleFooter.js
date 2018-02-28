@@ -32,15 +32,22 @@ export default class ModuleFooter extends Component {
   AddModule = (module) =>{
     const curModulesArr = ModuleObservable.getModules();
     const newModulesArr = Array.from(curModulesArr);
+    
+    let maxId = curModulesArr.map( m=> m.id ).reduce(( max, cur ) => Math.max( max, cur ))
+    module.id = maxId + 1
     newModulesArr.push(module);
+
     ModuleObservable.setModules(newModulesArr);
-    this.SaveChanges();
-    this.togglePopup();
   }
 
-  togglePopup = () => {
+  showAddModal = () => {
     this.setState({
-      isadding: !this.state.isadding
+      isadding: true
+    });
+  }
+  hideAddModal = () => {
+    this.setState({
+      isadding: false
     });
   }
   
@@ -50,13 +57,9 @@ export default class ModuleFooter extends Component {
             <ModuleButton action="undo" title="Undo Changes" disabled={!this.state.isChanged} clickHandler={this.UndoChanges} />
             <span className={style.moduleButtonSep}></span>
             <ModuleButton action="save" title="Save Changes" disabled={!this.state.isChanged} clickHandler={this.SaveChanges} />
-            <ModuleButton action="add" title="Add module" disabled={false} clickHandler={this.togglePopup} />
-            {this.state.isadding ?
-            <ModuleForm text='Adding module...' Cansel={this.togglePopup} Add={this.AddModule}/>
-            :null
-            }
+            <ModuleButton action="add" title="Add module" disabled={false} clickHandler={this.showAddModal} />
+            <ModuleForm onCancel={this.hideAddModal} onAdd={this.AddModule} visible={this.state.isadding} title="Adding Module.." actionName="ADD" />
       </div>
-        
     );
   }
 }

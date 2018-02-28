@@ -4,6 +4,7 @@ import ModuleObservable from './ModuleObservable';
 import style from  '../../assets/styles/modules.css';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
+
 export default class ModuleList extends Component {
 
   constructor(props) {
@@ -79,7 +80,7 @@ export default class ModuleList extends Component {
           )}
         </Droppable>
       </DragDropContext>
-        
+      
     );
   }
 }
