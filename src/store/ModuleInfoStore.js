@@ -50,7 +50,6 @@ export default function() {
     let sundays = {sundays: modeuleSundays}
     let BASE_URL = 'http://localhost:3005/api/history';
     //sundays format should look like this => {sundays: ["2016/11/06", "2016/11/13", "2016/11/20"]};
-    console.log(_data)
     fetch(`${BASE_URL}/${running_module_id}/${group_id}`, {
       method: 'PATCH', 
       body: JSON.stringify(sundays),
@@ -128,7 +127,6 @@ export default function() {
         group,
       }
     };
-    console.log(mergedData)
     setState(mergedData);
   };
 

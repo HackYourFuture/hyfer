@@ -50,4 +50,18 @@ h3{display: inline-block;
   
 .buttons{
   float: right;
+  margin-right: 50px;
 }
+
+.button{width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  margin: 8px;
+  background-color: rgb(128, 188, 240);
+  border: none;
+}
+
+.button:disabled{background-color: rgb(33, 150, 243);
+}
+
+.button:hover{background-color: rgb(157, 66, 185)}
