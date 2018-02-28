@@ -83,7 +83,7 @@ export default class Users extends React.Component {
                        onError={(e)=>{e.target.src=`https://api.adorable.io/avatars/100/${user.full_name}`} }/>
                   <div className ={styles.userName}>{user.full_name}</div>
                   <div><MdClass />{user.group_name}</div>
-                  <div><FaGraduationCap/> {user.role}  </div>
+                  <div><FaGraduationCap/>{user.role}</div>
                   <div><FaClockO />{user.register_date}</div>
                   <div><MdEmail />{user.email}</div>
                   <div><FaSlack />{user.slack_username}</div>
@@ -103,7 +103,7 @@ export default class Users extends React.Component {
                     slack_username: user.slack_username,
                     freecodecamp_username: user.freecodecamp_username,
                     mobile: user.mobile,
-                    group_id:user.group_id
+                    group_id: user.group_id
                   });
                 
                 } }>  
