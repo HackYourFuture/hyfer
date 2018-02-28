@@ -37,7 +37,6 @@
     "re-resizable": "^4.3.2",
     "react": "^16.2.0",
     "react-beautiful-dnd": "^4.0.1",
-    "react-cookie": "^2.1.4",
     "react-cookies": "^0.1.0",
     "react-dev-utils": "^5.0.0",
     "react-dom": "^16.2.0",
