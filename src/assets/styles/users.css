@@ -41,8 +41,9 @@ html {
   }
   
   .userName{
-    color: rgba(0,0,0,0.87);
+    color: rgba(119, 119, 119, 0.87);
     font-size: 1.2em;
+    margin-left: 10px;
   }
 
   .editUser{
@@ -84,7 +85,7 @@ html {
   }
 
   .editUser button {
-    background-color: rgb(197, 203, 206); /* Green */
+    background-color: rgb(223, 224, 224); /* Green */
     border: none;
     color: rgb(104, 100, 100);
     padding: 5px;
@@ -95,4 +96,8 @@ html {
     margin: 4px 2px;
     cursor: pointer;
     border-radius: 4px;
+}
+
+svg{
+  height: 15px;
 }

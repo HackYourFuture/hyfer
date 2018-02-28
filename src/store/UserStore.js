@@ -11,14 +11,14 @@ class store {
 		id:[],
 		username:[],
 		full_name: [],
+		group_name: [],
 		role: [],
 		register_date: [],
+		email: [],
 		slack_username: [],
 		freecodecamp_username: [],
-		email: [],
 		mobile: [],
-		group_id: [],
-		group_name: []
+		group_id: []
 		           
     }; 
 
