@@ -8,8 +8,16 @@ import Footer from './components/Footer/Footer';
 import Modules from './Pages/Modules/Modules'; // ADD YOURS HERE
 import Users from './Pages/Users/Users';
 import Profile from './Pages/Users/Profile';
+import cookie from 'react-cookies'
 
 class App extends Component {
+  
+  componentWillMount() {
+    const token = JSON.parse( cookie.load('token'))
+    console.log(token)
+    localStorage.setItem('token', token);
+  }
+
   render() {
     return (
       <BrowserRouter>
