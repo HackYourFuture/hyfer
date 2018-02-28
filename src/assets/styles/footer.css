@@ -1,0 +1,103 @@
+.footerDistributed{
+    background-color: #292c2f;
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.12);
+    box-sizing: border-box;
+    width: 100%;
+    text-align: left;
+    font: bold 16px sans-serif;
+    margin-top: 20px;
+    padding: 45px;
+    display: flex;
+    display: -webkit-flex;
+}
+
+.footerLogo{
+    display: inline-block;
+    vertical-align: top;
+    flex-grow: 1;
+    width: 60%;
+}
+.footerAbout{
+    display: inline-block;
+    vertical-align: top;
+}
+.footerIcons{
+    display: inline-block;
+    vertical-align: top;
+}
+.footerLinks{
+    display: inline-block;
+    vertical-align: top;
+}
+
+.footerLinks{
+    margin-bottom: 10px;
+}
+
+.footerLinks a{
+    color: #FFFFFF;
+    display: inline-block;
+    line-height: 1.8;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.footerAbout{
+    display: inline-block;
+    vertical-align: top;
+    flex-grow: 3;
+    line-height: 20px;
+    color: #92999f;
+    font-size: 13px;
+    font-weight: normal;
+    margin: 0;
+}
+.footerAbout a{
+    color: #B0BEC5;
+    display: inline-block;
+    line-height: 1.8;
+    text-decoration: none;
+}
+.footerAbout span{
+    display: block;
+    color: #ffffff;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+footer .faFacebook, .faTwitter, .faLinkedin, .faGithub{
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    border-radius: 50%;
+    font-size: 20px;
+    background-color: #33383b;
+    text-align: center;
+    line-height: 35px;
+    margin-right: 3px;
+}
+footer .faFacebook{
+    fill: #3b5998;
+}
+footer .faTwitter{
+    fill: #55acee;
+ }
+footer .faLinkedin{
+    fill: #007bb5;
+    }
+footer .faGithub{
+    fill: #000000;
+}
+footer .faFacebook:hover, .faTwitter:hover, .faLinkedin:hover, .faGithub:hover{
+    background-color: #58605d;
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    border-radius: 50%;
+    font-size: 20px;
+    text-align: center;
+    line-height: 35px;
+    margin-right: 3px;
+}
