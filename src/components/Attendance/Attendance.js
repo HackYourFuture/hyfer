@@ -1,14 +1,12 @@
 import React from 'react';
 import StudentWithWeeks from './StudentWithWeeks';
 import styles from '../../assets/styles/attendance.css';
-import AttendObs from '../../store/AttendanceStore';
-import TimeLineStore from '../../store/TimeLineStore';
-import ModuleInfoStore from '../../store/ModuleInfoStore';
+//import AttendObs from '../../store/AttendanceStore';
 import {
     moduleInfoStore,
     HISTORY_CHANGED
 } from '../../store';
-  
+
 export default class Attendance extends React.Component{
 
     state = {
@@ -36,7 +34,6 @@ export default class Attendance extends React.Component{
                     running_module_id: mergedData.payload.running_module_id,
                 })
             }
-            console.log('state in attendance is ',this.state)
         })       
     };
 
@@ -71,7 +68,7 @@ export default class Attendance extends React.Component{
 
             title = (
                 <div className={styles.Title}>
-                    <h3>{group_name} of {repoName}</h3>
+                    <h3>Attendance in {group_name} of {repoName}</h3>
                 </div>
             )
 

@@ -25,7 +25,6 @@
 
 .tabs{clear: both;
   display: block;
-
 }
 
 .tab{float: left;
@@ -37,14 +36,14 @@
   box-shadow: 0px 0px 18px 1px rgba(0,0,0,0.1);
   cursor: pointer;
 }
-
+/* 
 .tab--selected {
   background:red;
 }
 
 .tab:focus {
   background: blue!important;
-}
+} */
 
 .tab:hover{ box-shadow:  0px 3px 18px 1px rgba(0,0,0,0.1);
   background-color: rgb(226, 224, 224);

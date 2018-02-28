@@ -1,7 +1,7 @@
 import marked from 'marked';
 import moment from 'moment';
 
-import { REPO_NAME_CHANGED, READ_ME_CHANGED, ALL_SUNDAYS_CHANGED, HISTORY_CHANGED } from './';
+import { REPO_NAME_CHANGED, READ_ME_CHANGED, HISTORY_CHANGED } from './';
 
 const BASE_URL = 'https://api.github.com/repos/HackYourFuture';
 const noRepoAlternative = 'NOREPO'; // alternative name for if a module doesn't have a repo
