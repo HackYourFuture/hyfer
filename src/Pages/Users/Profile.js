@@ -1,6 +1,7 @@
 import React from 'react';
 import store from '../../store/UserStore';
 import styles from '../../assets/styles/profile.css';
+import { Link } from 'react-router-dom';
 
 
 export default class Profile extends React.Component {
@@ -13,6 +14,10 @@ export default class Profile extends React.Component {
 
   componentWillUnmount() {
     this.subscription.remove();
+  }
+
+  componentDidMount() {
+    window.scrollTo(0, 0)
   }
 
   saveProfile = () => {
@@ -29,7 +34,6 @@ export default class Profile extends React.Component {
       "freecodecamp_username": store.state.freecodecamp_username,
       "mobile": store.state.mobile,
       "group_id": store.state.group_id
-      
     }
 
     fetch(`http://localhost:3005/api/user/${store.state.id}`, {
@@ -44,6 +48,22 @@ export default class Profile extends React.Component {
         console.log(error)
         throw new Error('Problem with Server :  PATCH DATA')
     })  
+  }
+
+  resetProfile = () => {
+    store.setState({
+      id: store.state.reset_id,
+		  username:store.state.reset_username,
+      full_name: store.state.reset_full_name,
+      group_name: store.state.reset_group_name,
+      role: store.state.reset_role,
+      register_date: store.state.reset_register_date,
+      email: store.state.reset_email,
+      slack_username: store.state.reset_slack_username,
+      freecodecamp_username: store.state.reset_freecodecamp_username,
+      mobile: store.state.reset_mobile,
+      group_id: store.state.reset_group_id
+    })
   }
 
     render(){
@@ -64,10 +84,9 @@ export default class Profile extends React.Component {
                 <option value="teacher">Teacher</option>
                 <option value="student">Student</option>
               </select>
-              <select defaultValue="Class"
-                      onChange={(e)=> {store.setState({group_name: JSON.parse(e.target.value).name, group_id: +JSON.parse(e.target.value).id});
+              <select   value = {'{"name":"'+store.state.group_name+'","id":"'+store.state.group_id+'"}'}
+                        onChange={(e)=> {store.setState({group_name: JSON.parse(e.target.value).name, group_id: +JSON.parse(e.target.value).id});
               }}>
-                <option value="Class" disabled hiddenCD>Class</option>
                 <option value='{"name":"Class 6","id":"44"}'>Class 6</option>
                 <option value='{"name":"Class 7","id":"45"}'>Class 7</option>
                 <option value='{"name":"Class 8","id":"46"}'>Class 8</option>
@@ -100,15 +119,19 @@ export default class Profile extends React.Component {
                      onChange={(e)=> {store.setState({mobile: e.target.value});
                      }}/>
 
-              <input className={styles.saveProfile} 
-                     type="submit" 
-                     value="Save" 
-                     onClick={this.saveProfile}
-                     />
+              <Link to='/users'>
+                <input className={styles.saveProfile} 
+                        type="submit" 
+                        value="Save" 
+                        onClick={this.saveProfile}
+                        />
+              </Link>    
+    
               <input className={styles.resetProfile} 
-                     type="reset" 
-                     value="Reset" 
-                     />            
+                      type="reset" 
+                      value="Reset"
+                      onClick={this.resetProfile} 
+                      />                        
             </div>
         </div>    
         )

@@ -18,7 +18,19 @@ class store {
 		slack_username: [],
 		freecodecamp_username: [],
 		mobile: [],
-		group_id: []
+		group_id: [],
+
+		reset_id:[],
+		reset_username:[],
+		reset_full_name: [],
+		reset_group_name: [],
+		reset_role: [],
+		reset_register_date: [],
+		reset_email: [],
+		reset_slack_username: [],
+		reset_freecodecamp_username: [],
+		reset_mobile: [],
+		reset_group_id: []
 		           
     }; 
 

@@ -24,13 +24,11 @@ export default class Users extends React.Component {
     this.subscription.remove();
   }
 
-  // loads the user from API, it fethces from state
   componentDidMount = () => {
     this.loadUsers();
+    window.scrollTo(0, 0);
   };
 
-  // fetch the users data from API
-  // mounts to the <users> state
   loadUsers() {
     fetch('http://localhost:3000/api/users')
       .then(res => res.json())
@@ -60,8 +58,7 @@ export default class Users extends React.Component {
       filteredUsers: updatedList
     });
   };
-
-  
+ 
   render() {
     return (
       <div className={styles.filterList}>
@@ -103,7 +100,19 @@ export default class Users extends React.Component {
                     slack_username: user.slack_username,
                     freecodecamp_username: user.freecodecamp_username,
                     mobile: user.mobile,
-                    group_id: user.group_id
+                    group_id: user.group_id,
+
+                    reset_id: user.id,
+                    reset_username:user.username,
+                    reset_full_name: user.full_name,
+                    reset_group_name: user.group_name,
+                    reset_role: user.role,
+                    reset_register_date:user.register_date,
+                    reset_email: user.email,
+                    reset_slack_username: user.slack_username,
+                    reset_freecodecamp_username: user.freecodecamp_username,
+                    reset_mobile: user.mobile,
+                    reset_group_id: user.group_id
                   });
                 
                 } }>  
