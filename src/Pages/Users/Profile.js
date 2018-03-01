@@ -67,7 +67,7 @@ export default class Profile extends React.Component {
               <select defaultValue="Class"
                       onChange={(e)=> {store.setState({group_name: JSON.parse(e.target.value).name, group_id: +JSON.parse(e.target.value).id});
               }}>
-                <option value="Class" disabled hidden>Class</option>
+                <option value="Class" disabled hiddenCD>Class</option>
                 <option value='{"name":"Class 6","id":"44"}'>Class 6</option>
                 <option value='{"name":"Class 7","id":"45"}'>Class 7</option>
                 <option value='{"name":"Class 8","id":"46"}'>Class 8</option>
