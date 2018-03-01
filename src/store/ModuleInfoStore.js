@@ -1,7 +1,7 @@
 import marked from 'marked';
 import moment from 'moment';
 
-import { REPO_NAME_CHANGED, READ_ME_CHANGED, ALL_SUNDAYS_CHANGED } from './';
+import { REPO_NAME_CHANGED, READ_ME_CHANGED, HISTORY_CHANGED } from './';
 
 const BASE_URL = 'https://api.github.com/repos/HackYourFuture';
 const noRepoAlternative = 'NOREPO'; // alternative name for if a module doesn't have a repo
@@ -40,8 +40,45 @@ export default function() {
 
   // Normal methodes will be changing the state
 
-  const getReadme = clickEvent => {
-    _getRepoNameAndSundays(clickEvent);
+  const getHistory = clickEvent => {
+
+     _getRepoNameAndSundays(clickEvent);
+    getReadme();
+
+    const { group_id, running_module_id, group, duration, repoName, start, end } = _data;
+    let modeuleSundays = _getSundays(start, end)
+    let sundays = {sundays: modeuleSundays}
+    let BASE_URL = 'http://localhost:3005/api/history';
+    //sundays format should look like this => {sundays: ["2016/11/06", "2016/11/13", "2016/11/20"]};
+    console.log(_data)
+    fetch(`${BASE_URL}/${running_module_id}/${group_id}`, {
+      method: 'PATCH', 
+      body: JSON.stringify(sundays),
+      headers: {
+      'Content-Type': 'application/json',
+      }, 
+    })
+    .then(response => response.json())
+    .then(response => {
+      const keys = Object.keys(response)
+
+      setState({
+        type: HISTORY_CHANGED,
+        payload: {
+          history: response,
+          keys: keys,
+          duration: duration,
+          group_id: group_id,
+          running_module_id: running_module_id,
+          repoName: repoName,
+          group_name: group
+        }
+      });
+    })
+    .catch(err => console.log(err))
+  }
+  
+  const getReadme = () => {
     // check if there is a valid repoName
     if (!_data.repoName || _data.repoName === noRepoAlternative) return;
     // make the request
@@ -68,9 +105,7 @@ export default function() {
     let repoName = null;
     const target = clickEvent.event.target;
     const dataset = clickEvent.event.target.parentNode.parentNode.dataset;
-    // const git_repo = target.parentNode.parentNode.dataset.git_repo;
-    const { start, end, git_repo } = dataset;
-    _getSundays(start, end);
+    const { start, end, git_repo, group_id, group, running_module_id, duration } = dataset;
     if (target.className !== 'vis-item-content') return; // if the selected element is not the wanted one
 
     // if the selected element doesn't have a repo
@@ -84,9 +119,16 @@ export default function() {
     const mergedData = {
       type: REPO_NAME_CHANGED,
       payload: {
-        repoName
+        repoName,
+        group_id,
+        running_module_id,
+        duration,
+        start,
+        end,
+        group,
       }
     };
+    console.log(mergedData)
     setState(mergedData);
   };
 
@@ -97,16 +139,11 @@ export default function() {
 
     const allSundays = [];
     while (start.day(0).isBefore(end)) {
-      allSundays.push(start.clone());
+      allSundays.push(start.clone().format('YYYY/MM/DD'));
       start.add(1, 'weeks');
     }
-    // all sundays has been collected now setState with them to notify all interested observers
-    setState({
-      type: ALL_SUNDAYS_CHANGED,
-      payload: {
-        allSundays
-      }
-    });
+    return allSundays;
+    
   };
 
   return {
@@ -115,6 +152,7 @@ export default function() {
     isSubscribed,
     getState,
     setState,
-    getReadme
+    getReadme,
+    getHistory
   };
 }
