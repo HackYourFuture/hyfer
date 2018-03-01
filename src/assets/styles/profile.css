@@ -12,7 +12,6 @@ html {
   background: #f0f0f0;
   width: 800px;
   margin: 0 auto;
-  margin-top: 8px;
   margin-bottom: 2%;
   transition: opacity 1s;
   -webkit-transition: opacity 1s;
@@ -22,14 +21,14 @@ html {
     background: #3399cc;
     padding: 20px 0;
     font-size: 140%;
-    font-weight: 300;
+    font-weight: 400;
     text-align: center;
     color: #fff;
   }
 
 .profilePage .profileContainer {
   background: #f0f0f0;
-  padding: 6% 4%;
+  padding: 1% 4%;
 }
 
 .profilePage input[type="email"],
@@ -38,9 +37,9 @@ html {
 .profilePage input[type="password"], .profilePage select, .profilePage textarea {
   width: 100%;
   background: #fff;
-  margin-bottom: 4%;
+  margin-bottom: 2%;
   border: 1px solid #ccc;
-  padding: 4%;
+  padding: 2%;
   font-family: 'Open Sans', sans-serif;
   font-size: 95%;
   color: #555;
@@ -54,11 +53,11 @@ html {
     height: 100px;
   }
 
-.profilePage input[type="submit"] {
+  .saveProfile {
   width: 100%;
   background: #3399cc;
   border: 0;
-  padding: 4%;
+  padding: 3%;
   font-family: 'Open Sans', sans-serif;
   font-size: 100%;
   color: #fff;
@@ -67,10 +66,23 @@ html {
   -webkit-transition: background .3s;
 }
 
-.profilePage input[type="submit"]:hover {
-  background: #2288bb;
+.saveProfile:hover {
+  background: #22bb74;
 }
 
 .resetProfile{
-    background: #662344;
+  width: 100%;
+  background: #03161f;
+  border: 0;
+  padding: 3%;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 100%;
+  color: #fff;
+  cursor: pointer;
+  transition: background .3s;
+  -webkit-transition: background .3s;
+}
+
+.resetProfile:hover{
+  background-color: rgb(70, 4, 4);
 }

@@ -21,14 +21,15 @@ export default class Profile extends React.Component {
       "id": store.state.id,
       "username": store.state.username,
       "full_name": store.state.full_name,
+      "group_name": store.state.group_name,
       "role": store.state.role,
       "register_date": store.state.register_date,
+      "email": store.state.email,
       "slack_username": store.state.slack_username,
       "freecodecamp_username": store.state.freecodecamp_username,
-      "email": store.state.email,
       "mobile": store.state.mobile,
-      "group_id": store.state.group_id,
-      "group_name": store.state.group_name
+      "group_id": store.state.group_id
+      
     }
 
     fetch(`http://localhost:3005/api/user/${store.state.id}`, {
@@ -50,7 +51,7 @@ export default class Profile extends React.Component {
         
         <div className={styles.profilePage}>
             <h1>Edit Profile</h1>
-            <div className={`${styles.profileContainer}`}>
+            <div className={styles.profileContainer}>
               <input className={styles.profileName} 
                      type="text" value={store.state.full_name} 
                      placeholder="Name " 
@@ -59,24 +60,24 @@ export default class Profile extends React.Component {
               <select value={store.state.role} 
                       onChange={(e)=> {store.setState({role: e.target.value});
               }}>
-                <option value="guest" disabled selected hidden>Role</option>
+                <option value="guest" disabled hidden>Role</option>
                 <option value="teacher">Teacher</option>
                 <option value="student">Student</option>
               </select>
-              <select value={store.state.group_name} 
-                      onChange={(e)=> {store.setState({group_name: e.target.value});
+              <select defaultValue="Class"
+                      onChange={(e)=> {store.setState({group_name: JSON.parse(e.target.value).name, group_id: +JSON.parse(e.target.value).id});
               }}>
-                <option value="" disabled selected hidden>Class</option>
-                <option value="Class 6">Class 6</option>
-                <option value="Class 7">Class 7</option>
-                <option value="Class 8">Class 8</option>
-                <option value="Class 9">Class 9</option>
-                <option value="Class 10">Class 10</option>
-                <option value="Class 11">Class 11</option>
-                <option value="Class 12">Class 12</option>
-                <option value="Class 13">Class 13</option>
-                <option value="Class 14">Class 14</option>
-                <option value="Class 14">Class 15</option>
+                <option value="Class" disabled hidden>Class</option>
+                <option value='{"name":"Class 6","id":"44"}'>Class 6</option>
+                <option value='{"name":"Class 7","id":"45"}'>Class 7</option>
+                <option value='{"name":"Class 8","id":"46"}'>Class 8</option>
+                <option value='{"name":"Class 9","id":"47"}'>Class 9</option>
+                <option value='{"name":"Class 10","id":"48"}'>Class 10</option>
+                <option value='{"name":"Class 11","id":"49"}'>Class 11</option>
+                <option value='{"name":"Class 12","id":"50"}'>Class 12</option>
+                <option value='{"name":"Class 13","id":"51"}'>Class 13</option>
+                <option value='{"name":"Class 14","id":"52"}'>Class 14</option>
+                <option value='{"name":"Class 15","id":"53"}'>Class 15</option>
               </select>
               <input type="email" 
                      value={store.state.email} 
@@ -105,7 +106,7 @@ export default class Profile extends React.Component {
                      onClick={this.saveProfile}
                      />
               <input className={styles.resetProfile} 
-                     type="submit" 
+                     type="reset" 
                      value="Reset" 
                      />            
             </div>

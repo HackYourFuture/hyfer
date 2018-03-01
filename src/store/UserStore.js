@@ -11,14 +11,14 @@ class store {
 		id:[],
 		username:[],
 		full_name: [],
+		group_name: [],
 		role: [],
 		register_date: [],
+		email: [],
 		slack_username: [],
 		freecodecamp_username: [],
-		email: [],
 		mobile: [],
-		group_id: [],
-		group_name: []
+		group_id: []
 		           
     }; 
 
@@ -52,46 +52,3 @@ class store {
 }
 
 export default new store()
-
-
-
-
-
-
-// class store {
-//     observers = []
-//     // State
-//     state = {
-//         users: []
-        
-//     }; 
-    
-//     setState = (merge) => {
-//         let old = {}
-//         for (var k in merge) {
-//             if (this.state.hasOwnProperty(k)){
-//                 old[k] = this.state[k]
-//             }
-//             this.state[k] = merge[k]
-//         }
-//         for (var f of this.observers){
-//             f(merge, old)
-//         }
-//     }
-    
-//     get = (k) => {
-//         return this.state[k]
-//     }
-    
-//     subscribe = (f) => {
-//         this.observers.push(f)
-//     }
-//     unsubscribe = (f) => {
-//         this.observers = this.observers.filter(e => e !== f)
-//     }
-// }
-
-// export default new store()
-
-
-  
