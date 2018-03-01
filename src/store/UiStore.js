@@ -64,7 +64,8 @@ export default function() {
             isATeacher
           }
         });
-      });
+      })
+      .catch(err => console.log(err));
   };
 
   // Helper methods
