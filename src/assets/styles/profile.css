@@ -3,14 +3,15 @@
 html {
     box-sizing: border-box;
   }
-  *, *:before, *:after {
-    box-sizing: inherit;
-  }
+*, *:before, *:after {
+  box-sizing: inherit;
+}
   
-
 .profilePage {
   background: #f0f0f0;
-  width: 800px;
+  width: 70%;
+  max-width: 800px;
+  min-width: 375px;
   margin: 0 auto;
   margin-bottom: 2%;
   transition: opacity 1s;
@@ -18,13 +19,13 @@ html {
 }
 
 .profilePage h1 {
-    background: #3399cc;
-    padding: 20px 0;
-    font-size: 140%;
-    font-weight: 400;
-    text-align: center;
-    color: #fff;
-  }
+  background: #3399cc;
+  padding: 20px 0;
+  font-size: 140%;
+  font-weight: 400;
+  text-align: center;
+  color: #fff;
+}
 
 .profilePage .profileContainer {
   background: #f0f0f0;
@@ -54,35 +55,35 @@ html {
   }
 
   .saveProfile {
-  width: 100%;
-  background: #3399cc;
-  border: 0;
-  padding: 3%;
-  font-family: 'Open Sans', sans-serif;
-  font-size: 100%;
-  color: #fff;
-  cursor: pointer;
-  transition: background .3s;
-  -webkit-transition: background .3s;
-}
-
-.saveProfile:hover {
-  background: #22bb74;
-}
-
-.resetProfile{
-  width: 100%;
-  background: #03161f;
-  border: 0;
-  padding: 3%;
-  font-family: 'Open Sans', sans-serif;
-  font-size: 100%;
-  color: #fff;
-  cursor: pointer;
-  transition: background .3s;
-  -webkit-transition: background .3s;
-}
-
-.resetProfile:hover{
-  background-color: rgb(70, 4, 4);
-}
+    width: 100%;
+    background: #3399cc;
+    border: 0;
+    padding: 3%;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 100%;
+    color: #fff;
+    cursor: pointer;
+    transition: background .3s;
+    -webkit-transition: background .3s;
+  }
+  
+  .saveProfile:hover {
+    background: #22bb74;
+  }
+  
+  .resetProfile{
+    width: 100%;
+    background: #03161f;
+    border: 0;
+    padding: 3%;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 100%;
+    color: #fff;
+    cursor: pointer;
+    transition: background .3s;
+    -webkit-transition: background .3s;
+  }
+  
+  .resetProfile:hover{
+    background-color: rgb(70, 4, 4);
+  }

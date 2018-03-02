@@ -2,6 +2,7 @@ import React from 'react';
 import store from '../../store/UserStore';
 import styles from '../../assets/styles/users.css';
 import { Link } from 'react-router-dom';
+import Moment from 'moment';
 
 import FaGraduationCap from 'react-icons/lib/fa/graduation-cap';
 import FaClockO from 'react-icons/lib/fa/clock-o';
@@ -10,6 +11,7 @@ import FaSlack from 'react-icons/lib/fa/slack';
 import FaFire from 'react-icons/lib/fa/fire';
 import FaGithub from 'react-icons/lib/fa/github';
 import MdClass from 'react-icons/lib/md/class';
+import FaMobile from 'react-icons/lib/fa/mobile';
 
 
 export default class Users extends React.Component {
@@ -45,13 +47,14 @@ export default class Users extends React.Component {
       });
   }
 
-  //evethandler for SEARCH.
-  filterList = function(event) {
-    var updatedList = store.state.users;
+  //eventhandler for SEARCH. it checks the values in 'allUserValues'
+  searchUser = function(event) {
+    let updatedList = store.state.users;
     
     updatedList = updatedList.filter(function(item) {
+      let allUserValues = item.full_name + item.username + item.group_name + item.role + item.slack_username;
       return (
-        item.username.toLowerCase().search(event.target.value.toLowerCase()) !==-1
+        allUserValues.toLowerCase().search(event.target.value.toLowerCase()) !==-1 
       );
     });
     store.setState({
@@ -59,35 +62,36 @@ export default class Users extends React.Component {
     });
   };
  
-  render() {
+  render() { 
     return (
-      <div className={styles.filterList}>
+      <div className={styles.userSearchDiv}>
         <input
-          className={styles.userListInput}
+          className={styles.userSearchBox}
           type="text"
           placeholder="lookup someone"
-          onChange={this.filterList}
+          onChange={this.searchUser}
         />
 
-        <ul className={styles.userList}>
+        <ul className={styles.userContainer}>
           {store.state.filteredUsers.map((user, i) => (
             <React.Fragment key={user.id}>
-              <li className={styles.user}>
+              <li className={styles.userInformations}>
                 <div>
                   <img className={styles.userAvatar} 
                        src={`https://avatars.githubusercontent.com/${user.username}`} 
                        alt={`Profile - ${user.username}`}
                        onError={(e)=>{e.target.src=`https://api.adorable.io/avatars/100/${user.full_name}`} }/>
                   <div className ={styles.userName}>{user.full_name}</div>
-                  <div><MdClass />{user.group_name}</div>
-                  <div><FaGraduationCap/>{user.role}</div>
-                  <div><FaClockO />{user.register_date}</div>
-                  <div><MdEmail />{user.email}</div>
-                  <div><FaSlack />{user.slack_username}</div>
-                  <div><FaFire />{user.freecodecamp_username}</div>
-                  <div><FaGithub />{user.username}</div>
+                  <div className={user.group_name ? '':styles.hidden}><MdClass />{user.group_name}</div>
+                  <div className={user.role? '':styles.hidden}><FaGraduationCap/>{user.role}</div>
+                  <div className={user.register_date ? '':styles.hidden}><FaClockO />{new Moment(user.register_date).format('DD MMMM YYYY')}</div>
+                  <div className={user.email ? '':styles.hidden}><MdEmail />{user.email}</div>
+                  <div className={user.slack_username ? '':styles.hidden}><FaSlack />{user.slack_username}</div>
+                  <div className={user.freecodecamp_username ? '':styles.hidden}><FaFire />{user.freecodecamp_username}</div>
+                  <div className={user.username ? '':styles.hidden}><FaGithub />{user.username}</div>
+                  <div className={user.mobile ? '':styles.hidden}><FaMobile />{user.mobile}</div>
                 </div>
-                <form className = {styles.editUser} onClick={()=>{ 
+                <form className = {styles.editUserButton} onClick={()=>{ 
                   console.log("FROM EDIT BUTTON",user)
                   store.setState({
                     id: user.id,
