@@ -48,7 +48,7 @@ export default class Header extends Component {
     });
 
     
-    if (token) {
+    if (login) {
       uiStore.getUserInfo();
     }
   };
