@@ -20,12 +20,10 @@ export default class StudentWithWeeks extends React.Component{
     //this function will render check boxes for each student base on weeks
     renderWeeks(){
 
-        const { allHistory, keys } = this.props;
+        const { allHistory, students } = this.props;
 
-        for(var i = 0; i < keys.length; i++){
-
-            var studentHistory = allHistory[keys[i]];
-            
+        for(var i = 0; i < students.length; i++){
+            var studentHistory = allHistory[students[i]];
         };
 
         const weeks = studentHistory.map((week, duration) =>

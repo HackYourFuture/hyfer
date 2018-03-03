@@ -75,17 +75,22 @@ font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 .signInButton {
-  display: block;
+  display: inline-block;
   width: 80%;
   padding: 3px;
   font-size: 1.5rem;
   text-decoration: none;
   text-align: center;
   background-color: white;
-  color: rgb(50, 73, 204);
+  color: rgb(62, 72, 133);
   border-radius: 5px;
   box-shadow: 0 2px 10px;
-  transition: all 1s ease;
+  transition: all 0.5s ease;
+}
+
+.signInButton:hover{
+  background-color: white;
+  color: rgb(31, 35, 61);
 }
 
 .signInButton:active {

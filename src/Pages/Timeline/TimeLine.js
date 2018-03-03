@@ -9,10 +9,14 @@ import ModuleReadme from '../../components/ModuleReadme/ModuleReadme';
 import Attendance from '../../components/Attendance/Attendance';
 import Button from '../../Helpers/Button/Button';
 import AddClassForm from '../../components/AddClassForm/AddClassForm';
+
 import {
   MODAL_STATE_CHANGED,
   TIMELINE_GROUPS_CHANGED,
   TIMELINE_ITEMS_CHANGED,
+  READ_ME_CHANGED,
+  REPO_NAME_CHANGED,
+  HISTORY_CHANGED,
   timelineStore,
   moduleInfoStore,
   LOGIN_STATE_CHANGED,
@@ -33,7 +37,13 @@ export default class TimeLine extends Component {
     groups: [],
     items: [],
     isModalOpen: false,
-    isLoggedIn: false
+    isLoggedIn: false,
+    readme: null,
+    repoName: null,
+    group_name: null,
+    history: null,
+    duration: null,
+    students: null,
   };
 
   componentDidMount() {
@@ -52,6 +62,22 @@ export default class TimeLine extends Component {
           break;
       }
     });
+
+    moduleInfoStore.subscribe(mergedData => {
+      if (mergedData.type === REPO_NAME_CHANGED) {
+        this.setState({ repoName: mergedData.payload.repoName });
+      } else if (mergedData.type === READ_ME_CHANGED) {
+        this.setState({ readme: mergedData.payload.readme });
+      } else if (mergedData.type === HISTORY_CHANGED) {
+        this.setState({
+          history: mergedData.payload.history,
+          students: mergedData.payload.students,
+          duration: mergedData.payload.duration,
+          group_name: mergedData.payload.group_name,
+        })                
+      };
+    });
+
     uiStore.subscribe(mergedData => {
       if (mergedData.type === LOGIN_STATE_CHANGED) {
         this.setState({ isLoggedIn: mergedData.payload.isLoggedIn });
@@ -68,7 +94,7 @@ export default class TimeLine extends Component {
   }
 
   render() {
-    const { items, groups } = this.state;
+    const { items, groups, students, group_name, duration, history, repoName, readme } = this.state;
     let btn;
     if (this.state.isATeacher) {
       btn = (
@@ -92,7 +118,6 @@ export default class TimeLine extends Component {
             <AddClassForm />
           </Modal>
           <ComponentTimeLine
-            // clickHandler={moduleInfoStore.getReadme}
             clickHandler={moduleInfoStore.getHistory}
             items={[...items]}
             options={options}
@@ -100,20 +125,27 @@ export default class TimeLine extends Component {
           />
           <Tabs>
             <TabList className={styles.tabs}>
-              <Tab className={styles.tab}>Readme</Tab>
-              <Tab className={styles.tab}>Attendance</Tab>
+              <Tab className={styles.tab} 
+              >Readme</Tab>
+              <Tab className={styles.tab}
+              >Attendance</Tab>
             </TabList>
 
             <TabPanel>
-              <div>
-                <ModuleReadme />
-              </div>
+                <ModuleReadme 
+                readme={readme}
+                repoName={repoName}
+                />
             </TabPanel>
 
             <TabPanel>
-              <div>
-                <Attendance />
-              </div>
+                <Attendance 
+                repoName={repoName}
+                history={history}
+                duration={duration}
+                group_name={group_name}
+                students={students}
+                />
             </TabPanel>
           </Tabs>
         </main>

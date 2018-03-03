@@ -1,7 +1,7 @@
 import React from 'react';
 import StudentWithWeeks from './StudentWithWeeks';
 import styles from '../../assets/styles/attendance.css';
-//import AttendObs from '../../store/AttendanceStore';
+import Notifications, {notify} from 'react-notify-toast';
 import {
     moduleInfoStore,
     HISTORY_CHANGED
@@ -14,56 +14,64 @@ export default class Attendance extends React.Component{
     state = {
         edit_Mode: false,
         repoName: null,
-        group_id: null,
         group_name: null,
-        running_module_id: null,
         history: null,
-        keys: null,
+        students: null,
         duration: null,
     };
 
     // Subscribing to the module info store for getting "history"
     componentDidMount = () => {
+
+        // gtting data when component is mounted
         moduleInfoStore.subscribe(mergedData => {
             if (mergedData.type === HISTORY_CHANGED) {
                 this.setState({
                     history: mergedData.payload.history,
-                    keys: mergedData.payload.keys,
                     duration: mergedData.payload.duration,
-                    group_id: mergedData.payload.group_id,
                     group_name: mergedData.payload.group_name,
                     repoName: mergedData.payload.repoName,
-                    running_module_id: mergedData.payload.running_module_id,
+                    students: mergedData.payload.students,
                 })                
             }
+        })
+
+        // getting selected module update from timeline component
+        const { history, students, duration, repoName, group_name } = this.props;
+        this.setState({
+            repoName: repoName,
+            group_name: group_name,
+            history: history,
+            students: students,
+            duration: duration,
         })
     };
 
     render(){
 
-        const { history, keys, duration, repoName, group_name } = this.state;
+        const { history, students, duration, repoName, group_name } = this.state;
         let title = null;
         let content = null;
         let buttons = null;
         if (repoName === "NOREPO") {
-            content = (<h3 className={styles.message}>Oops! there is no History</h3>)
-        } else if (keys == null) {
-            content = (<h3 className={styles.message}>please choose a module</h3>)
-        } else if (history.length === 0 ){
-            content = (<h3 className={styles.message}>there is no history for this module</h3>)
+            content = (<h2 className={styles.message}>Oops! there is no History.</h2>)
+        } else if (students === null || repoName === undefined) {
+            content = (<h2 className={styles.message}>please choose a module</h2>)
+        } else if (students.length === 0 ){
+            content = (<h2 className={styles.message}>There is no student in this class.</h2>)
         } else {
             content= (
-            keys.map((student) =>
+            students.map((student) =>
             <div className={styles.Attendant} key={student}>
                 <div className={styles.AttendantName}>
                     <h3>{student}</h3>
                 </div>
                 <StudentWithWeeks 
                 allHistory={history}
-                keys={keys}
                 duration={duration}
                 onChange={(event) => { this.handleCheckboxChange( student, event )}}
                 student={student}
+                students={students}
                 />
             </div>)
             )
@@ -126,6 +134,7 @@ export default class Attendance extends React.Component{
                 {title}
                 {content}
                 {buttons}
+                <Notifications />
             </div>
         )
     };
@@ -142,7 +151,6 @@ export default class Attendance extends React.Component{
         stack.push(student, week, name);
 
         this.makeChange(student, week, name);
-
     }
 
     makeChange = (student, week, name) => {
@@ -178,6 +186,7 @@ export default class Attendance extends React.Component{
             }, 
           })
         .then(response => response.json())
+        .then(notify.show('Your changes are successfully Saved !', 'success'))
         .catch(err => console.log(err))
 
         this.setState({
