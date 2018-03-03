@@ -11,26 +11,56 @@ html {
   -webkit-tap-highlight-color: transparent;
 }
 
-.userList{
+.userSearchBox {
+  margin-left: 63px;
+  line-height: 2;
+  font-size: 18px;
+  height: auto;
+  padding-left: 20px;
+  border: none;
+  border-bottom: 1px solid rgb(179, 179, 179);
+  background-color: transparent;
+}
+
+.userContainer{
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;   
   list-style: none; 
   font-family: Roboto, "Helvetica Neue", sans-serif;
-
 }
 
-.user{  
+svg{
+  height: 15px;
+  fill: rgba(88, 88, 88, 0.74);
+}
+
+.hidden { 
+  display:none; 
+}
+
+.userInformations{  
   position: relative;
   color: rgba(0,0,0,0.54);
   background-color: rgb(255,255,255);
   border-radius: 2px;
-  min-width: 30%;
-  height: 200px;
-  margin: 8px;
+  width: 32%;
+  height: 250px;
+  margin: 8px 4px;
   padding: 8px;
   font-size: 14px;
   box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12);
+}
+
+.userInformations div{
+  margin: 3px;
+}
+
+.userName{
+  color: rgba(8, 8, 8, 0.87);
+  font-size: 1.4em;
+  padding-left: 10px;
+  padding-top:5px;
 }
 
 .userAvatar{
@@ -40,78 +70,44 @@ html {
   box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
 }
 
-.editUser{
+.editUserButton{
   position: absolute;
   bottom: 10px;
   right: 10px;
   font-size: 16px;
-  -webkit-transition: background-color 1s ease-out;
-  -moz-transition: background-color 1s ease-out;
-  -o-transition: background-color 1s ease-out;
-  transition: background-color 1s ease-out;
+  -webkit-transition: background-color 0.3s ease-out;
+  -moz-transition: background-color 0.3s ease-out;
+  -o-transition: background-color 0.3s ease-out;
+  transition: background-color 0.3s ease-out;
 }
-.editUser:hover { 
-  background-color: rgb(190, 190, 187);
+
+.editUserButton button {
+  background-color: transparent; 
+  border: none;
+  color: rgba(0,0,0,0.54);
+  padding: 8px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  margin: 4px 2px;
+  cursor: pointer;
+  
+}
+.editUserButton:hover { 
+  background-color: rgb(212, 212, 211);
+  border-radius: 2px;
 }  
 
-.userName{
-  color: rgba(8, 8, 8, 0.87);
-  font-size: 1.2em;
-  margin-left: 10px;
-}
 
-@media only screen and (max-width:699px){
-  .user{
-      width:90%;
+@media only screen and (min-width:768px) and (max-width:1024px ){
+  .userInformations{
+      width:48%;
   }
 }
 
-@media only screen and (min-width:700px) and (max-width:1000px ){
-  .user{
-      width:45%;
+@media only screen and (max-width:768px){
+  .userInformations{
+      width:96%;
   }
-}
-
-
-
-.userListInput {
-  margin-left: 60px;
-  line-height: 2;
-  font-size: 18px;
-  height: auto;
-  padding-left: 20px;
-  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
-}
-
-.editUser button {
-  background-color: rgb(223, 224, 224); /* Green */
-  border: none;
-  color: rgb(104, 100, 100);
-  padding: 5px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 12px;
-  margin: 4px 2px;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.editUser button {
-  background-color: rgb(223, 224, 224); /* Green */
-  border: none;
-  color: rgb(104, 100, 100);
-  padding: 5px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 12px;
-  margin: 4px 2px;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-svg{
-  height: 15px;
-  fill: rgba(158, 158, 158, 0.74);
 }
