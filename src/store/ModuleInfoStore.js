@@ -18,10 +18,6 @@ export default function() {
     _observers = _observers.filter(item => item !== observer);
   };
 
-  const isSubscribed = observer => {
-    return _observers.includes(observer);
-  };
-
   const setState = merge => {
     let old = {};
     for (let changedItemKey in merge.payload) {
@@ -30,7 +26,6 @@ export default function() {
       }
       _data[changedItemKey] = merge.payload[changedItemKey];
     }
-
     _observers.forEach(observer => observer(merge, old));
   };
 
@@ -59,16 +54,14 @@ export default function() {
     })
     .then(response => response.json())
     .then(response => {
-      const keys = Object.keys(response)
+      const students = Object.keys(response)
 
       setState({
         type: HISTORY_CHANGED,
         payload: {
           history: response,
-          keys: keys,
+          students: students,
           duration: duration,
-          group_id: group_id,
-          running_module_id: running_module_id,
           repoName: repoName,
           group_name: group
         }
@@ -134,20 +127,17 @@ export default function() {
     // note: not passing just a string because moment is throwing a warning about the format of the string
     const start = moment(new Date(startString));
     const end = moment(new Date(endString));
-
     const allSundays = [];
     while (start.day(0).isBefore(end)) {
       allSundays.push(start.clone().format('YYYY/MM/DD'));
       start.add(1, 'weeks');
     }
     return allSundays;
-    
   };
 
   return {
     subscribe,
     unsubscribe,
-    isSubscribed,
     getState,
     setState,
     getReadme,

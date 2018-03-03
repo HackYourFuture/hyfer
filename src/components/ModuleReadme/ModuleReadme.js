@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import ReactHtmlParser from 'react-html-parser';
 
 import styles from '../../assets/styles/moduleReadme.css';
-import {
-  moduleInfoStore,
-  READ_ME_CHANGED,
-  REPO_NAME_CHANGED
-} from '../../store';
+// import {
+//   moduleInfoStore,
+//   READ_ME_CHANGED,
+//   REPO_NAME_CHANGED
+// } from '../../store';
 
 const BASE_URL = 'https://github.com/HackYourFuture';
 
@@ -16,18 +16,20 @@ export default class ModuleInfo extends Component {
     repoName: null,
   };
 
-  componentDidMount = () => {
-    moduleInfoStore.subscribe(mergedData => {
-      if (mergedData.type === REPO_NAME_CHANGED) {
-        this.setState({ repoName: mergedData.payload.repoName });
-      } else if (mergedData.type === READ_ME_CHANGED) {
-        this.setState({ readme: mergedData.payload.readme });
-      }
-    });
-  };
+  // componentDidMount = () => {
+  //   moduleInfoStore.subscribe(mergedData => {
+  //     if (mergedData.type === REPO_NAME_CHANGED) {
+  //       this.setState({ repoName: mergedData.payload.repoName });
+  //     } else if (mergedData.type === READ_ME_CHANGED) {
+  //       this.setState({ readme: mergedData.payload.readme });
+  //     }
+      
+  //   });
+  // };
 
   render() {
-    const { repoName, readme } = this.state;
+    //const { repoName, readme } = this.state;
+    const { repoName, readme } = this.props;
     let linkToRepo = null; // filled conditionally
     let content = readme ? readme : null;
 
