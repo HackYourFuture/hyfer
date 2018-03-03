@@ -1,15 +1,8 @@
 import React from 'react';
 import Checkbox from '../../Helpers/Checkbox/Checkbox';
-import AttendObs from '../../store/AttendanceStore';
 import styles from '../../assets/styles/attendance.css';
 
 export default class StudentWithWeeks extends React.Component{
-
-    componentWillMount = () => {
-        this.subscription = AttendObs.subscribe(state => {
-            this.setState(state);
-        })
-    };
 
     render(){
         return(
