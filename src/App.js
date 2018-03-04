@@ -11,9 +11,16 @@ import Profile from './Pages/Users/Profile';
 import cookie from 'react-cookies';
 
 class App extends Component {
+  
   componentWillMount() {
-    const token = JSON.parse(cookie.load('token'));
-    console.log(token);
+    
+    let token = cookie.load('token')
+    if(token && typeof token != 'undefined'){
+      token = JSON.parse(token)
+    }
+    else{
+      token = ''
+    }
     localStorage.setItem('token', token);
   }
 
@@ -25,7 +32,7 @@ class App extends Component {
           <Switch>
             <Route path="/timeline" exact component={TimeLine} />
             <Route path="/modules" exact component={Modules} />
-            <Route path="/users" exact component={Users} />
+            <Route path="/users" exact component={Users} /> 
             <Route path="/profile" exact component={Profile} />
             <Redirect from="/" to="/timeline" />
           </Switch>

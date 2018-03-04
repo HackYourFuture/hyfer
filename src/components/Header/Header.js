@@ -9,12 +9,13 @@ import {
   ISTEACHER_STATE_CHANGED,
   LOGIN_STATE_CHANGED
 } from '../../store';
+import cookie from 'react-cookies'
 
 export default class Header extends Component {
   state = {
     isLoggedIn: false,
     isATeacher: false,
-    avatarUrl: null
+    avatarUrl: ''
   };
 
   componentDidMount = () => {
@@ -34,10 +35,28 @@ export default class Header extends Component {
       }
     });
 
-    if (localStorage.token) {
+    const token = localStorage.getItem("token")
+    let login = false
+    if(token && token != '')
+      login = true
+
+    uiStore.setState({
+      type: LOGIN_STATE_CHANGED,
+      payload: {
+        isLoggedIn: login
+      }
+    });
+
+    
+    if (login) {
       uiStore.getUserInfo();
     }
   };
+
+  SignOut = ()=>{
+    localStorage.removeItem('token')
+    cookie.save('token' , '') 
+  }
 
   render() {
     let user = null;
@@ -48,16 +67,19 @@ export default class Header extends Component {
             <span className={styles.visitor}>Visitor</span>
           </div>
           <div className={styles.signButtonWrapper}>
-            <a href="/auth/github" className={styles.signInButton}>
+            <a href="http://localhost:3005/auth/github" className={styles.signInButton}>
               Sign in
             </a>
           </div>
         </div>
       );
     } else {
-      const { avatarUrl } = this.state;
+      const { avatarUrl } = this.state.avatarUrl;
       user = (
-        <img src={avatarUrl} alt="user icon" className={styles.userIcon} />
+        <div>
+          <img src={avatarUrl} alt="user icon" className={styles.userIcon} />
+          <a href="http://localhost:3000/" onClick={this.SignOut} style={{color:'#fff'}}>Sign Out</a>
+        </div>
       );
     }
     return (
