@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ReactHtmlParser from 'react-html-parser';
-
 import styles from '../../assets/styles/moduleReadme.css';
 // import {
 //   moduleInfoStore,
@@ -11,10 +10,10 @@ import styles from '../../assets/styles/moduleReadme.css';
 const BASE_URL = 'https://github.com/HackYourFuture';
 
 export default class ModuleInfo extends Component {
-  state = {
-    readme: null,
-    repoName: null,
-  };
+  // state = {
+  //   readme: null,
+  //   repoName: null,
+  // };
 
   // componentDidMount = () => {
   //   moduleInfoStore.subscribe(mergedData => {
@@ -33,14 +32,15 @@ export default class ModuleInfo extends Component {
     let linkToRepo = null; // filled conditionally
     let content = readme ? readme : null;
 
-    if (!repoName) {
+    //if (!repoName) {
       //repo is null => nothing is clicked yet
-      content = (
-        <div className={styles.readmeNoRepo}>
-          <h2>select an item to view it's github readme</h2>
-        </div>
-      )
-    } else if (repoName === 'NOREPO') {
+      // content = (
+      //   <div className={styles.readmeNoRepo}>
+      //     <h2>select an item to view it's github readme</h2>
+      //   </div>
+      // )
+    //} else 
+    if (repoName === 'NOREPO') {
       //A module is clicked but it has no repo
       content = (
         <div className={styles.readmeNoRepo}>

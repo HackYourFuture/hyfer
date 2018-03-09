@@ -5,25 +5,23 @@ export default class Checkbox extends React.Component{
 
     render(){
         return(
-            <div className={styles.Checkbox}>
+            <div className={styles.center}>
                 <label>
-                    <input type='checkBox' className={this.props.className}
+                    <input type='checkBox' className={styles.homework}
                      checked={this.props.homeworkChecked(this.props.id, this.props.student)}
                      onChange={this.props.onChange}
                      id={this.props.id}
                      name={'homework'}
                     />
-                    <span>HomWork</span>
                 </label>
 
                 <label>
-                    <input type='checkBox' className={this.props.className}
+                    <input type='checkBox' className={styles.attendance}
                      onChange={this.props.onChange}
                      checked={this.props.AttendanceChecked(this.props.id, this.props.student)}
                      id={this.props.id}
                      name={'attendance'}
                     />
-                    <span>Attendance</span>
                 </label>
             </div>
         );

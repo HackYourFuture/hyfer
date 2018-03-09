@@ -68,6 +68,7 @@ export default class TimeLine extends Component {
         this.setState({ repoName: mergedData.payload.repoName });
       } else if (mergedData.type === READ_ME_CHANGED) {
         this.setState({ readme: mergedData.payload.readme });
+        console.log(this.state)
       } else if (mergedData.type === HISTORY_CHANGED) {
         this.setState({
           history: mergedData.payload.history,
@@ -78,6 +79,8 @@ export default class TimeLine extends Component {
       };
     });
 
+    moduleInfoStore.defaultReadme("curriculum")
+    
     uiStore.subscribe(mergedData => {
       if (mergedData.type === LOGIN_STATE_CHANGED) {
         this.setState({ isLoggedIn: mergedData.payload.isLoggedIn });

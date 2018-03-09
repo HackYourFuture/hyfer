@@ -25,6 +25,8 @@
 
 .tabs{clear: both;
   display: block;
+  z-index: 10;
+  margin-bottom: 5px;
 }
 
 .tab{float: left;
