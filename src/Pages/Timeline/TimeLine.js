@@ -68,7 +68,6 @@ export default class TimeLine extends Component {
         this.setState({ repoName: mergedData.payload.repoName });
       } else if (mergedData.type === READ_ME_CHANGED) {
         this.setState({ readme: mergedData.payload.readme });
-        console.log(this.state)
       } else if (mergedData.type === HISTORY_CHANGED) {
         this.setState({
           history: mergedData.payload.history,
@@ -109,7 +108,8 @@ export default class TimeLine extends Component {
         </Button>
       );
     }
-    if (items.length !== 0) {
+    if (items.length === 0) { return <img src={loader} alt="loader icon" className={styles.loader} />;
+    } else if (this.state.isLoggedIn && this.state.isATeacher){
       return (
         <main>
           {btn}
@@ -128,9 +128,9 @@ export default class TimeLine extends Component {
           />
           <Tabs>
             <TabList className={styles.tabs}>
-              <Tab className={styles.tab} 
+              <Tab className={styles.ReadmeTab} 
               >Readme</Tab>
-              <Tab className={styles.tab}
+              <Tab className={styles.AttendanceTab}
               >Attendance</Tab>
             </TabList>
 
@@ -153,8 +153,26 @@ export default class TimeLine extends Component {
           </Tabs>
         </main>
       );
-    } else {
-      return <img src={loader} alt="loader icon" className={styles.loader} />;
-    }
+    } else { 
+      // is not a teacher or not logged in 
+      return (
+        <main>
+          <ComponentTimeLine
+            clickHandler={moduleInfoStore.getHistory}
+            items={[...items]}
+            options={options}
+            groups={[...groups]}
+          />
+          <div>
+            <div>
+                <ModuleReadme 
+                readme={readme}
+                repoName={repoName}
+                />
+            </div>
+          </div>
+        </main>
+      );
+    } 
   }
 }

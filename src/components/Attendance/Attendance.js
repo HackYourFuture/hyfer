@@ -56,7 +56,7 @@ export default class Attendance extends React.Component{
         if (repoName === "NOREPO") {
             content = (<h2 className={styles.message}>Oops! there is no History.</h2>)
         } else if (students === null || repoName === undefined) {
-            content = (<h2 className={styles.message}>please choose a module</h2>)
+            content = (<h2 className={styles.message}>Please choose a module</h2>)
         } else if (students.length === 0 ){
             content = (<h2 className={styles.message}>There is no student in this class.</h2>)
         } else {
@@ -66,19 +66,21 @@ export default class Attendance extends React.Component{
                 <div className={styles.AttendantName}>
                     <h3>{student}</h3>
                 </div>
-                <StudentWithWeeks 
-                allHistory={history}
-                duration={duration}
-                onChange={(event) => { this.handleCheckboxChange( student, event )}}
-                student={student}
-                students={students}
-                />
+                <div className={styles.checkboxes}>
+                    <StudentWithWeeks 
+                    allHistory={history}
+                    duration={duration}
+                    onChange={(event) => { this.handleCheckboxChange( student, event )}}
+                    student={student}
+                    students={students}
+                    />
+                </div>
             </div>)
             )
 
             title = (
                 <div className={styles.Title}>
-                    <h3>Attendance - {repoName.charAt(0).toUpperCase() + repoName.slice(1)}</h3>
+                    <h3 className={styles.Title_inner}>Attendance - {repoName.charAt(0).toUpperCase() + repoName.slice(1)}</h3>
                 </div>
             )
 
@@ -108,8 +110,15 @@ export default class Attendance extends React.Component{
         return(
             <div>
                 {title}
-                {content}
-                {buttons}
+                <div >
+                    <div className={styles.group_name}>
+                        <h3 className={styles.group_name_inner}>{group_name}</h3>
+                    </div>
+                    <div className={styles.wrapper}>
+                        {content}
+                    </div>
+                    {buttons}
+                </div>
                 <Notifications />
             </div>
         )

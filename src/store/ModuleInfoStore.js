@@ -140,9 +140,7 @@ export default function() {
       .then(res => res.json())
       .then(readmeEncoded => {
         const readmeDecoded = atob(readmeEncoded.content);
-        const readmeHtml = marked(readmeDecoded);
-        console.log(readmeHtml,defaultRepo)
-        
+        const readmeHtml = marked(readmeDecoded);        
 
         setState({
           type: READ_ME_CHANGED,
