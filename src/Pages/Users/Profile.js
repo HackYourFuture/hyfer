@@ -2,6 +2,7 @@ import React from 'react';
 import store from '../../store/UserStore';
 import styles from '../../assets/styles/profile.css';
 import { Link } from 'react-router-dom';
+import Notifications, {notify} from 'react-notify-toast';
 
 
 export default class Profile extends React.Component {
@@ -44,6 +45,7 @@ export default class Profile extends React.Component {
       body: JSON.stringify(updatedUser), 
     })
       .then(response => console.log("RESPONSE", response))
+      .then(notify.show('Toasty!'))
       .catch((error) => {
         console.log(error)
         throw new Error('Problem with Server :  PATCH DATA')
@@ -70,6 +72,7 @@ export default class Profile extends React.Component {
       return (
       
       <div className={styles.profilePage}>
+          <Notifications />
           <h1>Edit Profile</h1>
           <div className={styles.profileContainer}>
             <input className={styles.profileName} 
@@ -133,6 +136,7 @@ export default class Profile extends React.Component {
                     onClick={this.resetProfile} 
                     />                        
           </div>
+          
       </div>    
       )
   }
