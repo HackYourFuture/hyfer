@@ -15,7 +15,7 @@ export default class Header extends Component {
   state = {
     isLoggedIn: false,
     isATeacher: false,
-    avatarUrl: ''
+    avatarUrl: null,
   };
 
   componentDidMount = () => {
@@ -23,6 +23,7 @@ export default class Header extends Component {
       switch (mergedData.type) {
         case AVATAR_URL_CHANGED:
           this.setState({ avatarUrl: mergedData.payload.avatarUrl });
+          console.log(this.state)
           break;
         case LOGIN_STATE_CHANGED:
           this.setState({ isLoggedIn: mergedData.payload.isLoggedIn });
@@ -37,7 +38,7 @@ export default class Header extends Component {
 
     const token = localStorage.getItem("token")
     let login = false
-    if(token && token != '')
+    if(token && token !== '')
       login = true
 
     uiStore.setState({
@@ -74,11 +75,10 @@ export default class Header extends Component {
         </div>
       );
     } else {
-      const { avatarUrl } = this.state.avatarUrl;
       user = (
-        <div>
-          <img src={avatarUrl} alt="user icon" className={styles.userIcon} />
-          <a href="http://localhost:3000/" onClick={this.SignOut} style={{color:'#fff'}}>Sign Out</a>
+        <div className={styles.signed_in}>
+          <img src={this.state.avatarUrl} alt="user icon" className={styles.userIcon} />
+          <a href="http://localhost:3000/" onClick={this.SignOut} style={{color:'#9da2a9'}}>Sign Out</a>
         </div>
       );
     }

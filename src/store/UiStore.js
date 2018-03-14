@@ -4,7 +4,6 @@ import {
   LOGIN_STATE_CHANGED
 } from './';
 
-const BASE_URL = 'https://api.github.com';
 const CURRENT_USER_INFO_URL = 'http://localhost:3005/api/user';
 
 export default function() {
@@ -69,20 +68,15 @@ export default function() {
   };
 
   // Helper methods
-
   const _getProfileImg = username => {
-    return fetch(`${BASE_URL}/users/${username}`)
-      .then(blob => blob.json())
-      .then(jsonRes => {
-        const avatarUrl = jsonRes.avatar_url;
-        //notify avatar url changed
-        setState({
-          type: AVATAR_URL_CHANGED,
-          payload: {
-            avatarUrl
-          }
-        });
-      });
+    const avatarUrl = `https://avatars.githubusercontent.com/${username}`;
+    //notify avatar url changed
+    setState({
+      type: AVATAR_URL_CHANGED,
+      payload: {
+        avatarUrl
+      }
+    });
   };
 
   return {

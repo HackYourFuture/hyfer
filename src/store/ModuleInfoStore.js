@@ -135,12 +135,37 @@ export default function() {
     return allSundays;
   };
 
+  const defaultReadme = (defaultRepo) => {
+    fetch(`${BASE_URL}/${defaultRepo}/readme`)
+      .then(res => res.json())
+      .then(readmeEncoded => {
+        const readmeDecoded = atob(readmeEncoded.content);
+        const readmeHtml = marked(readmeDecoded);        
+
+        setState({
+          type: READ_ME_CHANGED,
+          payload: {
+            readme: readmeHtml,
+            repoName: defaultRepo,
+          }
+        });
+        setState({
+          type: REPO_NAME_CHANGED,
+          payload: {
+            repoName: defaultRepo,
+          }
+        });
+      })
+      .catch(err => console.log(err));
+  }
+
   return {
     subscribe,
     unsubscribe,
     getState,
     setState,
     getReadme,
-    getHistory
+    getHistory,
+    defaultReadme
   };
 }

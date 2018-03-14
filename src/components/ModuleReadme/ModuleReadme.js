@@ -1,46 +1,18 @@
 import React, { Component } from 'react';
 import ReactHtmlParser from 'react-html-parser';
-
 import styles from '../../assets/styles/moduleReadme.css';
-// import {
-//   moduleInfoStore,
-//   READ_ME_CHANGED,
-//   REPO_NAME_CHANGED
-// } from '../../store';
 
 const BASE_URL = 'https://github.com/HackYourFuture';
 
 export default class ModuleInfo extends Component {
-  state = {
-    readme: null,
-    repoName: null,
-  };
-
-  // componentDidMount = () => {
-  //   moduleInfoStore.subscribe(mergedData => {
-  //     if (mergedData.type === REPO_NAME_CHANGED) {
-  //       this.setState({ repoName: mergedData.payload.repoName });
-  //     } else if (mergedData.type === READ_ME_CHANGED) {
-  //       this.setState({ readme: mergedData.payload.readme });
-  //     }
-      
-  //   });
-  // };
 
   render() {
-    //const { repoName, readme } = this.state;
+
     const { repoName, readme } = this.props;
-    let linkToRepo = null; // filled conditionally
+    let linkToRepo = null; 
     let content = readme ? readme : null;
 
-    if (!repoName) {
-      //repo is null => nothing is clicked yet
-      content = (
-        <div className={styles.readmeNoRepo}>
-          <h2>select an item to view it's github readme</h2>
-        </div>
-      )
-    } else if (repoName === 'NOREPO') {
+    if (repoName === 'NOREPO') {
       //A module is clicked but it has no repo
       content = (
         <div className={styles.readmeNoRepo}>

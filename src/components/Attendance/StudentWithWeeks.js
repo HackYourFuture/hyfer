@@ -21,7 +21,7 @@ export default class StudentWithWeeks extends React.Component{
 
         const weeks = studentHistory.map((week, duration) =>
              
-            <div className={styles.Checkboxes} key={duration}>
+            <div className={styles.week_checkboxes} key={duration}>
                 <Checkbox
                 onChange={(duration)=> this.props.onChange( duration, this.props.student)}
                 id={duration}
