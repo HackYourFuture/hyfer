@@ -23,11 +23,12 @@
   margin: 0 auto;
 }
 
-.tabs{clear: both;
-  display: block;
+.tabs{display: inline-block;
   z-index: 10;
   color:#606161;
   line-height: 13px;
+  margin: 10px 10px 10px 5%;
+  height: 35px;
 }
 
 .ReadmeTab{float: left;

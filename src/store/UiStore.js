@@ -42,8 +42,6 @@ export default function() {
 
   const getUserInfo = () => {
     const token = localStorage.getItem("token")
-    console.log(token, 'token is')
-
     fetch(CURRENT_USER_INFO_URL , {
       credentials: "same-origin",
       headers: {

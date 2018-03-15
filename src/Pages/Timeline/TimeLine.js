@@ -32,6 +32,7 @@ export default class TimeLine extends Component {
   state = {
     isLoggedIn: false,
     isATeacher: false,
+    tab: "readme",
     readme: null,
     repoName: null,
     group_name: null,
@@ -154,6 +155,7 @@ export default class TimeLine extends Component {
       repoName,
       readme,
       isATeacher,
+      isLoggedIn,
       timelineItems,
       groups,
       allWeeks,
@@ -162,48 +164,75 @@ export default class TimeLine extends Component {
       modules,
       groupsWithIds,
       teachers,
-      infoSelectedModule
+      infoSelectedModule,
+      tab
     } = this.state;
-    return (
-      <main>
-        <div style={{ marginBottom: '3rem' }}>
-          <TimelineComp
-            itemWidth={170}
-            rowHeight={70}
-            isTeacher={isATeacher}
-            timelineItems={timelineItems}
-            groups={groups}
-            allWeeks={allWeeks}
-            totalWeeks={totalWeeks}
-            selectedModule={selectedModule}
-            itemClickHandler={this.itemClickHandler}
-            allModules={modules}
-            groupsWithIds={groupsWithIds}
-            teachers={teachers}
-            infoSelectedModule={infoSelectedModule}
-          />
-        </div>
-        <Tabs>
-          <TabList className={styles.tabs}>
-            <Tab className={styles.ReadmeTab}>Readme</Tab>
-            <Tab className={styles.AttendanceTab}>Attendance</Tab>
-          </TabList>
 
-          <TabPanel>
-            <ModuleReadme readme={readme} repoName={repoName} />
-          </TabPanel>
+    let content = <ModuleReadme readme={readme} repoName={repoName}/>
+    if ( tab === "attendance") {
+       content = <Attendance 
+       repoName={repoName}
+       history={history}
+       duration={duration}
+       group_name={group_name}
+       students={students}
+      />
+    }
 
-          <TabPanel>
-            <Attendance
-              repoName={repoName}
-              history={history}
-              duration={duration}
-              group_name={group_name}
-              students={students}
+    if (isLoggedIn && isATeacher){
+      return (
+        <main>
+          <div style={{ marginBottom: '3rem' }}>
+            <TimelineComp
+              itemWidth={170}
+              rowHeight={70}
+              isTeacher={isATeacher}
+              timelineItems={timelineItems}
+              groups={groups}
+              allWeeks={allWeeks}
+              totalWeeks={totalWeeks}
+              selectedModule={selectedModule}
+              itemClickHandler={this.itemClickHandler}
+              allModules={modules}
+              groupsWithIds={groupsWithIds}
+              teachers={teachers}
+              infoSelectedModule={infoSelectedModule}
             />
-          </TabPanel>
-        </Tabs>
-      </main>
-    );
+          </div>
+          <div className={styles.tabs}>
+            <button className={styles.ReadmeTab} 
+              onClick={()=>this.setState({tab: "readme"})}
+            >readme</button>
+            <button className={styles.AttendanceTab} 
+            onClick={()=>this.setState({tab: "attendance"})}
+            >attendance</button>
+          </div>
+          {content}
+        </main>
+      );
+    } else {
+      return (
+        <main>
+          <div style={{ marginBottom: '3rem' }}>
+            <TimelineComp
+              itemWidth={170}
+              rowHeight={70}
+              isTeacher={isATeacher}
+              timelineItems={timelineItems}
+              groups={groups}
+              allWeeks={allWeeks}
+              totalWeeks={totalWeeks}
+              selectedModule={selectedModule}
+              itemClickHandler={this.itemClickHandler}
+              allModules={modules}
+              groupsWithIds={groupsWithIds}
+              teachers={teachers}
+              infoSelectedModule={infoSelectedModule}
+            />
+          </div>
+          <ModuleReadme readme={readme} repoName={repoName}/>
+        </main>
+      );
+    }
   }
 }
