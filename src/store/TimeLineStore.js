@@ -148,7 +148,7 @@ export default function() {
     let result = null;
     switch (action) {
       case 'weekLonger':
-        result = weekLonger(module, getState().groups);
+        result = weekLonger(module);
         break;
       case 'removeModule':
         result = removeModule(module);

@@ -10,7 +10,6 @@ export default class TodayMarker extends Component {
     leftPos -= window.innerWidth / 2;
     const scrollEl = this.props.scrollingParentRef;
     scrollEl.scrollLeft = leftPos;
-    todayMarker.parentNode.scrollIntoView();
   };
 
   render() {
