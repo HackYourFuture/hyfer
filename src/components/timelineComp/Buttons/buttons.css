@@ -1,0 +1,7 @@
+.buttonsWrapper {
+  z-index: 3;
+}
+.buttonsWrapper > * {
+  margin-top: 5px;
+  display: inline-block;
+}

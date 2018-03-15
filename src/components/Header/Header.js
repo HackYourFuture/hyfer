@@ -9,13 +9,13 @@ import {
   ISTEACHER_STATE_CHANGED,
   LOGIN_STATE_CHANGED
 } from '../../store';
-import cookie from 'react-cookies'
+import cookie from 'react-cookies';
 
 export default class Header extends Component {
   state = {
     isLoggedIn: false,
     isATeacher: false,
-    avatarUrl: null,
+    avatarUrl: null
   };
 
   componentDidMount = () => {
@@ -23,7 +23,6 @@ export default class Header extends Component {
       switch (mergedData.type) {
         case AVATAR_URL_CHANGED:
           this.setState({ avatarUrl: mergedData.payload.avatarUrl });
-          console.log(this.state)
           break;
         case LOGIN_STATE_CHANGED:
           this.setState({ isLoggedIn: mergedData.payload.isLoggedIn });
@@ -36,10 +35,9 @@ export default class Header extends Component {
       }
     });
 
-    const token = localStorage.getItem("token")
-    let login = false
-    if(token && token !== '')
-      login = true
+    const token = localStorage.getItem('token');
+    let login = false;
+    if (token && token !== '') login = true;
 
     uiStore.setState({
       type: LOGIN_STATE_CHANGED,
@@ -48,16 +46,15 @@ export default class Header extends Component {
       }
     });
 
-    
     if (login) {
       uiStore.getUserInfo();
     }
   };
 
-  SignOut = ()=>{
-    localStorage.removeItem('token')
-    cookie.save('token' , '') 
-  }
+  SignOut = () => {
+    localStorage.removeItem('token');
+    cookie.save('token', '');
+  };
 
   render() {
     let user = null;
@@ -68,7 +65,10 @@ export default class Header extends Component {
             <span className={styles.visitor}>Visitor</span>
           </div>
           <div className={styles.signButtonWrapper}>
-            <a href="http://localhost:3005/auth/github" className={styles.signInButton}>
+            <a
+              href="http://localhost:3005/auth/github"
+              className={styles.signInButton}
+            >
               Sign in
             </a>
           </div>
@@ -77,8 +77,18 @@ export default class Header extends Component {
     } else {
       user = (
         <div className={styles.signed_in}>
-          <img src={this.state.avatarUrl} alt="user icon" className={styles.userIcon} />
-          <a href="http://localhost:3000/" onClick={this.SignOut} style={{color:'#9da2a9'}}>Sign Out</a>
+          <img
+            src={this.state.avatarUrl}
+            alt="user icon"
+            className={styles.userIcon}
+          />
+          <a
+            href="http://localhost:3000/"
+            onClick={this.SignOut}
+            style={{ color: '#9da2a9' }}
+          >
+            Sign Out
+          </a>
         </div>
       );
     }

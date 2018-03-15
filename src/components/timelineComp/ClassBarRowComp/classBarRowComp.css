@@ -1,0 +1,8 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 85px;
+  z-index: 4;
+  background: #f6f6f8;
+}

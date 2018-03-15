@@ -1,0 +1,24 @@
+.roundButton {
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  margin-left: 10px;
+  border-radius: 50%;
+  outline: 0;
+  border: 0;
+  font-size: 1.5rem;
+  background-color: #F6F6F8;
+  cursor: pointer;
+  transition: all 0.25s ease-out;
+  box-shadow: 0px -2px 0px rgba(0,0,0,.1) inset;
+  color: #212B36;
+}
+
+.roundButton:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.roundButton:active {
+  /* transform: scale(0.9); */
+}

@@ -1,0 +1,10 @@
+.todayMarker {
+  position: absolute;
+  width: 0px;
+  border: 4px solid #ef7263;
+  height: 1000px;
+  top: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0.5;
+}
