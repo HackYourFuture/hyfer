@@ -41,7 +41,12 @@ export default function() {
   //Normal methods
 
   const getUserInfo = () => {
-    fetch(CURRENT_USER_INFO_URL)
+    const token = localStorage.getItem("token")
+    fetch(CURRENT_USER_INFO_URL , {
+      credentials: "same-origin",
+      headers: {
+      'Authorization':'Bearer ' + token,
+    }})
       .then(res => res.json())
       .then(jsonRes => {
         const isLoggedIn = true;
