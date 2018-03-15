@@ -1,0 +1,17 @@
+.container {
+  width: 65px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 8px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: inset 0 -1px 0 0 #eff2f3;
+}
+
+.groupId {
+  background-color: rgb(13, 107, 196);
+  color: white;
+  border-radius: 50%;
+  padding: 8px;
+}

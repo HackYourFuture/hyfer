@@ -36,40 +36,46 @@ export default function() {
   // Normal methodes will be changing the state
 
   const getHistory = clickEvent => {
-
-     _getRepoNameAndSundays(clickEvent);
+    _getRepoNameAndSundays(clickEvent);
     getReadme();
 
-    const { group_id, running_module_id, group, duration, repoName, start, end } = _data;
-    let modeuleSundays = _getSundays(start, end)
-    let sundays = {sundays: modeuleSundays}
+    const {
+      group_id,
+      running_module_id,
+      group,
+      duration,
+      repoName,
+      start,
+      end
+    } = _data;
+    let modeuleSundays = _getSundays(start, end);
+    let sundays = { sundays: modeuleSundays };
     let BASE_URL = 'http://localhost:3005/api/history';
     //sundays format should look like this => {sundays: ["2016/11/06", "2016/11/13", "2016/11/20"]};
     fetch(`${BASE_URL}/${running_module_id}/${group_id}`, {
-      method: 'PATCH', 
+      method: 'PATCH',
       body: JSON.stringify(sundays),
       headers: {
-      'Content-Type': 'application/json',
-      }, 
+        'Content-Type': 'application/json'
+      }
     })
-    .then(response => response.json())
-    .then(response => {
-      const students = Object.keys(response)
+      .then(response => response.json())
+      .then(response => {
+        const students = Object.keys(response);
+        setState({
+          type: HISTORY_CHANGED,
+          payload: {
+            history: response,
+            students: students,
+            duration: duration,
+            repoName: repoName,
+            group_name: group
+          }
+        });
+      })
+      .catch(err => console.log(err));
+  };
 
-      setState({
-        type: HISTORY_CHANGED,
-        payload: {
-          history: response,
-          students: students,
-          duration: duration,
-          repoName: repoName,
-          group_name: group
-        }
-      });
-    })
-    .catch(err => console.log(err))
-  }
-  
   const getReadme = () => {
     // check if there is a valid repoName
     if (!_data.repoName || _data.repoName === noRepoAlternative) return;
@@ -95,17 +101,24 @@ export default function() {
   const _getRepoNameAndSundays = clickEvent => {
     // it is a promise because it is being used in the getReadme function and that one won't wait
     let repoName = null;
-    const target = clickEvent.event.target;
-    const dataset = clickEvent.event.target.parentNode.parentNode.dataset;
-    const { start, end, git_repo, group_id, group, running_module_id, duration } = dataset;
-    if (target.className !== 'vis-item-content') return; // if the selected element is not the wanted one
+    const target = clickEvent.target;
+    const dataset = target.dataset;
+    const {
+      start,
+      end,
+      repo,
+      group_id,
+      group,
+      running_module_id,
+      duration
+    } = dataset;
 
     // if the selected element doesn't have a repo
-    if (!git_repo) {
+    if (!repo) {
       repoName = noRepoAlternative;
       setState({});
     } else {
-      repoName = git_repo;
+      repoName = repo;
     }
 
     const mergedData = {
@@ -117,7 +130,7 @@ export default function() {
         duration,
         start,
         end,
-        group,
+        group
       }
     };
     setState(mergedData);
@@ -135,29 +148,29 @@ export default function() {
     return allSundays;
   };
 
-  const defaultReadme = (defaultRepo) => {
+  const defaultReadme = defaultRepo => {
     fetch(`${BASE_URL}/${defaultRepo}/readme`)
       .then(res => res.json())
       .then(readmeEncoded => {
         const readmeDecoded = atob(readmeEncoded.content);
-        const readmeHtml = marked(readmeDecoded);        
+        const readmeHtml = marked(readmeDecoded);
 
         setState({
           type: READ_ME_CHANGED,
           payload: {
             readme: readmeHtml,
-            repoName: defaultRepo,
+            repoName: defaultRepo
           }
         });
         setState({
           type: REPO_NAME_CHANGED,
           payload: {
-            repoName: defaultRepo,
+            repoName: defaultRepo
           }
         });
       })
       .catch(err => console.log(err));
-  }
+  };
 
   return {
     subscribe,
