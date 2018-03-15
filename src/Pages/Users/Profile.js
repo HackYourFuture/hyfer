@@ -73,6 +73,12 @@ export default class Profile extends React.Component {
       
       <div className={styles.profilePage}>
           <Notifications />
+          <Link to='/users'>
+              <input className={styles.backButton} 
+                     type="button" 
+                     value="&#8249;" 
+                      />
+          </Link> 
           <h1>Edit Profile</h1>
           <div className={styles.profileContainer}>
             <input className={styles.profileName} 
