@@ -1,5 +1,6 @@
 import React from 'react';
 import StudentWithWeeks from './StudentWithWeeks';
+import WeekIndicator from './WeekIndicator';
 import styles from '../../assets/styles/attendance.css';
 import Notifications, {notify} from 'react-notify-toast';
 import {
@@ -8,6 +9,11 @@ import {
 } from '../../store';
 
 const stack = [];
+// #todo
+// tamiz kardan
+// responsive
+// module toye sign out
+// tarikh balaye hafte 
 
 export default class Attendance extends React.Component{
 
@@ -53,6 +59,7 @@ export default class Attendance extends React.Component{
         let title = null;
         let content = null;
         let buttons = null;
+        let weeks = null;
         if (repoName === "NOREPO") {
             content = (<h2 className={styles.message}>Oops! there is no History.</h2>)
         } else if (students === null || repoName === undefined) {
@@ -83,6 +90,17 @@ export default class Attendance extends React.Component{
                     <h3 className={styles.Title_inner}>Attendance - {repoName.charAt(0).toUpperCase() + repoName.slice(1)}</h3>
                 </div>
             )
+            
+            console.log(duration)
+
+            
+            
+                // duration.map((index) =>
+                // <div className={styles.test} key={index}>
+                //     <span>{index}</span>
+                // </div>
+                
+            
 
             buttons = (
                 <div className={styles.buttons} >
@@ -113,6 +131,10 @@ export default class Attendance extends React.Component{
                 <div >
                     <div className={styles.group_name}>
                         <h3 className={styles.group_name_inner}>{group_name}</h3>
+                        <WeekIndicator duration={duration}
+                        students={students}
+                        allHistory={history}
+                        />
                     </div>
                     <div className={styles.wrapper}>
                         {content}

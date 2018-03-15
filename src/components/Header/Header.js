@@ -82,7 +82,55 @@ export default class Header extends Component {
         </div>
       );
     }
-    return (
+
+    if (this.state.isLoggedIn && this.state.isATeacher) {
+      return (
+        <header className={styles.header}>
+          <a href="http://hackyourfuture.net/">
+            <img
+              src={hyfIcon}
+              alt="HackYourFuture logo"
+              className={styles.hyfIcon}
+            />
+          </a>
+          <nav className={styles.nav}>
+            <ul className={styles.list}>
+              <li>
+                <NavLink
+                  exact
+                  to="/timeline"
+                  className={styles.item}
+                  activeClassName={styles.activeNav}
+                >
+                  Timeline
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  exact
+                  to="/modules"
+                  className={styles.item}
+                  activeClassName={styles.activeNav}
+                >
+                  Modlues
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  exact
+                  to="/users"
+                  className={styles.item}
+                  activeClassName={styles.activeNav}
+                >
+                  Users
+                </NavLink>
+              </li>
+            </ul>
+          </nav>
+          {user}
+        </header>
+      );
+    } else { return (
       <header className={styles.header}>
         <a href="http://hackyourfuture.net/">
           <img
@@ -103,30 +151,10 @@ export default class Header extends Component {
                 Timeline
               </NavLink>
             </li>
-            <li>
-              <NavLink
-                exact
-                to="/modules"
-                className={styles.item}
-                activeClassName={styles.activeNav}
-              >
-                Modlues
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                exact
-                to="/users"
-                className={styles.item}
-                activeClassName={styles.activeNav}
-              >
-                Users
-              </NavLink>
-            </li>
           </ul>
         </nav>
         {user}
       </header>
-    );
+    )};
   }
 }

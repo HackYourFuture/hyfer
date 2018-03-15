@@ -198,3 +198,7 @@ h3{display: inline-block;}
 
 .checkbox input[type="checkbox"].homework:after { content: 'H'; }
 .checkbox input[type="checkbox"].attendance:after { content: 'A'; }
+
+.test{display: inline-block;
+width: 40px;
+border: 1px solid black;}
