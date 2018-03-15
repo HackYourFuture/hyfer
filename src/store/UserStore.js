@@ -1,7 +1,7 @@
   
 class store {
 
-	//------
+	//-------
 	// State 
 
 	state = {
