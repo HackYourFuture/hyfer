@@ -1,0 +1,38 @@
+.root {
+  max-width: 100vw;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  position: relative;
+}
+
+.timelineContainer {
+  position: relative;
+
+  background-color: #f6f6f8;
+  display: flex;
+}
+
+.rowsContainer {
+  position: relative;
+  left: 81px;
+  display: flex;
+  flex-direction: column;
+}
+
+.rowContainer {
+  display: flex;
+}
+
+.buttonsContainer {
+  position: absolute;
+  z-index: 4;
+  display: flex;
+  right: 32px;
+  flex-direction: column;
+}
+
+.loader {
+  width: 70vw;
+  position: absolute;
+  margin: 0 auto;
+}

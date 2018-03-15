@@ -1,10 +1,32 @@
-import moment from 'moment';
-
 import {
   TIMELINE_GROUPS_CHANGED,
   TIMELINE_ITEMS_CHANGED,
-  MODAL_STATE_CHANGED
+  ALL_WEEKS_CHANGED,
+  ALL_POSSIBLE_MODULES_CHANGED,
+  ALL_SUNDAYS_CHANGED,
+  ALL_TEACHERS_CHAGNED,
+  INFO_SELECTED_MDOULE_CHANGED,
+  GROUPS_WITH_IDS_CHANGED
 } from './';
+
+import {
+  getAllTotalWeeksAndSundays,
+  getTimelineItems,
+  setEndingDateForModules,
+  weekLonger,
+  weekShorter,
+  moveLeft,
+  moveRight,
+  assignTeachers,
+  addNewClass,
+  getALlPossibleModules,
+  addNewModuleToClass,
+  removeModule,
+  getAllSharedDates,
+  getTeachers,
+  getModulesOfGroup,
+  getAllGroupsWithIds
+} from '../util';
 
 const BASE_URL = 'http://localhost:3005';
 
@@ -40,101 +62,170 @@ export default function() {
     return _data;
   };
 
-  // Normal methodes will be changing the state
+  const fetchItems = async () => {
+    const timelineItems = await getTimelineItems(
+      BASE_URL + '/api/timeline'
+    ).catch(err => console.log(err));
 
-  const handleToggleModal = () => {
-    const currentModalState = _data.isModalOpen || false;
+    // set the state with the array of all current groups [maybe needed for sidecolumn group names]
+    const groups = Object.keys(timelineItems);
+    groups.sort();
+    const orderdTimelineItems = {};
+    groups.forEach(group => {
+      orderdTimelineItems[group] = timelineItems[group];
+    });
+
+    const groupsWithIds = await getAllGroupsWithIds();
+
     setState({
-      type: MODAL_STATE_CHANGED,
+      type: GROUPS_WITH_IDS_CHANGED,
       payload: {
-        isModalOpen: !currentModalState
+        groupsWithIds
       }
     });
+
+    const withEndingDate = setEndingDateForModules(orderdTimelineItems, groups); // group names
+    // set the state with the new received items
+    setState({
+      type: TIMELINE_ITEMS_CHANGED,
+      payload: {
+        items: withEndingDate
+      }
+    });
+
+    // get all possible modules for addition
+    const allPossibleModules = await getALlPossibleModules().catch(err =>
+      console.log(err)
+    );
+    setState({
+      type: ALL_POSSIBLE_MODULES_CHANGED,
+      payload: {
+        modules: allPossibleModules
+      }
+    });
+
+    // get all sundays and count how many weeks
+    const { allWeeks, allSundays } = getAllTotalWeeksAndSundays(withEndingDate);
+
+    //set State with all sundays
+    setState({
+      type: ALL_SUNDAYS_CHANGED,
+      payload: {
+        allSundays
+      }
+    });
+
+    // Set state with all weeks moments
+    setState({
+      type: ALL_WEEKS_CHANGED,
+      payload: {
+        allWeeks
+      }
+    });
+
+    getTeachers().then(res => {
+      const teachers = res.filter(user => user.role === 'teacher');
+      setState({
+        type: ALL_TEACHERS_CHAGNED,
+        payload: {
+          teachers
+        }
+      });
+    });
+
+    setState({
+      type: TIMELINE_GROUPS_CHANGED,
+      payload: {
+        // TODO:
+        groups
+      }
+    });
+
+    // set state with total weeks during all known schedule for current classes
   };
 
-  const getTimelineItems = () => {
-    fetch(`${BASE_URL}/api/timeline`)
-      .then(res => res.json())
-      .then(resJson => {
-        const groups = _extractGroups(resJson);
-        const items = _extractItems(resJson, groups);
+  const updateModule = (module, action) => {
+    let result = null;
+    switch (action) {
+      case 'weekLonger':
+        result = weekLonger(module, getState().groups);
+        break;
+      case 'removeModule':
+        result = removeModule(module);
+        break;
+      case 'weekShorter':
+        result = weekShorter(module, getState().groups);
+        break;
+      case 'moveLeft':
+        result = moveLeft(module, getState().groups);
+        break;
+      case 'moveRight':
+        result = moveRight(module, getState().groups);
+        break;
+      default:
+        break;
+    }
+
+    result
+      .then(() => {
+        fetchItems();
+      })
+      .catch(err => console.log(err));
+  };
+
+  const handleAssignTeachers = (item, teacher1, teacher2) => {
+    return (
+      // item.id is the id of the group
+      assignTeachers(item, item.id, teacher1, teacher2)
+        // when done go back throught the whole procedure to get the items on screen
+        .then(() => {
+          fetchItems();
+        })
+        .catch(err => console.log(err))
+    );
+  };
+
+  const handleAddModule = (
+    selectedModuleId,
+    selectedGroup,
+    duration,
+    selectedDate,
+    items
+  ) => {
+    const { modules } = _data; // getting all modules from the store directly
+    // make all the computations in util
+    return addNewModuleToClass(
+      selectedModuleId,
+      selectedGroup,
+      duration,
+      selectedDate,
+      items,
+      modules
+    ).then(res => {
+      fetchItems();
+    });
+  };
+
+  const addTheClass = (className, starting_date) => {
+    return addNewClass(className, starting_date).then(() => fetchItems());
+  };
+
+  const getSharedDates = items => {
+    return getAllSharedDates(items);
+  };
+
+  const getSelectedModuleInfo = item => {
+    // give it to util to handle
+    getModulesOfGroup(item.id)
+      .then(res => {
         setState({
-          type: TIMELINE_GROUPS_CHANGED,
+          type: INFO_SELECTED_MDOULE_CHANGED,
           payload: {
-            groups: groups
+            allModulesOfGroup: res[item.position]
           }
         });
-
-        setState({
-          type: TIMELINE_ITEMS_CHANGED,
-          payload: {
-            items: items
-          }
-        });
-      });
-  };
-
-  const handleAddClass = (className, startingDate) => {
-    const date = new Date(startingDate);
-    const body = {
-      group_name: className,
-      starting_date: date.toISOString()
-    };
-
-    fetch(`${BASE_URL}/api/groups`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    }).then(res => {
-      getTimelineItems();
-      handleToggleModal();
-    });
-  };
-
-  // Helper methods
-
-  const _extractGroups = data => {
-    const allGroups = Object.keys(data).map(item => {
-      return {
-        id: item
-      };
-    });
-    return allGroups;
-  };
-
-  const _extractItems = (data, groups) => {
-    let allItems = [];
-    groups.forEach(group => {
-      const items = data[group.id];
-      items.sort((a, b) => a.position - b.position); // make sure it is sorted
-
-      let lastDate = ''; // will be overwritten by each module in a row
-
-      items.map(item => {
-        if (lastDate === '') lastDate = item.starting_date;
-        item.starting_date = lastDate;
-
-        item.ending_date = moment(lastDate).add(item.duration, 'weeks');
-        lastDate = moment(item.ending_date);
-        return item;
-      });
-      allItems = [...items, ...allItems];
-    });
-    return allItems.map(item => {
-      return {
-        start: moment(item.starting_date).format('YYYY-MM-DD'),
-        end: moment(item.ending_date).format('YYYY-MM-DD'),
-        content: item.module_name,
-        group: item.group_name,
-        group_id: item.id,
-        running_module_id: item.running_module_id,
-        duration: item.duration,
-        className: item.module_name.split(' ').join('_'),
-        git_repo: item.git_repo
-      };
-    });
+      })
+      .catch(err => console.log(err));
   };
 
   return {
@@ -143,8 +234,12 @@ export default function() {
     isSubscribed,
     getState,
     setState,
-    getTimelineItems,
-    handleToggleModal,
-    handleAddClass
+    fetchItems,
+    updateModule,
+    handleAddModule,
+    addTheClass,
+    getSharedDates,
+    handleAssignTeachers,
+    getSelectedModuleInfo
   };
 }

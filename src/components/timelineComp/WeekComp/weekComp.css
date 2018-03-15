@@ -1,0 +1,29 @@
+.weekCompContainer {
+  position: relative;
+  margin: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.monthContainer {
+  text-align: left;
+  padding-left: 18px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: inset 0 -1px 0 0 #eff2f3;
+}
+
+.daysContainer {
+  background-color: #ffffff;
+  box-shadow: inset 0 -1px 0 0 #eff2f3;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.dayName {
+  color: grey;
+}
