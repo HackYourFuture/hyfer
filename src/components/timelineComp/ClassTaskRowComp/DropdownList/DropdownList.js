@@ -20,6 +20,22 @@ export default class DropdownList extends Component {
   toggleDropdown = e => {
     e.stopPropagation();
     this.setState({ isToggled: !this.state.isToggled });
+
+    // setting state is asynchronous
+    setTimeout(() => {
+      const timelineBottom = document
+        .querySelector('.rootContainer')
+        .getClientRects()[0].bottom;
+      const dropdownList = document.querySelector(`.${classes.dropdown}`);
+      const dropdownListBottom = dropdownList.getClientRects()[0].bottom;
+      console.log(timelineBottom);
+      console.log(dropdownListBottom);
+      if (dropdownListBottom > timelineBottom) {
+        console.error('here yeahhh');
+        dropdownList.style.bottom = -50 + 'px';
+        console.error(dropdownList.style);
+      }
+    }, 0);
   };
 
   weekLonger = e => {

@@ -102,14 +102,14 @@ export default class Timeline extends Component {
   };
 
   render() {
-    const { itemWidth, rowHeight, allWeeks, allModules } = this.props;
+    const { itemWidth, rowHeight, allWeeks } = this.props;
     // if there items are fetched  width is the 200 times total weeks otherwise it's 100vh
     // FIXME: no idea why this is not working with just 16 instead of 21
     const width = allWeeks
       ? itemWidth * allWeeks.length + 21 * allWeeks.length + 'px'
       : '100vw';
     return (
-      <div>
+      <div className="rootContainer">
         <ClassBarRowComp groups={this.props.groups} rowHeight={rowHeight} />
         <div
           className={classes.root}
