@@ -28,12 +28,9 @@ export default class DropdownList extends Component {
         .getClientRects()[0].bottom;
       const dropdownList = document.querySelector(`.${classes.dropdown}`);
       const dropdownListBottom = dropdownList.getClientRects()[0].bottom;
-      console.log(timelineBottom);
-      console.log(dropdownListBottom);
       if (dropdownListBottom > timelineBottom) {
-        console.error('here yeahhh');
-        dropdownList.style.bottom = -50 + 'px';
-        console.error(dropdownList.style);
+        dropdownList.style.top =
+          -(dropdownListBottom - timelineBottom + 20) + 'px';
       }
     }, 0);
   };
