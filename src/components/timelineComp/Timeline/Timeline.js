@@ -77,11 +77,12 @@ export default class Timeline extends Component {
   };
 
   handleClickTodayMarker = e => {
-    const todayMarker = this.state.todayMarkerRef; // using refs instead of manipulatng DOM
+    const todayMarker = this.state.todayMarkerRef;
+    const classesContainer = this.refs.classesContainer.refs.groupsRowContainer; // hackish way, hope good
+    const scrollEl = this.refs.timelineWrapper;
     let leftPos = todayMarker.parentNode.getBoundingClientRect().x;
-    leftPos -= window.innerWidth / 2;
-    const scrollEl = this.refs.timelineWrapper; // using refs instead of manipulatng DOM
-    scrollEl.scrollLeft = leftPos;
+    leftPos -= scrollEl.offsetWidth / 2 - classesContainer.offsetWidth;
+    scrollEl.scrollLeft += leftPos;
   };
 
   componentWillMount = () => {
@@ -102,15 +103,19 @@ export default class Timeline extends Component {
   };
 
   render() {
-    const { itemWidth, rowHeight, allWeeks, allModules } = this.props;
+    const { itemWidth, rowHeight, allWeeks } = this.props;
     // if there items are fetched  width is the 200 times total weeks otherwise it's 100vh
     // FIXME: no idea why this is not working with just 16 instead of 21
     const width = allWeeks
       ? itemWidth * allWeeks.length + 21 * allWeeks.length + 'px'
       : '100vw';
     return (
-      <div>
-        <ClassBarRowComp groups={this.props.groups} rowHeight={rowHeight} />
+      <div className="rootContainer">
+        <ClassBarRowComp
+          groups={this.props.groups}
+          rowHeight={rowHeight}
+          ref="classesContainer"
+        />
         <div
           className={classes.root}
           ref="timelineWrapper"

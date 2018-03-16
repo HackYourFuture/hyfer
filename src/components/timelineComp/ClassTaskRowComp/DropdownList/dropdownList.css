@@ -1,6 +1,5 @@
 .dropdown {
   position: absolute;
-  top: 0;
   right: -200px;
   width: 200px;
   z-index: 4;
@@ -28,7 +27,7 @@
   text-align: center;
   border-bottom: 0.1px solid #f6f6f8;
   background: rgb(255, 255, 255);
-  height: 50px;
+  height: 45px;
   line-height: 50px;
   text-decoration: none;
   transition: all 0.4s ease-in-out;

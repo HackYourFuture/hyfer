@@ -24,6 +24,7 @@
   z-index: 1;
   position: relative;
   height: 50px;
+  user-select: none;
 }
 
 .flexWrapper::before {

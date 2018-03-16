@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 import styles from '../../assets/styles/timeline.css';
-import loader from '../../assets/images/loader.gif';
 import ModuleReadme from '../../components/ModuleReadme/ModuleReadme';
 import Attendance from '../../components/Attendance/Attendance';
 

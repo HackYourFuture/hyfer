@@ -337,7 +337,7 @@ function _patchNewModuleForOneGroup(
           // 1- add it
           return _addModule(selectedModuleId, selectedGroupId, position)
             .then(res =>
-              // 2- change the d
+              // 2- change the duration
               _patchGroupsModules(
                 { position },
                 null,
