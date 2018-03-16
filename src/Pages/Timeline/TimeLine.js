@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-
 import styles from '../../assets/styles/timeline.css';
 import ModuleReadme from '../../components/ModuleReadme/ModuleReadme';
 import Attendance from '../../components/Attendance/Attendance';
@@ -124,8 +122,8 @@ export default class TimeLine extends Component {
     }
   }
 
-  itemClickHandler(clickEvent, item) {
-    moduleInfoStore.getHistory(clickEvent);
+  itemClickHandler = (clickEvent, item) => {
+    moduleInfoStore.getHistory(clickEvent, this.state.isATeacher);
     const selectedItemInStore = timelineStore.getState().selectedModule;
     if (
       !item ||
@@ -144,6 +142,7 @@ export default class TimeLine extends Component {
       }
     });
   }
+
   render() {
     // last item being set in store
     const {
@@ -201,10 +200,10 @@ export default class TimeLine extends Component {
           <div className={styles.tabs}>
             <button className={styles.ReadmeTab} 
               onClick={()=>this.setState({tab: "readme"})}
-            >readme</button>
+            >Readme</button>
             <button className={styles.AttendanceTab} 
             onClick={()=>this.setState({tab: "attendance"})}
-            >attendance</button>
+            >Attendance</button>
           </div>
           {content}
         </main>

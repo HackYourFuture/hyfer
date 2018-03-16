@@ -35,45 +35,51 @@ export default function() {
 
   // Normal methodes will be changing the state
 
-  const getHistory = clickEvent => {
-    _getRepoNameAndSundays(clickEvent);
-    getReadme();
+  const getHistory = (clickEvent, isATeacher) => {
+    
+    if (!isATeacher){
+      _getRepoNameAndSundays(clickEvent);
+      getReadme();
+    } else {
+      _getRepoNameAndSundays(clickEvent);
+      getReadme();
 
-    const {
-      group_id,
-      running_module_id,
-      group,
-      duration,
-      repoName,
-      start,
-      end
-    } = _data;
-    let modeuleSundays = _getSundays(start, end);
-    let sundays = { sundays: modeuleSundays };
-    let BASE_URL = 'http://localhost:3005/api/history';
-    //sundays format should look like this => {sundays: ["2016/11/06", "2016/11/13", "2016/11/20"]};
-    fetch(`${BASE_URL}/${running_module_id}/${group_id}`, {
-      method: 'PATCH',
-      body: JSON.stringify(sundays),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => response.json())
-      .then(response => {
-        const students = Object.keys(response);
-        setState({
-          type: HISTORY_CHANGED,
-          payload: {
-            history: response,
-            students: students,
-            duration: duration,
-            repoName: repoName,
-            group_name: group
-          }
-        });
+      const {
+        group_id,
+        running_module_id,
+        group,
+        duration,
+        repoName,
+        start,
+        end
+      } = _data;
+      let modeuleSundays = _getSundays(start, end);
+      let sundays = { sundays: modeuleSundays };
+      let BASE_URL = 'http://localhost:3005/api/history';
+      //sundays format => {sundays: ["2016/11/06", "2016/11/13", "2016/11/20"]};
+      fetch(`${BASE_URL}/${running_module_id}/${group_id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(sundays),
+        headers: {
+          'Content-Type': 'application/json'
+        }
       })
-      .catch(err => console.log(err));
+        .then(response => response.json())
+        .then(response => {
+          const students = Object.keys(response);
+          setState({
+            type: HISTORY_CHANGED,
+            payload: {
+              history: response,
+              students: students,
+              duration: duration,
+              repoName: repoName,
+              group_name: group
+            }
+          });
+        })
+        .catch(err => console.log(err));
+    }
   };
 
   const getReadme = () => {
