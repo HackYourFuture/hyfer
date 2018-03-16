@@ -123,7 +123,7 @@ export default class Header extends Component {
                   className={styles.item}
                   activeClassName={styles.activeNav}
                 >
-                  Modlues
+                  Modules
                 </NavLink>
               </li>
               <li>
