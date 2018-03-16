@@ -13,14 +13,12 @@ export default class ModuleInfo extends Component {
     let content = readme ? readme : null;
 
     if (repoName === 'NOREPO') {
-      //A module is clicked but it has no repo
       content = (
         <div className={styles.readmeNoRepo}>
           <h2>This module has no github repositroy</h2>
         </div>
       )
     } else {
-      // A module  is clicked and it has a repo => FETCH IT!
       content = (
         <div className={styles.markdownBody}>{ReactHtmlParser(readme)}</div>
       );

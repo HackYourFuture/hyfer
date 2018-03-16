@@ -65,6 +65,14 @@ h3{display: inline-block;}
 .group_name{color: #787979;
   margin-left: 3.5%;
   top:-5px;
+  float: left;
+}
+
+.group_name_inner{width: 300px;
+  float: left;}
+
+.week_indicator{ width: 100px;
+  float: left;
 }
 
 .message{display: block;
@@ -198,3 +206,4 @@ h3{display: inline-block;}
 
 .checkbox input[type="checkbox"].homework:after { content: 'H'; }
 .checkbox input[type="checkbox"].attendance:after { content: 'A'; }
+

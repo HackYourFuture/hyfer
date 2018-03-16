@@ -1,5 +1,6 @@
 import React from 'react';
 import StudentWithWeeks from './StudentWithWeeks';
+import WeekIndicator from './WeekIndicator';
 import styles from '../../assets/styles/attendance.css';
 import Notifications, {notify} from 'react-notify-toast';
 import {
@@ -8,6 +9,11 @@ import {
 } from '../../store';
 
 const stack = [];
+// #todo
+// tamiz kardan
+// responsive
+// module toye sign out
+// tarikh balaye hafte 
 
 export default class Attendance extends React.Component{
 
@@ -22,7 +28,6 @@ export default class Attendance extends React.Component{
 
     // Subscribing to the module info store for getting "history"
     componentDidMount = () => {
-
         // gtting data when component is mounted
         moduleInfoStore.subscribe(mergedData => {
             if (mergedData.type === HISTORY_CHANGED) {
@@ -83,7 +88,7 @@ export default class Attendance extends React.Component{
                     <h3 className={styles.Title_inner}>Attendance - {repoName.charAt(0).toUpperCase() + repoName.slice(1)}</h3>
                 </div>
             )
-
+    
             buttons = (
                 <div className={styles.buttons} >
                     <button className={styles.button_save}
@@ -91,13 +96,11 @@ export default class Attendance extends React.Component{
                      name="save"
                      onClick={this.onSave}
                     >Save</button>
-
                     <button className={styles.button_undo}
                      disabled={!this.state.edit_Mode}
                      name="undo"
                      onClick={this.undo}
                     >Undo</button>
-
                     <button className={styles.button_cancel}
                      disabled={!this.state.edit_Mode}
                      name="cancel"
@@ -113,6 +116,12 @@ export default class Attendance extends React.Component{
                 <div >
                     <div className={styles.group_name}>
                         <h3 className={styles.group_name_inner}>{group_name}</h3>
+                        <WeekIndicator
+                        duration={duration}
+                        students={students}
+                        history={history}
+                        repoName={repoName}
+                        />
                     </div>
                     <div className={styles.wrapper}>
                         {content}
@@ -125,23 +134,18 @@ export default class Attendance extends React.Component{
     };
 
     handleCheckboxChange = ( student, event ) => {
-
         const week = event.target.id;
         const name = event.target.name; //attendance or homework
         // edit_mode will active the save and cancel buttons
         this.setState({
             edit_Mode : true,
         })
-
         stack.push(student, week, name);
-
         this.makeChange(student, week, name);
     }
 
     makeChange = (student, week, name) => {
-
         const { history } = this.state;
-    
         const changeValue=(v)=>{
             if (v === 0) {
                 return 1
@@ -149,20 +153,16 @@ export default class Attendance extends React.Component{
                 return 0
             }
         };
-
         // change in history object
         history[student][week][name] = changeValue(history[student][week][name])
-
         this.setState({
             history: history,
         })
     };
 
     onSave = () => {
-
         const body = this.state.history;
         let BASE_URL = 'http://localhost:3005/api/history';
-
         fetch(BASE_URL , {
             method: 'POST', 
             body: JSON.stringify(body),
@@ -173,14 +173,12 @@ export default class Attendance extends React.Component{
         .then(response => response.json())
         .then(notify.show('Your changes are successfully Saved !', 'success'))
         .catch(err => console.log(err))
-
         this.setState({
             edit_Mode: null,
         }) 
     };
 
     onCancel = () => {
-
         for (let i = 0; i < stack.length; i++) { 
             this.undo();
         };
@@ -193,7 +191,6 @@ export default class Attendance extends React.Component{
         const student = toUndo[0];
         const week = toUndo[1];
         const name = toUndo[2];
-
         if ( stack.length === 0 ) {
             this.setState({
                 edit_Mode: null,

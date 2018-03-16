@@ -15,7 +15,7 @@ class App extends Component {
   componentWillMount() {
     
     let token = cookie.load('token')
-    if(token && typeof token != 'undefined'){
+    if(token && typeof token !== 'undefined'){
       token = JSON.parse(token)
     }
     else{
