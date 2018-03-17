@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import Modal from '../../../../../Helpers/Modal/Modal';
 import { timelineStore } from '../../../../../store/';
+import classes from './assignTeacherModal.css';
 
 export default class AssignTeacherModal extends Component {
   state = {
@@ -37,6 +38,7 @@ export default class AssignTeacherModal extends Component {
     const { teachers } = this.props;
     return (
       <select
+        className={classes.select}
         name={`teacherSelect${num}`}
         value={this.state[`teacher${num}`]}
         onChange={e => this.handleChangeTeacher(e, num)}
@@ -57,17 +59,22 @@ export default class AssignTeacherModal extends Component {
     } else {
       this.setState({ teacher2: '', selectedTeacher2: null });
     }
-    this.setState({
-      warningMessage:
-        'You can only reassign a teacher! If you leave them open to the way they were'
-    });
+    // this.setState({
+    //   warningMessage:
+    //     'You can only reassign a teacher! If you leave them open to the way they were'
+    // });
   };
 
   renderAssignedTeacher = (teacher, num) => {
     return (
-      <span onClick={() => this.unAssignTeacher(num)}>
-        {teacher.username}
-        <span>x</span>
+      <span className={classes.assignedTeacherWrapper}>
+        <span
+          onClick={() => this.unAssignTeacher(num)}
+          className={classes.unAssignTeacher}
+        >
+          x
+        </span>
+        <span className={classes.teachersName}>{teacher.username}</span>
       </span>
     );
   };
@@ -116,21 +123,39 @@ export default class AssignTeacherModal extends Component {
       }
     }
     return (
-      <div>
-        <Modal
-          visible={this.props.visible}
-          closeModal={this.props.closeModal}
-          title={title}
-        >
-          <label htmlFor="teacher1">Teacher 1:</label>
+      <Modal
+        visible={this.props.visible}
+        closeModal={this.props.closeModal}
+        title={title}
+      >
+        <div className={classes.formWrapper}>
+          <label className={classes.label} htmlFor="teacher1">
+            Teacher 1
+          </label>
           {selectTeacher1}
-          <label htmlFor="teacher2">Teacher 2:</label>
+          <label className={classes.label} htmlFor="teacher2">
+            Teacher 2
+          </label>
           {selectTeacher2}
-          <span>{this.state.warningMessage}</span>
-          <button onClick={this.props.closeModal}>Cancel</button>
-          <button onClick={this.handleAssignTeahcers}>Ok</button>
-        </Modal>
-      </div>
+          <div className={classes.btnWrapper}>
+            <span>{this.state.warningMessage}</span>
+            <div>
+              <button
+                className={`${classes.btn} ${classes.cancel}`}
+                onClick={this.props.closeModal}
+              >
+                CANCEL
+              </button>
+              <button
+                className={`${classes.btn} ${classes.ok}`}
+                onClick={this.handleAssignTeahcers}
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      </Modal>
     );
   }
 }

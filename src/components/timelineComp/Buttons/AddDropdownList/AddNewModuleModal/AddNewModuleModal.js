@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Modal from '../../../../../Helpers/Modal/Modal';
+import classes from './addNewModuleModal.css';
 import { timelineStore } from '../../../../../store';
 import moment from 'moment';
 
@@ -63,10 +64,8 @@ export default class AddNewModuleModal extends Component {
 
     let date = moment(e.target.value);
     const wantedDay = 0; // sunday
-    const daysDif = date.day() - wantedDay;
-    for (let x = 0; x < daysDif; x++) {
-      date.subtract(1, 'days'); // keep going back in the week until it's a sunday
-    }
+    const daysDif = date.day() - wantedDay; // till sunday
+    date.subtract(daysDif, 'days'); // keep going back in the week until it's a sunday
 
     let settingValidDateWith = false;
     let thatSunday = null;
@@ -93,6 +92,7 @@ export default class AddNewModuleModal extends Component {
   renderSelectModule = modules => {
     return (
       <select
+        className={classes.select}
         name="modulesSelect"
         value={this.state.selectedModuleId}
         onChange={this.handleChangeSelectedModuleId}
@@ -109,6 +109,7 @@ export default class AddNewModuleModal extends Component {
   renderSelectGroup = groups => {
     return (
       <select
+        className={classes.select}
         name="groupSelect"
         value={this.state.selectedGroup}
         onChange={this.handleChangeGroup}
@@ -125,6 +126,7 @@ export default class AddNewModuleModal extends Component {
   renderDurationOfModule = () => {
     return (
       <select
+        className={classes.select}
         name="durationOfModule"
         value={this.state.duration}
         onChange={this.handleChangeDuration}
@@ -211,37 +213,61 @@ export default class AddNewModuleModal extends Component {
     const groupsPlus = ['All classes', ...groups];
 
     return (
-      <div>
-        <Modal
-          title="Add a new module"
-          visible={this.props.isToggled}
-          closeModal={this.props.closeModal}
-        >
-          <label htmlFor="groupSelect">Group</label>
+      <Modal
+        title="Add a new module"
+        visible={this.props.isToggled}
+        closeModal={this.props.closeModal}
+      >
+        <div className={classes.formContainer}>
+          <label className={classes.label} htmlFor="groupSelect">
+            Group
+          </label>
           {this.renderSelectGroup(groupsPlus)}
-          <label htmlFor="moduleSelect">Module</label>
+          <label className={classes.label} htmlFor="moduleSelect">
+            Module
+          </label>
           {this.renderSelectModule(modules)}
-          <label htmlFor="durationOfModule">Duration (weeks)</label>
+          <label className={classes.label} htmlFor="durationOfModule">
+            Duration (weeks)
+          </label>
           {this.renderDurationOfModule()}
-          <label htmlFor="sundaySelect">Starting date of module</label>
-          <span>
-            If you choose a date that is not a suday, the date picker will roll
-            back to the last sunday
-          </span>
+          <label className={classes.label} htmlFor="sundaySelect">
+            Starting date of module
+            <span className={classes.dateInstr}>
+              (If you choose a date that is not a suday, the date picker will
+              roll back to the last sunday)
+            </span>
+          </label>
           <input
             type="date"
+            className={classes.dateInput}
             name="sundaySelect"
             value={this.state.selectedDate}
             onChange={this.handleChangeDate}
             min={this.state.minDate}
             max={this.state.maxDate}
           />
-          {/* FIXME: set a min and a max attr */}
-          <span>{this.state.errorMessage}</span>
-          <button onClick={this.props.closeModal}>Cancel</button>
-          <button onClick={this.handleAddModule}>Ok</button>
-        </Modal>
-      </div>
+          <div className={classes.btnsContainer}>
+            <div>
+              <button
+                className={`${classes.btn} ${classes.ok}`}
+                onClick={this.props.closeModal}
+              >
+                CANCEL
+              </button>
+              <button
+                className={`${classes.btn} ${classes.cancel}`}
+                onClick={this.handleAddModule}
+              >
+                OK
+              </button>
+            </div>
+            <span className={classes.errorMessage}>
+              {this.state.errorMessage}
+            </span>
+          </div>
+        </div>
+      </Modal>
     );
   }
 }
