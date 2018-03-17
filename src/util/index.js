@@ -228,7 +228,14 @@ export function addNewClass(className, starting_date) {
 }
 
 export function getALlPossibleModules() {
-  return fetch(`${BASE_URL}/api/modules`).then(res => res.json());
+  const token = localStorage.getItem("token")
+  return fetch(`${BASE_URL}/api/modules`,
+  {
+    credentials: "same-origin",
+    headers: {
+    'Authorization':'Bearer ' + token,
+  }})
+  .then(res => res.json());
 }
 
 export function getAllSharedDates(items) {

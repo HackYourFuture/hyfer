@@ -9,11 +9,6 @@ import {
 } from '../../store';
 
 const stack = [];
-// #todo
-// tamiz kardan
-// responsive
-// module toye sign out
-// tarikh balaye hafte 
 
 export default class Attendance extends React.Component{
 
@@ -92,19 +87,19 @@ export default class Attendance extends React.Component{
             buttons = (
                 <div className={styles.buttons} >
                     <button className={styles.button_save}
-                     disabled={!this.state.edit_Mode}
-                     name="save"
-                     onClick={this.onSave}
+                        disabled={!this.state.edit_Mode}
+                        name="save"
+                        onClick={this.onSave}
                     >Save</button>
                     <button className={styles.button_undo}
-                     disabled={!this.state.edit_Mode}
-                     name="undo"
-                     onClick={this.undo}
+                        disabled={!this.state.edit_Mode}
+                        name="undo"
+                        onClick={this.undo}
                     >Undo</button>
                     <button className={styles.button_cancel}
-                     disabled={!this.state.edit_Mode}
-                     name="cancel"
-                     onClick={this.onCancel}
+                        disabled={!this.state.edit_Mode}
+                        name="cancel"
+                        onClick={this.onCancel}
                     >Cancel</button>
                 </div>
             )
@@ -113,7 +108,7 @@ export default class Attendance extends React.Component{
         return(
             <div>
                 {title}
-                <div >
+                <div className={styles.wrapper}>
                     <div className={styles.group_name}>
                         <h3 className={styles.group_name_inner}>{group_name}</h3>
                         <WeekIndicator
@@ -123,7 +118,7 @@ export default class Attendance extends React.Component{
                         repoName={repoName}
                         />
                     </div>
-                    <div className={styles.wrapper}>
+                    <div className={styles.content_wrapper}>
                         {content}
                     </div>
                     {buttons}

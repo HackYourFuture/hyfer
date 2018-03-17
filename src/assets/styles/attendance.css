@@ -9,12 +9,19 @@ body {
   background-color: rgb(250, 250, 250);
 }
 
-.wrapper{align-content: center;
+.content_wrapper{align-content: center;
   background-color: #ffffff;
   border-radius: 10px;
   margin: 3px 10px 10px 10px;
   padding: 10px;
+  /* min-width: 1000px; */
 }
+/* 
+.wrapper{
+  min-width: 1100px;
+  overflow-x: auto ;
+  overflow-y: visible;
+} */
 
 h3{display: inline-block;}
 
@@ -30,6 +37,7 @@ h3{display: inline-block;}
 .checkboxes{display: inline-block;
   height: 80px;
   margin: auto 20px auto 20px;
+  position: relative;
 }
 
 .Attendant{
@@ -63,7 +71,7 @@ h3{display: inline-block;}
 }
 
 .group_name{color: #787979;
-  margin-left: 3.5%;
+  margin-left: 2.5%;
   top:-5px;
   float: left;
 }
@@ -71,8 +79,10 @@ h3{display: inline-block;}
 .group_name_inner{width: 300px;
   float: left;}
 
-.week_indicator{ width: 100px;
+.week_indicator{ width: 82px;
+  margin: 0 9px;
   float: left;
+  text-align: center;
 }
 
 .message{display: block;

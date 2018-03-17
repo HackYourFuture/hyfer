@@ -76,20 +76,21 @@ export default class Header extends Component {
       );
     } else {
       user = (
-        <div className={styles.signed_in}>
-          <img
+        <ul className={styles.signed_in}>
+          <li><img
             src={this.state.avatarUrl}
             alt="user icon"
             className={styles.userIcon}
-          />
-          <a
-            href="http://localhost:3000/"
-            onClick={this.SignOut}
-            style={{ color: '#9da2a9' }}
-          >
-            Sign Out
-          </a>
-        </div>
+          /></li>
+          <li><div className={styles.menu}>
+            <a
+              href="http://localhost:3000/"
+              onClick={this.SignOut}
+            >
+              Sign Out
+            </a>
+          </div></li>
+        </ul>
       );
     }
 

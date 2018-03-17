@@ -57,9 +57,31 @@ font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 .userIcon {
-  width: 70px;
-  height: 70px;
-  border-radius: 40%;
+  width: 50px;
+  height: 50px;
+  margin: 2.5px;
+  border-radius: 50%;
+  float: right
+}
+
+.menu{display: none;
+  width: 100px;
+  background-color:white;
+  color: #787979;
+  padding: 8px;
+  border: 1px solid rgb(224, 223, 223);
+  border-radius: 1px;
+  text-align: center;
+  font-size: 1.3em;
+  font-weight: bold;
+}
+
+a{text-decoration: none;}
+
+.signed_in{margin: 0 2%;}
+
+.signed_in:hover .menu{display: inline-block;
+  cursor: pointer;
 }
 
 .signInWrapper {
@@ -78,19 +100,18 @@ font-family: Roboto, "Helvetica Neue", sans-serif;
   display: inline-block;
   width: 80%;
   padding: 3px;
-  font-size: 1.5rem;
+  font-size: 1rem;
   text-decoration: none;
   text-align: center;
-  background-color: white;
-  color: rgb(62, 72, 133);
-  border-radius: 5px;
-  box-shadow: 0 2px 10px;
+  color: white;
+  border-radius: 3px;
+  border: 1px solid white;
   transition: all 0.5s ease;
 }
 
 .signInButton:hover{
   background-color: white;
-  color: rgb(31, 35, 61);
+  color: rgb(63, 81, 181);
 }
 
 .signInButton:active {
