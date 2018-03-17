@@ -1,4 +1,4 @@
-.formContainer {
+.formWrapper {
   margin: 2rem 0;
   position: relative;
 }
@@ -12,26 +12,30 @@
   font-size: 2em;
 }
 
-.dateInstr {
-  font-size: 15px;
-  color: grey;
-  font-style: italic;
-  margin-left: 4px;
-}
-
-.classNumber {
+.select {
   min-width: 300px;
   min-height: 30px;
   padding: 8px;
+  margin-bottom: 2rem;
+  margin-top: 1rem;
   font-size: 20px;
 }
-.classPrefix {
-  color: grey;
-  font-size: 1.5rem;
-  margin-right: 3px;
+
+.assignedTeacherWrapper {
+  background: lightblue;
+  font-size: 1.5em;
+  padding: 10px;
+  border-radius: 12px;
 }
 
-.btnsContainer {
+.unAssignTeacher {
+  font-size: 2.2rem;
+  color: red;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.btnWrapper {
   margin-top: 6rem;
   display: flex;
   flex-direction: column;
@@ -61,8 +65,4 @@
 
 .btn.cancel {
   background: red;
-}
-
-.errorMessage {
-  color: red;
 }
