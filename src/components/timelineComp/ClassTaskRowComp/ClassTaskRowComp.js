@@ -11,8 +11,9 @@ export default class ClassTaskRowComp extends Component {
     let rowCells = [];
     if (weeksBefore.length !== 0) {
       rowCells = weeksBefore.map(week => (
-        <EmptyTaskCell key={week} width={width} height={height} />
+        <EmptyTaskCell key={week} week={week} width={width} height={height} />
       ));
+      rowCells.pop();
     }
 
     const taskRowItems = items.map(item => {
