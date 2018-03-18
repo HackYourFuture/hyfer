@@ -30,7 +30,10 @@ class store {
 		reset_slack_username: [],
 		reset_freecodecamp_username: [],
 		reset_mobile: [],
-		reset_group_id: []
+		reset_group_id: [],
+
+		mobileActive: false,
+		slackActive: false
 		           
     }; 
 
