@@ -168,7 +168,7 @@ export default function() {
 
     result
       .then(() => {
-        fetchItems();
+        return fetchItems();
       })
       .catch(err => console.log(err));
   };
