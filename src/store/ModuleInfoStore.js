@@ -55,13 +55,15 @@ export default function() {
       } = _data;
       let modeuleSundays = _getSundays(start, end);
       let sundays = { sundays: modeuleSundays };
+      const token = localStorage.getItem("token")
       let BASE_URL = 'http://localhost:3005/api/history';
       //sundays format => {sundays: ["2016/11/06", "2016/11/13", "2016/11/20"]};
       fetch(`${BASE_URL}/${running_module_id}/${group_id}`, {
         method: 'PATCH',
         body: JSON.stringify(sundays),
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization':'Bearer ' + token,
         }
       })
         .then(response => response.json())

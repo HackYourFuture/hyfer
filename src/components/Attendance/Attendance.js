@@ -156,6 +156,7 @@ export default class Attendance extends React.Component{
     };
 
     onSave = () => {
+        const token = localStorage.getItem("token")
         const body = this.state.history;
         let BASE_URL = 'http://localhost:3005/api/history';
         fetch(BASE_URL , {
@@ -163,6 +164,7 @@ export default class Attendance extends React.Component{
             body: JSON.stringify(body),
             headers: {
             'Content-Type': 'application/json',
+            'Authorization':'Bearer ' + token,
             }, 
           })
         .then(response => response.json())

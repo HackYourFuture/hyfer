@@ -4,6 +4,7 @@ import ModuleButton from './ModuleButton';
 import ModuleObservable from './ModuleObservable';
 import ModuleServiceBack from './ModuleServiceBack';
 import ModuleForm from './ModuleForm';
+import Notifications, {notify} from 'react-notify-toast';
 //import { triggerAsyncId } from 'async_hooks';
 
 export default class ModuleFooter extends Component {
@@ -21,11 +22,13 @@ export default class ModuleFooter extends Component {
 
   UndoChanges = () => {
     ModuleObservable.resetModules()
+    notify.show('Your changes have been cancelled !', 'warning');
   }
 
   SaveChanges = () => {
     ModuleServiceBack.saveModules(ModuleObservable.getModules() , ()=> {
       ModuleServiceBack.loadModules((result)=> ModuleObservable.initModules(result))
+      notify.show('Your changes are successfully Saved !', 'success')
     })
   }
 
@@ -54,6 +57,7 @@ export default class ModuleFooter extends Component {
   render() {
     return (
       <div className={style.moduleFooter}>
+            <Notifications />
             <ModuleButton action="undo" title="Undo Changes" disabled={!this.state.isChanged} clickHandler={this.UndoChanges} />
             <span className={style.moduleButtonSep}></span>
             <ModuleButton action="save" title="Save Changes" disabled={!this.state.isChanged} clickHandler={this.SaveChanges} />
