@@ -4,6 +4,7 @@ import styles from '../../assets/styles/profile.css';
 import { Link } from 'react-router-dom';
 import Notifications, {notify} from 'react-notify-toast';
 
+const token = localStorage.getItem("token")
 
 export default class Profile extends React.Component {
 
@@ -51,6 +52,7 @@ export default class Profile extends React.Component {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization':'Bearer ' + token,
       },
       body: JSON.stringify(updatedUser), 
     })

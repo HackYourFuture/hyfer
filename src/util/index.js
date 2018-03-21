@@ -1,6 +1,7 @@
 import moment from 'moment';
 
 const BASE_URL = 'http://localhost:3005';
+const token = localStorage.getItem("token")
 
 //return a promise with `then` getting the json formatted data
 export function getTimelineItems() {
@@ -32,7 +33,11 @@ export function setEndingDateForModules(allItems, groups) {
 }
 
 export function getAllGroupsWithIds() {
-  return fetch(`${BASE_URL}/api/groups`).then(res => res.json());
+  return fetch(`${BASE_URL}/api/groups`,{
+  headers: {
+    'Authorization':'Bearer ' + token,
+    }} )
+    .then(res => res.json());
 }
 
 export function getAllTotalWeeksAndSundays(allItems) {
@@ -49,7 +54,12 @@ export function getAllTotalWeeksAndSundays(allItems) {
 }
 
 export function getTeachers() {
-  return fetch(`${BASE_URL}/api/users`).then(res => res.json());
+  return fetch(`${BASE_URL}/api/users`,{
+    headers: {
+      'Authorization':'Bearer ' + token,
+    }}
+    )
+    .then(res => res.json());
 }
 
 export function getWeeksBeforeAndAfter(allWeeks, classModules) {
@@ -156,7 +166,11 @@ export function removeModule(chosenModule) {
 }
 
 export function getModulesOfGroup(groupId) {
-  return fetch(`${BASE_URL}/api/running/${groupId}`).then(res => res.json());
+  return fetch(`${BASE_URL}/api/running/${groupId}`,{
+    headers: {
+      'Authorization':'Bearer ' + token,
+      }} )
+    .then(res => res.json());
 }
 
 ////////////////////////////////////////////////////////////////// helper functions
