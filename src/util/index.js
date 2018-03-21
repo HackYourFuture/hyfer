@@ -53,7 +53,6 @@ export function getTeachers() {
 }
 
 export function getWeeksBeforeAndAfter(allWeeks, classModules) {
-  console.log(classModules);
 
   // starting date of the first module of a class
   const firstModuleStartingDate = moment.min(
@@ -63,7 +62,6 @@ export function getWeeksBeforeAndAfter(allWeeks, classModules) {
   const lastModuleEndingDate = moment.max(
     classModules.map(week => week.ending_date)
   );
-  console.log('ending', lastModuleEndingDate.toString());
   // get an array with all the weeks before the start of this class
   const weeksBefore = allWeeks.filter(week =>
     week[0].isBefore(firstModuleStartingDate)
@@ -73,7 +71,6 @@ export function getWeeksBeforeAndAfter(allWeeks, classModules) {
   const weeksAfter = allWeeks.filter(week =>
     week[1].isAfter(lastModuleEndingDate)
   );
-  console.log(weeksAfter.map(e => e.toString()));
   return {
     weeksBefore,
     weeksAfter
@@ -150,8 +147,11 @@ export function moveLeft(chosenModule, groups) {
 
 export function removeModule(chosenModule) {
   const { id, position } = chosenModule;
+  const token = localStorage.getItem("token")
   return fetch(`${BASE_URL}/api/running/${id}/${position}`, {
-    method: 'DELETE'
+    method: 'DELETE',
+    headers: { 'Content-Type': 'Application/json',
+    'Authorization':'Bearer ' + token, },
   }).then(res => res.json());
 }
 
@@ -171,7 +171,7 @@ function _patchGroupsModules(
 ) {
   // we need position for request and group_name to filter the group id wanted
   const { position } = item;
-
+  const token = localStorage.getItem("token")
   const body = {
     duration: newDuration,
     position: newPosition,
@@ -180,7 +180,8 @@ function _patchGroupsModules(
   };
   return fetch(`${BASE_URL}/api/running/update/${group_id}/${position}`, {
     method: 'PATCH',
-    headers: { 'Content-Type': 'Application/json' },
+    headers: { 'Content-Type': 'Application/json',
+    'Authorization':'Bearer ' + token, },
     body: JSON.stringify(body)
   }).then(res => res.json());
   // return Promise.resolve('yo I just did it');
@@ -409,11 +410,14 @@ function _patchNewModuleForOneGroup(
 }
 
 async function _addModule(moduleId, groupId, position) {
+  const token = localStorage.getItem("token")
   return fetch(
     `${BASE_URL}/api/running/add/${moduleId}/${groupId}/${position}`,
     {
       method: 'PATCH',
-      headers: { 'Content-Type': 'Application/json' }
+      headers: { 'Content-Type': 'Application/json',
+      'Authorization':'Bearer ' + token,
+     }
     }
   ).then(res => res.json());
 }

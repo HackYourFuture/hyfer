@@ -70,7 +70,7 @@ export default function() {
     // set the state with the array of all current groups [maybe needed for sidecolumn group names]
     const groups = Object.keys(timelineItems);
     groups.sort((group1, group2) => {
-      return group1.split(' ')[1] > group2.split(' ')[1];
+      return +group1.split(' ')[1] > +group2.split(' ')[1];
     });
     const orderdTimelineItems = {};
     groups.forEach(group => {
