@@ -159,6 +159,7 @@ export default class Attendance extends React.Component{
         const token = localStorage.getItem("token")
         const body = this.state.history;
         let BASE_URL = 'http://localhost:3005/api/history';
+        
         fetch(BASE_URL , {
             method: 'POST', 
             body: JSON.stringify(body),

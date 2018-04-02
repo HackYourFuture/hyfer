@@ -1,22 +1,29 @@
 ## Hyfer
 
-This is a small setup for the project. `react-router-dom` is added and configured so please take a look in `app.js` to how it all work.
+Hyfer is a Code School platform for students and teachers.
 
-Also [css modules](https://github.com/gajus/react-css-modules) is enabled, it's an easier way of styling without caring about if class names collide. Please take a look at the link, it'll save us a lot of headache.
+### Installation
 
-You will find a couple of folders
+## Database
 
-* `Pages`: these are the components that are being rendered directly in the `app.js`
-* `Components`: these are the components that are embedded in components of the `Pages` folder
-* `Helpers`: these are reusable components such as a button, inputFiled...
+This application requires a MySQL database.
 
-The structure is made so that it's easy to integrate you already built parts of the project. Look into the folder named `Pages` you will already find two folders called `Users` and `Modules`, you can put your made components instead of what's in there. But for the consistency try to follow the folder structure mentioned before.
+- Create an empty database and a MySQL user with rights to the database.
+
+- Use the command line to load the most recent version of the schema SQL file from the `sql` folder into the database:
+
+    `mysql -u` _user-name_ `-p` _database-name_ `<` _sql-file_
+
+- Next, repeat this command to load the sample data SQL file from the `sql` folder into the database.
+
+- create a `config.js` file in the `server/config` folder, paste the contents of the `config.sample.js` file into it, and modify to reflect your specific database configuration.
+you need to Register a new OAuth application in your GitHub developer settings. set the Homepage URL to `http://localhost:3005` and callback URL to `http://localhost:3005/auth/github/callback`.
 
 ## Installing dependencies
 
 Install dependencies using:
 ```bash
-yarn
+yarn install
 ```
 
 ## Running tests
@@ -32,4 +39,8 @@ yarn test
 ```bash
 yarn start
 ```
+
+# Admin functions
+
+Certain admin tasks require a teacher role. To initially give yourself this role you need to sign-in with GitHUb and then use the my-sql command line or the MySQL Workbench to change your role in the users table from guest to teacher.
 

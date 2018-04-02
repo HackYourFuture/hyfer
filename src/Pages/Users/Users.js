@@ -4,14 +4,13 @@ import styles from '../../assets/styles/users.css';
 import { Link } from 'react-router-dom';
 import Moment from 'moment';
 
-import FaGraduationCap from 'react-icons/lib/fa/graduation-cap';
-import FaClockO from 'react-icons/lib/fa/clock-o';
 import MdEmail from 'react-icons/lib/md/email';
 import FaSlack from 'react-icons/lib/fa/slack';
 import FaFire from 'react-icons/lib/fa/fire';
 import FaGithub from 'react-icons/lib/fa/github';
-import MdClass from 'react-icons/lib/md/class';
 import FaMobile from 'react-icons/lib/fa/mobile';
+
+const token = localStorage.getItem("token")
 
 export default class Users extends React.Component {
 
@@ -32,7 +31,10 @@ export default class Users extends React.Component {
   };
 
   loadUsers() {
-    fetch('http://localhost:3000/api/users')
+    fetch('http://localhost:3000/api/users',{
+      headers: {
+        'Authorization':'Bearer ' + token,
+        }} )
       .then(res => res.json())
       .then(json => {
         store.setState({
