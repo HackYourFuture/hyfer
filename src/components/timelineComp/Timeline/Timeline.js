@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import { timelineStore, TODAY_MARKER_REFERENCE } from '../../../store';
+import { timelineStore, TODAY_MARKER_REFERENCE } from "../../../store";
 
-import WeekComp from '../WeekComp/WeekComp';
-import ClassBarRowComp from '../ClassBarRowComp/ClassBarRowComp';
-import ClassTaskRowComp from '../ClassTaskRowComp/ClassTaskRowComp';
-import loader from '../../../assets/images/loader.gif';
-import Buttons from '../Buttons/Buttons';
-import classes from './timeline.css';
+import WeekComp from "../WeekComp/WeekComp";
+import ClassBarRowComp from "../ClassBarRowComp/ClassBarRowComp";
+import ClassTaskRowComp from "../ClassTaskRowComp/ClassTaskRowComp";
+import loader from "../../../assets/images/loader.gif";
+import Buttons from "../Buttons/Buttons";
+import classes from "./timeline.css";
 
 export default class Timeline extends Component {
   state = {
@@ -91,11 +91,17 @@ export default class Timeline extends Component {
   };
 
   componentDidMount = () => {
+    if (this.props.teachers === null) {
+      timelineStore.fetchItems(false).then(() => {
+        this.setState({ loaded: true });
+      });
+    } else {
+      timelineStore.fetchItems(true).then(() => {
+        this.setState({ loaded: true });
+      });
+    }
     // kick in the process by getting the items and changing the state properties
     // in didMount cause it causes side-effects
-    timelineStore.fetchItems().then(() => {
-      this.setState({ loaded: true });
-    });
   };
 
   componentWillUnmount = () => {
@@ -107,8 +113,8 @@ export default class Timeline extends Component {
     // if there items are fetched  width is the 200 times total weeks otherwise it's 100vh
     // FIXME: no idea why this is not working with just 16 instead of 21
     const width = allWeeks
-      ? itemWidth * allWeeks.length + 21 * allWeeks.length + 'px'
-      : '100vw';
+      ? itemWidth * allWeeks.length + 21 * allWeeks.length + "px"
+      : "100vw";
     return (
       <div className="rootContainer">
         <ClassBarRowComp

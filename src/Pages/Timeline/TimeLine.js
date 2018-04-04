@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import styles from '../../assets/styles/timeline.css';
-import ModuleReadme from '../../components/ModuleReadme/ModuleReadme';
-import Attendance from '../../components/Attendance/Attendance';
+import React, { Component } from "react";
+import styles from "../../assets/styles/timeline.css";
+import ModuleReadme from "../../components/ModuleReadme/ModuleReadme";
+import Attendance from "../../components/Attendance/Attendance";
 
-import TimelineComp from '../../components/timelineComp/Timeline/Timeline';
+import TimelineComp from "../../components/timelineComp/Timeline/Timeline";
 
 import {
   READ_ME_CHANGED,
@@ -23,7 +23,7 @@ import {
   GROUPS_WITH_IDS_CHANGED,
   ALL_TEACHERS_CHAGNED,
   INFO_SELECTED_MDOULE_CHANGED
-} from '../../store/index';
+} from "../../store/index";
 
 export default class TimeLine extends Component {
   state = {
@@ -107,7 +107,7 @@ export default class TimeLine extends Component {
       }
     });
 
-    moduleInfoStore.defaultReadme('curriculum');
+    moduleInfoStore.defaultReadme("curriculum");
 
     uiStore.subscribe(mergedData => {
       if (mergedData.type === LOGIN_STATE_CHANGED) {
@@ -141,7 +141,7 @@ export default class TimeLine extends Component {
         selectedModule: item
       }
     });
-  }
+  };
 
   render() {
     // last item being set in store
@@ -166,21 +166,23 @@ export default class TimeLine extends Component {
       tab
     } = this.state;
 
-    let content = <ModuleReadme readme={readme} repoName={repoName}/>
-    if ( tab === "attendance") {
-       content = <Attendance 
-       repoName={repoName}
-       history={history}
-       duration={duration}
-       group_name={group_name}
-       students={students}
-      />
+    let content = <ModuleReadme readme={readme} repoName={repoName} />;
+    if (tab === "attendance") {
+      content = (
+        <Attendance
+          repoName={repoName}
+          history={history}
+          duration={duration}
+          group_name={group_name}
+          students={students}
+        />
+      );
     }
 
-    if (isLoggedIn && isATeacher){
+    if (isLoggedIn && isATeacher) {
       return (
         <main>
-          <div style={{ marginBottom: '3rem' }}>
+          <div style={{ marginBottom: "3rem" }}>
             <TimelineComp
               itemWidth={170}
               rowHeight={70}
@@ -198,12 +200,18 @@ export default class TimeLine extends Component {
             />
           </div>
           <div className={styles.tabs}>
-            <button className={styles.ReadmeTab} 
-              onClick={()=>this.setState({tab: "readme"})}
-            >Readme</button>
-            <button className={styles.AttendanceTab} 
-            onClick={()=>this.setState({tab: "attendance"})}
-            >Attendance</button>
+            <button
+              className={styles.ReadmeTab}
+              onClick={() => this.setState({ tab: "readme" })}
+            >
+              Readme
+            </button>
+            <button
+              className={styles.AttendanceTab}
+              onClick={() => this.setState({ tab: "attendance" })}
+            >
+              Attendance
+            </button>
           </div>
           {content}
         </main>
@@ -211,7 +219,7 @@ export default class TimeLine extends Component {
     } else {
       return (
         <main>
-          <div style={{ marginBottom: '3rem' }}>
+          <div style={{ marginBottom: "3rem" }}>
             <TimelineComp
               itemWidth={170}
               rowHeight={70}
@@ -224,11 +232,12 @@ export default class TimeLine extends Component {
               itemClickHandler={this.itemClickHandler}
               allModules={modules}
               groupsWithIds={groupsWithIds}
-              teachers={teachers}
+              //teachers={teachers}
+              teachers={null}
               infoSelectedModule={infoSelectedModule}
             />
           </div>
-          <ModuleReadme readme={readme} repoName={repoName}/>
+          <ModuleReadme readme={readme} repoName={repoName} />
         </main>
       );
     }
