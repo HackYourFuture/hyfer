@@ -1,2 +1,6 @@
-{"javascript.implicitProjectConfig.experimentalDecorators": true,
+{
+  "javascript.implicitProjectConfig.experimentalDecorators": true,
+  "cSpell.words": [
+    "norepo"
+  ],
 }

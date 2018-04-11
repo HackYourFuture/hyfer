@@ -33,7 +33,7 @@ export default function() {
     return _data;
   };
 
-  // Normal methodes will be changing the state
+  // Normal method's will be changing the state
 
   const getHistory = (clickEvent, isATeacher) => {
     
