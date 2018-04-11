@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import style from  '../../assets/styles/modules.css';
+import React, { Component } from 'react'
+import style from  '../../assets/styles/modules.css'
 
 export default class ModuleHeader extends Component {
 
@@ -11,6 +11,6 @@ export default class ModuleHeader extends Component {
         {this.weeksGrid.map( (item , index) => <div key={index} className="week_element">{item}</div>)}
         </div>
         
-    );
+    )
   }
 }

@@ -1,8 +1,8 @@
-const api_url = 'http://localhost:3000/api';
+const api_url = 'http://localhost:3000/api'
 
 class moduleServiceBack {
   loadModules(callBack) {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token')
     fetch(`${api_url}/modules`, {
       credentials: 'same-origin',
       headers: {
@@ -11,16 +11,16 @@ class moduleServiceBack {
     })
       .then(res => res.json())
       .then(resJson => {
-        callBack(resJson);
+        callBack(resJson)
       })
       .catch(error => {
-        console.log(error);
-        throw new Error('Server error!');
-      });
+        console.log(error)
+        throw new Error('Server error!')
+      })
   }
 
   saveModules(modules, callBack) {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token')
     fetch(`${api_url}/modules`, {
       method: 'PATCH',
       credentials: 'same-origin',
@@ -31,14 +31,14 @@ class moduleServiceBack {
       body: JSON.stringify(modules)
     })
       .then(res => {
-        callBack();
+        callBack()
       })
       .catch(error => {
-        console.log(error);
-        throw new Error('Server error!');
-      });
+        console.log(error)
+        throw new Error('Server error!')
+      })
   }
 }
 
-var ModuleServiceBack = new moduleServiceBack();
-export default ModuleServiceBack;
+var ModuleServiceBack = new moduleServiceBack()
+export default ModuleServiceBack

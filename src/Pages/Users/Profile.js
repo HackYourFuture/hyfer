@@ -1,8 +1,8 @@
-import React from 'react';
-import store from '../../store/UserStore';
-import styles from '../../assets/styles/profile.css';
-import { Link } from 'react-router-dom';
-import Notifications, {notify} from 'react-notify-toast';
+import React from 'react'
+import store from '../../store/UserStore'
+import styles from '../../assets/styles/profile.css'
+import { Link } from 'react-router-dom'
+import Notifications from 'react-notify-toast'// , {notify} is unused
 
 const token = localStorage.getItem("token")
 
@@ -10,8 +10,8 @@ export default class Profile extends React.Component {
 
   componentWillMount = () => {
     this.subscription = store.subscribe(state => {
-      this.setState(state);
-    });
+      this.setState(state)
+    })
   }
 
   setInputActive = (e) => {
@@ -20,12 +20,12 @@ export default class Profile extends React.Component {
   }
 
   componentWillUnmount() {
-    this.subscription.remove();
+    this.subscription.remove()
   }
 
   checkHasValue (val) {
     console.log(val)
-    return (!val || val.length === 0) ? '' : styles.isCompleted;
+    return (!val || val.length === 0) ? '' : styles.isCompleted
   }
 
   componentDidMount() {
@@ -87,7 +87,7 @@ export default class Profile extends React.Component {
             <Link to='/users'>
               <input className={styles.backButton} 
                 type="button" 
-                value="&#8249;" 
+                value="&#8249" 
               />
             </Link> 
           <h1>Edit Profile</h1>
@@ -97,7 +97,7 @@ export default class Profile extends React.Component {
               <input className={styles.matInput} 
                     type="text" value={store.state.full_name} 
                     id="first-name"
-                    onChange={(e)=> {store.setState({full_name: e.target.value});}}
+                    onChange={(e)=> {store.setState({full_name: e.target.value})}}
                     onFocus = {(e) => {this.setInputActive(e)}}
                     />
             </div>
@@ -107,7 +107,7 @@ export default class Profile extends React.Component {
               <select value={store.state.role}
                       id="role" 
                       className={styles.matInput}
-                      onChange={(e)=> {store.setState({role: e.target.value});}}
+                      onChange={(e)=> {store.setState({role: e.target.value})}}
                       >
                 <option value="guest" disabled hidden>Role</option>
                 <option value="teacher">Teacher</option>
@@ -118,7 +118,7 @@ export default class Profile extends React.Component {
             <div className={styles.small + ' ' + styles.matDiv + ' ' + styles.isCompleted}>
               <label for="Class" className={styles.matLabel}>Class</label>
               <select   className={styles.matInput} value = {'{"name":"'+store.state.group_name+'","id":"'+store.state.group_id+'"}'}
-                        onChange={(e)=> {store.setState({group_name: JSON.parse(e.target.value).name, group_id: +JSON.parse(e.target.value).id});
+                        onChange={(e)=> {store.setState({group_name: JSON.parse(e.target.value).name, group_id: +JSON.parse(e.target.value).id})
               }}>
                 <option value='{"name":"Class 6","id":"44"}'>Class 6</option>
                 <option value='{"name":"Class 7","id":"45"}'>Class 7</option>
@@ -138,7 +138,7 @@ export default class Profile extends React.Component {
                       className={styles.matInput} 
                       value={store.state.email}
                       id="e-mail" 
-                      onChange={(e)=> {store.setState({email: e.target.value});}}
+                      onChange={(e)=> {store.setState({email: e.target.value})}}
                       onFocus = {(e) => {this.setInputActive(e)}}/>
             </div>    
             <div className={styles.matDiv+ ' ' + this.checkHasValue(store.state.slack_username)}>
@@ -147,7 +147,7 @@ export default class Profile extends React.Component {
                       value={store.state.slack_username}
                       className={styles.matInput}  
                       id="slack-username" 
-                      onChange={(e)=> {store.setState({slack_username: e.target.value});}} 
+                      onChange={(e)=> {store.setState({slack_username: e.target.value})}} 
                       onFocus = {(e) => {this.setInputActive(e)}}
                       />
             </div>
@@ -157,7 +157,7 @@ export default class Profile extends React.Component {
                       value={store.state.freecodecamp_username} 
                       className={styles.matInput}
                       id="freecodecamp-username"
-                      onChange={(e)=> {store.setState({freecodecamp_username: e.target.value});}}
+                      onChange={(e)=> {store.setState({freecodecamp_username: e.target.value})}}
                       onFocus = {(e) => {this.setInputActive(e)}}
                       />
             </div>  
@@ -167,7 +167,7 @@ export default class Profile extends React.Component {
                       value={store.state.mobile}
                       className={styles.matInput} 
                       id="mobile" 
-                      onChange={(e)=> {store.setState({mobile: e.target.value});}}
+                      onChange={(e)=> {store.setState({mobile: e.target.value})}}
                       onFocus = {(e) => {this.setInputActive(e)}}
                       />
             </div>           

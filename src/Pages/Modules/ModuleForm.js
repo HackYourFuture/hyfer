@@ -1,14 +1,14 @@
-import React from 'react';
-import style from  '../../assets/styles/modules.css';
-import ModalDialog from '../../components/ModalDialog';
+import React from 'react'
+import style from  '../../assets/styles/modules.css'
+import ModalDialog from '../../components/ModalDialog'
 
 
 export default class ModuleForm extends React.Component {
 
     
     constructor(props){
-        super(props);
-        this.state = {ModuleId: '' , ModuleName: '', RepoName: '', RepoUrl: '', Duration: '', Color: '', Optional: false , focusId:'' , errorIds:[]};
+        super(props)
+        this.state = {ModuleId: '' , ModuleName: '', RepoName: '', RepoUrl: '', Duration: '', Color: '', Optional: false , focusId:'' , errorIds:[]}
     }
 
     componentDidMount = () => {
@@ -31,16 +31,16 @@ export default class ModuleForm extends React.Component {
     }
 
     onFocus = (e) => {
-        this.setState({focusId: e.target.id});
+        this.setState({focusId: e.target.id})
     }
     onBlur = (e) => {
-        this.setState({focusId: ''});
+        this.setState({focusId: ''})
     }
     
     inputChanged = (e) => {
         const id = e.target.id
         const val = e.target.value
-        this.setState({[id] : val});
+        this.setState({[id] : val})
         this.validateInput( id , val)
 
     }
@@ -90,12 +90,12 @@ export default class ModuleForm extends React.Component {
     }
 
     resetForm(){
-        this.setState({ModuleId: '' , ModuleName: '', RepoName: '', RepoUrl: '', Duration: '', Color: '', Optional: false , focusId:'' , errorIds:[]});
+        this.setState({ModuleId: '' , ModuleName: '', RepoName: '', RepoUrl: '', Duration: '', Color: '', Optional: false , focusId:'' , errorIds:[]})
     }
 
     RegError(id){
         if(!this.state.errorIds.includes(id)){
-            this.setState({errorIds : [...this.state.errorIds , id]});
+            this.setState({errorIds : [...this.state.errorIds , id]})
         }
     }
 
@@ -104,7 +104,7 @@ export default class ModuleForm extends React.Component {
             this.state.errorIds.filter(function(item) { 
                 return item !== id
             })
-        });
+        })
     }
 
     isURL(str) {
@@ -117,30 +117,30 @@ export default class ModuleForm extends React.Component {
     }
 
     colorChanged = (e) => {
-        this.setState({Color : e.target.value});
+        this.setState({Color : e.target.value})
         this.UnRegError("Color")
     }
 
     optionalToggle = (e)=> {
-        this.setState({Optional : !this.state.Optional});
+        this.setState({Optional : !this.state.Optional})
     }
 
     addModule = (e) => {
-        let module = {};
-        module.id = this.state.ModuleId;
-        module.module_name = this.state.ModuleName;
-        module.git_repo = this.state.RepoName;
-        module.git_url = this.state.RepoUrl;
-        module.default_duration = this.state.Duration;
-        module.color = this.state.Color;
+        let module = {}
+        module.id = this.state.ModuleId
+        module.module_name = this.state.ModuleName
+        module.git_repo = this.state.RepoName
+        module.git_url = this.state.RepoUrl
+        module.default_duration = this.state.Duration
+        module.color = this.state.Color
         if(this.state.Optional){
-            module.optional = 1;
+            module.optional = 1
         }
         else {
-            module.optional = 0;
+            module.optional = 0
         }
-        this.props.onAdd(module);
-        this.props.onCancel();
+        this.props.onAdd(module)
+        this.props.onCancel()
 
         if(!this.props.module)
             this.resetForm()
@@ -230,6 +230,6 @@ export default class ModuleForm extends React.Component {
 
                 </div>
             </ModalDialog>
-          );
+          )
     }
 }

@@ -35,7 +35,7 @@ class store {
 		mobileActive: false,
 		slackActive: false
 		           
-    }; 
+    } 
 
 	setState(updates) {
 		Object.assign(this.state, updates)

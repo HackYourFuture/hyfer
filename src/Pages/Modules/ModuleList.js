@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
-import ModuleItem from './ModuleItem';
-import ModuleObservable from './ModuleObservable';
-import style from  '../../assets/styles/modules.css';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import React, { Component } from 'react'
+import ModuleItem from './ModuleItem'
+import ModuleObservable from './ModuleObservable'
+import style from  '../../assets/styles/modules.css'
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 
 export default class ModuleList extends Component {
 
   constructor(props) {
-    super(props);
-    this.state = { weekWidth : 1 };
+    super(props)
+    this.state = { weekWidth : 1 }
   }
   
   componentWillMount = () => {
@@ -22,7 +22,7 @@ export default class ModuleList extends Component {
   }
 
   componentWillUnmount = () => {
-      window.removeEventListener("resize", this.computeWeekWidth);
+      window.removeEventListener("resize", this.computeWeekWidth)
   }
 
   computeWeekWidth = () => {
@@ -33,22 +33,22 @@ export default class ModuleList extends Component {
   }
 
   reorder = (list, startIndex, endIndex) => {
-      const result = Array.from(list);
-      const [removed] = result.splice(startIndex, 1);
-      result.splice(endIndex, 0, removed);
-      return result;
-  };
+      const result = Array.from(list)
+      const [removed] = result.splice(startIndex, 1)
+      result.splice(endIndex, 0, removed)
+      return result
+  }
 
   onDragEnd = (result) => {
       if (!result.destination) {
-        return;
+        return
       }
       const items = this.reorder(
           ModuleObservable.getModules(),
           result.source.index,
           result.destination.index
-      );
-      ModuleObservable.setModules(items);
+      )
+      ModuleObservable.setModules(items)
   }
 
   render() {
@@ -81,6 +81,6 @@ export default class ModuleList extends Component {
         </Droppable>
       </DragDropContext>
       
-    );
+    )
   }
 }

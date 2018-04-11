@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import style from  '../../assets/styles/modules.css';
+import React, { Component } from 'react'
+import style from  '../../assets/styles/modules.css'
 
 export default class ModuleButton extends Component {
 
     /*buttonClicked = ()=>{
-      alert('click');
+      alert('click')
     }*/
 
   render() {
@@ -16,6 +16,6 @@ export default class ModuleButton extends Component {
           <md-icon class="material-icons">{this.props.action}</md-icon>
         </button>
         
-    );
+    )
   }
 }

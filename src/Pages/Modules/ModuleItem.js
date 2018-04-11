@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import Resizable from 're-resizable';
-import style from  '../../assets/styles/modules.css';
-import ModuleObservable from './ModuleObservable';
-import ModuleForm from './ModuleForm';
+import React, { Component } from 'react'
+import Resizable from 're-resizable'
+import style from  '../../assets/styles/modules.css'
+import ModuleObservable from './ModuleObservable'
+import ModuleForm from './ModuleForm'
 
 export default class ModuleItem extends Component {
 
     constructor(props) {
-        super(props);
-        this.state = { isMenuShow : false , isEditing:false };
+        super(props)
+        this.state = { isMenuShow : false , isEditing:false }
         }
 
     showMenu = () => {
@@ -26,23 +26,23 @@ export default class ModuleItem extends Component {
     showAddModal = () => {
         this.setState({
                 isEditing: true
-        });
+        })
     }
     hideAddModal = () => {
         this.setState({
             isEditing: false
-        });
+        })
     }
 
     DeleteModule = () => {
-        const curModulesArr = ModuleObservable.getModules();
-        let newModulesArr = curModulesArr.map(a => ({...a}));
+        const curModulesArr = ModuleObservable.getModules()
+        let newModulesArr = curModulesArr.map(a => ({...a}))
         newModulesArr = newModulesArr.filter(m => m.id !== this.props.module.id)
-        ModuleObservable.setModules(newModulesArr);
+        ModuleObservable.setModules(newModulesArr)
       }
 
     UpdateModule = (module) => {
-        const curModulesArr = ModuleObservable.getModules();
+        const curModulesArr = ModuleObservable.getModules()
         let newModulesArr = curModulesArr.map(a => {
             if(a.id === module.id){
                 return module
@@ -50,8 +50,8 @@ export default class ModuleItem extends Component {
             else{
                 return {...a}
             }
-        });
-        ModuleObservable.setModules(newModulesArr);
+        })
+        ModuleObservable.setModules(newModulesArr)
     }
 
     render() {
@@ -119,7 +119,7 @@ export default class ModuleItem extends Component {
             </Resizable>
             <ModuleForm onCancel={this.hideAddModal} onAdd={this.UpdateModule} visible={this.state.isEditing} title={"Update Module " + this.props.module.module_name + ".."} module={this.props.module} actionName="UPDATE" />
             </div>
-        );
+        )
     
     }
 }
