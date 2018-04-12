@@ -34,31 +34,13 @@ class store {
 		slackActive: false
 
 	};
-	loadUsers = () => {
-		fetch('http://localhost:3000/api/users', {
-			headers: {
-				'Authorization': 'Bearer ' + token,
-			}
-		})
-			.then(res => res.json())
-			.then(res => {
-				this.setState({
-					users: res,
-					filteredUsers: res
-				});
-				return;
-			})
-			.catch(error => {
-				console.log(error);
-				throw new Error('Problem with Server: GET DATA');
-			});
-	}
 	notify = () => {
 		for (const handler of this.handlers) {
 			handler(this.state)
 		}
 	}
-	setState=(updates)=> {
+
+	setState = (updates) => {
 		Object.assign(this.state, updates)
 		this.notify()
 	}
@@ -67,7 +49,7 @@ class store {
 
 	handlers = new Set()
 
-	subscribe=(handler)=> {
+	subscribe = (handler) => {
 		this.handlers.add(handler)
 		handler(this.state)
 		return {
@@ -77,6 +59,31 @@ class store {
 		}
 	}
 
+
+	loadUsers = () => {
+		// console.log(this.state.users[1])
+		fetch('http://localhost:3000/api/users', {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + token,
+			}
+		})
+			.then(res => res.json())
+			.then(data => {
+				this.setState({
+					users: data,
+					filteredUsers: data,
+				});
+				return;
+			})
+			.catch(error => {
+				console.log(error);
+				throw new Error('Problem with Server: GET DATA');
+			});
+			
+		}
+		
 	saveProfile = () => {
 		const updatedUser = {
 			"id": this.state.id,
@@ -100,12 +107,17 @@ class store {
 			},
 			body: JSON.stringify(updatedUser),
 		})
-			.then(response => console.log("RESPONSE", response))
-			.catch((error) => {
-				console.log(error)
-				throw new Error('Problem with Server :  PATCH DATA')
+			.then(response => { 
+				if (response.status >= 400) {
+					throw new Error("Bad response from server");
+				}
+				this.loadUsers()
 			})
-		this.loadUsers()
+		.catch((error) => {
+			console.log(error)
+			throw new Error('Problem with Server :  PATCH DATA')
+		})
+		console.log(this.state.full_name)
 	}
 
 	resetProfile = () => {

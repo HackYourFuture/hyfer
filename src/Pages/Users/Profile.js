@@ -48,7 +48,7 @@ export default class Profile extends React.Component {
             <input className={styles.matInput}
               type="text" value={store.state.full_name}
               id="first-name"
-              onChange={(e) => { store.setState({ full_name: e.target.value }); }}
+              onChange={(e) => { store.setState({ full_name: e.target.value });}}
               onFocus={(e) => { this.setInputActive(e) }}
             />
           </div>
@@ -77,6 +77,7 @@ export default class Profile extends React.Component {
                   group_name: JSON.parse(e.target.value).name, group_id: +JSON.parse(e.target.value).id
                 });
               }}>
+              <option value='{"name":"Class 5","id":"43"}'>Class 5</option>
               <option value='{"name":"Class 6","id":"44"}'>Class 6</option>
               <option value='{"name":"Class 7","id":"45"}'>Class 7</option>
               <option value='{"name":"Class 8","id":"46"}'>Class 8</option>
