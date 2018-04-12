@@ -9,10 +9,10 @@ import Notifications, {notify} from 'react-notify-toast';
 
 export default class ModuleFooter extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {isChanged:false, isadding: false};
-  }
+  state = {
+    isChanged: false,
+    isadding: false
+  };
 
   componentDidMount = () => {
     ModuleObservable.subscribe((newArr) => {

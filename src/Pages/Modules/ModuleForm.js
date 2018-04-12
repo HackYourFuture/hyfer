@@ -5,11 +5,17 @@ import ModalDialog from '../../components/ModalDialog';
 
 export default class ModuleForm extends React.Component {
 
-    
-    constructor(props){
-        super(props);
-        this.state = {ModuleId: '' , ModuleName: '', RepoName: '', RepoUrl: '', Duration: '', Color: '', Optional: false , focusId:'' , errorIds:[]};
-    }
+    state = {
+        ModuleId: '',
+        ModuleName: '',
+        RepoName: '',
+        RepoUrl: '',
+        Duration: '',
+        Color: '',
+        Optional: false,
+        focusId: '',
+        errorIds: []
+    };
 
     componentDidMount = () => {
         const module = this.props.module

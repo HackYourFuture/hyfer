@@ -26,8 +26,7 @@ export default class Modules extends Component {
         <ModuleList />
         <ModuleFooter />
         <div><p>* Optional modules</p></div>
-      </div>
-      
+      </div> 
     );
   }
 }

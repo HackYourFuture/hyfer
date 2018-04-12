@@ -6,10 +6,10 @@ import ModuleForm from './ModuleForm';
 
 export default class ModuleItem extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = { isMenuShow : false , isEditing:false };
-        }
+    state = {
+        isMenuShow: false,
+        isEditing: false
+    };
 
     showMenu = () => {
         this.setState({ isMenuShow : true })

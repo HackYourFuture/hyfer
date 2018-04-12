@@ -7,14 +7,9 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 export default class ModuleList extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = { weekWidth : 1 };
-  }
-  
-  componentWillMount = () => {
-    
-  }
+  state = {
+    weekWidth: 1
+  };
 
   componentDidMount = () => {
     window.addEventListener("resize", this.computeWeekWidth)
