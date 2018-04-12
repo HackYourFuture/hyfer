@@ -1,2 +1,6 @@
-{"javascript.implicitProjectConfig.experimentalDecorators": true,
+{
+    "javascript.implicitProjectConfig.experimentalDecorators": true,
+    "editor.detectIndentation": false,
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
 }
