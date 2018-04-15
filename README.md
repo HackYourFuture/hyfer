@@ -1,4 +1,4 @@
-## Hyfer
+# Hyfer
 
 Hyfer is a Code School platform for students and teachers.
 
