@@ -165,7 +165,7 @@ export default class TimeLine extends Component {
       infoSelectedModule,
       tab
     } = this.state;
-
+    console.log('teachers',teachers)
     let content = <ModuleReadme readme={readme} repoName={repoName}/>
     if ( tab === "attendance") {
        content = <Attendance 

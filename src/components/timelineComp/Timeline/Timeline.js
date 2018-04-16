@@ -5,9 +5,10 @@ import { timelineStore, TODAY_MARKER_REFERENCE } from '../../../store';
 import WeekComp from '../WeekComp/WeekComp';
 import ClassBarRowComp from '../ClassBarRowComp/ClassBarRowComp';
 import ClassTaskRowComp from '../ClassTaskRowComp/ClassTaskRowComp';
-import loader from '../../../assets/images/loader.gif';
+import loader from '../../../assets/images/loading-dash.gif';
 import Buttons from '../Buttons/Buttons';
 import classes from './timeline.css';
+
 
 export default class Timeline extends Component {
   state = {
@@ -21,6 +22,7 @@ export default class Timeline extends Component {
   renderWeekComp = () => {
     if (!this.props.allWeeks) return null;
     const { rowHeight, itemWidth } = this.props;
+    console.log(this.props.allWeeks)
     return (
       <div className={classes.rowContainer}>
         {this.props.allWeeks.map(week => (
@@ -42,8 +44,14 @@ export default class Timeline extends Component {
       !this.props.groups ||
       !this.props.timelineItems ||
       !this.props.allWeeks
-    ) {
-      return null;
+    )
+    // implement the loader giv
+    {
+      return (
+        <div className={classes.divLoading}>
+          <img src={loader} alt="loader" className={classes.load}/>
+        </div>
+      );
     }
     return this.props.groups.map(group => {
       const items = this.props.timelineItems[group];
@@ -61,6 +69,7 @@ export default class Timeline extends Component {
             itemClickHandler={this.props.itemClickHandler}
             infoSelectedModule={this.props.infoSelectedModule}
           />
+          
         </div>
       );
     });
@@ -110,7 +119,9 @@ export default class Timeline extends Component {
       ? itemWidth * allWeeks.length + 21 * allWeeks.length + 'px'
       : '100vw';
     return (
-      <div className="rootContainer">
+      <div className="rootContainer">  
+        {/* <ReactLoading height='2000' width='2000' /> */}
+  
         <ClassBarRowComp
           groups={this.props.groups}
           rowHeight={rowHeight}

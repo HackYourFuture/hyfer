@@ -1,3 +1,10 @@
+.load {
+ display: block;
+ margin: 0 auto; 
+ padding-left: 20%;
+ 
+ }
+
 .root {
   max-width: 100vw;
   overflow-x: scroll;

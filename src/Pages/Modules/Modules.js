@@ -14,14 +14,17 @@ export default class Modules extends Component {
 
   componentDidMount = () => {
     ModuleObservable.subscribe((newArr) => {
-				this.setState({modulesArr: newArr})
+        this.setState({modulesArr: newArr})
     })
     ModuleServiceBack.loadModules((result)=> ModuleObservable.initModules(result))
   };
 
   render() {
+    console.log('fromM')
+    console.log('modulesArr',this.state.modulesArr)
+    
     return (
-      <div className={style.modeuleContainer}>
+      <div className={style.moduleContainer}>
         <ModuleHeader />
         <ModuleList />
         <ModuleFooter />

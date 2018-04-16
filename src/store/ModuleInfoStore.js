@@ -53,8 +53,8 @@ export default function() {
         start,
         end
       } = _data;
-      let modeuleSundays = _getSundays(start, end);
-      let sundays = { sundays: modeuleSundays };
+      let moduleSundays = _getSundays(start, end);
+      let sundays = { sundays: moduleSundays };
       const token = localStorage.getItem("token")
       let BASE_URL = 'http://localhost:3005/api/history';
       //sundays format => {sundays: ["2016/11/06", "2016/11/13", "2016/11/20"]};
