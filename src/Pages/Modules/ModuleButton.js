@@ -4,10 +4,6 @@ import style from  '../../assets/styles/modules.css'
 
 export default class ModuleButton extends Component {
 
-    /*buttonClicked = ()=>{
-      alert('click')
-    }*/
-
     render() {
         return (
             <button type="button"

@@ -5,7 +5,7 @@ import ModuleObservable from './ModuleObservable'
 import ModuleServiceBack from './ModuleServiceBack'
 import ModuleForm from './ModuleForm'
 import Notifications, {notify} from 'react-notify-toast'
-//import { triggerAsyncId } from 'async_hooks'
+
 
 export default class ModuleFooter extends Component {
 
