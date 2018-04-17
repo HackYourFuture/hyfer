@@ -1,6 +1,6 @@
 {
-  "javascript.implicitProjectConfig.experimentalDecorators": true,
-  "cSpell.words": [
-    "norepo"
-  ],
+    "javascript.implicitProjectConfig.experimentalDecorators": true,
+    "editor.detectIndentation": false,
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
 }

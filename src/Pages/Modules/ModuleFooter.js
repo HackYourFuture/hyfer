@@ -5,7 +5,6 @@ import ModuleObservable from './ModuleObservable';
 import ModuleServiceBack from './ModuleServiceBack';
 import ModuleForm from './ModuleForm';
 import Notifications, { notify } from 'react-notify-toast';
-//import { triggerAsyncId } from 'async_hooks';
 
 export default class ModuleFooter extends Component {
 
@@ -24,14 +23,13 @@ export default class ModuleFooter extends Component {
       })  
     })
   };
-  
 
-  UndoChanges = () => {
-    ModuleObservable.resetModules()
-    notify.show('Your changes have been cancelled !', 'warning');
-  }
+    UndoChanges = () => {
+        ModuleObservable.resetModules()
+        notify.show('Your changes have been cancelled !', 'warning')
+    }
 
-  SaveChanges = () => {
+  saveChanges = () => {
     ModuleServiceBack.saveModules(ModuleObservable.getModules(), () => {
       ModuleServiceBack.loadModules((result) => ModuleObservable.initModules(result))
       notify.show('Your changes are successfully Saved !', 'success')
@@ -49,6 +47,8 @@ export default class ModuleFooter extends Component {
     ModuleObservable.setModules(newModulesArr);
   }
 
+        ModuleObservable.setModules(newModulesArr)
+    }
   showAddModal = () => {
     this.setState({
       isAdding: true
@@ -61,7 +61,6 @@ export default class ModuleFooter extends Component {
   }
 
   render() {
-    console.log('fromMF')
     return (
       <div className={style.moduleFooter}>
         <Notifications />
@@ -74,7 +73,7 @@ export default class ModuleFooter extends Component {
           action="save"
           title="Save Changes"
           disabled={!this.state.isChanged}
-          clickHandler={this.SaveChanges} />
+          clickHandler={this.saveChanges} />
         <ModuleButton
           action="add"
           title="Add module"
