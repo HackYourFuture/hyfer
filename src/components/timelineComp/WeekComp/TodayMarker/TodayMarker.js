@@ -13,7 +13,7 @@ export default class TodayMarker extends Component {
   }
 
   render() {
-    const { offset } = this.props    
+    const { offset } = this.props
     return (
       <div
         ref="todayMarker"

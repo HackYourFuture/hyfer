@@ -87,7 +87,7 @@ export default class Profile extends React.Component {
             <Link to='/users'>
               <input className={styles.backButton} 
                 type="button" 
-                value="&#8249" 
+                value="&#8249;" 
               />
             </Link> 
           <h1>Edit Profile</h1>

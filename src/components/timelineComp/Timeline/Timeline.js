@@ -5,7 +5,6 @@ import { timelineStore, TODAY_MARKER_REFERENCE } from "../../../store"
 import WeekComp from "../WeekComp/WeekComp"
 import ClassBarRowComp from "../ClassBarRowComp/ClassBarRowComp"
 import ClassTaskRowComp from "../ClassTaskRowComp/ClassTaskRowComp"
-// import loader from "../../../assets/images/loader.gif"  defined but never used
 import Buttons from "../Buttons/Buttons"
 import classes from "./timeline.css"
 

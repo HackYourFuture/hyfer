@@ -90,9 +90,10 @@ choosePort(HOST, DEFAULT_PORT)
       }
       console.log(chalk.cyan('Starting the development server...\n'))
       openBrowser(urls.localUrlForBrowser)
-    }); // this will not work without the ( ; )
+    })
 
-    ['SIGINT', 'SIGTERM'].forEach(function(sig) {
+    const SIGS = ['SIGINT', 'SIGTERM']
+    SIGS.forEach(function(sig) {
       process.on(sig, function() {
         devServer.close()
         process.exit()

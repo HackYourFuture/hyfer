@@ -59,10 +59,7 @@ export default class AssignTeacherModal extends Component {
     } else {
       this.setState({ teacher2: '', selectedTeacher2: null })
     }
-    // this.setState({
-    //   warningMessage:
-    //     'You can only reassign a teacher! If you leave them open to the way they were'
-    // })
+
   }
 
   renderAssignedTeacher = (teacher, num) => {
