@@ -22,7 +22,7 @@ function Observable() {
     this.initModules = (server_moules) => {
         this._serverModules = server_moules
         this._isChanged = false
-        this._modules = server_moules.map(a => ({...a}))
+        this._modules = server_moules.map(a => ({ ...a }))
         for (let f of this._observers)
             f(server_moules)
     }
@@ -34,5 +34,5 @@ function Observable() {
     }
 }
 
-var ModuleObservable = new Observable()
+const ModuleObservable = new Observable()
 export default ModuleObservable
