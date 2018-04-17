@@ -8,26 +8,28 @@ import style from  '../../assets/styles/modules.css'
 
 export default class Modules extends Component {
 
-  state = {
-    modulesArr: []
-  }
 
-  componentDidMount = () => {
-    ModuleObservable.subscribe((newArr) => {
-				this.setState({modulesArr: newArr})
-    })
-    ModuleServiceBack.loadModules((result)=> ModuleObservable.initModules(result))
-  }
+    state = {
+        modulesArr: []
+    }
 
-  render() {
-    return (
-      <div className={style.modeuleContainer}>
-        <ModuleHeader />
-        <ModuleList />
-        <ModuleFooter />
-        <div><p>* Optional modules</p></div>
-      </div>
-      
-    )
-  }
+    componentDidMount = () => {
+        ModuleObservable.subscribe((newArr) => {
+            this.setState({ modulesArr: newArr })
+        })
+        ModuleServiceBack.loadModules((result) => {
+            ModuleObservable.initModules(result)
+        })
+    }
+
+    render() {
+        return (
+            <div className={style.modeuleContainer}>
+                <ModuleHeader />
+                <ModuleList />
+                <ModuleFooter />
+                <div><p>* Optional modules</p></div>
+            </div> 
+        )
+    }
 }
