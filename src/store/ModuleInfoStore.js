@@ -9,7 +9,6 @@ const noRepoAlternative = 'NOREPO'; // alternative name for if a module doesn't 
 export default function() {
   let _observers = [];
   let _data = {};
-
   const subscribe = observer => {
     _observers.push(observer);
   };
@@ -43,6 +42,7 @@ export default function() {
     } else {
       _getRepoNameAndSundays(clickEvent);
       getReadme();
+      console.log(_data);
 
       const {
         group_id,
@@ -57,7 +57,6 @@ export default function() {
       let sundays = { sundays: moduleSundays };
       const token = localStorage.getItem("token")
       let BASE_URL = 'http://localhost:3005/api/history';
-      //sundays format => {sundays: ["2016/11/06", "2016/11/13", "2016/11/20"]};
       fetch(`${BASE_URL}/${running_module_id}/${group_id}`, {
         method: 'PATCH',
         body: JSON.stringify(sundays),

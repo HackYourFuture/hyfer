@@ -32,7 +32,6 @@ export default class Profile extends React.Component {
 
   render() {
     return (
-
       <div className={styles.profilePage}>
         <Notifications />
         <Link to='/users'>

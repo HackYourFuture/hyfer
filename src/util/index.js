@@ -33,10 +33,11 @@ export function setEndingDateForModules(allItems, groups) {
 }
 
 export function getAllGroupsWithIds() {
-  return fetch(`${BASE_URL}/api/groups`,{
-  headers: {
-    'Authorization':'Bearer ' + token,
-    }} )
+  return fetch(`${BASE_URL}/api/groups`, {
+    headers: {
+      'Authorization': 'Bearer ' + token,
+    }
+  })
     .then(res => res.json());
 }
 
@@ -54,11 +55,12 @@ export function getAllTotalWeeksAndSundays(allItems) {
 }
 
 export function getTeachers() {
-  return fetch(`${BASE_URL}/api/users`,{
+  return fetch(`${BASE_URL}/api/users`, {
     headers: {
-      'Authorization':'Bearer ' + token,
-    }}
-    )
+      'Authorization': 'Bearer ' + token,
+    }
+  }
+  )
     .then(res => res.json());
 }
 
@@ -160,16 +162,19 @@ export function removeModule(chosenModule) {
   const token = localStorage.getItem("token")
   return fetch(`${BASE_URL}/api/running/${id}/${position}`, {
     method: 'DELETE',
-    headers: { 'Content-Type': 'Application/json',
-    'Authorization':'Bearer ' + token, },
+    headers: {
+      'Content-Type': 'Application/json',
+      'Authorization': 'Bearer ' + token,
+    },
   }).then(res => res.json());
 }
 
 export function getModulesOfGroup(groupId) {
-  return fetch(`${BASE_URL}/api/running/${groupId}`,{
+  return fetch(`${BASE_URL}/api/running/${groupId}`, {
     headers: {
-      'Authorization':'Bearer ' + token,
-      }} )
+      'Authorization': 'Bearer ' + token,
+    }
+  })
     .then(res => res.json());
 }
 
@@ -194,8 +199,10 @@ function _patchGroupsModules(
   };
   return fetch(`${BASE_URL}/api/running/update/${group_id}/${position}`, {
     method: 'PATCH',
-    headers: { 'Content-Type': 'Application/json',
-    'Authorization':'Bearer ' + token, },
+    headers: {
+      'Content-Type': 'Application/json',
+      'Authorization': 'Bearer ' + token,
+    },
     body: JSON.stringify(body)
   }).then(res => res.json());
   // return Promise.resolve('yo I just did it');
@@ -429,9 +436,10 @@ async function _addModule(moduleId, groupId, position) {
     `${BASE_URL}/api/running/add/${moduleId}/${groupId}/${position}`,
     {
       method: 'PATCH',
-      headers: { 'Content-Type': 'Application/json',
-      'Authorization':'Bearer ' + token,
-     }
+      headers: {
+        'Content-Type': 'Application/json',
+        'Authorization': 'Bearer ' + token,
+      }
     }
   ).then(res => res.json());
 }

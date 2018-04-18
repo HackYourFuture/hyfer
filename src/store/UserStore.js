@@ -61,7 +61,6 @@ class store {
 
 
 	loadUsers = () => {
-		// console.log(this.state.users[1])
 		fetch('http://localhost:3000/api/users', {
 			method: 'GET',
 			headers: {

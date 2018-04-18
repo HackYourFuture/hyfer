@@ -5,7 +5,7 @@ import { timelineStore, TODAY_MARKER_REFERENCE } from '../../../store';
 import WeekComp from '../WeekComp/WeekComp';
 import ClassBarRowComp from '../ClassBarRowComp/ClassBarRowComp';
 import ClassTaskRowComp from '../ClassTaskRowComp/ClassTaskRowComp';
-import loader from '../../../assets/images/loading-dash.gif';
+import loader from '../../../assets/images/loader.gif';
 import Buttons from '../Buttons/Buttons';
 import classes from './timeline.css';
 
@@ -22,7 +22,6 @@ export default class Timeline extends Component {
   renderWeekComp = () => {
     if (!this.props.allWeeks) return null;
     const { rowHeight, itemWidth } = this.props;
-    console.log(this.props.allWeeks)
     return (
       <div className={classes.rowContainer}>
         {this.props.allWeeks.map(week => (
@@ -118,10 +117,10 @@ export default class Timeline extends Component {
     const width = allWeeks
       ? itemWidth * allWeeks.length + 21 * allWeeks.length + 'px'
       : '100vw';
+      // console.log(this.props.groups)
     return (
-      <div className="rootContainer">  
-        {/* <ReactLoading height='2000' width='2000' /> */}
-  
+
+      <div className="rootContainer">    
         <ClassBarRowComp
           groups={this.props.groups}
           rowHeight={rowHeight}
