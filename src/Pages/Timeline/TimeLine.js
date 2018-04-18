@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import styles from "../../assets/styles/timeline.css";
 import ModuleReadme from "../../components/ModuleReadme/ModuleReadme";
 import Attendance from "../../components/Attendance/Attendance";
-
 import TimelineComp from "../../components/timelineComp/Timeline/Timeline";
 
 import {
@@ -66,8 +65,7 @@ export default class TimeLine extends Component {
         break;
       case SELECTED_MODULE_ID_CHANGED:
         this.setState({
-          selectedModule: mergedData.payload.selectedModule
-        });
+          selectedModule: mergedData.payload.selectedModule});
         break;
       case ALL_WEEKS_CHANGED:
         const { allWeeks } = mergedData.payload;
@@ -79,8 +77,9 @@ export default class TimeLine extends Component {
         break;
       case INFO_SELECTED_MDOULE_CHANGED:
         this.setState({
-          infoSelectedModule: mergedData.payload.allModulesOfGroup
-        });
+            infoSelectedModule: mergedData.payload.allModulesOfGroup  
+            });
+            console.log(mergedData.payload.allModulesOfGroup)    
         break;
       default:
         break;
@@ -130,7 +129,7 @@ export default class TimeLine extends Component {
       (selectedItemInStore &&
         item.running_module_id === selectedItemInStore.running_module_id)
     ) {
-      // if the clicked module is the same on unselect it
+      // if the clicked module is the same module, unselect it
       item = null;
     } else {
       timelineStore.getSelectedModuleInfo(item);
