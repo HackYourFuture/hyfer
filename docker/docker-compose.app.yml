@@ -1,0 +1,41 @@
+version: '3.2'
+
+services:
+
+  nginx:
+    image: nginx:1.13.11-alpine
+    volumes:
+      - ./containers/nginx:/etc/nginx/conf.d
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=hyfer"
+      - "traefik.frontend.rule=HostRegexp:hyfer.localhost,{subdomain:[a-z]+}.hyfer.localhost"
+      - "traefik.frontend.entryPoints=http"
+      - "traefik.docker.network=infrastructure_proxy"
+
+  traefik:
+    image: traefik:latest
+    ports:
+      - 8080:8080
+      - 80:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.toml:/etc/traefik/traefik.toml
+
+  db:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ../app/sql:/docker-entrypoint-initdb.d
+
+  app:
+    image: node:9-alpine 
+    environment:
+      HOME: /home
+    working_dir: /app
+    command: ['npm', 'start']
+    ports:
+      - 3005:3005
+    volumes:
+      - ../app:/app
