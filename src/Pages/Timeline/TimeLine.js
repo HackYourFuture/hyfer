@@ -76,10 +76,7 @@ export default class TimeLine extends Component {
         this.setState({ modules });
         break;
       case INFO_SELECTED_MDOULE_CHANGED:
-        this.setState({
-            infoSelectedModule: mergedData.payload.allModulesOfGroup  
-            });
-            console.log(mergedData.payload.allModulesOfGroup)    
+        this.setState({infoSelectedModule: mergedData.payload.allModulesOfGroup});
         break;
       default:
         break;
