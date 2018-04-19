@@ -12,28 +12,6 @@ export default class Modules extends Component {
     modulesArr: []
   };
 
-<<<<<<< HEAD
-    componentDidMount = () => {
-        ModuleObservable.subscribe((newArr) => {
-            this.setState({ modulesArr: newArr })
-        })
-        ModuleServiceBack.loadModules((result) => {
-            ModuleObservable.initModules(result)
-        })
-    }
-
-    render() {
-        return (
-            <div className={style.modeuleContainer}>
-                <ModuleHeader />
-                <ModuleList />
-                <ModuleFooter />
-                <div><p>* Optional modules</p></div>
-            </div> 
-        )
-    }
-
-=======
   componentDidMount = () => {
     ModuleObservable.subscribe((newArr) => {
         this.setState({modulesArr: newArr})
@@ -53,5 +31,4 @@ export default class Modules extends Component {
       
     );
   }
->>>>>>> fd5bb6996e04fc88f74beffa905cca17912c68c5
 }

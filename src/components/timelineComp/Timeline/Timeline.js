@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 
 import { timelineStore, TODAY_MARKER_REFERENCE } from "../../../store";
-<<<<<<< HEAD
 
 import WeekComp from "../WeekComp/WeekComp";
 import ClassBarRowComp from "../ClassBarRowComp/ClassBarRowComp";
@@ -9,13 +8,6 @@ import ClassTaskRowComp from "../ClassTaskRowComp/ClassTaskRowComp";
 import loader from "../../../assets/images/loader.gif";
 import Buttons from "../Buttons/Buttons";
 import classes from "./timeline.css";
-=======
-import ClassBarRowComp from '../ClassBarRowComp/ClassBarRowComp';
-import ClassTaskRowComp from '../ClassTaskRowComp/ClassTaskRowComp';
-import loader from '../../../assets/images/loading-dash.gif';
-import Buttons from '../Buttons/Buttons';
-import classes from './timeline.css';
->>>>>>> fd5bb6996e04fc88f74beffa905cca17912c68c5
 
 
 export default class Timeline extends Component {
