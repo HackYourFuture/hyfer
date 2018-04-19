@@ -7,7 +7,7 @@ import {
   ALL_TEACHERS_CHAGNED,
   INFO_SELECTED_MDOULE_CHANGED,
   GROUPS_WITH_IDS_CHANGED
-} from './';
+} from "./";
 
 import {
   getAllTotalWeeksAndSundays,
@@ -26,9 +26,9 @@ import {
   getTeachers,
   getModulesOfGroup,
   getAllGroupsWithIds
-} from '../util';
+} from "../util";
 
-const BASE_URL = 'http://localhost:3005';
+const BASE_URL = "http://localhost:3005";
 
 export default function() {
   let _observers = [];
@@ -62,19 +62,19 @@ export default function() {
     return _data;
   };
 
-  const fetchItems = async () => {
+  const fetchItems = async isTeacher => {
     const timelineItems = await getTimelineItems(
-      BASE_URL + '/api/timeline'
+      BASE_URL + "/api/timeline"
     ).catch(err => console.log(err));
 
     // set the state with the array of all current groups [maybe needed for sidecolumn group names]
     const groups = Object.keys(timelineItems);
     groups.sort((group1, group2) => {
-      return +group1.split(' ')[1] > +group2.split(' ')[1];
+      return +group1.split(" ")[1] > +group2.split(" ")[1];
     });
-    const orderdTimelineItems = {};
+    const orderedTimelineItems = {};
     groups.forEach(group => {
-      orderdTimelineItems[group] = timelineItems[group];
+      orderedTimelineItems[group] = timelineItems[group];
     });
 
     const groupsWithIds = await getAllGroupsWithIds();
@@ -86,7 +86,7 @@ export default function() {
       }
     });
 
-    const withEndingDate = setEndingDateForModules(orderdTimelineItems, groups); // group names
+    const withEndingDate = setEndingDateForModules(orderedTimelineItems, groups); // group names
     // set the state with the new received items
     setState({
       type: TIMELINE_ITEMS_CHANGED,
@@ -125,15 +125,17 @@ export default function() {
       }
     });
 
-    getTeachers().then(res => {
-      const teachers = res.filter(user => user.role === 'teacher');
-      setState({
-        type: ALL_TEACHERS_CHAGNED,
-        payload: {
-          teachers
-        }
+    if (isTeacher) {
+      getTeachers().then(res => {
+        const teachers = res.filter(user => user.role === "teacher");
+        setState({
+          type: ALL_TEACHERS_CHAGNED,
+          payload: {
+            teachers
+          }
+        });
       });
-    });
+    }
 
     setState({
       type: TIMELINE_GROUPS_CHANGED,
@@ -149,19 +151,19 @@ export default function() {
   const updateModule = (module, action) => {
     let result = null;
     switch (action) {
-      case 'weekLonger':
+      case "weekLonger":
         result = weekLonger(module);
         break;
-      case 'removeModule':
+      case "removeModule":
         result = removeModule(module);
         break;
-      case 'weekShorter':
+      case "weekShorter":
         result = weekShorter(module, getState().groups);
         break;
-      case 'moveLeft':
+      case "moveLeft":
         result = moveLeft(module, getState().groups);
         break;
-      case 'moveRight':
+      case "moveRight":
         result = moveRight(module, getState().groups);
         break;
       default:

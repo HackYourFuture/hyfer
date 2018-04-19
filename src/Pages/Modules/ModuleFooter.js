@@ -25,10 +25,10 @@ export default class ModuleFooter extends Component {
   };
   
 
-  UndoChanges = () => {
-    ModuleObservable.resetModules()
-    notify.show('Your changes have been cancelled !', 'warning');
-  }
+    UndoChanges = () => {
+        ModuleObservable.resetModules()
+        notify.show('Your changes have been cancelled !', 'warning')
+    }
 
   saveChanges = () => {
     ModuleServiceBack.saveModules(ModuleObservable.getModules(), () => {
@@ -45,8 +45,8 @@ export default class ModuleFooter extends Component {
     module.id = maxId + 1
     newModulesArr.push(module);
 
-    ModuleObservable.setModules(newModulesArr);
-  }
+        ModuleObservable.setModules(newModulesArr)
+    }
 
   showAddModal = () => {
     this.setState({

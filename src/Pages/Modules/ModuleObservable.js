@@ -1,3 +1,4 @@
+
 class Observable {
     constructor() {
         this._observers = [];
@@ -33,8 +34,10 @@ class Observable {
         this.resetModules = () => {
             this.initModules(this._serverModules);
         };
+
     }
 }
 
 const ModuleObservable = new Observable()
+
 export default ModuleObservable;
