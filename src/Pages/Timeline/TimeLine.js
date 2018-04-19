@@ -164,6 +164,7 @@ export default class TimeLine extends Component {
       infoSelectedModule,
       tab
     } = this.state;
+<<<<<<< HEAD
     let content = <ModuleReadme readme={readme} repoName={repoName}/>
     if ( tab === "attendance") {
        content = <Attendance 
@@ -173,6 +174,19 @@ export default class TimeLine extends Component {
        group_name={group_name}
        students={students}
       />
+=======
+    let content = <ModuleReadme readme={readme} repoName={repoName} />;
+    if (tab === "attendance") {
+      content = (
+        <Attendance
+          repoName={repoName}
+          history={history}
+          duration={duration}
+          group_name={group_name}
+          students={students}
+        />
+      );
+>>>>>>> fd5bb6996e04fc88f74beffa905cca17912c68c5
     }
 
     if (isLoggedIn && isATeacher) {

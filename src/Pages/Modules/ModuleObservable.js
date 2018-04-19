@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> fd5bb6996e04fc88f74beffa905cca17912c68c5
 class Observable {
     constructor() {
         this._observers = [];
@@ -34,10 +37,16 @@ class Observable {
         this.resetModules = () => {
             this.initModules(this._serverModules);
         };
+<<<<<<< HEAD
 
+=======
+>>>>>>> fd5bb6996e04fc88f74beffa905cca17912c68c5
     }
 }
 
 const ModuleObservable = new Observable()
+<<<<<<< HEAD
 
+=======
+>>>>>>> fd5bb6996e04fc88f74beffa905cca17912c68c5
 export default ModuleObservable;

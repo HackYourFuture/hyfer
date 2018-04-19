@@ -23,7 +23,10 @@ export default class ModuleFooter extends Component {
       })  
     })
   };
+<<<<<<< HEAD
   
+=======
+>>>>>>> fd5bb6996e04fc88f74beffa905cca17912c68c5
 
     UndoChanges = () => {
         ModuleObservable.resetModules()
@@ -44,10 +47,19 @@ export default class ModuleFooter extends Component {
     let maxId = curModulesArr.map(m => m.id).reduce((max, cur) => Math.max(max, cur))
     module.id = maxId + 1
     newModulesArr.push(module);
+<<<<<<< HEAD
 
         ModuleObservable.setModules(newModulesArr)
     }
 
+=======
+
+    ModuleObservable.setModules(newModulesArr);
+  }
+
+        ModuleObservable.setModules(newModulesArr)
+    }
+>>>>>>> fd5bb6996e04fc88f74beffa905cca17912c68c5
   showAddModal = () => {
     this.setState({
       isAdding: true
