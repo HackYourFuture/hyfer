@@ -1,44 +1,32 @@
+import locals from '../../util/locals'
+
 const api_url = 'http://localhost:3000/api'
 
+const token = localStorage.getItem('token')
 class moduleServiceBack {
 
-    
-    loadModules(callBack) {
-        const token = localStorage.getItem('token')
-        fetch(`${api_url}/modules`, {
-            credentials: 'same-origin',
+
+    loadModules = async (callBack) => {
+        const load = await locals.request(`${api_url}/modules`, {
             headers: {
                 Authorization: 'Bearer ' + token
             }
         })
-        .then(res => res.json())
-        .then(resJson => {
-            callBack(resJson)
-        })
-        .catch(error => {
-            console.log(error)
-            throw new Error('Server error!')
-        })
+        const resJson = await load.json()
+        callBack(resJson)
     }
 
-    saveModules(modules, callBack) {
-        const token = localStorage.getItem('token')
-        fetch(`${api_url}/modules`, {
+    saveModules = async (modules, callBack) => {
+        const load = await locals.request(`${api_url}/modules`, {
             method: 'PATCH',
-            credentials: 'same-origin',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: 'Bearer ' + token
             },
-            body: JSON.stringify(modules)
+            body: modules
         })
-        .then(res => {
-            callBack()
-        })
-        .catch(error => {
-            console.log(error)
-            throw new Error('Server error!')
-        })
+        await load.json()
+        callBack()
     }
 }
 
