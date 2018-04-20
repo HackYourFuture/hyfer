@@ -14,18 +14,18 @@ class Observable {
         this.getModules = () => {
             return this._modules
         }
-        this.setModules = (new_moules) => {
+        this.setModules = (new_modules) => {
             this._isChanged = true
-            this._modules = new_moules
+            this._modules = new_modules
             for (let f of this._observers)
-                f(new_moules)
+                f(new_modules)
         }
-        this.initModules = (server_moules) => {
-            this._serverModules = server_moules
+        this.initModules = (server_modules) => {
+            this._serverModules = server_modules
             this._isChanged = false
-            this._modules = server_moules.map(a => ({ ...a }))
+            this._modules = server_modules.map(a => ({ ...a }))
             for (let f of this._observers)
-                f(server_moules)
+                f(server_modules)
         }
         this.isChanged = () => {
             return this._isChanged
