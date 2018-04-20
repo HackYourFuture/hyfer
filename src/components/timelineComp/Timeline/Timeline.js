@@ -43,14 +43,14 @@ export default class Timeline extends Component {
       !this.props.groups ||
       !this.props.timelineItems ||
       !this.props.allWeeks
-    )
-    // implement the loader giv
+
     {
       return (
         <div className={classes.divLoading}>
           <img src={loader} alt="loader" className={classes.load}/>
         </div>
       );
+
     }
     return this.props.groups.map(group => {
       const items = this.props.timelineItems[group];
