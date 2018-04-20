@@ -13,7 +13,7 @@ export default class AssignTeacherModal extends Component {
     warningMessage: ''
   };
 
-  handleAssignTeahcers = () => {
+  handleAssignTeachers = () => {
     const { teacher1, teacher2 } = this.state;
     const { selectedModule } = this.props;
     timelineStore
@@ -148,7 +148,7 @@ export default class AssignTeacherModal extends Component {
               </button>
               <button
                 className={`${classes.btn} ${classes.ok}`}
-                onClick={this.handleAssignTeahcers}
+                onClick={this.handleAssignTeachers}
               >
                 OK
               </button>
