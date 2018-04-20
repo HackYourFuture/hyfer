@@ -11,17 +11,17 @@ export default class StudentWithWeeks extends React.Component{
     //this function will render check boxes for each student base on weeks
     renderWeeks(){
         const { allHistory, students } = this.props;
-        for(var i = 0; i < students.length; i++){
-            var studentHistory = allHistory[students[i]];
+        let studentHistory;
+        for(let i = 0; i < students.length; i++){
+            studentHistory = allHistory[students[i]];
         };
         const weeks = studentHistory.map((week, duration) =>
-             
             <div className={styles.week_checkboxes} key={duration}>
                 <Checkbox
-                onChange={(duration)=> this.props.onChange( duration, this.props.student)}
-                id={duration}
-                homeworkChecked={(id)=>this.getIsHomeworkChecked(id , this.props.student)}
-                AttendanceChecked={(id)=>this.getIsAttendanceChecked(id , this.props.student)}
+                    onChange={(duration)=> this.props.onChange( duration, this.props.student)}
+                    id={duration}
+                    homeworkChecked={(id)=>this.getIsHomeworkChecked(id , this.props.student)}
+                    AttendanceChecked={(id)=>this.getIsAttendanceChecked(id , this.props.student)}
                 />
             </div>
         ) 
@@ -31,12 +31,13 @@ export default class StudentWithWeeks extends React.Component{
     getIsHomeworkChecked = (id, student) => {
         if (this.props.allHistory[student][id].homework === 1) {
             return true;
-        } else {return false}
+        } else {return false;}
     };
 
     getIsAttendanceChecked = (id, student) => {
         if (this.props.allHistory[student][id].attendance === 1) {
             return true;
-        } else {return false}
+        } 
     };
 };
+

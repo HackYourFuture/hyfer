@@ -42,8 +42,6 @@ export default function() {
     } else {
       _getRepoNameAndSundays(clickEvent);
       getReadme();
-      console.log(_data);
-
       const {
         group_id,
         running_module_id,
