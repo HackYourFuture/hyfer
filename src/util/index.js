@@ -110,10 +110,10 @@ export function weekLonger(chosenModule, groups) {
     const newDuration = duration + 1
     const groupId = chosenModule.id
     return _patchGroupsModules({
-            item: chosenModule,
-            newDuration,
-            group_id: groupId
-        })
+        item: chosenModule,
+        newDuration,
+        group_id: groupId
+    })
 }
 
 export function weekShorter(chosenModule, groups) {
@@ -122,10 +122,10 @@ export function weekShorter(chosenModule, groups) {
     const groupId = chosenModule.id
 
     return _patchGroupsModules({
-            item: chosenModule,
-            newDuration,
-            group_id: groupId
-        })
+        item: chosenModule,
+        newDuration,
+        group_id: groupId
+    })
 }
 
 export function moveRight(chosenModule, groups) {
@@ -134,11 +134,11 @@ export function moveRight(chosenModule, groups) {
     const groupId = chosenModule.id
 
     return _patchGroupsModules({
-            item: chosenModule,
-            newPosition,
-            newDuration:duration,
-            group_id: groupId
-        })
+        item: chosenModule,
+        newPosition,
+        newDuration: duration,
+        group_id: groupId
+    })
 }
 
 export function moveLeft(chosenModule, groups) {
@@ -147,16 +147,15 @@ export function moveLeft(chosenModule, groups) {
     const groupId = chosenModule.id
 
     return _patchGroupsModules({
-            item:chosenModule,
-            newPosition,
-            newDuration: duration,
-            group_id:groupId
-        })
+        item: chosenModule,
+        newPosition,
+        newDuration: duration,
+        group_id: groupId
+    })
 }
 
 export function removeModule(chosenModule) {
     const { id, position } = chosenModule
-    const token = localStorage.getItem("token")
     return fetch(`${BASE_URL}/api/running/${id}/${position}`, {
         method: 'DELETE',
         headers: {
