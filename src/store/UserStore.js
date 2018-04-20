@@ -1,12 +1,11 @@
-  
+const token = localStorage.getItem("token")
+
 class store {
 
-	//-------
-	// State 
-
 	state = {
-        users: [],
+		users: [],
 		filteredUsers: [],
+
 
 		id:'',
 		username:'',
@@ -32,25 +31,29 @@ class store {
 		reset_mobile: '',
 		reset_group_id: '',
 
+
 		mobileActive: false,
 		slackActive: false
-		           
-    }; 
 
-	setState(updates) {
+	};
+	notify = () => {
+		for (const handler of this.handlers) {
+			handler(this.state)
+		}
+	}
+
+	setState = (updates) => {
 		Object.assign(this.state, updates)
 		this.notify()
 	}
 
-	//------
 	// Subscriptions
 
 	handlers = new Set()
 
-	subscribe(handler) {
+	subscribe = (handler) => {
 		this.handlers.add(handler)
 		handler(this.state)
-
 		return {
 			remove: () => {
 				this.handlers.delete(handler)
@@ -58,11 +61,94 @@ class store {
 		}
 	}
 
-	notify() {
-		for (const handler of this.handlers) {
-			handler(this.state)
+
+	loadUsers = () => {
+		fetch('http://localhost:3000/api/users', {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + token,
+			}
+		})
+			.then(res => res.json())
+			.then(data => {
+				this.setState({
+					users: data,
+					filteredUsers: data,
+				});
+				return;
+			})
+			.catch(error => {
+				console.log(error);
+				throw new Error('Problem with Server: GET DATA');
+			});
+			
 		}
+		
+	saveProfile = () => {
+		const updatedUser = {
+			"id": this.state.id,
+			"username": this.state.username,
+			"full_name": this.state.full_name,
+			"group_name": this.state.group_name,
+			"role": this.state.role,
+			"register_date": this.state.register_date,
+			"email": this.state.email,
+			"slack_username": this.state.slack_username,
+			"freecodecamp_username": this.state.freecodecamp_username,
+			"mobile": this.state.mobile,
+			"group_id": this.state.group_id
+		}
+
+		fetch(`http://localhost:3005/api/user/${this.state.id}`, {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': 'Bearer ' + token,
+			},
+			body: JSON.stringify(updatedUser),
+		})
+			.then(response => { 
+				if (response.status >= 400) {
+					throw new Error("Bad response from server");
+				}
+				this.loadUsers()
+			})
+		.catch((error) => {
+			console.log(error)
+			throw new Error('Problem with Server :  PATCH DATA')
+		})
+		console.log(this.state.full_name)
 	}
+
+	resetProfile = () => {
+		this.setState({
+			id: this.state.reset_id,
+			username: this.state.reset_username,
+			full_name: this.state.reset_full_name,
+			group_name: this.state.reset_group_name,
+			role: this.state.reset_role,
+			register_date: this.state.reset_register_date,
+			email: this.state.reset_email,
+			slack_username: this.state.reset_slack_username,
+			freecodecamp_username: this.state.reset_freecodecamp_username,
+			mobile: this.state.reset_mobile,
+			group_id: this.state.reset_group_id
+		})
+	}
+
+	// filter by user full_name(I think it's more specific)
+	searchUser = (event) => {
+		let updatedList = this.state.users;
+		updatedList = updatedList.filter((item) => {
+			return (
+				item.full_name.toLowerCase().search(event.target.value.toLowerCase()) !== -1
+			);
+		});
+		this.setState({
+			filteredUsers: updatedList
+		});
+	};
 
 }
 

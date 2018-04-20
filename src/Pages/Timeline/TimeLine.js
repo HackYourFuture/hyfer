@@ -4,6 +4,7 @@ import ModuleReadme from "../../components/ModuleReadme/ModuleReadme";
 import Attendance from "../../components/Attendance/Attendance";
 import TimelineComp from "../../components/timelineComp/Timeline/Timeline";
 
+
 import {
   READ_ME_CHANGED,
   REPO_NAME_CHANGED,
@@ -161,7 +162,6 @@ export default class TimeLine extends Component {
       infoSelectedModule,
       tab
     } = this.state;
-
     let content = <ModuleReadme readme={readme} repoName={repoName} />;
     if (tab === "attendance") {
       content = (

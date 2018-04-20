@@ -39,7 +39,7 @@ svg{
   display:none !important;
 }
 
-.userInformations{  
+.userInformation {
   position: relative;
   color: rgba(0,0,0,0.54);
   background-color: rgb(255,255,255);
@@ -182,13 +182,13 @@ svg{
 
 
 @media only screen and (min-width:768px) and (max-width:1024px ){
-  .userInformations{
+  .userInformation{
       width:48%;
   }
 }
 
 @media only screen and (max-width:768px){
-  .userInformations{
+  .userInformation{
       width:96%;
   }
 }

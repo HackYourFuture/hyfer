@@ -9,6 +9,7 @@ import loader from "../../../assets/images/loader.gif";
 import Buttons from "../Buttons/Buttons";
 import classes from "./timeline.css";
 
+
 export default class Timeline extends Component {
   state = {
     todayMarkerRef: null
@@ -42,10 +43,14 @@ export default class Timeline extends Component {
       !this.props.groups ||
       !this.props.timelineItems ||
       !this.props.allWeeks
-    ) {
-      return (<div>
-        <img src={loader} alt='Loader'/>
-        </div>);
+
+    {
+      return (
+        <div className={classes.divLoading}>
+          <img src={loader} alt="loader" className={classes.load}/>
+        </div>
+      );
+
     }
     return this.props.groups.map(group => {
       const items = this.props.timelineItems[group];
@@ -63,6 +68,7 @@ export default class Timeline extends Component {
             itemClickHandler={this.props.itemClickHandler}
             infoSelectedModule={this.props.infoSelectedModule}
           />
+          
         </div>
       );
     });
@@ -80,6 +86,7 @@ export default class Timeline extends Component {
 
   handleClickTodayMarker = e => {
     const todayMarker = this.state.todayMarkerRef;
+    console.log('todayMarker'+todayMarker)
     const classesContainer = this.refs.classesContainer.refs.groupsRowContainer; // hackish way, hope good
     const scrollEl = this.refs.timelineWrapper;
     let leftPos = todayMarker.parentNode.getBoundingClientRect().x;
@@ -118,7 +125,8 @@ export default class Timeline extends Component {
       ? itemWidth * allWeeks.length + 21 * allWeeks.length + "px"
       : "100vw";
     return (
-      <div className="rootContainer">
+
+      <div className="rootContainer">    
         <ClassBarRowComp
           groups={this.props.groups}
           rowHeight={rowHeight}

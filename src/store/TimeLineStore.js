@@ -72,9 +72,9 @@ export default function() {
     groups.sort((group1, group2) => {
       return +group1.split(" ")[1] > +group2.split(" ")[1];
     });
-    const orderdTimelineItems = {};
+    const orderedTimelineItems = {};
     groups.forEach(group => {
-      orderdTimelineItems[group] = timelineItems[group];
+      orderedTimelineItems[group] = timelineItems[group];
     });
 
     const groupsWithIds = await getAllGroupsWithIds();
@@ -86,7 +86,7 @@ export default function() {
       }
     });
 
-    const withEndingDate = setEndingDateForModules(orderdTimelineItems, groups); // group names
+    const withEndingDate = setEndingDateForModules(orderedTimelineItems, groups); // group names
     // set the state with the new received items
     setState({
       type: TIMELINE_ITEMS_CHANGED,
