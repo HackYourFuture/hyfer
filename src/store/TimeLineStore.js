@@ -127,7 +127,6 @@ export default function () {
         })
         
         if (isTeacher) {
-            console.log('HELLOHELLOHELLOHELLOHELLOHELLOHELLO')
             getTeachers().then(res => {
                 const teachers = res.filter(user => user.role === "teacher")
                 setState({
@@ -171,7 +170,6 @@ export default function () {
             default:
                 break
         }
-        console.log('updateModule')        
         result.then(() => {
                 return fetchItems()
             })
@@ -179,7 +177,6 @@ export default function () {
     }
 
     const handleAssignTeachers = (item, teacher1, teacher2) => {
-        console.log('handleAssignTeachers')
         return (
             // item.id is the id of the group
             assignTeachers(item, item.id, teacher1, teacher2)
