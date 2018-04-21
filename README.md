@@ -23,7 +23,7 @@ you need to Register a new OAuth application in your GitHub developer settings. 
 
 Install dependencies using:
 ```bash
-yarn install
+npm install
 ```
 
 ## Running tests
@@ -31,13 +31,13 @@ yarn install
 You can run tests using:
 
 ```bash
-yarn test
+npm test
 ```
 
 ## start the app
 
 ```bash
-yarn start
+npm start
 ```
 
 # Admin functions

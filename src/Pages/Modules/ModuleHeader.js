@@ -6,6 +6,7 @@ export default class ModuleHeader extends Component {
 
     weeksGrid = ['1 week', '2 weeks', '3 weeks', '4 weeks', '5 weeks', '6 weeks']
 
+
     render() {
         return (
             <div className={style.moduleHeader}>

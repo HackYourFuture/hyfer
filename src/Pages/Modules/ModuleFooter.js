@@ -7,6 +7,7 @@ import ModuleForm from './ModuleForm'
 import Notifications, { notify } from 'react-notify-toast'
 
 
+
 export default class ModuleFooter extends Component {
 
     state = {

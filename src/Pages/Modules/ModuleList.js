@@ -7,6 +7,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 export default class ModuleList extends Component {
 
+
     state = {
         weekWidth: 1
     }
@@ -15,6 +16,7 @@ export default class ModuleList extends Component {
         window.addEventListener("resize", this.computeWeekWidth)
         this.computeWeekWidth()
     }
+
 
     componentWillUnmount = () => {
         window.removeEventListener("resize", this.computeWeekWidth)
@@ -26,6 +28,7 @@ export default class ModuleList extends Component {
             this.setState({ weekWidth : week_element.clientWidth })
         }
     }
+
 
     reorder = (list, startIndex, endIndex) => {
         const result = Array.from(list)
@@ -73,6 +76,7 @@ export default class ModuleList extends Component {
                         ))}
                         {provided.placeholder}
                     </div>
+
                     )}
                 </Droppable>
             </DragDropContext>  

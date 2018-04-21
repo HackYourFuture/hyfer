@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import style from  '../assets/styles/ModalDialog.css';
+import React, { Component } from 'react'
+import style from  '../assets/styles/ModalDialog.css'
 
 export default class ModalDialog extends Component {
 
   constructor(props) {
-    super(props);
-    this.state = {visible:false};
+    super(props)
+    this.state = {visible:false}
   }
 
   showDialog(){
@@ -29,6 +29,6 @@ export default class ModalDialog extends Component {
           </div>
     </div>
         
-    );
+    )
   }
 }

@@ -6,6 +6,7 @@ import ModuleForm from './ModuleForm'
 
 export default class ModuleItem extends Component {
 
+
     state = {
         isMenuShow: false,
         isEditing: false
@@ -140,5 +141,6 @@ export default class ModuleItem extends Component {
                 />
             </div>
         )
+
     }
 }

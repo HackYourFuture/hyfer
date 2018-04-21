@@ -5,6 +5,7 @@ import ModalDialog from '../../components/ModalDialog'
 
 export default class ModuleForm extends React.Component {
 
+
     state = {
         ModuleId: '',
         ModuleName: '',
@@ -37,6 +38,7 @@ export default class ModuleForm extends React.Component {
     }
 
     onFocus = (e) => {
+
         this.setState({ focusId: e.target.id })
     }
 

@@ -1,63 +1,63 @@
-import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { Component } from 'react'
+import { NavLink } from 'react-router-dom'
 
-import hyfIcon from '../../assets/images/icon.png';
-import styles from '../../assets/styles/header.css';
+import hyfIcon from '../../assets/images/icon.png'
+import styles from '../../assets/styles/header.css'
 import {
   uiStore,
   AVATAR_URL_CHANGED,
   ISTEACHER_STATE_CHANGED,
   LOGIN_STATE_CHANGED
-} from '../../store';
-import cookie from 'react-cookies';
+} from '../../store'
+import cookie from 'react-cookies'
 
 export default class Header extends Component {
   state = {
     isLoggedIn: false,
     isATeacher: false,
     avatarUrl: null
-  };
+  }
 
   componentDidMount = () => {
     uiStore.subscribe(mergedData => {
       switch (mergedData.type) {
         case AVATAR_URL_CHANGED:
-          this.setState({ avatarUrl: mergedData.payload.avatarUrl });
-          break;
+          this.setState({ avatarUrl: mergedData.payload.avatarUrl })
+          break
         case LOGIN_STATE_CHANGED:
-          this.setState({ isLoggedIn: mergedData.payload.isLoggedIn });
-          break;
+          this.setState({ isLoggedIn: mergedData.payload.isLoggedIn })
+          break
         case ISTEACHER_STATE_CHANGED:
-          this.setState({ isATeacher: mergedData.payload.isATeacher });
-          break;
+          this.setState({ isATeacher: mergedData.payload.isATeacher })
+          break
         default:
-          break;
+          break
       }
-    });
+    })
 
-    const token = localStorage.getItem('token');
-    let login = false;
-    if (token && token !== '') login = true;
+    const token = localStorage.getItem('token')
+    let login = false
+    if (token && token !== '') login = true
 
     uiStore.setState({
       type: LOGIN_STATE_CHANGED,
       payload: {
         isLoggedIn: login
       }
-    });
+    })
 
     if (login) {
-      uiStore.getUserInfo();
+      uiStore.getUserInfo()
     }
-  };
+  }
 
   SignOut = () => {
-    localStorage.removeItem('token');
-    cookie.save('token', '');
-  };
+    localStorage.removeItem('token')
+    cookie.save('token', '')
+  }
 
   render() {
-    let user = null;
+    let user = null
     if (!this.state.isLoggedIn) {
       user = (
         <div className={styles.signInWrapper}>
@@ -66,14 +66,14 @@ export default class Header extends Component {
           </div>
           <div className={styles.signButtonWrapper}>
             <a
-              href="http://localhost:3005/auth/github"
+              href={process.env.REACT_APP_GITHUB_OAUTH_URL}
               className={styles.signInButton}
             >
               Sign in
             </a>
           </div>
         </div>
-      );
+      )
     } else {
       user = (
         <ul className={styles.signed_in}>
@@ -84,14 +84,14 @@ export default class Header extends Component {
           /></li>
           <li><div className={styles.menu}>
             <a
-              href="http://localhost:3000/"
+              href={process.env.REACT_APP_API_HOST}
               onClick={this.SignOut}
             >
               Sign Out
             </a>
           </div></li>
         </ul>
-      );
+      )
     }
 
     if (this.state.isLoggedIn && this.state.isATeacher) {
@@ -140,7 +140,7 @@ export default class Header extends Component {
           </nav>
           {user}
         </header>
-      );
+      )
     } else { return (
       <header className={styles.header}>
         <a href="http://hackyourfuture.net/">
