@@ -40,15 +40,16 @@ class locals {
         options = { method, ...params }
         return fetch(url, options)
             .catch(error => {
-                if (NODE_ENV === 'development') {
-                    return (errorCallback) ? errorCallback(args) : console.error(error)
-                }
                 // no args! ... asign the error to args
                 if (!args) args = error
-                // no errorCallback! ... return the error to do something else with it
-                if (!errorCallback) return error
-                // otherwise just call the errorCallback
+                // just call the errorCallback if there is a one there
                 if (errorCallback) return errorCallback(args)
+                if (NODE_ENV === 'development') {
+                    // only if the errorCallback is null
+                    if (errorCallback === null) return console.error(args)
+                }
+                // no errorCallback! ... return the error to do something else with it (env) ~> production | development | test
+                if (!errorCallback) return args
             })
     }
 }
