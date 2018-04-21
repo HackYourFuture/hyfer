@@ -4,7 +4,7 @@ import ModuleList from './ModuleList'
 import ModuleFooter from './ModuleFooter'
 import ModuleObservable from './ModuleObservable'
 import ModuleServiceBack from './ModuleServiceBack'
-import style from  '../../assets/styles/modules.css'
+import style from '../../assets/styles/modules.css'
 
 export default class Modules extends Component {
 
@@ -24,12 +24,12 @@ export default class Modules extends Component {
 
     render() {
         return (
-            <div className={style.modeuleContainer}>
+            <div className={style.moduleContainer}>
                 <ModuleHeader />
                 <ModuleList />
                 <ModuleFooter />
                 <div><p>* Optional modules</p></div>
-            </div> 
+            </div>
         )
     }
 }

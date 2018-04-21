@@ -3,12 +3,13 @@ import moment from 'moment'
 
 import { REPO_NAME_CHANGED, READ_ME_CHANGED, HISTORY_CHANGED } from './'
 
-const BASE_URL = 'https://api.github.com/repos/HackYourFuture'
+const {REACT_APP_REPOS_URL} = process.env
 const noRepoAlternative = 'NOREPO' // alternative name for if a module doesn't have a repo
 
 export default function() {
   let _observers = []
   let _data = {}
+
 
   const subscribe = observer => {
     _observers.push(observer)
@@ -33,7 +34,7 @@ export default function() {
     return _data
   }
 
-  // Normal methodes will be changing the state
+  // Normal method's will be changing the state
 
   const getHistory = (clickEvent, isATeacher) => {
     
@@ -41,8 +42,8 @@ export default function() {
       _getRepoNameAndSundays(clickEvent)
       getReadme()
     } else {
-      _getRepoNameAndSundays(clickEvent)
-      getReadme()
+      _getRepoNameAndSundays(clickEvent);
+      getReadme();
 
       const {
         group_id,
@@ -56,9 +57,10 @@ export default function() {
       let modeuleSundays = _getSundays(start, end)
       let sundays = { sundays: modeuleSundays }
       const token = localStorage.getItem("token")
-      let BASE_URL = 'http://localhost:3005/api/history'
-      //sundays format => {sundays: ["2016/11/06", "2016/11/13", "2016/11/20"]}
-      fetch(`${BASE_URL}/${running_module_id}/${group_id}`, {
+      let REACT_APP_API_HISTORY_URL = process.env
+      // sundays format => {sundays: ["2016/11/06", "2016/11/13", "2016/11/20"]}
+
+      fetch(`${REACT_APP_API_HISTORY_URL}/${running_module_id}/${group_id}`, { // TODO
         method: 'PATCH',
         body: JSON.stringify(sundays),
         headers: {
@@ -88,7 +90,8 @@ export default function() {
     // check if there is a valid repoName
     if (!_data.repoName || _data.repoName === noRepoAlternative) return
     // make the request
-    fetch(`${BASE_URL}/${_data.repoName}/readme`)
+      
+    fetch(`${REACT_APP_REPOS_URL}/${_data.repoName}/readme`)
       .then(res => res.json())
       .then(readmeEncoded => {
         const readmeDecoded = atob(readmeEncoded.content)
@@ -157,7 +160,7 @@ export default function() {
   }
 
   const defaultReadme = defaultRepo => {
-    fetch(`${BASE_URL}/${defaultRepo}/readme`)
+    fetch(`${REACT_APP_REPOS_URL}/${defaultRepo}/readme`)
       .then(res => res.json())
       .then(readmeEncoded => {
         const readmeDecoded = atob(readmeEncoded.content)

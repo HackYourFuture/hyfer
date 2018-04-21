@@ -8,12 +8,13 @@ import {
 
 import locals from './locals'
 
-const BASE_URL = 'http://localhost:3005'
+const { REACT_APP_API_HOST } = process.env
 const token = localStorage.getItem("token")
 
 //return a promise with `then` getting the json formatted data
 export function getTimelineItems() {
-    return fetch(BASE_URL + '/api/timeline').then(res => res.json())
+    // this don't need to be with a custom fetch it's a one line
+    return fetch(REACT_APP_API_HOST + '/api/timeline').then(res => res.json())
 }
 
 export function setEndingDateForModules(allItems, groups) {
@@ -40,13 +41,13 @@ export function setEndingDateForModules(allItems, groups) {
     return allItems
 }
 
-export function getAllGroupsWithIds() {
-    return fetch(`${BASE_URL}/api/groups`, {
+export async function getAllGroupsWithIds() {
+    const groups = await fetch(`${REACT_APP_API_HOST}/api/groups`, {
         headers: {
             'Authorization': 'Bearer ' + token,
         }
     })
-        .then(res => res.json())
+    return await groups.json()
 }
 
 export function getAllTotalWeeksAndSundays(allItems) {
@@ -63,7 +64,7 @@ export function getAllTotalWeeksAndSundays(allItems) {
 }
 
 export async function getTeachers() {
-    const teachers = locals.request(`${BASE_URL}/api/users`, {
+    const teachers = await locals.request(`${REACT_APP_API_HOST}/api/users`, {
         headers: {
             'Authorization': 'Bearer ' + token,
         }
@@ -154,27 +155,31 @@ export function moveLeft(chosenModule, groups) {
     })
 }
 
-export function removeModule(chosenModule) {
+// Hey yoooooo
+export async function removeModule(chosenModule) {
     const { id, position } = chosenModule
-    return fetch(`${BASE_URL}/api/running/${id}/${position}`, {
+    const res = await fetch(`${REACT_APP_API_HOST}/api/running/${id}/${position}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'Application/json',
             'Authorization': 'Bearer ' + token,
         },
-    }).then(res => res.json())
+    })
+    return await res.json()
 }
 
-export function getModulesOfGroup(groupId) {
-    return fetch(`${BASE_URL}/api/running/${groupId}`, {
+// Hey yoooooo
+export async function getModulesOfGroup(groupId) {
+    const res = await fetch(`${REACT_APP_API_HOST}/api/running/${groupId}`, {
         headers: {
             'Authorization': 'Bearer ' + token,
         }
     })
-        .then(res => res.json())
+    return res.json()
 }
 
 ////////////////////////////////////////////////////////////////// helper functions
+
 
 
 // this is not used yet cause there's nothing shown to user to invoke it
@@ -195,7 +200,7 @@ export function addNewClass(className, starting_date) {
         starting_date: date.toISOString()
     }
 
-    return fetch(`${BASE_URL}/api/groups`, {
+    return fetch(`${REACT_APP_API_HOST}/api/groups`, {
         method: 'POST',
         headers: {
             'Content-Type': 'Application/json'
@@ -205,7 +210,7 @@ export function addNewClass(className, starting_date) {
 }
 
 export async function getALlPossibleModules() {
-    const res = await locals.request(`${BASE_URL}/api/modules`, {
+    const res = await locals.request(`${REACT_APP_API_HOST}/api/modules`, {
         headers: {
             Authorization: 'Bearer ' + token
         }

@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import style from  '../../assets/styles/modules.css'
+import style from '../../assets/styles/modules.css'
 import ModuleButton from './ModuleButton'
 import ModuleObservable from './ModuleObservable'
 import ModuleServiceBack from './ModuleServiceBack'
 import ModuleForm from './ModuleForm'
-import Notifications, {notify} from 'react-notify-toast'
+import Notifications, { notify } from 'react-notify-toast'
 
 
 
@@ -36,8 +36,8 @@ export default class ModuleFooter extends Component {
     AddModule = (module) => {
         const curModulesArr = ModuleObservable.getModules()
         const newModulesArr = Array.from(curModulesArr)
-        
-        let maxId = curModulesArr.map( m => m.id ).reduce(( max, cur ) => Math.max(max, cur))
+
+        let maxId = curModulesArr.map(m => m.id).reduce((max, cur) => Math.max(max, cur))
         module.id = maxId + 1
         newModulesArr.push(module)
 
@@ -46,16 +46,16 @@ export default class ModuleFooter extends Component {
 
     showAddModal = () => {
         this.setState({
-        isadding: true
+            isadding: true
         })
     }
-        
+
     hideAddModal = () => {
         this.setState({
-        isadding: false
+            isadding: false
         })
     }
-  
+
     render() {
         return (
             <div className={style.moduleFooter}>

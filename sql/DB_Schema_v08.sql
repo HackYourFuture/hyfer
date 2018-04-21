@@ -25,7 +25,6 @@ USE hyfer;
 
 # Dump of table group_students
 # ------------------------------------------------------------
-
 DROP TABLE IF EXISTS `group_students`;
 
 CREATE TABLE `group_students` (

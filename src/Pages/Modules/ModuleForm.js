@@ -1,5 +1,5 @@
 import React from 'react'
-import style from  '../../assets/styles/modules.css'
+import style from '../../assets/styles/modules.css'
 import ModalDialog from '../../components/ModalDialog'
 
 
@@ -22,16 +22,16 @@ export default class ModuleForm extends React.Component {
         const module = this.props.module
         if (module) {
             this.setState({
-                ModuleId : module.id,
-                ModuleName: module.module_name, 
-                RepoName: module.git_repo, 
-                RepoUrl: module.git_url,  
-                Duration: module.default_duration,  
-                Color: module.color,  
-                Optional: module.optional === 1 ? true : false, 
-                focusId:'' , 
+                ModuleId: module.id,
+                ModuleName: module.module_name,
+                RepoName: module.git_repo,
+                RepoUrl: module.git_url,
+                Duration: module.default_duration,
+                Color: module.color,
+                Optional: module.optional === 1 ? true : false,
+                focusId: '',
                 errorIds: []
-            })  
+            })
         } else {
             this.resetForm()
         }
@@ -45,7 +45,7 @@ export default class ModuleForm extends React.Component {
     onBlur = (e) => {
         this.setState({ focusId: '' })
     }
-    
+
     inputChanged = (e) => {
         const id = e.target.id
         const val = e.target.value
@@ -57,19 +57,19 @@ export default class ModuleForm extends React.Component {
         if (id === "RepoUrl") {
             if (val !== "" && !this.isURL(val)) {
                 this.RegError(id)
-            } else{
+            } else {
                 this.UnRegError(id)
             }
         }
         if (id === "Duration") {
-            if (val !== "" && (isNaN(val) || val <= 0 || val > 6)) { 
+            if (val !== "" && (isNaN(val) || val <= 0 || val > 6)) {
                 this.RegError(id)
             } else {
                 this.UnRegError(id)
             }
         }
         if (id === "Color") {
-            if (val !== "" && !this.isColor(val)) {   
+            if (val !== "" && !this.isColor(val)) {
                 this.RegError(id)
             } else {
                 this.UnRegError(id)
@@ -79,9 +79,9 @@ export default class ModuleForm extends React.Component {
 
     isFormValidate() {
         if (
-            this.state.errorIds.length === 0 && 
-            this.state.ModuleName !== '' && 
-            this.state.RepoName !== '' && 
+            this.state.errorIds.length === 0 &&
+            this.state.ModuleName !== '' &&
+            this.state.RepoName !== '' &&
             this.state.RepoUrl !== '' &&
             this.state.Duration !== '' &&
             this.state.Color !== ''
@@ -103,15 +103,16 @@ export default class ModuleForm extends React.Component {
     }
 
     UnRegError(id) {
-        this.setState({ errorIds: 
-            this.state.errorIds.filter(function(item) { 
-                return item !== id
-            })
+        this.setState({
+            errorIds:
+                this.state.errorIds.filter(function (item) {
+                    return item !== id
+                })
         })
     }
 
     isURL(str) {
-        return  /^(https?|ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(str)
+        return /^(https?|ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(str)
     }
 
     isColor(val) {
@@ -148,7 +149,7 @@ export default class ModuleForm extends React.Component {
             this.resetForm()
         }
     }
-    
+
     render() {
         return (
             <ModalDialog visible={this.props.visible} closeClicked={this.props.onCancel} title={this.props.title}>
@@ -160,7 +161,7 @@ export default class ModuleForm extends React.Component {
                             ${this.state.errorIds.includes("ModuleName") ? style.error : ''}`}>
                             Module Name
                         </label>
-                        
+
                         <input id="ModuleName" type='text' className={`
                             ${this.state.focusId === "ModuleName" ? style.focus : ''} 
                             ${this.state.errorIds.includes("ModuleName") ? style.error : ''}`}
@@ -192,7 +193,7 @@ export default class ModuleForm extends React.Component {
                             ${this.state.errorIds.includes("RepoUrl") ? style.error : ''}`}>
                             Repo Url
                         </label>
-                        
+
                         <input id="RepoUrl" type='text' className={`
                             ${this.state.focusId === "RepoUrl" ? style.focus : ''} 
                             ${this.state.errorIds.includes("RepoUrl") ? style.error : ''}`}
@@ -208,7 +209,7 @@ export default class ModuleForm extends React.Component {
                             ${this.state.errorIds.includes("Duration") ? style.error : ''}`}>
                             Duration
                         </label>
-                        
+
                         <input id="Duration" type='text' className={`
                             ${this.state.focusId === "Duration" ? style.focus : ''} 
                             ${this.state.errorIds.includes("Duration") ? style.error : ''}`}
@@ -224,7 +225,7 @@ export default class ModuleForm extends React.Component {
                             ${this.state.errorIds.includes("Color") ? style.error : ''}`}>
                             Color
                         </label>
-                        
+
                         <input id="Color" type='text' className={`
                             ${this.state.focusId === "Color" ? style.focus : ''} 
                             ${this.state.errorIds.includes("Color") ? style.error : ''}`}

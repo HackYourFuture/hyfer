@@ -145,7 +145,7 @@ export default class AssignTeacherModal extends Component {
               </button>
               <button
                 className={`${classes.btn} ${classes.ok}`}
-                onClick={this.handleAssignTeahcers}
+                onClick={this.handleAssignTeachers}
               >
                 OK
               </button>

@@ -2,7 +2,6 @@ import React, { Component } from "react"
 import styles from "../../assets/styles/timeline.css"
 import ModuleReadme from "../../components/ModuleReadme/ModuleReadme"
 import Attendance from "../../components/Attendance/Attendance"
-
 import TimelineComp from "../../components/timelineComp/Timeline/Timeline"
 
 import {

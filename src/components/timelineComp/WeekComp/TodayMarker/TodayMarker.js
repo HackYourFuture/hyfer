@@ -12,8 +12,9 @@ export default class TodayMarker extends Component {
     scrollEl.scrollLeft = leftPos
   }
 
-  render() {
-    const { offset } = this.props
+
+  render() {    
+    const { offset } = this.props;
     return (
       <div
         ref="todayMarker"
