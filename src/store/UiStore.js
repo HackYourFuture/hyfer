@@ -4,7 +4,7 @@ import {
   LOGIN_STATE_CHANGED
 } from './'
 
-const { REACT_APP_CURRENT_USER_INFO_URL } = process.env
+const { REACT_APP_CURRENT_API_USER_INFO_URL } = process.env
 
 export default function() {
   let _observers = []
@@ -41,8 +41,8 @@ export default function() {
   //Normal methods
 
   const getUserInfo = () => {
-    const token = localStorage.getItem("token")
-      fetch(REACT_APP_CURRENT_USER_INFO_URL , {
+      const token = localStorage.getItem("token")
+      fetch(REACT_APP_CURRENT_API_USER_INFO_URL , {
       credentials: "same-origin",
       headers: {
       'Authorization':'Bearer ' + token,

@@ -1,7 +1,6 @@
 import moment from 'moment'
 import locals from './locals';
-const BASE_URL = 'http://localhost:3005'
-const token = localStorage.getItem("token")
+const { REACT_APP_API_HOST } = process.env
 
 export {
     _patchGroupsModules,
@@ -19,19 +18,14 @@ async function _patchGroupsModules({
 }) {
     // we need position for request and group_name to filter the group id wanted
     const { position } = item
-    const body = {
-        duration: newDuration,
-        position: newPosition,
-        teacher1_id,
-        teacher2_id
-    }
-    const res = await locals.request(`${BASE_URL}/api/running/update/${group_id}/${position}`, {
+    const res = await locals.request(`${REACT_APP_API_HOST}/api/running/update/${group_id}/${position}`, {
         method: 'PATCH',
-        body,
-        headers: {
-            'Content-Type': 'Application/json',
-            'Authorization': 'Bearer ' + token,
-        },
+        body: {
+            duration: newDuration,
+            position: newPosition,
+            teacher1_id,
+            teacher2_id
+        }
     })
     return await res.json()
 }
@@ -130,10 +124,10 @@ function _patchNewModuleForOneGroup(
             const position = +item.position + 1
             return _addModule(selectedModuleId, selectedGroupId, position).then(res =>
                 _patchGroupsModules({
-                        item: { position },
-                        newDuration: duration,
-                        group_id: selectedDate
-                    })
+                    item: { position },
+                    newDuration: duration,
+                    group_id: selectedDate
+                })
             )
         }
     }
@@ -145,14 +139,9 @@ function _getNewDurationWhenAddingModule(selectedDate, module) {
 
 
 async function _addModule(moduleId, groupId, position) {
-    const singleModule = await fetch(`${BASE_URL}/api/running/add/${moduleId}/${groupId}/${position}`, {
+    const singleModule = await locals.request(`${REACT_APP_API_HOST}/api/running/add/${moduleId}/${groupId}/${position}`, {
         method: 'PATCH',
-        headers: {
-            'Content-Type': 'Application/json',
-            'Authorization': 'Bearer ' + token,
-        }
-    }
-    )
+    })
     return await singleModule.json()
         .catch(console.log)
 }

@@ -66,7 +66,7 @@ export default class Header extends Component {
           </div>
           <div className={styles.signButtonWrapper}>
             <a
-              href="http://localhost:3005/auth/github"
+              href={process.env.REACT_APP_GITHUB_OAUTH_URL}
               className={styles.signInButton}
             >
               Sign in
@@ -84,7 +84,7 @@ export default class Header extends Component {
           /></li>
           <li><div className={styles.menu}>
             <a
-              href="http://localhost:3000/"
+              href={process.env.REACT_APP_API_HOST}
               onClick={this.SignOut}
             >
               Sign Out

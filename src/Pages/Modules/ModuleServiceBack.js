@@ -1,13 +1,12 @@
 import locals from '../../util/locals'
 
-const api_url = 'http://localhost:3000/api'
+const { REACT_APP_API_URL } = process.env
 
 const token = localStorage.getItem('token')
 class moduleServiceBack {
 
-
     loadModules = async (callBack) => {
-        const load = await locals.request(`${api_url}/modules`, {
+        const load = await locals.request(`${REACT_APP_API_URL}/modules`, {
             headers: {
                 Authorization: 'Bearer ' + token
             }
@@ -17,7 +16,7 @@ class moduleServiceBack {
     }
 
     saveModules = async (modules, callBack) => {
-        const load = await locals.request(`${api_url}/modules`, {
+        const load = await locals.request(`${REACT_APP_API_URL}/modules`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
