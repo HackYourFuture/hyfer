@@ -2,8 +2,12 @@
 const token = localStorage.getItem("token")
 
 class locals {
-    request(url, { method, body, headers, credentials }, callback, ...args) {
-        console.log('request:', method || 'GET', url) // temproray
+    request(url, { method, body, headers, credentials }, errorCallback, ...args) {
+        // the first arg here will be equal to the error in the catch method
+        const { NODE_ENV } = process.env
+        if (NODE_ENV === 'development') {
+            console.log('request:', method || 'GET', url) // temproray
+        }
         const params = {
             body: JSON.stringify(body),
             credentials: credentials || 'same-origin',
@@ -36,10 +40,15 @@ class locals {
         options = { method, ...params }
         return fetch(url, options)
             .catch(error => {
-                if (process.env.NODE_ENV === 'development') {
-                    return (callback) ? callback(args) : console.error(error)
+                if (NODE_ENV === 'development') {
+                    return (errorCallback) ? errorCallback(args) : console.error(error)
                 }
-                return (callback) ? callback(args) : error
+                // no args! ... asign the error to args
+                if (!args) args = error
+                // no errorCallback! ... return the error to do something else with it
+                if (!errorCallback) return error
+                // otherwise just call the errorCallback
+                if (errorCallback) return errorCallback(args)
             })
     }
 }

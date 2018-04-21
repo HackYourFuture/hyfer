@@ -3,6 +3,7 @@ import StudentWithWeeks from './StudentWithWeeks'
 import WeekIndicator from './WeekIndicator'
 import styles from '../../assets/styles/attendance.css'
 import Notifications, { notify } from 'react-notify-toast'
+import locals from '../../util/locals'
 import {
     moduleInfoStore,
     HISTORY_CHANGED
@@ -155,22 +156,16 @@ export default class Attendance extends React.Component {
         })
     }
 
-    onSave = () => {
-        const token = localStorage.getItem("token")
-        const body = this.state.history
+    onSave = async () => {
         let { REACT_APP_API_HISTORY_URL } = process.env
 
-        fetch(REACT_APP_API_HISTORY_URL, {
+        const res = await locals.request(REACT_APP_API_HISTORY_URL, {
             method: 'POST',
-            body: JSON.stringify(body),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token,
-            },
+            body: this.state.history,
         })
-            .then(response => response.json())
-            .then(notify.show('Your changes are successfully Saved !', 'success'))
-            .catch(err => console.log(err))
+        await res.json()
+        await notify.show('Your changes are successfully Saved !', 'success')
+
         this.setState({
             edit_Mode: null,
         })

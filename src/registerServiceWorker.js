@@ -8,6 +8,8 @@
 // To learn more about the benefits of this model, read https://goo.gl/KwvDNy.
 // This link also includes instructions on opting out of this behavior.
 
+import locals from './util/locals'
+
 const isLocalhost = Boolean(
     window.location.hostname === 'localhost' ||
     // [::1] is the IPv6 localhost address.
@@ -81,31 +83,24 @@ function registerValidSW(swUrl) {
         })
 }
 
-function checkValidServiceWorker(swUrl) {
+async function checkValidServiceWorker(swUrl) {
     // Check if the service worker can be found. If it can't reload the page.
-    fetch(swUrl)
-        .then(response => {
-            // Ensure service worker exists, and that we really are getting a JS file.
-            if (
-                response.status === 404 ||
-                response.headers.get('content-type').indexOf('javascript') === -1
-            ) {
-                // No service worker found. Probably a different app. Reload the page.
-                navigator.serviceWorker.ready.then(registration => {
-                    registration.unregister().then(() => {
-                        window.location.reload()
-                    })
-                })
-            } else {
-                // Service worker found. Proceed as normal.
-                registerValidSW(swUrl)
-            }
+    const serviceWorkerResponse = await locals.request(swUrl, {/* Empty ~> we need it to be a GET normal request */}, console.error, 'No internet connection found. App is running in offline mode.')
+    // Ensure service worker exists, and that we really are getting a JS file.
+    if (
+        serviceWorkerResponse.status === 404 ||
+        serviceWorkerResponse.headers.get('content-type').indexOf('javascript') === -1
+    ) {
+        // No service worker found. Probably a different app. Reload the page.
+        navigator.serviceWorker.ready.then(registration => {
+            registration.unregister().then(() => {
+                window.location.reload()
+            })
         })
-        .catch(() => {
-            console.log(
-                'No internet connection found. App is running in offline mode.'
-            )
-        })
+    } else {
+        // Service worker found. Proceed as normal.
+        registerValidSW(swUrl)
+    }
 }
 
 export function unregister() {

@@ -1,3 +1,5 @@
+import locals from '../util/locals'
+
 const token = localStorage.getItem("token")
 
 class store {
@@ -60,30 +62,26 @@ class store {
     }
 
 
-    loadUsers = () => {
-        fetch(process.env.REACT_APP_API_USERS_LIST_URL, {
-            method: 'GET',
+    loadUsers = async () => {
+        const error = () => {
+            // no need for the console in a production mode
+            // -- instead we will throw a helpfull message
+            throw new Error('Problem with Server: GET DATA')
+        }
+        const res = await locals.request(process.env.REACT_APP_API_USERS_LIST_URL, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + token,
             }
+        }, error)
+        const jsonRes = await res.json().catch(error)
+        this.setState({
+            users: jsonRes,
+            filteredUsers: jsonRes,
         })
-            .then(res => res.json())
-            .then(data => {
-                this.setState({
-                    users: data,
-                    filteredUsers: data,
-                });
-                return;
-            })
-            .catch(error => {
-                console.log(error);
-                throw new Error('Problem with Server: GET DATA');
-            });
-
     }
 
-    saveProfile = () => {
+    saveProfile = async () => {
         const updatedUser = {
             "id": this.state.id,
             "username": this.state.username,
@@ -97,25 +95,18 @@ class store {
             "mobile": this.state.mobile,
             "group_id": this.state.group_id
         }
+        const error = () => {
+            throw new Error('Problem with Server :  PATCH DATA')
+        }
         const { REACT_APP_CURRENT_API_USER_INFO_URL } = process.env
-        fetch(`${REACT_APP_CURRENT_API_USER_INFO_URL}/${this.state.id}`, {
+        const res = await locals.request(`${REACT_APP_CURRENT_API_USER_INFO_URL}/${this.state.id}`, {
             method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token,
-            },
-            body: JSON.stringify(updatedUser),
-        })
-            .then(response => {
-                if (response.status >= 400) {
-                    throw new Error("Bad response from server");
-                }
-                this.loadUsers()
-            })
-            .catch((error) => {
-                console.log(error)
-                throw new Error('Problem with Server :  PATCH DATA')
-            })
+            body: updatedUser,
+        }, error)
+        if (res.status >= 400) {
+            throw new Error("Bad response from server");
+        }
+        this.loadUsers()
         console.log(this.state.full_name)
     }
 

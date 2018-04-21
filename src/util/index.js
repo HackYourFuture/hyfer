@@ -14,6 +14,7 @@ const token = localStorage.getItem("token")
 //return a promise with `then` getting the json formatted data
 export function getTimelineItems() {
     // this don't need to be with a custom fetch it's a one line
+    // -- FOR NOW
     return fetch(REACT_APP_API_HOST + '/api/timeline').then(res => res.json())
 }
 
@@ -42,7 +43,7 @@ export function setEndingDateForModules(allItems, groups) {
 }
 
 export async function getAllGroupsWithIds() {
-    const groups = await fetch(`${REACT_APP_API_HOST}/api/groups`, {
+    const groups = await locals.request(`${REACT_APP_API_HOST}/api/groups`, {
         headers: {
             'Authorization': 'Bearer ' + token,
         }
@@ -155,22 +156,16 @@ export function moveLeft(chosenModule, groups) {
     })
 }
 
-// Hey yoooooo
 export async function removeModule(chosenModule) {
     const { id, position } = chosenModule
-    const res = await fetch(`${REACT_APP_API_HOST}/api/running/${id}/${position}`, {
+    const res = await locals.request(`${REACT_APP_API_HOST}/api/running/${id}/${position}`, {
         method: 'DELETE',
-        headers: {
-            'Content-Type': 'Application/json',
-            'Authorization': 'Bearer ' + token,
-        },
     })
     return await res.json()
 }
 
-// Hey yoooooo
 export async function getModulesOfGroup(groupId) {
-    const res = await fetch(`${REACT_APP_API_HOST}/api/running/${groupId}`, {
+    const res = await locals.request(`${REACT_APP_API_HOST}/api/running/${groupId}`, {
         headers: {
             'Authorization': 'Bearer ' + token,
         }
@@ -193,19 +188,16 @@ export function assignTeachers(item, groupsId, teacher1_id, teacher2_id) {
     })
 }
 
-export function addNewClass(className, starting_date) {
+export async function addNewClass(className, starting_date) {
     const date = new Date(starting_date)
     const body = {
         group_name: className,
         starting_date: date.toISOString()
     }
 
-    return fetch(`${REACT_APP_API_HOST}/api/groups`, {
+    return await locals.request(`${REACT_APP_API_HOST}/api/groups`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'Application/json'
-        },
-        body: JSON.stringify(body)
+        body: body
     })
 }
 
