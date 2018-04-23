@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 
 export default class InputField extends Component {
   handleChange = event => {
-    this.props.onChange(event.target.value);
-  };
+    this.props.onChange(event.target.value)
+  }
 
   render() {
     return (
@@ -14,6 +14,6 @@ export default class InputField extends Component {
         onChange={this.handleChange}
         className={this.props.className}
       />
-    );
+    )
   }
 }

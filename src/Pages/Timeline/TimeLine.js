@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import styles from "../../assets/styles/timeline.css";
-import ModuleReadme from "../../components/ModuleReadme/ModuleReadme";
-import Attendance from "../../components/Attendance/Attendance";
-import TimelineComp from "../../components/timelineComp/Timeline/Timeline";
+import React, { Component } from "react"
+import styles from "../../assets/styles/timeline.css"
+import ModuleReadme from "../../components/ModuleReadme/ModuleReadme"
+import Attendance from "../../components/Attendance/Attendance"
+import TimelineComp from "../../components/timelineComp/Timeline/Timeline"
 
 import {
   READ_ME_CHANGED,
@@ -22,7 +22,7 @@ import {
   GROUPS_WITH_IDS_CHANGED,
   ALL_TEACHERS_CHAGNED,
   INFO_SELECTED_MDOULE_CHANGED
-} from "../../store/index";
+} from "../../store/index"
 
 export default class TimeLine extends Component {
   state = {
@@ -44,100 +44,100 @@ export default class TimeLine extends Component {
     groupsWithIds: null,
     teachers: null,
     infoSelectedModule: null
-  };
+  }
 
   timelineObserver = mergedData => {
     switch (mergedData.type) {
       case TIMELINE_ITEMS_CHANGED:
-        this.setState({ timelineItems: mergedData.payload.items });
-        break;
+        this.setState({ timelineItems: mergedData.payload.items })
+        break
       case ALL_TEACHERS_CHAGNED:
-        this.setState({ teachers: mergedData.payload.teachers });
-        break;
+        this.setState({ teachers: mergedData.payload.teachers })
+        break
       case GROUPS_WITH_IDS_CHANGED:
-        this.setState({ groupsWithIds: mergedData.payload.groupsWithIds });
-        break;
+        this.setState({ groupsWithIds: mergedData.payload.groupsWithIds })
+        break
       case TODAY_MARKER_REFERENCE:
-        this.setState({ todayMarkerRef: mergedData.payload.todayMarkerRef });
-        break;
+        this.setState({ todayMarkerRef: mergedData.payload.todayMarkerRef })
+        break
       case TIMELINE_GROUPS_CHANGED:
-        this.setState({ groups: mergedData.payload.groups });
-        break;
+        this.setState({ groups: mergedData.payload.groups })
+        break
       case SELECTED_MODULE_ID_CHANGED:
         this.setState({
-          selectedModule: mergedData.payload.selectedModule});
-        break;
+          selectedModule: mergedData.payload.selectedModule})
+        break
       case ALL_WEEKS_CHANGED:
-        const { allWeeks } = mergedData.payload;
-        this.setState({ allWeeks: allWeeks });
-        break;
+        const { allWeeks } = mergedData.payload
+        this.setState({ allWeeks: allWeeks })
+        break
       case ALL_POSSIBLE_MODULES_CHANGED:
-        const { modules } = mergedData.payload;
-        this.setState({ modules });
-        break;
+        const { modules } = mergedData.payload
+        this.setState({ modules })
+        break
       case INFO_SELECTED_MDOULE_CHANGED:
-        this.setState({infoSelectedModule: mergedData.payload.allModulesOfGroup});
-        break;
+        this.setState({infoSelectedModule: mergedData.payload.allModulesOfGroup})
+        break
       default:
-        break;
+        break
     }
-  };
+  }
 
   componentWillMount() {
-    timelineStore.subscribe(this.timelineObserver);
+    timelineStore.subscribe(this.timelineObserver)
   }
 
   componentDidMount() {
     moduleInfoStore.subscribe(mergedData => {
       if (mergedData.type === REPO_NAME_CHANGED) {
-        this.setState({ repoName: mergedData.payload.repoName });
+        this.setState({ repoName: mergedData.payload.repoName })
       } else if (mergedData.type === READ_ME_CHANGED) {
-        this.setState({ readme: mergedData.payload.readme });
+        this.setState({ readme: mergedData.payload.readme })
       } else if (mergedData.type === HISTORY_CHANGED) {
         this.setState({
           history: mergedData.payload.history,
           students: mergedData.payload.students,
           duration: mergedData.payload.duration,
           group_name: mergedData.payload.group_name
-        });
+        })
       }
-    });
+    })
 
-    moduleInfoStore.defaultReadme("curriculum");
+    moduleInfoStore.defaultReadme("curriculum")
 
     uiStore.subscribe(mergedData => {
       if (mergedData.type === LOGIN_STATE_CHANGED) {
-        this.setState({ isLoggedIn: mergedData.payload.isLoggedIn });
+        this.setState({ isLoggedIn: mergedData.payload.isLoggedIn })
       } else if (mergedData.type === ISTEACHER_STATE_CHANGED) {
-        this.setState({ isATeacher: mergedData.payload.isATeacher });
+        this.setState({ isATeacher: mergedData.payload.isATeacher })
       }
-    });
+    })
 
     if (localStorage.token) {
-      uiStore.getUserInfo();
+      uiStore.getUserInfo()
     }
   }
 
   itemClickHandler = (clickEvent, item) => {
-    moduleInfoStore.getHistory(clickEvent, this.state.isATeacher);
-    const selectedItemInStore = timelineStore.getState().selectedModule;
+    moduleInfoStore.getHistory(clickEvent, this.state.isATeacher)
+    const selectedItemInStore = timelineStore.getState().selectedModule
     if (
       !item ||
       (selectedItemInStore &&
         item.running_module_id === selectedItemInStore.running_module_id)
     ) {
       // if the clicked module is the same module, unselect it
-      item = null;
+      item = null
     } else {
-      timelineStore.getSelectedModuleInfo(item);
+      timelineStore.getSelectedModuleInfo(item)
     }
     timelineStore.setState({
       type: SELECTED_MODULE_ID_CHANGED,
       payload: {
         selectedModule: item
       }
-    });
-  };
+    })
+  }
 
   render() {
     // last item being set in store
@@ -160,9 +160,9 @@ export default class TimeLine extends Component {
       teachers,
       infoSelectedModule,
       tab
-    } = this.state;
+    } = this.state
 
-    let content = <ModuleReadme readme={readme} repoName={repoName} />;
+    let content = <ModuleReadme readme={readme} repoName={repoName} />
     if (tab === "attendance") {
       content = (
         <Attendance
@@ -172,7 +172,7 @@ export default class TimeLine extends Component {
           group_name={group_name}
           students={students}
         />
-      );
+      )
     }
 
     if (isLoggedIn && isATeacher) {
@@ -211,7 +211,7 @@ export default class TimeLine extends Component {
           </div>
           {content}
         </main>
-      );
+      )
     } else {
       return (
         <main>
@@ -233,9 +233,9 @@ export default class TimeLine extends Component {
               infoSelectedModule={infoSelectedModule}
             />
           </div>
-          <ModuleReadme readme={readme} repoName={repoName} />
+              <ModuleReadme readme={readme} repoName={repoName} />
         </main>
-      );
+      )
     }
   }
 }

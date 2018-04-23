@@ -11,7 +11,7 @@ const token = localStorage.getItem("token")
 export default class Profile extends React.Component {
 
     state = {
-        classOptions : []
+        classOptions: []
     }
 
     componentWillMount = () => {
@@ -36,14 +36,15 @@ export default class Profile extends React.Component {
     componentDidMount() {
         let getData = async () => {
 
-        let groupData = await getAllGroupsWithIds()
-   
+            let groupData = await getAllGroupsWithIds()
+
             groupData.map(group => {
-            return {
-                groupsName: group.group_name,
-                groupsId: group.id                    }
+                return {
+                    groupsName: group.group_name,
+                    groupsId: group.id
+                }
             })
-            
+
             this.setState({
                 classOptions: groupData
             })
@@ -51,7 +52,7 @@ export default class Profile extends React.Component {
         getData()
         window.scrollTo(0, 0)
     }
-    saveProfile = () => {
+    saveProfile = async () => {
 
         const updatedUser = {
             "id": store.state.id,
@@ -67,19 +68,19 @@ export default class Profile extends React.Component {
             "group_id": store.state.group_id
         }
 
-        fetch(`http://localhost:3005/api/user/${store.state.id}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token,
-            },
-            body: JSON.stringify(updatedUser),
-        })
-            .then(response => console.log("RESPONSE", response))
-            .catch((error) => {
-                console.log(error)
-                throw new Error('Problem with Server :  PATCH DATA')
+        try {
+            await fetch(`http://localhost:3005/api/user/${store.state.id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                },
+                body: JSON.stringify(updatedUser),
             })
+        } catch (error) {
+            console.log(error)
+            throw new Error('Problem with Server :  PATCH DATA')
+        }
     }
 
     resetProfile = () => {
@@ -107,7 +108,7 @@ export default class Profile extends React.Component {
                 <Link to='/users'>
                     <input className={styles.backButton}
                         type="button"
-                        value="&#8249"
+                        value="&#8249;"
                     />
                 </Link>
                 <h1>Edit Profile</h1>
@@ -144,9 +145,11 @@ export default class Profile extends React.Component {
                             }}>
 
                             {this.state.classOptions.map(group => {
-                              let optionValue = `{"name":"${group.group_name}","id":"${group.id}"}`
+
+                                let optionValue = `{"name":"${group.group_name}","id":"${group.id}"}`
                                 return (<option key={group.id} value={optionValue}>{group.group_name}</option>)
-                            })}            
+
+                            })}
                         </select>
                     </div>
                     <div className={styles.matDiv + ' ' + this.checkHasValue(store.state.email)}>

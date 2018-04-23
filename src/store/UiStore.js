@@ -2,41 +2,41 @@ import {
   AVATAR_URL_CHANGED,
   ISTEACHER_STATE_CHANGED,
   LOGIN_STATE_CHANGED
-} from './';
+} from './'
 
-const CURRENT_USER_INFO_URL = 'http://localhost:3005/api/user';
+const CURRENT_USER_INFO_URL = 'http://localhost:3005/api/user'
 
 export default function() {
-  let _observers = [];
-  let _data = {};
+  let _observers = []
+  let _data = {}
 
   const subscribe = observer => {
-    _observers.push(observer);
-  };
+    _observers.push(observer)
+  }
 
   const unsubscribe = observer => {
-    _observers = _observers.filter(item => item !== observer);
-  };
+    _observers = _observers.filter(item => item !== observer)
+  }
 
   const isSubscribed = observer => {
-    return _observers.includes(observer);
-  };
+    return _observers.includes(observer)
+  }
 
   const setState = merge => {
-    let old = {};
+    let old = {}
     for (let changedItemKey in merge.payload) {
       if (_data.hasOwnProperty(changedItemKey)) {
-        old[changedItemKey] = merge.payload[changedItemKey];
+        old[changedItemKey] = merge.payload[changedItemKey]
       }
-      _data[changedItemKey] = merge.payload[changedItemKey];
+      _data[changedItemKey] = merge.payload[changedItemKey]
     }
 
-    _observers.forEach(observer => observer(merge, old));
-  };
+    _observers.forEach(observer => observer(merge, old))
+  }
 
   const getState = () => {
-    return _data;
-  };
+    return _data
+  }
 
   //Normal methods
 
@@ -49,9 +49,9 @@ export default function() {
     }})
       .then(res => res.json())
       .then(jsonRes => {
-        const isLoggedIn = true;
-        const isATeacher = jsonRes.role === 'teacher' ? true : false;
-        _getProfileImg(jsonRes.username);
+        const isLoggedIn = true
+        const isATeacher = jsonRes.role === 'teacher' ? true : false
+        _getProfileImg(jsonRes.username)
 
         // notify login
         setState({
@@ -59,7 +59,7 @@ export default function() {
           payload: {
             isLoggedIn
           }
-        });
+        })
 
         //notify a teacher
         setState({
@@ -67,22 +67,22 @@ export default function() {
           payload: {
             isATeacher
           }
-        });
+        })
       })
-      .catch(err => console.log(err));
-  };
+      .catch(err => console.log(err))
+  }
 
   // Helper methods
   const _getProfileImg = username => {
-    const avatarUrl = `https://avatars.githubusercontent.com/${username}`;
+    const avatarUrl = `https://avatars.githubusercontent.com/${username}`
     //notify avatar url changed
     setState({
       type: AVATAR_URL_CHANGED,
       payload: {
         avatarUrl
       }
-    });
-  };
+    })
+  }
 
   return {
     subscribe,
@@ -91,5 +91,5 @@ export default function() {
     getState,
     setState,
     getUserInfo
-  };
+  }
 }

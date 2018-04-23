@@ -1,14 +1,14 @@
-import React from 'react';
-import store from '../../store/UserStore';
-import styles from '../../assets/styles/users.css';
-import { Link } from 'react-router-dom';
-import Moment from 'moment';
+import React from 'react'
+import store from '../../store/UserStore'
+import styles from '../../assets/styles/users.css'
+import { Link } from 'react-router-dom'
+import Moment from 'moment'
 
-import MdEmail from 'react-icons/lib/md/email';
-import FaSlack from 'react-icons/lib/fa/slack';
-import FaFire from 'react-icons/lib/fa/fire';
-import FaGithub from 'react-icons/lib/fa/github';
-import FaMobile from 'react-icons/lib/fa/mobile';
+import MdEmail from 'react-icons/lib/md/email'
+import FaSlack from 'react-icons/lib/fa/slack'
+import FaFire from 'react-icons/lib/fa/fire'
+import FaGithub from 'react-icons/lib/fa/github'
+import FaMobile from 'react-icons/lib/fa/mobile'
 
 const token = localStorage.getItem("token")
 
@@ -17,41 +17,41 @@ export default class Users extends React.Component {
  
   componentWillMount = () => {
     this.subscription = store.subscribe(state => {
-      this.setState(state);
-    });
-  };
+      this.setState(state)
+    })
+  }
 
   componentWillUnmount() {
-    this.subscription.remove();
+    this.subscription.remove()
   }
 
   componentDidMount = () => {
-    this.loadUsers();
-    window.scrollTo(0, 0);
-  };
-
-  loadUsers() {
-    fetch('http://localhost:3000/api/users',{
-      headers: {
-        'Authorization':'Bearer ' + token,
-        }} )
-      .then(res => res.json())
-      .then(json => {
-        store.setState({
-          users: json,
-          filteredUsers: json
-        });
-        return;
-      })
-      .catch(error => {
-        console.log(error);
-        throw new Error('Problem with Server: GET DATA');
-      });
+    this.loadUsers()
+    window.scrollTo(0, 0)
   }
+
+    async loadUsers() {
+        try {
+            const res = await fetch('http://localhost:3000/api/users', {
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }
+            })
+            const json = await res.json()
+            store.setState({
+                users: json,
+                filteredUsers: json
+            })
+        } catch (error) {
+            console.log(error)
+            throw new Error('Problem with Server: GET DATA')
+        }
+
+    }
 
   //eventhandler for SEARCH. it checks the values in 'allUserValues'
   searchUser = function(event) {
-    let updatedList = store.state.users;
+    let updatedList = store.state.users
 
     updatedList = updatedList.filter(function(item) {
       let allUserValues =
@@ -59,16 +59,16 @@ export default class Users extends React.Component {
         item.username +
         item.group_name +
         item.role +
-        item.slack_username;
+        item.slack_username
       return (
         allUserValues.toLowerCase().search(event.target.value.toLowerCase()) !==
         -1
-      );
-    });
+      )
+    })
     store.setState({
       filteredUsers: updatedList
-    });
-  };
+    })
+  }
 
   render() {
     return (
@@ -95,7 +95,7 @@ export default class Users extends React.Component {
                       onError={e => {
                         e.target.src = `https://api.adorable.io/avatars/100/${
                           user.full_name
-                        }`;
+                        }`
                       }}
                     />
                   </div>
@@ -171,7 +171,7 @@ export default class Users extends React.Component {
                       reset_freecodecamp_username: user.freecodecamp_username,
                       reset_mobile: user.mobile,
                       reset_group_id: user.group_id
-                    });
+                    })
                   }}
                 >
                   <Link to="/profile">
@@ -183,6 +183,6 @@ export default class Users extends React.Component {
           ))}
         </ul>
       </div>
-    );
+    )
   }
 }

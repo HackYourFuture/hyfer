@@ -1,14 +1,14 @@
-import React from 'react';
-import StudentWithWeeks from './StudentWithWeeks';
-import WeekIndicator from './WeekIndicator';
-import styles from '../../assets/styles/attendance.css';
-import Notifications, {notify} from 'react-notify-toast';
+import React from 'react'
+import StudentWithWeeks from './StudentWithWeeks'
+import WeekIndicator from './WeekIndicator'
+import styles from '../../assets/styles/attendance.css'
+import Notifications, {notify} from 'react-notify-toast'
 import {
     moduleInfoStore,
     HISTORY_CHANGED
-} from '../../store';
+} from '../../store'
 
-const stack = [];
+const stack = []
 
 export default class Attendance extends React.Component{
 
@@ -19,7 +19,7 @@ export default class Attendance extends React.Component{
         history: null,
         students: null,
         duration: null,
-    };
+    }
 
     // Subscribing to the module info store for getting "history"
     componentDidMount = () => {
@@ -37,7 +37,7 @@ export default class Attendance extends React.Component{
         })
 
         // getting selected module update from timeline component
-        const { history, students, duration, repoName, group_name } = this.props;
+        const { history, students, duration, repoName, group_name } = this.props
         this.setState({
             repoName: repoName,
             group_name: group_name,
@@ -45,14 +45,14 @@ export default class Attendance extends React.Component{
             students: students,
             duration: duration,
         })
-    };
+    }
 
     render(){
 
-        const { history, students, duration, repoName, group_name } = this.state;
-        let title = null;
-        let content = null;
-        let buttons = null;
+        const { history, students, duration, repoName, group_name } = this.state
+        let title = null
+        let content = null
+        let buttons = null
         if (repoName === "NOREPO") {
             content = (<h2 className={styles.message}>Oops! there is no History.</h2>)
         } else if (students === null || repoName === undefined) {
@@ -103,7 +103,7 @@ export default class Attendance extends React.Component{
                     >Cancel</button>
                 </div>
             )
-        };
+        }
 
         return(
             <div>
@@ -126,74 +126,75 @@ export default class Attendance extends React.Component{
                 <Notifications />
             </div>
         )
-    };
+    }
 
     handleCheckboxChange = ( student, event ) => {
-        const week = event.target.id;
-        const name = event.target.name; //attendance or homework
+        const week = event.target.id
+        const name = event.target.name //attendance or homework
         // edit_mode will active the save and cancel buttons
         this.setState({
             edit_Mode : true,
         })
-        stack.push(student, week, name);
-        this.makeChange(student, week, name);
+        stack.push(student, week, name)
+        this.makeChange(student, week, name)
     }
 
     makeChange = (student, week, name) => {
-        const { history } = this.state;
+        const { history } = this.state
         const changeValue=(v)=>{
             if (v === 0) {
                 return 1
             } else if (v === 1) {
                 return 0
             }
-        };
+        }
         // change in history object
         history[student][week][name] = changeValue(history[student][week][name])
         this.setState({
             history: history,
         })
-    };
+    }
 
-    onSave = () => {
+    onSave = async () => {
         const token = localStorage.getItem("token")
-        const body = this.state.history;
-        let BASE_URL = 'http://localhost:3005/api/history';
-        
-        fetch(BASE_URL , {
-            method: 'POST', 
-            body: JSON.stringify(body),
-            headers: {
-            'Content-Type': 'application/json',
-            'Authorization':'Bearer ' + token,
-            }, 
-          })
-        .then(response => response.json())
-        .then(notify.show('Your changes are successfully Saved !', 'success'))
-        .catch(err => console.log(err))
+        const body = this.state.history
+        let BASE_URL = 'http://localhost:3005/api/history'
+        try {
+            await fetch(BASE_URL, {
+                method: 'POST',
+                body: JSON.stringify(body),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                },
+            })
+            notify.show('Your changes are successfully Saved !', 'success')
+        } catch (err){
+            console.log(err)
+        }
         this.setState({
             edit_Mode: null,
         }) 
-    };
+    }
 
     onCancel = () => {
         for (let i = 0; i < stack.length; i++) { 
-            this.undo();
-        };
-        notify.show('Your changes have been cancelled !', 'warning');
+            this.undo()
+        }
+        notify.show('Your changes have been cancelled !', 'warning')
     }
 
     undo = () => {
-        const toUndo = stack.slice(-3);
-        stack.splice(-3, 3);
-        const student = toUndo[0];
-        const week = toUndo[1];
-        const name = toUndo[2];
+        const toUndo = stack.slice(-3)
+        stack.splice(-3, 3)
+        const student = toUndo[0]
+        const week = toUndo[1]
+        const name = toUndo[2]
         if ( stack.length === 0 ) {
             this.setState({
                 edit_Mode: null,
             })
-        };
-        this.makeChange(student, week, name);
-    };
-};
+        }
+        this.makeChange(student, week, name)
+    }
+}

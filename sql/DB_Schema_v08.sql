@@ -86,6 +86,7 @@ CREATE TABLE `running_modules` (
   `position` int(8) DEFAULT NULL,
   `teacher1_id` int(8) DEFAULT NULL,
   `teacher2_id` int(8) DEFAULT NULL,
+  `description` VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_module` (`module_id`),
   KEY `fk_group_name` (`group_id`),

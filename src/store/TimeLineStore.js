@@ -7,7 +7,7 @@ import {
   ALL_TEACHERS_CHAGNED,
   INFO_SELECTED_MDOULE_CHANGED,
   GROUPS_WITH_IDS_CHANGED
-} from "./";
+} from "./"
 
 import {
   getAllTotalWeeksAndSundays,
@@ -26,88 +26,86 @@ import {
   getTeachers,
   getModulesOfGroup,
   getAllGroupsWithIds
-} from "../util";
+} from "../util"
 
-const BASE_URL = "http://localhost:3005";
+const BASE_URL = "http://localhost:3005"
 
 export default function() {
-  let _observers = [];
-  let _data = {};
+  let _observers = []
+  let _data = {}
 
   const subscribe = observer => {
-    _observers.push(observer);
-  };
+    _observers.push(observer)
+  }
 
   const unsubscribe = observer => {
-    _observers = _observers.filter(item => item !== observer);
-  };
+    _observers = _observers.filter(item => item !== observer)
+  }
 
   const isSubscribed = observer => {
-    return _observers.includes(observer);
-  };
+    return _observers.includes(observer)
+  }
 
   const setState = merge => {
-    let old = {};
+    let old = {}
     for (let changedItemKey in merge.payload) {
       if (_data.hasOwnProperty(changedItemKey)) {
-        old[changedItemKey] = merge.payload[changedItemKey];
+        old[changedItemKey] = merge.payload[changedItemKey]
       }
-      _data[changedItemKey] = merge.payload[changedItemKey];
+      _data[changedItemKey] = merge.payload[changedItemKey]
     }
 
-    _observers.forEach(observer => observer(merge, old));
-  };
+    _observers.forEach(observer => observer(merge, old))
+  }
 
   const getState = () => {
-    return _data;
-  };
+    return _data
+  }
 
   const fetchItems = async isTeacher => {
-    const timelineItems = await getTimelineItems(
-      BASE_URL + "/api/timeline"
-    ).catch(err => console.log(err));
+    const timelineItems = await getTimelineItems(BASE_URL + "/api/timeline")
 
     // set the state with the array of all current groups [maybe needed for sidecolumn group names]
-    const groups = Object.keys(timelineItems);
+    const groups = Object.keys(timelineItems)
     groups.sort((group1, group2) => {
-      return +group1.split(" ")[1] > +group2.split(" ")[1];
-    });
-    const orderdTimelineItems = {};
+      return +group1.split(" ")[1] > +group2.split(" ")[1]
+    })
+    const orderdTimelineItems = {}
     groups.forEach(group => {
-      orderdTimelineItems[group] = timelineItems[group];
-    });
+      orderdTimelineItems[group] = timelineItems[group]
+    })
 
-    const groupsWithIds = await getAllGroupsWithIds();
+    const groupsWithIds = await getAllGroupsWithIds()
 
     setState({
       type: GROUPS_WITH_IDS_CHANGED,
       payload: {
         groupsWithIds
       }
-    });
+    })
 
-    const withEndingDate = setEndingDateForModules(orderdTimelineItems, groups); // group names
+    const withEndingDate = setEndingDateForModules(orderdTimelineItems, groups) // group names
     // set the state with the new received items
     setState({
       type: TIMELINE_ITEMS_CHANGED,
       payload: {
         items: withEndingDate
       }
-    });
+    })
 
     // get all possible modules for addition
     const allPossibleModules = await getALlPossibleModules().catch(err =>
       console.log(err)
-    );
+    )
     setState({
       type: ALL_POSSIBLE_MODULES_CHANGED,
       payload: {
         modules: allPossibleModules
       }
-    });
+    })
 
     // get all sundays and count how many weeks
-    const { allWeeks, allSundays } = getAllTotalWeeksAndSundays(withEndingDate);
+    const { allWeeks, allSundays } = getAllTotalWeeksAndSundays(withEndingDate)
 
     //set State with all sundays
     setState({
@@ -115,7 +113,7 @@ export default function() {
       payload: {
         allSundays
       }
-    });
+    })
 
     // Set state with all weeks moments
     setState({
@@ -123,18 +121,18 @@ export default function() {
       payload: {
         allWeeks
       }
-    });
+    })
 
     if (isTeacher) {
       getTeachers().then(res => {
-        const teachers = res.filter(user => user.role === "teacher");
+        const teachers = res.filter(user => user.role === "teacher")
         setState({
           type: ALL_TEACHERS_CHAGNED,
           payload: {
             teachers
           }
-        });
-      });
+        })
+      })
     }
 
     setState({
@@ -143,51 +141,51 @@ export default function() {
         // TODO:
         groups
       }
-    });
+    })
 
     // set state with total weeks during all known schedule for current classes
-  };
+  }
 
   const updateModule = (module, action) => {
-    let result = null;
+    let result = null
     switch (action) {
       case "weekLonger":
-        result = weekLonger(module);
-        break;
+        result = weekLonger(module)
+        break
       case "removeModule":
-        result = removeModule(module);
-        break;
+        result = removeModule(module)
+        break
       case "weekShorter":
-        result = weekShorter(module, getState().groups);
-        break;
+        result = weekShorter(module, getState().groups)
+        break
       case "moveLeft":
-        result = moveLeft(module, getState().groups);
-        break;
+        result = moveLeft(module, getState().groups)
+        break
       case "moveRight":
-        result = moveRight(module, getState().groups);
-        break;
+        result = moveRight(module, getState().groups)
+        break
       default:
-        break;
+        break
     }
 
     result
       .then(() => {
-        return fetchItems();
+        return fetchItems()
       })
-      .catch(err => console.log(err));
-  };
+      .catch(err => console.log(err))
+  }
 
   const handleAssignTeachers = (item, teacher1, teacher2) => {
     return (
       // item.id is the id of the group
-      assignTeachers(item, item.id, teacher1, teacher2)
-        // when done go back throught the whole procedure to get the items on screen
+        assignTeachers(item, item.id, teacher1, teacher2)      
+        // when done go back through the whole procedure to get the items on screen
         .then(() => {
-          fetchItems();
+          fetchItems()
         })
         .catch(err => console.log(err))
-    );
-  };
+    )
+  }
 
   const handleAddModule = (
     selectedModuleId,
@@ -196,7 +194,7 @@ export default function() {
     selectedDate,
     items
   ) => {
-    const { modules } = _data; // getting all modules from the store directly
+    const { modules } = _data // getting all modules from the store directly
     // make all the computations in util
     return addNewModuleToClass(
       selectedModuleId,
@@ -206,17 +204,17 @@ export default function() {
       items,
       modules
     ).then(res => {
-      fetchItems();
-    });
-  };
+      fetchItems()
+    })
+  }
 
   const addTheClass = (className, starting_date) => {
-    return addNewClass(className, starting_date).then(() => fetchItems());
-  };
+    return addNewClass(className, starting_date).then(() => fetchItems())
+  }
 
   const getSharedDates = items => {
-    return getAllSharedDates(items);
-  };
+    return getAllSharedDates(items)
+  }
 
   const getSelectedModuleInfo = item => {
     // give it to util to handle
@@ -227,10 +225,10 @@ export default function() {
           payload: {
             allModulesOfGroup: res[item.position]
           }
-        });
+        })
       })
-      .catch(err => console.log(err));
-  };
+      .catch(err => console.log(err))
+  }
 
   return {
     subscribe,
@@ -245,5 +243,5 @@ export default function() {
     getSharedDates,
     handleAssignTeachers,
     getSelectedModuleInfo
-  };
+  }
 }
