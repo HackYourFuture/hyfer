@@ -1,35 +1,35 @@
-import moment from 'moment';
+import moment from 'moment'
 
-const BASE_URL = 'http://localhost:3005';
+const BASE_URL = 'http://localhost:3005'
 const token = localStorage.getItem("token")
 
 //return a promise with `then` getting the json formatted data
 export function getTimelineItems() {
-  return fetch(BASE_URL + '/api/timeline').then(res => res.json());
+  return fetch(BASE_URL + '/api/timeline').then(res => res.json())
 }
 
 export function setEndingDateForModules(allItems, groups) {
   groups.forEach(group => {
-    const items = allItems[group];
-    items.sort((a, b) => a.position - b.position); // make sure it is sorted
+    const items = allItems[group]
+    items.sort((a, b) => a.position - b.position) // make sure it is sorted
 
-    let lastDate = ''; // will be overwritten by each module of a group to set the ending date
+    let lastDate = '' // will be overwritten by each module of a group to set the ending date
 
     items.map(item => {
-      if (lastDate === '') lastDate = item.starting_date;
-      item.starting_date = moment(lastDate);
+      if (lastDate === '') lastDate = item.starting_date
+      item.starting_date = moment(lastDate)
 
       if (item.starting_date.day() !== 0) {
-        console.error(item.starting_date.toString());
-        item.starting_date.weekday(0);
+        console.error(item.starting_date.toString())
+        item.starting_date.weekday(0)
       }
 
-      item.ending_date = moment(lastDate).add(item.duration, 'weeks');
-      lastDate = moment(item.ending_date);
-      return item;
-    });
-  });
-  return allItems;
+      item.ending_date = moment(lastDate).add(item.duration, 'weeks')
+      lastDate = moment(item.ending_date)
+      return item
+    })
+  })
+  return allItems
 }
 
 export function getAllGroupsWithIds() {
@@ -38,20 +38,20 @@ export function getAllGroupsWithIds() {
       'Authorization': 'Bearer ' + token,
     }
   })
-    .then(res => res.json());
+    .then(res => res.json())
 }
 
 export function getAllTotalWeeksAndSundays(allItems) {
-  const groups = Object.keys(allItems);
+  const groups = Object.keys(allItems)
 
   const onlyModules = groups.reduce((acc, prev) => {
-    return acc.concat(...allItems[prev]);
-  }, []);
+    return acc.concat(...allItems[prev])
+  }, [])
 
-  const firstDate = moment.min(onlyModules.map(module => module.starting_date));
-  const lastDate = moment.max(onlyModules.map(module => module.ending_date));
+  const firstDate = moment.min(onlyModules.map(module => module.starting_date))
+  const lastDate = moment.max(onlyModules.map(module => module.ending_date))
 
-  return _getAllWeeks(firstDate, lastDate);
+  return _getAllWeeks(firstDate, lastDate)
 }
 
 export function getTeachers() {
@@ -61,7 +61,7 @@ export function getTeachers() {
     }
   }
   )
-    .then(res => res.json());
+    .then(res => res.json())
 }
 
 export function getWeeksBeforeAndAfter(allWeeks, classModules) {
@@ -69,39 +69,39 @@ export function getWeeksBeforeAndAfter(allWeeks, classModules) {
   // starting date of the first module of a class
   const firstModuleStartingDate = moment.min(
     classModules.map(week => week.starting_date)
-  );
+  )
   // the ending date of the last module of a class
   const lastModuleEndingDate = moment.max(
     classModules.map(week => week.ending_date)
-  );
+  )
   // get an array with all the weeks before the start of this class
   const weeksBefore = allWeeks.filter(week =>
     week[0].isBefore(firstModuleStartingDate)
-  );
+  )
 
   // get an array with all the weeks agter the course has ended
   const weeksAfter = allWeeks.filter(week =>
     week[1].isAfter(lastModuleEndingDate)
-  );
+  )
   return {
     weeksBefore,
     weeksAfter
-  };
+  }
 }
 
 export function getCurrentWeek(week, width) {
-  const today = new moment();
-  if (!today.isAfter(week[0]) || !today.isBefore(week[1])) return null;
-  const dayDiff = today.diff(week[0], 'days');
-  const oneDayWidth = width / 7;
-  const offset = oneDayWidth * dayDiff;
-  return offset;
+  const today = new moment()
+  if (!today.isAfter(week[0]) || !today.isBefore(week[1])) return null
+  const dayDiff = today.diff(week[0], 'days')
+  const oneDayWidth = width / 7
+  const offset = oneDayWidth * dayDiff
+  return offset
 }
 
 export function weekLonger(chosenModule, groups) {
-  const { duration } = chosenModule;
-  const newDuration = duration + 1;
-  const groupId = chosenModule.id;
+  const { duration } = chosenModule
+  const newDuration = duration + 1
+  const groupId = chosenModule.id
   return _patchGroupsModules(
     chosenModule,
     null,
@@ -109,13 +109,13 @@ export function weekLonger(chosenModule, groups) {
     null,
     null,
     groupId
-  );
+  )
 }
 
 export function weekShorter(chosenModule, groups) {
-  const { duration } = chosenModule;
-  const newDuration = duration - 1;
-  const groupId = chosenModule.id;
+  const { duration } = chosenModule
+  const newDuration = duration - 1
+  const groupId = chosenModule.id
 
   return _patchGroupsModules(
     chosenModule,
@@ -124,13 +124,13 @@ export function weekShorter(chosenModule, groups) {
     null,
     null,
     groupId
-  );
+  )
 }
 
 export function moveRight(chosenModule, groups) {
-  const { position, duration } = chosenModule;
-  const newPosition = position + 1;
-  const groupId = chosenModule.id;
+  const { position, duration } = chosenModule
+  const newPosition = position + 1
+  const groupId = chosenModule.id
 
   return _patchGroupsModules(
     chosenModule,
@@ -139,13 +139,13 @@ export function moveRight(chosenModule, groups) {
     null,
     null,
     groupId
-  );
+  )
 }
 
 export function moveLeft(chosenModule, groups) {
-  const { position, duration } = chosenModule;
-  const newPosition = position - 1;
-  const groupId = chosenModule.id;
+  const { position, duration } = chosenModule
+  const newPosition = position - 1
+  const groupId = chosenModule.id
 
   return _patchGroupsModules(
     chosenModule,
@@ -154,11 +154,11 @@ export function moveLeft(chosenModule, groups) {
     null,
     null,
     groupId
-  );
+  )
 }
 
 export function removeModule(chosenModule) {
-  const { id, position } = chosenModule;
+  const { id, position } = chosenModule
   const token = localStorage.getItem("token")
   return fetch(`${BASE_URL}/api/running/${id}/${position}`, {
     method: 'DELETE',
@@ -166,7 +166,7 @@ export function removeModule(chosenModule) {
       'Content-Type': 'Application/json',
       'Authorization': 'Bearer ' + token,
     },
-  }).then(res => res.json());
+  }).then(res => res.json())
 }
 
 export function getModulesOfGroup(groupId) {
@@ -175,7 +175,7 @@ export function getModulesOfGroup(groupId) {
       'Authorization': 'Bearer ' + token,
     }
   })
-    .then(res => res.json());
+    .then(res => res.json())
 }
 
 ////////////////////////////////////////////////////////////////// helper functions
@@ -189,14 +189,14 @@ function _patchGroupsModules(
   group_id
 ) {
   // we need position for request and group_name to filter the group id wanted
-  const { position } = item;
+  const { position } = item
   const token = localStorage.getItem("token")
   const body = {
     duration: newDuration,
     position: newPosition,
     teacher1_id,
     teacher2_id
-  };
+  }
   return fetch(`${BASE_URL}/api/running/update/${group_id}/${position}`, {
     method: 'PATCH',
     headers: {
@@ -204,27 +204,27 @@ function _patchGroupsModules(
       'Authorization': 'Bearer ' + token,
     },
     body: JSON.stringify(body)
-  }).then(res => res.json());
-  // return Promise.resolve('yo I just did it');
+  }).then(res => res.json())
+  // return Promise.resolve('yo I just did it')
 }
 
 function _getAllWeeks(startingDate, endingDate) {
-  const allSundays = [];
-  let tempDate = startingDate.clone();
+  const allSundays = []
+  let tempDate = startingDate.clone()
   while (tempDate.day(0).isBefore(endingDate)) {
-    allSundays.push(moment(tempDate));
-    tempDate = tempDate.add(1, 'weeks');
+    allSundays.push(moment(tempDate))
+    tempDate = tempDate.add(1, 'weeks')
   }
 
   const allWeeks = allSundays.reduce((acc, prevItem, index, arr) => {
-    const nextItem = arr[index + 1];
-    if (!nextItem) return acc;
-    const oneWeek = [prevItem, nextItem];
-    acc.push(oneWeek);
-    return acc;
-  }, []);
+    const nextItem = arr[index + 1]
+    if (!nextItem) return acc
+    const oneWeek = [prevItem, nextItem]
+    acc.push(oneWeek)
+    return acc
+  }, [])
 
-  return { allWeeks, allSundays };
+  return { allWeeks, allSundays }
 }
 
 // this is not used yet cause there's nothing shown to user to invoke it
@@ -236,15 +236,15 @@ export function assignTeachers(item, groupsId, teacher1_id, teacher2_id) {
     teacher1_id,
     teacher2_id,
     groupsId
-  );
+  )
 }
 
 export function addNewClass(className, starting_date) {
-  const date = new Date(starting_date);
+  const date = new Date(starting_date)
   const body = {
     group_name: className,
     starting_date: date.toISOString()
-  };
+  }
 
   return fetch(`${BASE_URL}/api/groups`, {
     method: 'POST',
@@ -252,53 +252,53 @@ export function addNewClass(className, starting_date) {
       'Content-Type': 'Application/json'
     },
     body: JSON.stringify(body)
-  });
+  })
 }
 
 export function getALlPossibleModules() {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('token')
   return fetch(`${BASE_URL}/api/modules`, {
     credentials: 'same-origin',
     headers: {
       Authorization: 'Bearer ' + token
     }
-  }).then(res => res.json());
+  }).then(res => res.json())
 }
 
 export function getAllSharedDates(items) {
-  const keys = Object.keys(items);
+  const keys = Object.keys(items)
   const minAndMax = keys.reduce(
     (acc, key) => {
-      const modules = items[key];
-      const startingsOfModule = modules.map(module => module.starting_date);
-      let minCurrentModules = moment.min(startingsOfModule);
+      const modules = items[key]
+      const startingsOfModule = modules.map(module => module.starting_date)
+      let minCurrentModules = moment.min(startingsOfModule)
       if (minCurrentModules.day() !== 0) {
-        const daysToSunday = 7 - minCurrentModules.day();
-        for (let x = 0; x < daysToSunday; x++) {
-          minCurrentModules.add(1, 'day');
+        const daysToSunday = 7 - minCurrentModules.day()
+          for (let x = 0; x < daysToSunday; x++) {
+          minCurrentModules.add(1, 'day')
         }
       }
-      const endingsOfModule = modules.map(module => module.ending_date);
-      const maxCurrentModules = moment.max(endingsOfModule);
+      const endingsOfModule = modules.map(module => module.ending_date)
+      const maxCurrentModules = moment.max(endingsOfModule)
       if (acc.min && acc.max) {
         const min =
-          minCurrentModules.diff(acc.min) > 0 ? minCurrentModules : acc.min;
+          minCurrentModules.diff(acc.min) > 0 ? minCurrentModules : acc.min
         const max =
-          maxCurrentModules.diff(acc.max) < 0 ? maxCurrentModules : acc.max;
+          maxCurrentModules.diff(acc.max) < 0 ? maxCurrentModules : acc.max
         return {
           min,
           max
-        };
+        }
       } else {
         return {
           min: minCurrentModules,
           max: maxCurrentModules
-        };
+        }
       }
     },
     { min: '', max: '' }
-  );
-  return minAndMax;
+  )
+  return minAndMax
 }
 
 export function addNewModuleToClass(
@@ -317,13 +317,13 @@ export function addNewModuleToClass(
       selectedGroup.id,
       items,
       modules
-    );
+    )
   } else {
-    const allGroups = Object.keys(items);
-    let allPromises = [];
+    const allGroups = Object.keys(items)
+    let allPromises = []
     allGroups.forEach(group => {
-      const groupsItems = items[group];
-      const groupId = groupsItems[0].id;
+      const groupsItems = items[group]
+      const groupId = groupsItems[0].id
       allPromises.push(
         _patchNewModuleForOneGroup(
           selectedModuleId,
@@ -333,9 +333,9 @@ export function addNewModuleToClass(
           groupsItems,
           modules
         )
-      );
-    });
-    return Promise.all(allPromises).then('Fulfilled');
+      )
+    })
+    return Promise.all(allPromises).then('Fulfilled')
   }
 }
 
@@ -347,7 +347,7 @@ function _patchNewModuleForOneGroup(
   items,
   modules
 ) {
-  const selectedDateMoment = new moment(selectedDate, 'YYYY-MM-DD');
+  const selectedDateMoment = new moment(selectedDate, 'YYYY-MM-DD')
   for (let item of items) {
     // case 1 it is betweeen the staritng and the end! Nasty!!/////////////////////////////////////////////
     if (selectedDateMoment.isBetween(item.starting_date, item.ending_date)) {
@@ -355,7 +355,7 @@ function _patchNewModuleForOneGroup(
       const newDuration = _getNewDurationWhenAddingModule(
         selectedDateMoment,
         item
-      );
+      )
       // send to backend the new duration to the backendc
       return _patchGroupsModules(
         item,
@@ -367,7 +367,7 @@ function _patchNewModuleForOneGroup(
       )
         .then(res => {
           //step 2 add the new module after that one
-          const position = +item.position + 1;
+          const position = +item.position + 1
           // 1- add it
           return _addModule(selectedModuleId, selectedGroupId, position)
             .then(res =>
@@ -383,11 +383,11 @@ function _patchNewModuleForOneGroup(
             )
             .then(res => {
               // step 3 add the new module
-              const remainingDuration = item.duration - newDuration;
-              const otherHalfPosition = position + 1;
+              const remainingDuration = item.duration - newDuration
+              const otherHalfPosition = position + 1
               const splittedModuleId = modules.filter(
                 one => one.module_name === item.module_name
-              )[0].id;
+              )[0].id
               return (
                 _addModule(splittedModuleId, selectedGroupId, otherHalfPosition)
                   // now adjust the duration so that it's just the rest of the module not a new one
@@ -399,23 +399,23 @@ function _patchNewModuleForOneGroup(
                       null,
                       null,
                       selectedGroupId
-                    );
+                    )
                   })
-              );
+              )
             })
             .catch(err => {
-              console.log(err);
-              return Promise.reject(); // maybe to give the user indication that it went wrong
-            });
+              console.log(err)
+              return Promise.reject() // maybe to give the user indication that it went wrong
+            })
         })
         .catch(err => {
-          console.log(err);
-          return Promise.reject(); // maybe to give the user indication that it went wrong
-        });
+          console.log(err)
+          return Promise.reject() // maybe to give the user indication that it went wrong
+        })
     }
     if (selectedDateMoment.diff(item.ending_date, 'weeks') === 0) {
       // case 2 the new module is at the end of an existing one (GREAT!)//////////////////////////////////////////////////
-      const position = +item.position + 1;
+      const position = +item.position + 1
       return _addModule(selectedModuleId, selectedGroupId, position).then(res =>
         _patchGroupsModules(
           { position },
@@ -425,7 +425,7 @@ function _patchNewModuleForOneGroup(
           null,
           selectedGroupId
         )
-      );
+      )
     }
   }
 }
@@ -441,9 +441,9 @@ async function _addModule(moduleId, groupId, position) {
         'Authorization': 'Bearer ' + token,
       }
     }
-  ).then(res => res.json());
+  ).then(res => res.json())
 }
 
 function _getNewDurationWhenAddingModule(selectedDate, module) {
-  return selectedDate.diff(module.starting_date, 'week');
+  return selectedDate.diff(module.starting_date, 'week')
 }

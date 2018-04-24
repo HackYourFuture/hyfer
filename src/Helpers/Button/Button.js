@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 
 export default class Button extends Component {
   render() {
@@ -10,6 +10,6 @@ export default class Button extends Component {
       >
         {this.props.children}
       </button>
-    );
+    )
   }
 }

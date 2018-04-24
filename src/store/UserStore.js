@@ -33,7 +33,7 @@ class store {
 		mobileActive: false,
 		slackActive: false
 
-	};
+	}
 	notify = () => {
 		for (const handler of this.handlers) {
 			handler(this.state)
@@ -73,13 +73,13 @@ class store {
 				this.setState({
 					users: data,
 					filteredUsers: data,
-				});
-				return;
+				})
+				return
 			})
 			.catch(error => {
-				console.log(error);
-				throw new Error('Problem with Server: GET DATA');
-			});
+				console.log(error)
+				throw new Error('Problem with Server: GET DATA')
+			})
 			
 		}
 		
@@ -108,7 +108,7 @@ class store {
 		})
 			.then(response => { 
 				if (response.status >= 400) {
-					throw new Error("Bad response from server");
+					throw new Error("Bad response from server")
 				}
 				this.loadUsers()
 			})
@@ -137,16 +137,16 @@ class store {
 
 	// filter by user full_name(I think it's more specific)
 	searchUser = (event) => {
-		let updatedList = this.state.users;
+		let updatedList = this.state.users
 		updatedList = updatedList.filter((item) => {
 			return (
 				item.full_name.toLowerCase().search(event.target.value.toLowerCase()) !== -1
-			);
-		});
+			)
+		})
 		this.setState({
 			filteredUsers: updatedList
-		});
-	};
+		})
+	}
 
 }
 

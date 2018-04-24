@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import React, { Component } from 'react'
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 
-import './assets/styles/app.css';
-import Header from './components/Header/Header';
-import TimeLine from './Pages/Timeline/TimeLine';
-import Footer from './components/Footer/Footer';
-import Modules from './Pages/Modules/Modules';
-import Users from './Pages/Users/Users';
-import Profile from './Pages/Users/Profile';
-import cookie from 'react-cookies';
+import './assets/styles/app.css'
+import Header from './components/Header/Header'
+import TimeLine from './Pages/Timeline/TimeLine'
+import Footer from './components/Footer/Footer'
+import Modules from './Pages/Modules/Modules'
+import Users from './Pages/Users/Users'
+import Profile from './Pages/Users/Profile'
+import cookie from 'react-cookies'
 
 class App extends Component {
   
@@ -21,7 +21,7 @@ class App extends Component {
     else{
       token = ''
     }
-    localStorage.setItem('token', token);
+    localStorage.setItem('token', token)
   }
 
   render() {
@@ -39,8 +39,8 @@ class App extends Component {
           <Footer />
         </React.Fragment>
       </BrowserRouter>
-    );
+    )
   }
 }
 
-export default App;
+export default App
