@@ -46,13 +46,13 @@ export default class TimeLine extends Component {
     infoSelectedModule: null
   }
 
-  timelineObserver = mergedData => {
+    timelineObserver = mergedData => {
     switch (mergedData.type) {
       case TIMELINE_ITEMS_CHANGED:
         this.setState({ timelineItems: mergedData.payload.items })
         break
       case ALL_TEACHERS_CHAGNED:
-        this.setState({ teachers: mergedData.payload.teachers })
+        this.setState({teachers: mergedData.payload.teachers})
         break
       case GROUPS_WITH_IDS_CHANGED:
         this.setState({ groupsWithIds: mergedData.payload.groupsWithIds })
