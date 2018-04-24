@@ -239,20 +239,25 @@ export function assignTeachers(item, groupsId, teacher1_id, teacher2_id) {
   )
 }
 
-export function addNewClass(className, starting_date) {
-  const date = new Date(starting_date)
-  const body = {
-    group_name: className,
-    starting_date: date.toISOString()
-  }
-
-  return fetch(`${BASE_URL}/api/groups`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'Application/json'
-    },
-    body: JSON.stringify(body)
-  })
+export async function addNewClass(className, starting_date) {
+    const date = new Date(starting_date)
+    const body = {
+        group_name: className,
+        starting_date: date.toISOString()
+    }
+    const token = localStorage.getItem('token')
+    try {
+        return await fetch(`${BASE_URL}/api/groups`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'Application/json',
+                'Authorization': 'Bearer ' + token,
+            },
+            body: JSON.stringify(body)
+        })
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 export function getALlPossibleModules() {
