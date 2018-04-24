@@ -28,16 +28,12 @@ export default class StudentWithWeeks extends React.Component{
         return weeks;  
     };
 
-    getIsHomeworkChecked = (id, student) => {
-        if (this.props.allHistory[student][id].homework === 1) {
-            return true;
-        } else {return false;}
+    getIsHomeworkChecked = (id, student) => {  
+        return ( this.props.allHistory[student][id].attendance === 1 )
     };
 
     getIsAttendanceChecked = (id, student) => {
-        if (this.props.allHistory[student][id].attendance === 1) {
-            return true;
-        } 
+        return (this.props.allHistory[student][id].attendance === 1) 
     };
 };
 
