@@ -4,8 +4,14 @@ const BASE_URL = 'http://localhost:3005'
 const token = localStorage.getItem("token")
 
 //return a promise with `then` getting the json formatted data
-export function getTimelineItems() {
-  return fetch(BASE_URL + '/api/timeline').then(res => res.json())
+export async function getTimelineItems() {
+    try {
+        const res = await fetch(BASE_URL + '/api/timeline')
+        return await res.json()
+    } catch (error) {
+        console.log(error)
+    }
+
 }
 
 export function setEndingDateForModules(allItems, groups) {
@@ -32,13 +38,17 @@ export function setEndingDateForModules(allItems, groups) {
   return allItems
 }
 
-export function getAllGroupsWithIds() {
-  return fetch(`${BASE_URL}/api/groups`, {
-    headers: {
-      'Authorization': 'Bearer ' + token,
+export async function getAllGroupsWithIds() {
+    try {
+        const res = await fetch(`${BASE_URL}/api/groups`, {
+            headers: {
+                'Authorization': 'Bearer ' + token,
+            }
+        })
+        return await res.json()
+    } catch (error) {
+        console.log(error)
     }
-  })
-    .then(res => res.json())
 }
 
 export function getAllTotalWeeksAndSundays(allItems) {
@@ -54,14 +64,17 @@ export function getAllTotalWeeksAndSundays(allItems) {
   return _getAllWeeks(firstDate, lastDate)
 }
 
-export function getTeachers() {
-  return fetch(`${BASE_URL}/api/users`, {
-    headers: {
-      'Authorization': 'Bearer ' + token,
+export async function getTeachers() {
+    try {
+        const res = await fetch(`${BASE_URL}/api/users`, {
+            headers: {
+                'Authorization': 'Bearer ' + token,
+            }
+        })
+        return await res.json()
+    } catch (error) {
+        console.log(error)
     }
-  }
-  )
-    .then(res => res.json())
 }
 
 export function getWeeksBeforeAndAfter(allWeeks, classModules) {
@@ -157,55 +170,74 @@ export function moveLeft(chosenModule, groups) {
   )
 }
 
-export function removeModule(chosenModule) {
-  const { id, position } = chosenModule
-  const token = localStorage.getItem("token")
-  return fetch(`${BASE_URL}/api/running/${id}/${position}`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'Application/json',
-      'Authorization': 'Bearer ' + token,
-    },
-  }).then(res => res.json())
+export async function removeModule(chosenModule) {
+    const {
+        id,
+        position
+    } = chosenModule
+    const token = localStorage.getItem("token")
+    try {
+        const res = await fetch(`${BASE_URL}/api/running/${id}/${position}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'Application/json',
+                'Authorization': 'Bearer ' + token,
+            },
+        })
+        return await res.json()
+    } catch (error) {
+        console.log(error)
+    }
+
 }
 
-export function getModulesOfGroup(groupId) {
-  return fetch(`${BASE_URL}/api/running/${groupId}`, {
-    headers: {
-      'Authorization': 'Bearer ' + token,
+export async function getModulesOfGroup(groupId) {
+    try {
+        const res = await fetch(`${BASE_URL}/api/running/${groupId}`, {
+            headers: {
+                'Authorization': 'Bearer ' + token,
+            }
+        })
+        return await res.json()
+    } catch (error) {
+        console.log(error)
     }
-  })
-    .then(res => res.json())
 }
 
 ////////////////////////////////////////////////////////////////// helper functions
 
-function _patchGroupsModules(
-  item,
-  newPosition,
-  newDuration,
-  teacher1_id,
-  teacher2_id,
-  group_id
-) {
-  // we need position for request and group_name to filter the group id wanted
-  const { position } = item
-  const token = localStorage.getItem("token")
-  const body = {
-    duration: newDuration,
-    position: newPosition,
+async function _patchGroupsModules(
+    item,
+    newPosition,
+    newDuration,
     teacher1_id,
-    teacher2_id
-  }
-  return fetch(`${BASE_URL}/api/running/update/${group_id}/${position}`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'Application/json',
-      'Authorization': 'Bearer ' + token,
-    },
-    body: JSON.stringify(body)
-  }).then(res => res.json())
-  // return Promise.resolve('yo I just did it')
+    teacher2_id,
+    group_id
+) {
+    // we need position for request and group_name to filter the group id wanted
+    const {
+        position
+    } = item
+    const token = localStorage.getItem("token")
+    const body = {
+        duration: newDuration,
+        position: newPosition,
+        teacher1_id,
+        teacher2_id
+    }
+    try {
+        const res = await fetch(`${BASE_URL}/api/running/update/${group_id}/${position}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'Application/json',
+                'Authorization': 'Bearer ' + token,
+            },
+            body: JSON.stringify(body)
+        })
+        return await res.json()
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 function _getAllWeeks(startingDate, endingDate) {
@@ -260,14 +292,19 @@ export async function addNewClass(className, starting_date) {
     }
 }
 
-export function getALlPossibleModules() {
-  const token = localStorage.getItem('token')
-  return fetch(`${BASE_URL}/api/modules`, {
-    credentials: 'same-origin',
-    headers: {
-      Authorization: 'Bearer ' + token
+export async function getALlPossibleModules() {
+    const token = localStorage.getItem('token')
+    try {
+        const res = await fetch(`${BASE_URL}/api/modules`, {
+            credentials: 'same-origin',
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        })
+        return await res.json()
+    } catch (error) {
+        console.log(error)
     }
-  }).then(res => res.json())
 }
 
 export function getAllSharedDates(items) {
@@ -436,17 +473,20 @@ function _patchNewModuleForOneGroup(
 }
 
 async function _addModule(moduleId, groupId, position) {
-  const token = localStorage.getItem("token")
-  return fetch(
-    `${BASE_URL}/api/running/add/${moduleId}/${groupId}/${position}`,
-    {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'Application/json',
-        'Authorization': 'Bearer ' + token,
-      }
+    const token = localStorage.getItem("token")
+    try {
+        const res = await fetch(`${BASE_URL}/api/running/add/${moduleId}/${groupId}/${position}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'Application/json',
+                'Authorization': 'Bearer ' + token,
+            }
+
+        })
+        return await res.json()
+    } catch (error) {
+        console.log(error)
     }
-  ).then(res => res.json())
 }
 
 function _getNewDurationWhenAddingModule(selectedDate, module) {

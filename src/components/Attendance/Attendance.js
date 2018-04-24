@@ -2,7 +2,7 @@ import React from 'react'
 import StudentWithWeeks from './StudentWithWeeks'
 import WeekIndicator from './WeekIndicator'
 import styles from '../../assets/styles/attendance.css'
-import Notifications, {notify} from 'react-notify-toast'
+import Notifications, { notify } from 'react-notify-toast'
 import * as attendanceStore from '../../store/attendanceStore'
 import {
     moduleInfoStore,
@@ -11,7 +11,7 @@ import {
 
 const stack = []
 
-export default class Attendance extends React.Component{
+export default class Attendance extends React.Component {
 
     state = {
         edit_Mode: false,
@@ -33,7 +33,7 @@ export default class Attendance extends React.Component{
                     group_name: mergedData.payload.group_name,
                     repoName: mergedData.payload.repoName,
                     students: mergedData.payload.students,
-                })               
+                })
             }
         })
 
@@ -48,7 +48,7 @@ export default class Attendance extends React.Component{
         })
     }
 
-    render(){
+    render() {
         const { history, students, duration, repoName, group_name } = this.state
         let title = null
         let content = null
@@ -57,25 +57,25 @@ export default class Attendance extends React.Component{
             content = (<h2 className={styles.message}>Oops! there is no History.</h2>)
         } else if (students === null || repoName === undefined) {
             content = (<h2 className={styles.message}>Please choose a module</h2>)
-        } else if (students.length === 0 ){
+        } else if (students.length === 0) {
             content = (<h2 className={styles.message}>There is no student in this class.</h2>)
         } else {
-            content= (
-            students.map((student) =>
-            <div className={styles.Attendant} key={student}>
-                <div className={styles.AttendantName}>
-                    <h3>{student}</h3>
-                </div>
-                <div className={styles.checkboxes}>
-                    <StudentWithWeeks 
-                        allHistory={history}
-                        duration={duration}
-                        onChange={(event) => {this.handleCheckboxChange( student, event )}}
-                        student={student}
-                        students={students}
-                    />
-                </div>
-            </div>)
+            content = (
+                students.map((student) =>
+                    <div className={styles.Attendant} key={student}>
+                        <div className={styles.AttendantName}>
+                            <h3>{student}</h3>
+                        </div>
+                        <div className={styles.checkboxes}>
+                            <StudentWithWeeks
+                                allHistory={history}
+                                duration={duration}
+                                onChange={(event) => { this.handleCheckboxChange(student, event) }}
+                                student={student}
+                                students={students}
+                            />
+                        </div>
+                    </div>)
             )
 
             title = (
@@ -83,7 +83,7 @@ export default class Attendance extends React.Component{
                     <h3 className={styles.Title_inner}>Attendance - {repoName.charAt(0).toUpperCase() + repoName.slice(1)}</h3>
                 </div>
             )
-    
+
             buttons = (
                 <div className={styles.buttons} >
                     <button className={styles.button_save}
@@ -105,7 +105,7 @@ export default class Attendance extends React.Component{
             )
         }
 
-        return(
+        return (
             <div>
                 {title}
                 <div className={styles.wrapper}>
@@ -128,12 +128,12 @@ export default class Attendance extends React.Component{
         )
     }
 
-    handleCheckboxChange = ( student, event ) => {
+    handleCheckboxChange = (student, event) => {
         const week = event.target.id
         const name = event.target.name //attendance or homework
         // edit_mode will active the save and cancel buttons
         this.setState({
-            edit_Mode : true
+            edit_Mode: true
         })
         stack.push(student, week, name)
         this.makeChange(student, week, name)
@@ -141,7 +141,7 @@ export default class Attendance extends React.Component{
 
     makeChange = (student, week, name) => {
         const { history } = this.state
-        const changeValue=(v)=>{
+        const changeValue = (v) => {
             if (v === 0) {
                 return 1
             } else if (v === 1) {
@@ -160,8 +160,8 @@ export default class Attendance extends React.Component{
         const response = attendanceStore.saveHistory(body)
         this.setState({
             edit_Mode: null
-        }) 
-        if (!response) {notify.show('Something happend during Save !', 'warning')}
+        })
+        if (!response) { notify.show('Something happend during Save !', 'warning') }
         notify.show('Your changes are successfully Saved !', 'success')
     }
 
