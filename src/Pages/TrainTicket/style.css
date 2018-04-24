@@ -1,0 +1,37 @@
+.ticketContainer {
+  margin: 0 auto;
+  max-width: 40%;
+}
+
+.Tickets {
+  margin: 0 auto;
+  overflow: auto;
+  display: block;
+  width: 34vw;
+  height: 40vh;
+  font-size: 1em;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+.Tickets:focus {
+  outline: none !important;
+  border-color: #719ECE;
+}
+
+.ticketBtnBack,
+.ticketBtnNext {
+  margin: 0 auto;
+  padding: 3%;
+  margin: 3% 35% 0% 68%;
+  overflow: auto;
+  display: block;
+  width: 10vw;
+  color: white;
+  background: #3f51b5;
+  border: none;
+  border-radius: 2px;
+}
+
+.ticketBtnBack {
+  float: left;
+}
