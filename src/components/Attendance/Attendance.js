@@ -3,6 +3,7 @@ import StudentWithWeeks from './StudentWithWeeks';
 import WeekIndicator from './WeekIndicator';
 import styles from '../../assets/styles/attendance.css';
 import Notifications, {notify} from 'react-notify-toast';
+import * as attendanceStore from '../../store/attendanceStore'
 import {
     moduleInfoStore,
     HISTORY_CHANGED
@@ -32,8 +33,8 @@ export default class Attendance extends React.Component{
                     group_name: mergedData.payload.group_name,
                     repoName: mergedData.payload.repoName,
                     students: mergedData.payload.students,
-                })                
-            }
+                });               
+            };
         })
 
         // getting selected module update from timeline component
@@ -44,21 +45,20 @@ export default class Attendance extends React.Component{
             history: history,
             students: students,
             duration: duration,
-        })
+        });
     };
 
     render(){
-
         const { history, students, duration, repoName, group_name } = this.state;
         let title = null;
         let content = null;
         let buttons = null;
         if (repoName === "NOREPO") {
-            content = (<h2 className={styles.message}>Oops! there is no History.</h2>)
+            content = (<h2 className={styles.message}>Oops! there is no History.</h2>);
         } else if (students === null || repoName === undefined) {
-            content = (<h2 className={styles.message}>Please choose a module</h2>)
+            content = (<h2 className={styles.message}>Please choose a module</h2>);
         } else if (students.length === 0 ){
-            content = (<h2 className={styles.message}>There is no student in this class.</h2>)
+            content = (<h2 className={styles.message}>There is no student in this class.</h2>);
         } else {
             content= (
             students.map((student) =>
@@ -68,15 +68,15 @@ export default class Attendance extends React.Component{
                 </div>
                 <div className={styles.checkboxes}>
                     <StudentWithWeeks 
-                    allHistory={history}
-                    duration={duration}
-                    onChange={(event) => { this.handleCheckboxChange( student, event )}}
-                    student={student}
-                    students={students}
+                        allHistory={history}
+                        duration={duration}
+                        onChange={(event) => {this.handleCheckboxChange( student, event )}}
+                        student={student}
+                        students={students}
                     />
                 </div>
             </div>)
-            )
+            );
 
             title = (
                 <div className={styles.Title}>
@@ -112,10 +112,10 @@ export default class Attendance extends React.Component{
                     <div className={styles.group_name}>
                         <h3 className={styles.group_name_inner}>{group_name}</h3>
                         <WeekIndicator
-                        duration={duration}
-                        students={students}
-                        history={history}
-                        repoName={repoName}
+                            duration={duration}
+                            students={students}
+                            history={history}
+                            repoName={repoName}
                         />
                     </div>
                     <div className={styles.content_wrapper}>
@@ -133,8 +133,8 @@ export default class Attendance extends React.Component{
         const name = event.target.name; //attendance or homework
         // edit_mode will active the save and cancel buttons
         this.setState({
-            edit_Mode : true,
-        })
+            edit_Mode : true
+        });
         stack.push(student, week, name);
         this.makeChange(student, week, name);
     }
@@ -143,43 +143,30 @@ export default class Attendance extends React.Component{
         const { history } = this.state;
         const changeValue=(v)=>{
             if (v === 0) {
-                return 1
+                return 1;
             } else if (v === 1) {
-                return 0
+                return 0;
             }
         };
         // change in history object
-        history[student][week][name] = changeValue(history[student][week][name])
+        history[student][week][name] = changeValue(history[student][week][name]);
         this.setState({
-            history: history,
-        })
+            history
+        });
     };
 
     onSave = () => {
-        const token = localStorage.getItem("token")
         const body = this.state.history;
-        let BASE_URL = 'http://localhost:3005/api/history';
-        
-        fetch(BASE_URL , {
-            method: 'POST', 
-            body: JSON.stringify(body),
-            headers: {
-            'Content-Type': 'application/json',
-            'Authorization':'Bearer ' + token,
-            }, 
-          })
-        .then(response => response.json())
-        .then(notify.show('Your changes are successfully Saved !', 'success'))
-        .catch(err => console.log(err))
+        const response = attendanceStore.saveHistory(body);
         this.setState({
-            edit_Mode: null,
-        }) 
+            edit_Mode: null
+        }); 
+        if (!response) {notify.show('Something happend during Save !', 'warning');}
+        notify.show('Your changes are successfully Saved !', 'success');
     };
 
     onCancel = () => {
-        for (let i = 0; i < stack.length; i++) { 
-            this.undo();
-        };
+        stack.forEach(() => this.undo());
         notify.show('Your changes have been cancelled !', 'warning');
     }
 
@@ -189,9 +176,9 @@ export default class Attendance extends React.Component{
         const student = toUndo[0];
         const week = toUndo[1];
         const name = toUndo[2];
-        if ( stack.length === 0 ) {
+        if (stack.length === 0) {
             this.setState({
-                edit_Mode: null,
+                edit_Mode: null
             })
         };
         this.makeChange(student, week, name);
