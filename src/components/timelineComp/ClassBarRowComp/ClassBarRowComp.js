@@ -5,12 +5,13 @@ import classes from './classBarRowComp.css'
 
 export default class ClassBarRowComp extends Component {
   
-  renderAllRowComp = () => {
+    renderAllRowComp = () => {
     if (!this.props.groups) return
-    return this.props.groups.map(group => (
-      <ClassRowComp
+      return this.props.groups.map(group => (
+        <ClassRowComp      
         key={group}
         classId={group.split(' ')[1]}
+        groupsWithIds={this.props.groupsWithIds}      
         height={this.props.rowHeight}
       />
     ))
