@@ -1,56 +1,37 @@
-import React, { Component } from 'react';
-import Style from "./style.css";
+import React, { Component } from 'react'
+import VoucherCodes from "./voucherCodes"
 
 class TrainTicket extends Component {
   state = {
-    couponCodes: '',
+    couponCodes: [],
   }
-  componentDidMount() { 
-    fetch('https://api.github.com/teams/2275987/members', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept':'application/vnd.github.hellcat-preview+json',
-        'Authorization': 'token 1865feb51fe0ce4353f0e2a656e521028a45f2b5',
-      }
-    })
-      .then(res => res.json())
-      .then(data => {
-        console.log(data)
+
+  handleCouponCodesChange = (e) => {
+    this.setState({
+      couponCodes: e.target.value
+        .split('\n')
+        .map(line => line.trim())
+        .filter(line => line !== '')
+        .map(line => line.replace(/Couponcode:\s+/g, ''))
+        .map((couponCode, i) => {
+          return {
+            couponCode,
+            id: i + 1,
+          }
         })
-      .catch(error => {
-        console.log(error);
-      });
-  }
-  
-  handleChange = (e) => {
-    this.setState({ couponCodes: e.target.value });
-  }
-  handleClick = () => {
-    const KeyVal = this.state.couponCodes.replace(/\n/g, " ")
-      .replace(/code:\s+/g, '')
-      .split(' ')
-      .reduce((p, c) => { p.push({ code: c }); return p }, [])
-      console.log(KeyVal);
+    })
   }
   render() {
     return (
       <div>
-        <div className={Style.ticketContainer}>
-          <textarea className={Style.Tickets}
-            type="text"
-            placeholder="Tickets"
-            onChange={this.handleChange}>
-          </textarea>
-          {/* <button className={Style.ticketBtnBack}>Back</button> */}
-          <button className={Style.ticketBtnNext}
-            onClick={this.handleClick}>
-            Next
-          </button>
-        </div>
+        <h5>Step</h5>
+        <p>available ticket: {this.state.couponCodes.length}</p>
+        <VoucherCodes
+          handleChange={this.handleCouponCodesChange}
+        />
       </div>
     );
   }
 }
 
-export default TrainTicket;
+export default TrainTicket
