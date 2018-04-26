@@ -50,8 +50,11 @@ module.exports = function (app) {
 
   app.get('/auth/github', passport.authenticate('github'))
   app.get('/auth/github/callback', passport.authenticate('github', { session: false, failureRedirect: '/login' }),
-    auth.gitHubCallback, auth.setTokenCookie)
-
+        auth.gitHubCallback, auth.setTokenCookie)
+    
+  app.get('/api/teams', auth.hasRole('teacher'), github.getTeams)// this is the route tor getting the teams, still need to 
+                     // check if the user has the role that allows him to enter.  
+  app.get('/api/teams/:id', auth.hasRole('teacher'), github.getTeamMembers)
   app.route('/*')
     .get((req, res) => res.sendFile('index.html', { root: app.get('docRoot') }))
 }
