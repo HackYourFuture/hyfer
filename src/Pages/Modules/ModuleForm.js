@@ -14,7 +14,7 @@ export default class ModuleForm extends React.Component {
         Color: '',
         Optional: false,
         focusId: '',
-        errorIds: []
+        errorIds: ''
     }
 
     componentDidMount = () => {
@@ -180,7 +180,7 @@ export default class ModuleForm extends React.Component {
                             ${this.state.focusId === "RepoName" ? style.focus : ''} 
                             ${this.state.errorIds.includes("RepoName") ? style.error : ''}`}
                             onChange={this.inputChanged} onBlur={this.onBlur} onFocus={this.onFocus}
-                            value={this.state.RepoName}
+                            value={this.state.RepoName || ""}
                         />
                     </div>
 
@@ -196,7 +196,7 @@ export default class ModuleForm extends React.Component {
                             ${this.state.focusId === "RepoUrl" ? style.focus : ''} 
                             ${this.state.errorIds.includes("RepoUrl") ? style.error : ''}`}
                             onChange={this.inputChanged} onBlur={this.onBlur} onFocus={this.onFocus}
-                            value={this.state.RepoUrl}
+                            value={this.state.RepoUrl || ""}
                         />
                     </div>
 
