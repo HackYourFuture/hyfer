@@ -12,30 +12,31 @@ const cache = LRU({
     maxAge: ONE_DAY_IN_MSECS
 })
 
+function httpRequestPromise(url) {
+    return new Promise((resolve, reject) => {
+        const request = {
+            url: url,
+            json: true,
+            headers: {
+                'User-Agent': 'hackyourfuture',
+                'Authorization': 'token ' + config.githubToken
+            }
+        }
+        httpRequest.get(request, (error, response, body) => {
+            if (!error && response.statusCode === 200) {
+                resolve(response.body)
+            } else {
+                reject(error)
+            }
+        })
+    })
+}
 
 function getTeams(req, res) {
     const allTeams = []
-    function fetchTeams() {
-        return new Promise((resolve, reject) => {
-            const request = {
-                url: `${API_END_POINT}/orgs/hackyourfuture/teams`,
-                json: true,
-                headers: {
-                    'User-Agent': 'hackyourfuture',
-                    'Authorization': 'token ' + config.githubToken
-                }
-            }
-            httpRequest.get(request, (error, response, body) => {
-                if (!error && response.statusCode === 200) {
-                    resolve(response.body)
-                    res.send(response.body)
-                } else {
-                    reject(error)
-                }
-            })
-        })
-    } 
-    fetchTeams()
+
+    httpRequestPromise(`${API_END_POINT}/orgs/hackyourfuture/teams`)
+        .then(result => res.send(result))
         .then(fetchedTeams => fetchedTeams.map(team => {
             if (team.name.slice(0, 5) === "class") {
                 allTeams.push({ teamName: team.name, teamId: team.id })
@@ -52,27 +53,8 @@ function getTeamMembers(req, res) {
     const teamId = req.params.id
     const teamMembers = []
 
-    function fetchMembers() {
-        return new Promise((resolve, reject) => {
-            const request = {
-                url: `${API_END_POINT}/teams/${teamId}/members`,
-                json: true,
-                headers: {
-                    'User-Agent': 'hackyourfuture',
-                    'Authorization': 'token ' + config.githubToken
-                }
-            }
-            httpRequest.get(request, (error, response, body) => {
-                if (!error && response.statusCode === 200) {
-                    resolve(response.body)
-                    res.send(response.body)
-                } else {
-                    reject(error)
-                }
-            })
-        })
-    }
-    fetchMembers()
+    httpRequestPromise(`${API_END_POINT}/teams/${teamId}/members`)
+        .then(result => res.send(result))
         .then(fetchedTeam => fetchedTeam.map(member => {
             teamMembers.push({
                 memberLogin: member.login,
@@ -90,29 +72,10 @@ function getTeamMembers(req, res) {
 
 function getUserEmails(req, res) {
 
-    function fetchEmails() {
-        return new Promise((resolve, reject) => {
-            const request = {
-                url: `${API_END_POINT}/user/emails`,
-                json: true,
-                headers: {
-                    'User-Agent': 'hackyourfuture',
-                    'Authorization': 'token ' + config.githubToken
-                }
-            }
-            httpRequest.get(request, (error, response, body) => {
-                if (!error && response.statusCode === 200) {
-                    resolve(response.body)
-                    res.send(response.body)
-                } else {
-                    reject(error)
-                }
-            })
-        })
-    }
-    fetchEmails()
-    .then(userEmails => {
-        return userEmails[0].email
+    httpRequestPromise(`${API_END_POINT}/user/emails`)
+        .then(result => res.send(result))
+        .then(userEmails => {
+            return userEmails[0].email
         })
         .catch(err => {
             console.log(err)
