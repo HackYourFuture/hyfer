@@ -1,12 +1,11 @@
-import React from 'react';
+import React, { Component } from 'react'
 import store from '../../store/UserStore';
 import styles from '../../assets/styles/profile.css';
 import { Link } from 'react-router-dom';
 import Notifications from 'react-notify-toast';
 
-
-export default class Profile extends React.Component {
-
+class userAccount extends Component {
+  
   componentWillMount = () => {
     this.subscription = store.subscribe(state => {
       this.setState(state);
@@ -28,13 +27,12 @@ export default class Profile extends React.Component {
   checkHasValue(val) {
     return (!val || val.length === 0) ? '' : styles.isCompleted;
   }
-
-
+  
   render() {
     return (
       <div className={styles.profilePage}>
         <Notifications />
-        <Link to='/users'>
+        <Link to='/currentUserProfile'>
           <input className={styles.backButton}
             type="button"
             value="&#8249;"
@@ -54,46 +52,23 @@ export default class Profile extends React.Component {
 
           <div className={styles.small + ' ' + styles.matDiv + ' ' + styles.isCompleted}>
             <label htmlFor="role" className={styles.matLabel}>Role</label>
-            <select value={store.state.role}
-              id="role"
+            <input type="text"
               className={styles.matInput}
-              onChange={(e) => { store.setState({ role: e.target.value }); }}
-            >
-              <option value="guest" disabled hidden>Role</option>
-              <option value="teacher">Teacher</option>
-              <option value="student">Student</option>
-            </select>
+              value={store.state.role}
+              disabled='true' />
           </div>
 
           <div className={styles.small + ' ' + styles.matDiv + ' ' + styles.isCompleted}>
             <label htmlFor="Class" className={styles.matLabel}>Class</label>
-            <select className={styles.matInput}
-              value={
-                '{"name":"' + store.state.group_name + '","id":"' + store.state.group_id + '"}'
-              }
-              onChange={(e) => {
-                store.setState({
-                  group_name: JSON.parse(e.target.value).name, group_id: +JSON.parse(e.target.value).id
-                });
-              }}>
-              <option value='{"name":"Class 5","id":"43"}'>Class 5</option>
-              <option value='{"name":"Class 6","id":"44"}'>Class 6</option>
-              <option value='{"name":"Class 7","id":"45"}'>Class 7</option>
-              <option value='{"name":"Class 8","id":"46"}'>Class 8</option>
-              <option value='{"name":"Class 9","id":"47"}'>Class 9</option>
-              <option value='{"name":"Class 10","id":"48"}'>Class 10</option>
-              <option value='{"name":"Class 11","id":"49"}'>Class 11</option>
-              <option value='{"name":"Class 12","id":"50"}'>Class 12</option>
-              <option value='{"name":"Class 13","id":"51"}'>Class 13</option>
-              <option value='{"name":"Class 14","id":"52"}'>Class 14</option>
-              <option value='{"name":"Class 15","id":"53"}'>Class 15</option>
-            </select>
+            <input type="text"
+              className={styles.matInput}
+              value={store.state.group_name}
+              disabled='true'/>
           </div>
           <div className={styles.matDiv + ' ' + this.checkHasValue(store.state.email)}>
             <label htmlFor="e-mail" className={styles.matLabel}>e-mail</label>
             <input type="email"
               className={styles.matInput}
-              //The default props 'value' of an input should be an empty string
               value={store.state.email || ''}
               id="e-mail"
               onChange={(e) => { store.setState({ email: e.target.value }); }}
@@ -129,11 +104,11 @@ export default class Profile extends React.Component {
               onFocus={(e) => { this.setInputActive(e) }}
             />
           </div>
-          <Link to='/users'>
+          <Link to='/currentUserProfile'>
             <input className={styles.saveProfile}
               type="submit"
               value="Save"
-              onClick={()=>store.saveProfile('loadUsers')}
+              onClick={() => store.saveProfile('loadUser')}
             />
           </Link>
           <input className={styles.resetProfile}
@@ -147,3 +122,5 @@ export default class Profile extends React.Component {
     )
   }
 }
+
+export default userAccount

@@ -3,6 +3,7 @@ const token = localStorage.getItem("token")
 class store {
 
 	state = {
+		currentUser: '',
 		users: [],
 		filteredUsers: [],
 
@@ -58,32 +59,49 @@ class store {
 			}
 		}
 	}
-
-
-	loadUsers = () => {
-		fetch('http://localhost:3000/api/users', {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + token,
-			}
-		})
-			.then(res => res.json())
-			.then(data => {
-				this.setState({
-					users: data,
-					filteredUsers: data,
-				});
-				return;
+	async loadUser() {
+		try {
+			const res = await fetch('http://localhost:3000/api/user', {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': 'Bearer ' + token,
+				}
 			})
-			.catch(error => {
-				console.log(error);
-				throw new Error('Problem with Server: GET DATA');
+			const data = await res.json()
+			this.setState({
+				currentUser: data,
 			});
-			
+			return;
 		}
-		
-	saveProfile = () => {
+
+		catch (error) {
+			console.log(error);
+			throw new Error('Problem with Server: GET DATA');
+		}
+	}
+	async loadUsers() {
+		try {
+			const res = await fetch('http://localhost:3000/api/users', {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': 'Bearer ' + token,
+				}
+			})
+			const data = await res.json()
+			this.setState({
+				users: data,
+				filteredUsers: data,
+			});
+			return;
+		}
+		catch (error) {
+			console.log(error);
+			throw new Error('Problem with Server: GET DATA');
+		}
+	}
+	saveProfile = async (loadData) => {
 		const updatedUser = {
 			"id": this.state.id,
 			"username": this.state.username,
@@ -97,26 +115,25 @@ class store {
 			"mobile": this.state.mobile,
 			"group_id": this.state.group_id
 		}
-
-		fetch(`http://localhost:3005/api/user/${this.state.id}`, {
-			method: 'PATCH',
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + token,
-			},
-			body: JSON.stringify(updatedUser),
-		})
-			.then(response => { 
-				if (response.status >= 400) {
-					throw new Error("Bad response from server");
-				}
-				this.loadUsers()
+		try {
+			await fetch(`http://localhost:3005/api/user/${this.state.id}`, {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': 'Bearer ' + token,
+				},
+				body: JSON.stringify(updatedUser),				
 			})
-		.catch((error) => {
+			if (loadData === 'loadUser') {
+				this.loadUser()
+			} else if (loadData === 'loadUsers') {
+				this.loadUsers()
+			}
+		}
+		catch (error) {
 			console.log(error)
 			throw new Error('Problem with Server :  PATCH DATA')
-		})
-		console.log(this.state.full_name)
+		}
 	}
 
 	resetProfile = () => {

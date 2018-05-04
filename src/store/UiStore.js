@@ -1,6 +1,7 @@
 import {
   AVATAR_URL_CHANGED,
   ISTEACHER_STATE_CHANGED,
+  ISSTUDENT_STATE_CHANGED,
   LOGIN_STATE_CHANGED
 } from './';
 
@@ -51,8 +52,8 @@ export default function() {
       .then(jsonRes => {
         const isLoggedIn = true;
         const isATeacher = jsonRes.role === 'teacher' ? true : false;
+        const isStudent = jsonRes.role === 'student' ? true : false;        
         _getProfileImg(jsonRes.username);
-
         // notify login
         setState({
           type: LOGIN_STATE_CHANGED,
@@ -60,12 +61,17 @@ export default function() {
             isLoggedIn
           }
         });
-
         //notify a teacher
         setState({
           type: ISTEACHER_STATE_CHANGED,
           payload: {
             isATeacher
+          }
+        });
+        setState({
+          type: ISSTUDENT_STATE_CHANGED,
+          payload: {
+            isStudent
           }
         });
       })
