@@ -1,72 +1,72 @@
-import React, { Component } from 'react';
-import Modal from '../../../../../Helpers/Modal/Modal';
-import classes from './addClassModal.css';
-import { timelineStore } from '../../../../../store/';
-import moment from 'moment';
+import React, { Component } from 'react'
+import Modal from '../../../../../Helpers/Modal/Modal'
+import classes from './addClassModal.css'
+import { timelineStore } from '../../../../../store/'
+import moment from 'moment'
 
 export default class AddClassModal extends Component {
   state = {
     classNumber: '',
     starting_date: '',
     errorMessage: ''
-  };
+  }
 
   handleChangeClassNameInput = e => {
-    const { value } = e.target;
+    const { value } = e.target
     if (!isNaN(value)) {
-      this.setState({ classNumber: value });
+      this.setState({ classNumber: value })
     } else {
-      this.refs.classNrInput.value = this.state.classNumber;
+      this.refs.classNrInput.value = this.state.classNumber
       this.setState({
         errorMessage: 'Please provide only the number of the new class'
-      });
-      return;
+      })
+      return
     }
-    const { starting_date } = this.state;
+    const { starting_date } = this.state
     if (value && starting_date) {
-      this.setState({ errorMessage: '' });
+      this.setState({ errorMessage: '' })
     }
-  };
+  }
 
   handleChangeStartingDateInput = e => {
     // if all valid remove weird error message
-    const { value } = e.target;
+    const { value } = e.target
     if (!value) {
       this.setState({
         errorMessage: 'Please provide a valid starting date for the class'
-      });
+      })
     }
-    const { classNumber } = this.state;
+    const { classNumber } = this.state
     if (classNumber && value) {
-      this.setState({ errorMessage: '' });
+      this.setState({ errorMessage: '' })
     }
-    const selectedDate = moment(value, 'YYYY-MM-DD');
-    const daysDif = 7 - selectedDate.day(); // till sunday
-    selectedDate.add(daysDif, 'days'); // keep going back in the week until it's a sunday
-    this.setState({ starting_date: selectedDate.format('YYYY-MM-DD') });
-  };
+    const selectedDate = moment(value, 'YYYY-MM-DD')
+    const daysDif = 7 - selectedDate.day() // till sunday
+    selectedDate.add(daysDif, 'days') // keep going back in the week until it's a sunday
+    this.setState({ starting_date: selectedDate.format('YYYY-MM-DD') })
+  }
 
   addNewClass = () => {
-    const { classNumber, starting_date } = this.state;
+    const { classNumber, starting_date } = this.state
 
     if (!classNumber || !starting_date) {
       this.setState({
         errorMessage: 'Please make sure to fill all the inputs'
-      });
-      return;
+      })
+      return
     }
 
     timelineStore
       .addTheClass(`Class ${classNumber}`, starting_date)
       .then(res => {
         //Awesome got the response close the modal
-        this.props.closeModal();
+        this.props.closeModal()
       })
       .catch(err => {
-        console.log(err);
-        this.setState({ errorMessage: 'There was a network error!' });
-      });
-  };
+        console.log(err)
+        this.setState({ errorMessage: 'There was a network error!' })
+      })
+  }
   render() {
     return (
       <Modal
@@ -125,6 +125,6 @@ export default class AddClassModal extends Component {
           </div>
         </div>
       </Modal>
-    );
+    )
   }
 }
