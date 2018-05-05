@@ -8,6 +8,29 @@ import { getAllGroupsWithIds } from '../../util'
 const token = localStorage.getItem("token")
 
 export default class Profile extends React.Component {
+  state = {
+    classOptions: []
+  } 
+  
+  componentDidMount() {
+    let getData = async () => {
+
+      let groupData = await getAllGroupsWithIds()
+
+      groupData.map(group => {
+        return {
+          groupsName: group.group_name,
+          groupsId: group.id
+        }
+      })
+
+      this.setState({
+        classOptions: groupData
+      })
+    }
+    getData()
+    window.scrollTo(0, 0)
+  }
 
   componentWillMount = () => {
     this.subscription = store.subscribe(state => {
@@ -24,9 +47,6 @@ export default class Profile extends React.Component {
     this.subscription.remove();
   }
 
-  componentDidMount() {
-    window.scrollTo(0, 0)
-  }
   checkHasValue(val) {
     return (!val || val.length === 0) ? '' : styles.isCompleted;
   }
@@ -70,25 +90,17 @@ export default class Profile extends React.Component {
           <div className={styles.small + ' ' + styles.matDiv + ' ' + styles.isCompleted}>
             <label htmlFor="Class" className={styles.matLabel}>Class</label>
             <select className={styles.matInput}
-              value={
-                '{"name":"' + store.state.group_name + '","id":"' + store.state.group_id + '"}'
-              }
+              value={'{"name":"' + store.state.group_name + '","id":"' + store.state.group_id + '"}'}
               onChange={(e) => {
-                store.setState({
-                  group_name: JSON.parse(e.target.value).name, group_id: +JSON.parse(e.target.value).id
-                });
+                store.setState({ group_name: JSON.parse(e.target.value).name, group_id: +JSON.parse(e.target.value).id })
               }}>
-              <option value='{"name":"Class 5","id":"43"}'>Class 5</option>
-              <option value='{"name":"Class 6","id":"44"}'>Class 6</option>
-              <option value='{"name":"Class 7","id":"45"}'>Class 7</option>
-              <option value='{"name":"Class 8","id":"46"}'>Class 8</option>
-              <option value='{"name":"Class 9","id":"47"}'>Class 9</option>
-              <option value='{"name":"Class 10","id":"48"}'>Class 10</option>
-              <option value='{"name":"Class 11","id":"49"}'>Class 11</option>
-              <option value='{"name":"Class 12","id":"50"}'>Class 12</option>
-              <option value='{"name":"Class 13","id":"51"}'>Class 13</option>
-              <option value='{"name":"Class 14","id":"52"}'>Class 14</option>
-              <option value='{"name":"Class 15","id":"53"}'>Class 15</option>
+
+              {this.state.classOptions.map(group => {
+
+                let optionValue = `{"name":"${group.group_name}","id":"${group.id}"}`
+                return (<option key={group.id} value={optionValue}>{group.group_name}</option>)
+
+              })}
             </select>
           </div>
           <div className={styles.matDiv + ' ' + this.checkHasValue(store.state.email)}>

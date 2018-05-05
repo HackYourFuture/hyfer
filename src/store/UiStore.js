@@ -1,16 +1,9 @@
 import {
-<<<<<<< HEAD
   AVATAR_URL_CHANGED,
   ISTEACHER_STATE_CHANGED,
   ISSTUDENT_STATE_CHANGED,
   LOGIN_STATE_CHANGED
 } from './';
-=======
-    AVATAR_URL_CHANGED,
-    ISTEACHER_STATE_CHANGED,
-    LOGIN_STATE_CHANGED
-} from './'
->>>>>>> upstream/master
 
 const CURRENT_USER_INFO_URL = 'http://localhost:3005/api/user'
 
@@ -48,21 +41,7 @@ export default function () {
 
     //Normal methods
 
-    const getUserInfo = async () => {
-        const token = localStorage.getItem("token")
-        try {
-            const res = await fetch(CURRENT_USER_INFO_URL, {
-                credentials: "same-origin",
-                headers: {
-                    'Authorization': 'Bearer ' + token,
-                }
-            })
-            const jsonRes = await res.json()
-            const isLoggedIn = true
-            const isATeacher = jsonRes.role === 'teacher' ? true : false
-            _getProfileImg(jsonRes.username)
 
-<<<<<<< HEAD
   const getUserInfo = () => {
     const token = localStorage.getItem("token")
     fetch(CURRENT_USER_INFO_URL , {
@@ -111,39 +90,7 @@ export default function () {
       }
     });
   };
-=======
-            // notify login
-            setState({
-                type: LOGIN_STATE_CHANGED,
-                payload: {
-                    isLoggedIn
-                }
-            })
 
-            //notify a teacher
-            setState({
-                type: ISTEACHER_STATE_CHANGED,
-                payload: {
-                    isATeacher
-                }
-            })
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    // Helper methods
-    const _getProfileImg = username => {
-        const avatarUrl = `https://avatars.githubusercontent.com/${username}`
-        //notify avatar url changed
-        setState({
-            type: AVATAR_URL_CHANGED,
-            payload: {
-                avatarUrl
-            }
-        })
-    }
->>>>>>> upstream/master
 
     return {
         subscribe,
