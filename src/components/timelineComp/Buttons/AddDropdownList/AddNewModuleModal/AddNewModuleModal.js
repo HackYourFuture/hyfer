@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import Modal from '../../../../../Helpers/Modal/Modal';
-import classes from './addNewModuleModal.css';
-import { timelineStore } from '../../../../../store';
-import moment from 'moment';
+import React, { Component } from 'react'
+import Modal from '../../../../../Helpers/Modal/Modal'
+import classes from './addNewModuleModal.css'
+import { timelineStore } from '../../../../../store'
+import moment from 'moment'
 
 export default class AddNewModuleModal extends Component {
   state = {
@@ -15,41 +15,42 @@ export default class AddNewModuleModal extends Component {
     mountedFirstTime: false,
     minDate: '',
     maxDate: ''
-  };
+  }
 
   getSharedDatesBetweenGroups = () => {
-    return timelineStore.getSharedDates(this.props.items);
-  };
+    return timelineStore.getSharedDates(this.props.items)
+  }
 
   handleChangeDuration = e => {
-    this.setState({ duration: e.target.value });
-  };
+    this.setState({ duration: e.target.value })
+  }
 
   handleChangeGroup = e => {
-    const groupName = e.target.value;
-    this.setState({ selectedGroup: groupName });
+    const groupName = e.target.value
+    this.setState({ selectedGroup: groupName })
     if (groupName !== 'All classes') {
-      const modules = this.props.items[groupName];
-      const startingsOfModule = modules.map(module => module.starting_date);
-      const min = moment.min(startingsOfModule);
-      const endingsOfModule = modules.map(module => module.ending_date);
-      const max = moment.max(endingsOfModule);
+      const modules = this.props.items[groupName]
+      const startingsOfModule = modules.map(module => module.starting_date)
+      const min = moment.min(startingsOfModule)
+      const endingsOfModule = modules.map(module => module.ending_date)
+      const max = moment.max(endingsOfModule)
       this.setState({
+
         minDate: moment(min).format('YYYY-MM-DD'),
         maxDate: moment(max).format('YYYY-MM-DD')
       });
     } else {
-      const { min, max } = this.getSharedDatesBetweenGroups();
+      const { min, max } = this.getSharedDatesBetweenGroups()
       this.setState({
         minDate: moment(min).format('YYYY-MM-DD'),
         maxDate: moment(max).format('YYYY-MM-DD')
       });
     }
-  };
+  }
 
   handleChangeSelectedModuleId = e => {
-    this.setState({ selectedModuleId: e.target.value });
-  };
+    this.setState({ selectedModuleId: e.target.value })
+  }
 
   handleChangeDate = e => {
     // check there's no value selected in the date picker
@@ -57,37 +58,37 @@ export default class AddNewModuleModal extends Component {
       this.setState({
         validDate: false,
         errorMessage: 'Please provide a starting date for the module'
-      });
-      return;
+      })
+      return
     }
-    const allSundays = timelineStore.getState().allSundays;
+    const allSundays = timelineStore.getState().allSundays
 
-    let date = moment(e.target.value);
-    const wantedDay = 0; // sunday
-    const daysDif = date.day() - wantedDay; // till sunday
-    date.subtract(daysDif, 'days'); // keep going back in the week until it's a sunday
+    let date = moment(e.target.value)
+    const wantedDay = 0 // sunday
+    const daysDif = date.day() - wantedDay // till sunday
+    date.subtract(daysDif, 'days') // keep going back in the week until it's a sunday
 
-    let settingValidDateWith = false;
-    let thatSunday = null;
+    let settingValidDateWith = false
+    let thatSunday = null
     // loop through all sundays and if it's not betweens them tell the user it cannot be done
     allSundays.forEach(sunday => {
       if (sunday.diff(date) === 0) {
-        thatSunday = date.format('YYYY-MM-DD');
-        settingValidDateWith = true;
+        thatSunday = date.format('YYYY-MM-DD')
+        settingValidDateWith = true
       }
-    });
+    })
     this.setState({
       validDate: settingValidDateWith
-    });
+    })
     if (settingValidDateWith) {
-      this.setState({ selectedDate: thatSunday, errorMessage: '' });
+      this.setState({ selectedDate: thatSunday, errorMessage: '' })
     } else {
       this.setState({
         errorMessage:
           'Please provide a date that is not out of the range of current classes'
-      });
+      })
     }
-  };
+  }
 
   renderSelectModule = modules => {
     return (
@@ -103,8 +104,8 @@ export default class AddNewModuleModal extends Component {
           </option>
         ))}
       </select>
-    );
-  };
+    )
+  }
 
   renderSelectGroup = groups => {
     return (
@@ -120,8 +121,8 @@ export default class AddNewModuleModal extends Component {
           </option>
         ))}
       </select>
-    );
-  };
+    )
+  }
 
   renderDurationOfModule = () => {
     return (
@@ -137,38 +138,38 @@ export default class AddNewModuleModal extends Component {
           </option>
         ))}
       </select>
-    );
-  };
+    )
+  }
 
   handleAddModule = e => {
     if (!this.state.validDate) {
       this.setState({
         errorMessage:
           'Please provide a valid starting date for the module to be added'
-      });
-      return;
+      })
+      return
     }
-    const { items } = this.props;
+    const { items } = this.props
     // this step is weird but it's just to pass the modules of a class instead of all of them, or if all classes is selected pass em all
     let className = Object.keys(items).filter(
       group => group === this.state.selectedGroup
-    );
-    className = className.length === 0 ? 'All classes' : className[0];
+    )
+    className = className.length === 0 ? 'All classes' : className[0]
 
-    const modulesOfGroup = items[className] || items;
+    const modulesOfGroup = items[className] || items
 
     const {
       selectedGroup,
       duration,
       selectedDate,
       selectedModuleId
-    } = this.state;
-    let groupWithId = 'All classes';
+    } = this.state
+    let groupWithId = 'All classes'
     // if the classname is all classes don't get the object group with id on it, cause there isn't one for all classes
     if (className !== 'All classes') {
       groupWithId = this.props.groupsWithIds.filter(
         group => group.group_name === selectedGroup // if something matched it is instead of 'All classes'
-      )[0];
+      )[0]
     }
 
     timelineStore
@@ -180,15 +181,15 @@ export default class AddNewModuleModal extends Component {
         modulesOfGroup
       )
       .then(() => {
-        // this.setInitialState(this.props);
-        this.props.closeModal();
-      });
-  };
+        // this.setInitialState(this.props)
+        this.props.closeModal()
+      })
+  }
 
   setInitialState = props => {
-    const { modules, groups, items } = props;
-    if (!modules || !groups || !items) return;
-    const { min, max } = this.getSharedDatesBetweenGroups();
+    const { modules, groups, items } = props
+    if (!modules || !groups || !items) return
+    const { min, max } = this.getSharedDatesBetweenGroups()
     this.setState({
       selectedGroup: 'All classes',
       selectedModuleId: modules[0].id,
@@ -202,15 +203,15 @@ export default class AddNewModuleModal extends Component {
   // set up the default state
   componentWillReceiveProps = props => {
     if (!this.state.mountedFirstTime) {
-      this.setInitialState(props);
+      this.setInitialState(props)
     }
-  };
+  }
 
   render() {
-    const { groups } = this.props;
-    const { modules, allSundays } = timelineStore.getState();
-    if (!groups || !modules || !allSundays) return null;
-    const groupsPlus = ['All classes', ...groups];
+    const { groups } = this.props
+    const { modules, allSundays } = timelineStore.getState()
+    if (!groups || !modules || !allSundays) return null
+    const groupsPlus = ['All classes', ...groups]
 
     return (
       <Modal
@@ -268,6 +269,6 @@ export default class AddNewModuleModal extends Component {
           </div>
         </div>
       </Modal>
-    );
+    )
   }
 }

@@ -1,29 +1,29 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 
-import DropdownList from '../DropdownList/DropdownList';
-import classes from './taskComp.css';
-import AssignTeacherModal from '../DropdownList/AssignTeacherModal/AssignTeacherModal';
-import { timelineStore } from '../../../../store';
+import DropdownList from '../DropdownList/DropdownList'
+import classes from './taskComp.css'
+import AssignTeacherModal from '../DropdownList/AssignTeacherModal/AssignTeacherModal'
+import { timelineStore } from '../../../../store'
 
 export default class TaskComp extends Component {
   state = {
     assignTeacherModalIsToggled: false,
     dontChangeSelectedItem: false
-  };
+  }
 
   showAssignTeacherModal = e => {
-    e.stopPropagation();
-    this.setState({ assignTeacherModalIsToggled: true });
-  };
+    e.stopPropagation()
+    this.setState({ assignTeacherModalIsToggled: true })
+  }
 
   hideAssignTeacherModal = () => {
-    this.setState({ assignTeacherModalIsToggled: false });
-  };
+    this.setState({ assignTeacherModalIsToggled: false })
+  }
 
   handleClickItem = e => {
-    const { item } = this.props;
-    this.props.itemClickHandler(e, item);
-  };
+    const { item } = this.props
+    this.props.itemClickHandler(e, item)
+  }
 
   render() {
     const {
@@ -36,16 +36,16 @@ export default class TaskComp extends Component {
       running_module_id,
       id,
       group_name
-    } = this.props.item;
-    let { width, height, active } = this.props;
+    } = this.props.item
+    let { width, height, active } = this.props
     if (duration > 1) {
       // add extra times width as much as needed but for the margin add all - 1 (for the first item it doesn't need any margin)
-      width = width * duration + 16 * (duration - 1);
+      width = width * duration + 16 * (duration - 1)
     }
-    let className = classes.flexWrapper;
-    if (active) className += ` ${classes.active}`;
+    let className = classes.flexWrapper
+    if (active) className += ` ${classes.active}`
 
-    let dropdownList = null;
+    let dropdownList = null
     if (
       this.props.selectedModule &&
       this.props.selectedModule.running_module_id ===
@@ -60,10 +60,10 @@ export default class TaskComp extends Component {
             allModules={this.props.allModules}
           />
         </div>
-      );
+      )
     }
-    const theStart = starting_date;
-    // theStart.add(2, 'hours');
+    const theStart = starting_date
+    // theStart.add(2, 'hours')
 
     return (
       <div>
@@ -104,6 +104,6 @@ export default class TaskComp extends Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }

@@ -1,31 +1,31 @@
-import React from 'react';
-import store from '../../store/UserStore';
-import styles from '../../assets/styles/users.css';
-import { Link } from 'react-router-dom';
-import Moment from 'moment';
+import React from 'react'
+import store from '../../store/UserStore'
+import styles from '../../assets/styles/users.css'
+import { Link } from 'react-router-dom'
+import Moment from 'moment'
 
-import MdEmail from 'react-icons/lib/md/email';
-import FaSlack from 'react-icons/lib/fa/slack';
-import FaFire from 'react-icons/lib/fa/fire';
-import FaGithub from 'react-icons/lib/fa/github';
-import FaMobile from 'react-icons/lib/fa/mobile';
+import MdEmail from 'react-icons/lib/md/email'
+import FaSlack from 'react-icons/lib/fa/slack'
+import FaFire from 'react-icons/lib/fa/fire'
+import FaGithub from 'react-icons/lib/fa/github'
+import FaMobile from 'react-icons/lib/fa/mobile'
 
 export default class Users extends React.Component {
 
   componentWillMount = () => {
     this.subscription = store.subscribe(state => {
-      this.setState(state);
-    });
-  };
+      this.setState(state)
+    })
+  }
 
   componentWillUnmount() {
-    this.subscription.remove();
+    this.subscription.remove()
   }
 
   componentDidMount = () => {
-    store.loadUsers();
-    window.scrollTo(0, 0);
-  };
+    store.loadUsers()
+    window.scrollTo(0, 0)
+  }
 
   
 
@@ -54,7 +54,7 @@ export default class Users extends React.Component {
                       onError={e => {
                         e.target.src = `https://api.adorable.io/avatars/100/${
                           user.full_name
-                          }`;
+                          }`
                       }}
                     />
                   </div>
@@ -130,7 +130,7 @@ export default class Users extends React.Component {
                       reset_freecodecamp_username: user.freecodecamp_username,
                       reset_mobile: user.mobile,
                       reset_group_id: user.group_id
-                    });
+                    })
                   }}
                 >
                   <Link to="/profile">
@@ -142,6 +142,6 @@ export default class Users extends React.Component {
           ))}
         </ul>
       </div>
-    );
+    )
   }
 }

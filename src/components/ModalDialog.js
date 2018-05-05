@@ -1,12 +1,11 @@
-import React, { Component } from 'react';
-import style from  '../assets/styles/ModalDialog.css';
+import React, { Component } from 'react'
+import style from  '../assets/styles/ModalDialog.css'
 
 export default class ModalDialog extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {visible:false};
-  }
+    state = {
+        visible: false
+    }
 
   showDialog(){
 
@@ -16,8 +15,8 @@ export default class ModalDialog extends Component {
   render() {
     return (
       <div onMouseDown={(e)=>{e.stopPropagation()}} className={style.overlay} style={{
-        visibility:this.props.visible?"visible":"hidden",
-        opacity:this.props.visible?"1":"0"}}>
+        visibility:this.state.visible?"visible":"hidden",
+        opacity:this.state.visible?"1":"0"}}>
           <div className={style.popup}>
             <div className={style.popup_header}>
               <a className={style.popup_close} onClick={this.props.closeClicked}>×</a>
@@ -29,6 +28,6 @@ export default class ModalDialog extends Component {
           </div>
     </div>
         
-    );
+    )
   }
 }
