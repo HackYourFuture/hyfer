@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import styles from '../../assets/styles/footer.css';
-import hyfIcon from '../../assets/images/icon.png';
+import React, { Component } from 'react'
+import styles from '../../assets/styles/footer.css'
+import hyfIcon from '../../assets/images/icon.png'
 export default class Footer extends Component {
   render() {
     return (
@@ -32,6 +32,6 @@ export default class Footer extends Component {
     </p>
   </div>
 </footer>
-    );
+    )
   }
 }

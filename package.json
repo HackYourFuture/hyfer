@@ -59,6 +59,7 @@
     "react-router-dom": "^4.2.2",
     "react-sticky": "^6.0.1",
     "react-tabs": "^2.2.1",
+    "request": "^2.85.0",
     "style-loader": "0.19.0",
     "sw-precache-webpack-plugin": "0.11.4",
     "url-loader": "0.6.2",

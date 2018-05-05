@@ -1,5 +1,5 @@
-import React from 'react';
-import styles from '../../assets/styles/attendance.css';
+import React from 'react'
+import styles from '../../assets/styles/attendance.css'
 
 export default class Checkbox extends React.Component{
 
@@ -20,7 +20,7 @@ export default class Checkbox extends React.Component{
                      name={'attendance'}
                     />
             </div>
-        );
-    };
-};
+        )
+    }
+}
 

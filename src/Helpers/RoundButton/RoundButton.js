@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 
-import classes from './roundButton.css';
+import classes from './roundButton.css'
 
 export default class ModuleButton extends Component {
   render() {
-    let className = classes.roundButton;
+    let className = classes.roundButton
     if (this.props.className) {
-      className += ` ${this.props.className}`;
+      className += ` ${this.props.className}`
     }
     return (
       <button
@@ -17,6 +17,6 @@ export default class ModuleButton extends Component {
       >
         <md-icon class="material-icons">{this.props.action}</md-icon>
       </button>
-    );
+    )
   }
 }

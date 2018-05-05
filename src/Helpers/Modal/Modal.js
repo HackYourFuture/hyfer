@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import classes from './modal.css';
+import React, { Component } from 'react'
+import classes from './modal.css'
 
 export default class ModalDialog extends Component {
   handleClickBackdrop = e => {
-    e.stopPropagation();
+    e.stopPropagation()
     if (e.target.classList.contains(classes.overlay)) {
-      this.props.closeModal();
+      this.props.closeModal()
     }
-  };
+  }
 
   render() {
     return (
@@ -29,6 +29,6 @@ export default class ModalDialog extends Component {
           <div className={classes.popup_content}>{this.props.children}</div>
         </div>
       </div>
-    );
+    )
   }
 }
