@@ -14,7 +14,7 @@ const cache = LRU({
 
 function httpRequestPromise(url) {
     return new Promise((resolve, reject) => {
-        const request = { 
+        const request = {
             url,
             json: true,
             headers: {
@@ -23,50 +23,41 @@ function httpRequestPromise(url) {
             }
         }
         httpRequest.get(request, (error, response, body) => {
-            //console.log(response.body)
             if (error) {
                 reject(error)
                 return
             }
             resolve(response.body)
-            //console.log(response.body)
         })
     })
 }
 
-async function getTeams(req, res) {
-    const result = []
-    const teams = await httpRequestPromise(`https://api.github.com/orgs/hackyourfuture/teams`)
-    console.log(teams)
-    teams.forEach(async team => {
-        const teamInfo = {
-            teamName: team.name,
-            id: team.id,
-            url: team.url,
-            members:{}
-        }
-        result.push(teamInfo)
-    })
-    res.send(result)
-}
-
-
 async function getTeamMembers(req, res) {
-    
-    const teamMembers = await httpRequestPromise(`https://api.github.com/teams/${req.params.id}/members`)
-    console.log(teamMembers);
-    const promises = teamMembers.map(member => httpRequestPromise(member.url))
-    const members = await Promise.all(promises)
-    const memberInfo = members.map(member => {
-        return {
-            login: member.login,
-            name: member.name,
-            email: member.email
-        }
-    })
-    res.send(memberInfo)
-}
+    try {
+        const teams = await httpRequestPromise(`https://api.github.com/orgs/hackyourfuture/teams`)
+        const teamsUrl = teams.map(team => httpRequestPromise(team.url))
+        const teamsInfo = await Promise.all(teamsUrl)
+        const classTeamPromises = teams.map(classTeam => httpRequestPromise(`https://api.github.com/teams/${classTeam.id}/members`))
+        const allClassTeams = await Promise.all(classTeamPromises)
 
+        const studentsPromises = allClassTeams.map(team => {
+            const userPromises = team.map(user => httpRequestPromise(user.url))
+            return Promise.all(userPromises)
+        })
+        const teamsStudents = await Promise.all(studentsPromises)
+        const modifiedTeamsStudents = teamsStudents.map((item, i) => {
+            return {
+                teamName: teamsInfo[i].name,
+                created_at: teamsInfo[i].created_at,
+                members: item
+            }
+        })
+        res.send(modifiedTeamsStudents)
+    }
+    catch (error) {
+        console.log(res.statusCode)
+    }
+}
 
 function getReadMeAsHtml(req, res) {
     const owner = req.params.owner
@@ -111,6 +102,5 @@ function getReadMeAsHtml(req, res) {
 
 module.exports = {
     getReadMeAsHtml,
-    getTeams,
     getTeamMembers
 }
