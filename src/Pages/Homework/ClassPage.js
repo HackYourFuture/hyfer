@@ -1,102 +1,92 @@
 import React, { Component } from "react"
-import moment from "moment"
 import AddHomework from "./AddHomework"
 import Submission from "./Submission"
-import { studentClasses } from "../../store/HomeworkStore"
-
+import Reviews from "./Reviews"
+import { studentClasses, students, submissions, reviews } from "../../store/HomeworkStore"
 import styles from "../../assets/styles/homework.css"
 
 
 export default class ClassPage extends Component {
 
     state = {
-        homeworkList: studentClasses[this.props.studentClass].homeworkList,
-        students: studentClasses[this.props.studentClass].students
+        currentUser: {},
+        students: students[this.props.studentClass],
+        submissions: submissions[this.props.studentClass],
+        reviews: reviews[this.props.studentClass]    
     }
 
-    addSubmission = (title, submitter, githubLink) => {
+    async componentWillMount() {
+
+        const CURRENT_USER_INFO_URL = 'http://localhost:3005/api/user'
+        const token = localStorage.getItem("token")
+
+        const res = await fetch(CURRENT_USER_INFO_URL, {
+            credentials: "same-origin",
+            headers: {
+                "Authorization": "Bearer " + token,
+            }
+        })       
+        const userData = await res.json()
+        const currentUser = {
+            name: userData.full_name || userData.username,
+            email: userData.email,
+            avatar: `https://avatars.githubusercontent.com/${userData.username}`
+        }
+
         this.setState({
-            homeworkList: this.state.homeworkList.map(homework => (
-                homework.title === title
-                    ?
-                    {
-                        ...homework,
-                        submissions: [...homework.submissions, { submitter, githubLink }]
-                    }
-                    :
-                    homework
-            ))
+            currentUser,
+            students: [...this.state.students, currentUser]
         })
     }
 
-    addReview = (title, reviewer, reviewee, comments) => {
-        this.setState({
-            homeworkList: this.state.homeworkList.map(homework => (
-                homework.title === title
-                    ?
-                    {
-                        ...homework,
-                        reviews: [...homework.reviews, { reviewer, reviewee, comments }]
-                    }
-                    :
-                    homework
-            ))
+    addSubmission = (githubLink) => {
+        this.setState({  
+            submissions: [
+                ...this.state.submissions,
+                { submitter: this.state.currentUser.name, githubLink }
+            ]           
         })
     }
 
-    requestReview = (reviewer, title, reviewee) => {
+    requestReview = (reviewer, reviewee) => {
         // *** send email to reviewer - 
-        //"Your review has been requested on {reviewee}'s {title} homework"
-        console.log("email sent to " + reviewer)
+        //"Your review has been requested on {reviewee}'s homework"
+    }
+
+    addReview = (reviewee, comments) => {
+        this.setState({
+            reviews: [
+                ...this.state.reviews,
+                { reviewer: this.state.currentUser.name, reviewee, comments }
+            ]            
+        })
     }
 
     render() {
-        const { homeworkList, students } = this.state
-        const activeClasses = Object.keys(studentClasses)
-
+        const { students, submissions, reviews } = this.state
 
         return (
             <div>
                 <div className={styles.navBar}>
-                    {activeClasses.map(group => (
-                        <a key={group} href={"/homework/" + group}><button>Class {group.substr(5)}</button></a>
+                    {studentClasses.map(studentClass => (
+                        <a key={studentClass} href={"/homework/" + studentClass}>
+                            <button>Class {studentClass.substr(5)}</button>
+                        </a>
                     ))}
                 </div>
 
-                <AddHomework students={students}
-                    homeworkList={homeworkList}
-                    addSubmission={this.addSubmission}
-                />    
+                <AddHomework addSubmission={this.addSubmission} />  
+                
                 <section className={styles.classPage}>
-                    {homeworkList.map(homework => (
-                        <div key={homework.title} className={styles.hmwrkContainer}>
-                            <h2>{homework.title}</h2>
-                            <h4>Deadline: {moment(homework.dateDue).format("dddd, MMMM D")}</h4>
-                            <a href={homework.githubLink}>Instructions</a>
-
-                            <Submission title={homework.title}
-                                students={students}
-                                homework={homework}
-                                addReview={this.addReview}
-                                requestReview={this.requestReview}
-                            />
-                        </div> 
-                    ))}
-
+                    <Submission
+                        students={students}
+                        submissions={submissions}
+                        addReview={this.addReview}
+                        requestReview={this.requestReview}
+                    />
+                         
                     <div className={styles.reviewsContainer}>
-                        <h2>Reviews</h2>    
-                        {homeworkList.map(homework => (
-                            <div key={homework.title} className={styles.hmwrkReview}>
-                                <h3>{homework.title}</h3>
-
-                                {homework.reviews.map((review, i) => (
-                                    <div key={review.reviewer + i}>
-                                        <h4>{review.reviewer} reviewed {review.reviewee}</h4>
-                                        <p>{review.comments} </p>
-                                    </div>
-                                ))}
-                            </div>
-                        ))} 
+                         <Reviews reviews={reviews}/>
                     </div> 
                 </section>    
             </div>

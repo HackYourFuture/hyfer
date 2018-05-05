@@ -34,52 +34,72 @@ h2 {
     margin-top: 7vh;
 }
 
-.classPage .reviewsContainer {
-    border-left: 2px solid;
+.reviewsContainer {
     padding: 2vh 3vw;
-}
-
-.hmwrkReview {
-    margin: 7vh 0vw;
-}
-
-.hmwrkReview h3 {
-    color: green;
-}
-
-.classPage .hmwrkContainer {
-    width: 30%;
+    width: 40%;
 }
 
 .hmwrkSubmission {
     margin: 5vh 0vw;
+    width: 45%;
 }
 
 .hmwrkSubmission .submitter {
-    border: 2px dotted green;
+    border: 2px dashed rgb(66, 143, 66);
     padding: 2vh 3vw;
     margin-bottom: 3vh;
+    position: relative;
+}
+
+.hmwrkSubmission h3 {
+   display: block;
+}
+
+.hmwrkSubmission a {
+    position: absolute;
+    top: 13vh;
+    right: 15vw;    
 }
 
 .hmwrkSubmission img {
-    width: 25%;
+    display: block;
+    width: 20%;
+    margin: -2vh 0vw 2vh 0vw;
+    padding: 0.5vh;
+    border: 2px solid rebeccapurple;
+    border-radius: 50%;
 }
 
-.hmwrkSubmission button {
-    margin: 1vh 2vw;
-    padding: 1vh 1vw;
-    cursor: pointer;
+.timestamp {
+    position: absolute;
+    bottom: 0vh;
+    right: 1vw;
+    font-size: 80%;
+    color: gray;
 }
 
 .hmwrkSubmission textarea {
-    width: 80%;
-    margin-top: 2vh;
+    width: 100%;
     padding: 2vh 1vw;
     font-size: 110%;
 }
 
-.hmwrkSubmission .assignBtn {
-    margin-top: 3vh;
+.assignReviewer {
+    position: absolute;
+    top: 2vh;
+    right: 1vw;
+}
+
+.assignReviewer button,
+.replyContainer button {
+    margin-left: 1vw;
+    padding: 1vh 1vw;
+    cursor: pointer;
+}
+
+.replyContainer button:nth-child(2) {
+    margin-left: 10vw;
+    margin-top: 1vh;   
 }
 
 .addBtn {
@@ -93,15 +113,10 @@ h2 {
     width: 60%;
 }
 
-.addForm .textInput {
+.addForm input {
     padding: 1vh 2vw;
     margin-right: 4vw;
     width: 50%;
-    font-size: 110%;
-}
-
-.addForm .dropdown {
-    margin-bottom: 2vh;
     font-size: 110%;
 }
 
@@ -111,5 +126,7 @@ h2 {
     margin-right: 4vw;
     cursor: pointer;
 }
+
+
 
 

@@ -28,7 +28,6 @@ class App extends Component {
   }
 
     render() {
-        const activeClasses = Object.keys(studentClasses)
     return (
       <BrowserRouter>
         <React.Fragment>
@@ -39,10 +38,11 @@ class App extends Component {
             <Route path="/users" exact component={Users} /> 
             <Route path="/profile" exact component={Profile} />
             <Route path="/homework" exact
-                render={props => <ClassPage {...props} studentClass="class12" />} />
-                {activeClasses.map(group => (
-                <Route key={group} path={"/homework/" + group} exact
-                    render={props => <ClassPage {...props} studentClass={group} />} />
+                render={props => <ClassPage {...props} studentClass={studentClasses[0]} />} />
+                    
+            {studentClasses.map(studentClass => (
+                <Route key={studentClass} path={"/homework/" + studentClass} exact
+                    render={props => <ClassPage {...props} studentClass={studentClass} />} />
             ))}        
             <Redirect from="/" to="/timeline" />
           </Switch>

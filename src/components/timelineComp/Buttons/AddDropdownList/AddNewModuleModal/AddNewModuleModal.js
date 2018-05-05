@@ -35,14 +35,14 @@ export default class AddNewModuleModal extends Component {
       const endingsOfModule = modules.map(module => module.ending_date);
       const max = moment.max(endingsOfModule);
       this.setState({
-        minDate: min.format('YYYY-MM-DD'),
-        maxDate: max.format('YYYY-MM-DD')
+        minDate: moment(min).format('YYYY-MM-DD'),
+        maxDate: moment(max).format('YYYY-MM-DD')
       });
     } else {
       const { min, max } = this.getSharedDatesBetweenGroups();
       this.setState({
-        minDate: min.format('YYYY-MM-DD'),
-        maxDate: max.format('YYYY-MM-DD')
+        minDate: moment(min).format('YYYY-MM-DD'),
+        maxDate: moment(max).format('YYYY-MM-DD')
       });
     }
   };
@@ -194,8 +194,8 @@ export default class AddNewModuleModal extends Component {
       selectedModuleId: modules[0].id,
       duration: 1,
       mountedFirstTime: true,
-      minDate: min.format('YYYY-MM-DD'),
-      maxDate: max.format('YYYY-MM-DD')
+      minDate: moment(min).format('YYYY-MM-DD'),
+      maxDate: moment(max).format('YYYY-MM-DD')
     });
   };
 

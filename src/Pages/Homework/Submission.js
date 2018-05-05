@@ -1,27 +1,25 @@
 import React, { Component } from "react"
 import moment from "moment"
-import Dropdown from "react-dropdown"
 import styles from "../../assets/styles/homework.css"
-import dropdownStyle from "react-dropdown/style.css"
+
 
 export default class Submission extends Component {
 
     state = {
         assignedReviewer: "",
-        assigningReviewer: false,
-        currentReviewer: "",
+        selectingReviewer: false,
         comments: "",
         commentsOpen: false,
     }
 
     addReview = (reviewee) => {
-        const { title } = this.props
-        const { currentReviewer, comments } = this.state
+        const { comments } = this.state
 
-        if (currentReviewer && comments) {
-            this.props.addReview(title, currentReviewer, reviewee, comments)
+        if (comments) {
+            this.props.addReview(reviewee, comments)
+            this.toggleComments()
+            this.setState({ comments: "" })
         }
-        this.toggleComments()
     }
 
     handleInputChange = (value, field) => {
@@ -32,16 +30,15 @@ export default class Submission extends Component {
 
     requestReview = (reviewee) => {
         const { assignedReviewer } = this.state
-        const { title } = this.props
         if (assignedReviewer) {
-            this.props.requestReview(assignedReviewer, title, reviewee)
+            this.props.requestReview(assignedReviewer, reviewee)
         }
         this.toggleAssignReviewer()
     }
 
     toggleAssignReviewer = () => {
         this.setState({
-            assigningReviewer: !this.state.assigningReviewer
+            selectingReviewer: !this.state.selectingReviewer
         })
     }
 
@@ -52,55 +49,55 @@ export default class Submission extends Component {
     }
 
     render() {
-        const { homework, students } = this.props
+        const { students, submissions } = this.props
         const {
-            assigningReviewer,
-            assignedReviewer,
-            currentReviewer,
+            selectingReviewer,
             comments,
             commentsOpen
         } = this.state
 
-        const studentNames = students.map(student => student.name)
-
         return (
             <section className={styles.hmwrkSubmission}>
-                {homework.submissions.map(submission => (
+                {submissions.map(submission => (
                     <div key={submission.submitter} className={styles.submitter}>
                         <h3>{submission.submitter}</h3>
+                        <p className={styles.timestamp}>{moment().format("LLL")}</p>
                         {students.map(student => (
-                            student.name === submission.submitter ? <img src={student.avatar} alt={student.name} key={student.name} /> : null
+                            student.name === submission.submitter
+                                ? <img src={student.avatar} alt={student.name} key={student.name} />
+                                : null
                         ))}
-                        <a href={submission.githubLink}>Homework</a>
-                        {assigningReviewer
-                            ? <div>
-                                <Dropdown options={studentNames}
-                                    value={assignedReviewer}
-                                    placeholder="select reviewer"
-                                    className={dropdownStyle}
-                                    onChange={selected => this.handleInputChange(selected.value, "assignedReviewer")}
-                                /> 
-                                <button onClick={() => this.requestReview(submission.submitter)}>Request</button>
-                                <button onClick={this.toggleAssignReviewer}>Cancel</button>
-                            </div>
-                            : <button onClick={this.toggleAssignReviewer} className={styles.assignBtn}>Request Review</button>
-                        }
-                        <p>Submitted: {moment().calendar()} </p>
 
-                        {commentsOpen
-                            ? <div>
-                                <Dropdown options={studentNames}
-                                    value={currentReviewer}
-                                    placeholder="select your name"
-                                    className={dropdownStyle}
-                                    onChange={selected => this.handleInputChange(selected.value, "currentReviewer")}
-                                /> 
-                                <textarea value={comments} placeholder="enter review ..." onChange={e => this.handleInputChange(e.target.value, "comments")}/>
-                                <button onClick={() => this.addReview(submission.submitter)}>Submit</button>
-                                <button onClick={this.toggleComments}>Cancel</button>
-                            </div>
-                            : <button onClick={this.toggleComments} className={styles.replyBtn}>Reply</button>
-                        }
+                        <div className={styles.assignReviewer}>
+                            {selectingReviewer
+                                ? <div>
+                                    <select placeholder="Students"
+                                        onChange={e => this.handleInputChange(e.target.value, "assignedReviewer")}>
+                                        {students.map(student => (
+                                        <option key={student.name} value={student.name}>{student.name}</option>   
+                                        ))}    
+                                    </select>
+                                    <button onClick={() => this.requestReview(submission.submitter)}>Request</button>
+                                    <button onClick={this.toggleAssignReviewer}>Cancel</button>
+                                </div>
+                                : <button onClick={this.toggleAssignReviewer} className={styles.assignBtn}>Request Review</button>
+                            }
+                        </div>    
+
+                        <a href={submission.githubLink}>View homework</a>
+                        
+                        <div className={styles.replyContainer}>
+                            {commentsOpen
+                                ? <div>
+                                    <textarea value={comments} placeholder="enter review . . ."
+                                        onChange={e => this.handleInputChange(e.target.value, "comments")}
+                                    />
+                                    <button onClick={() => this.addReview(submission.submitter)}>Submit</button>
+                                    <button onClick={this.toggleComments}>Cancel</button>
+                                </div>
+                                : <button onClick={this.toggleComments} className={styles.replyBtn}>Reply</button>
+                            }
+                        </div>    
                     </div>
                 ))}
             </section>
