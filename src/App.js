@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import React, { Component } from 'react'
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 
 import './assets/styles/app.css';
 import Header from './components/Header/Header';
@@ -24,7 +24,7 @@ class App extends Component {
     else{
       token = ''
     }
-    localStorage.setItem('token', token);
+    localStorage.setItem('token', token)
   }
 
   render() {
@@ -45,8 +45,8 @@ class App extends Component {
           <Footer />
         </React.Fragment>
       </BrowserRouter>
-    );
+    )
   }
 }
 
-export default App;
+export default App

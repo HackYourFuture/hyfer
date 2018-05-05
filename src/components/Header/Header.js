@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { Component } from 'react'
+import { NavLink } from 'react-router-dom'
 
-import hyfIcon from '../../assets/images/icon.png';
-import styles from '../../assets/styles/header.css';
+import hyfIcon from '../../assets/images/icon.png'
+import styles from '../../assets/styles/header.css'
 import {
   uiStore,
   AVATAR_URL_CHANGED,
   ISTEACHER_STATE_CHANGED,
   ISSTUDENT_STATE_CHANGED,
   LOGIN_STATE_CHANGED
-} from '../../store';
-import cookie from 'react-cookies';
+} from '../../store'
+import cookie from 'react-cookies'
 
 export default class Header extends Component {
   state = {
@@ -18,17 +18,17 @@ export default class Header extends Component {
     isATeacher: false,
     isStudent: false,
     avatarUrl: null
-  };
+  }
 
   componentDidMount = () => {
     uiStore.subscribe(mergedData => {
       switch (mergedData.type) {
         case AVATAR_URL_CHANGED:
-          this.setState({ avatarUrl: mergedData.payload.avatarUrl });
-          break;
+          this.setState({ avatarUrl: mergedData.payload.avatarUrl })
+          break
         case LOGIN_STATE_CHANGED:
-          this.setState({ isLoggedIn: mergedData.payload.isLoggedIn });
-          break;
+          this.setState({ isLoggedIn: mergedData.payload.isLoggedIn })
+          break
         case ISTEACHER_STATE_CHANGED:
           this.setState({ isATeacher: mergedData.payload.isATeacher });
           break;
@@ -36,30 +36,30 @@ export default class Header extends Component {
           this.setState({ isStudent: mergedData.payload.isStudent });
           break;
         default:
-          break;
+          break
       }
-    });
+    })
 
-    const token = localStorage.getItem('token');
-    let login = false;
-    if (token && token !== '') login = true;
+    const token = localStorage.getItem('token')
+    let login = false
+    if (token && token !== '') login = true
 
     uiStore.setState({
       type: LOGIN_STATE_CHANGED,
       payload: {
         isLoggedIn: login
       }
-    });
+    })
 
     if (login) {
-      uiStore.getUserInfo();
+      uiStore.getUserInfo()
     }
-  };
+  }
 
   SignOut = () => {
-    localStorage.removeItem('token');
-    cookie.save('token', '');
-  };
+    localStorage.removeItem('token')
+    cookie.save('token', '')
+  }
 
   render() {
     const student = (
@@ -111,7 +111,7 @@ export default class Header extends Component {
             </a>
           </div>
         </div>
-      );
+      )
     } else {
       user = (
         <ul className={styles.signed_in}>
@@ -134,7 +134,7 @@ export default class Header extends Component {
             </li>
             </ul>
         </ul>
-      );
+      )
     }
 
     if (this.state.isLoggedIn && this.state.isATeacher) {
