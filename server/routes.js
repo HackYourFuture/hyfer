@@ -34,11 +34,11 @@ module.exports = function (app) {
 
     app.get('/api/github/readme/:owner/:repo', github.getReadMeAsHtml)
 
-    app.get('/api/user', auth.isAuthenticated(), users.getCurrentUser)
-    //app.get('/api/users', auth.hasRole('student|teacher'), users.getUsers)
-    app.get('/api/users', users.getUsers)
-    app.get('/api/user/:id', auth.hasRole('teacher'), users.getUserById)
-    app.patch('/api/user/:id', auth.hasRole('teacher'), users.updateUser)
+  app.get('/api/user', auth.isAuthenticated(), users.getCurrentUser)  
+  //app.get('/api/users', auth.hasRole('student|teacher'), users.getUsers)
+  app.get('/api/users', users.getUsers)
+  app.get('/api/user/:id', auth.hasRole('teacher|student'), users.getUserById)
+  app.patch('/api/user/:id', auth.hasRole('teacher|student'), users.updateUser)
 
     app.patch('/api/history/:moduleId/:groupId', auth.isAuthenticated(), history.getHistory)
 
