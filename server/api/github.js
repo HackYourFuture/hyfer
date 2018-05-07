@@ -29,9 +29,13 @@ function httpRequestPromise(url) {
             } else {
                 reject(error)
             
+            }
         })
     })
 }
+
+
+
 async function getTeamMembers(req, res) {
     try {
         const teams = await httpRequestPromise(`https://api.github.com/orgs/hackyourfuture/teams`)
