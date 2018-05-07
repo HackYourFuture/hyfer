@@ -20,13 +20,14 @@ function httpRequestPromise(url) {
             json: true,
             headers: {
                 'User-Agent': 'hackyourfuture',
-                'Authorization': 'token ' + config.githubToken
+                'Authorization': 'token ' + config.githubTeamKey
             }
         }
         httpRequest.get(request, (error, response, body) => {
             if (!error && response.statusCode === 200) {
                 resolve(response.body)
             } else {
+
                 reject(error)
 
             }
@@ -34,6 +35,7 @@ function httpRequestPromise(url) {
     })
 
 }
+
 async function getTeamMembers(req, res) {
     try {
         const teams = await httpRequestPromise(`https://api.github.com/orgs/hackyourfuture/teams`)
@@ -41,7 +43,6 @@ async function getTeamMembers(req, res) {
         const teamsInfo = await Promise.all(teamsUrl)
         const classTeamPromises = teams.map(classTeam => httpRequestPromise(`https://api.github.com/teams/${classTeam.id}/members`))
         const allClassTeams = await Promise.all(classTeamPromises)
-
         const studentsPromises = allClassTeams.map(team => {
             const userPromises = team.map(user => httpRequestPromise(user.url))
             return Promise.all(userPromises)
@@ -101,6 +102,7 @@ function getTeams(req, res) {
 //         })
 // }
 
+
 function getUserEmails(req, res) {
 
     httpRequestPromise(`${API_END_POINT}/user/emails`)
@@ -157,7 +159,6 @@ function getReadMeAsHtml(req, res) {
 
 module.exports = {
     getReadMeAsHtml,
-    getTeams,
     getTeamMembers,
     getUserEmails
 }
