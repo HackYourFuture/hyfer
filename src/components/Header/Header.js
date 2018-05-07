@@ -253,6 +253,7 @@ export default class Header extends Component {
                 >
                   Timeline
               </NavLink>
+
             </li>
             <li>
                 <NavLink
