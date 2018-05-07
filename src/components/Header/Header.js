@@ -188,8 +188,7 @@ export default class Header extends Component {
                         >
                             Homework
                         </NavLink>
-                    </li>  
-                </li>
+                    </li>
               <li>
                 <NavLink
                   exact

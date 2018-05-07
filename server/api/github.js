@@ -28,7 +28,7 @@ function httpRequestPromise(url) {
                 resolve(response.body)
             } else {
                 reject(error)
-            
+            }
         })
     })
 }
