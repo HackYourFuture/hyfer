@@ -34,11 +34,11 @@ module.exports = function (app) {
 
     app.get('/api/github/readme/:owner/:repo', github.getReadMeAsHtml)
 
-    app.get('/api/user', auth.isAuthenticated(), users.getCurrentUser)
-    //app.get('/api/users', auth.hasRole('student|teacher'), users.getUsers)
-    app.get('/api/users', users.getUsers)
-    app.get('/api/user/:id', auth.hasRole('teacher'), users.getUserById)
-    app.patch('/api/user/:id', auth.hasRole('teacher'), users.updateUser)
+  app.get('/api/user', auth.isAuthenticated(), users.getCurrentUser)  
+  //app.get('/api/users', auth.hasRole('student|teacher'), users.getUsers)
+  app.get('/api/users', users.getUsers)
+  app.get('/api/user/:id', auth.hasRole('teacher|student'), users.getUserById)
+  app.patch('/api/user/:id', auth.hasRole('teacher|student'), users.updateUser)
 
     app.patch('/api/history/:moduleId/:groupId', auth.isAuthenticated(), history.getHistory)
 
@@ -52,9 +52,9 @@ module.exports = function (app) {
     app.get('/auth/github/callback', passport.authenticate('github', { session: false, failureRedirect: '/login' }),
         auth.gitHubCallback, auth.setTokenCookie)
 
-    app.get('/api/teams', auth.hasRole('teacher'), github.getTeams)
-    app.get('/team/:id/members', auth.hasRole('teacher'), github.getTeamMembers)
+    app.get('/api/students', auth.hasRole('teacher'), github.getTeamMembers)
     app.get('/user/emails', auth.hasRole('teacher'), github.getUserEmails)
+
 
     app.route('/*')
         .get((req, res) => res.sendFile('index.html', { root: app.get('docRoot') }))
