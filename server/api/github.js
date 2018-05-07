@@ -27,11 +27,14 @@ function httpRequestPromise(url) {
             if (!error && response.statusCode === 200) {
                 resolve(response.body)
             } else {
-                reject(error)            
+
+                reject(error)
+
             }
         })
     })
-}    
+
+}
 
 async function getTeamMembers(req, res) {
     try {
@@ -58,6 +61,48 @@ async function getTeamMembers(req, res) {
     }
 }
 
+function getTeams(req, res) {
+    const allTeams = []
+
+    httpRequestPromise(`${API_END_POINT}/orgs/hackyourfuture/teams`)
+        .then(result => res.send(result))
+        .then(fetchedTeams => fetchedTeams.map(team => {
+            if (team.name.slice(0, 5) === "class") {
+                allTeams.push({
+                    teamName: team.name,
+                    teamId: team.id
+                })
+            }
+        }))
+        .then(() => allTeams)
+        .catch(err => {
+            console.log(err)
+            throw new Error("failed to fetch teams names")
+        })
+}
+
+// function getTeamMembers(req, res) {
+//     const teamId = req.params.id
+//     const teamMembers = []
+
+//     httpRequestPromise(`${API_END_POINT}/teams/${teamId}/members`)
+//         .then(result => res.send(result))
+//         .then(fetchedTeam => fetchedTeam.map(member => {
+//             teamMembers.push({
+//                 memberLogin: member.login,
+//                 memberId: member.id,
+//                 memberAvatar: member.avatar_url
+//             })
+
+//         }))
+//         .then(() => teamMembers)
+//         .catch(err => {
+//             console.log(err)
+//             throw new Error("failed to fetch teams members")
+//         })
+// }
+
+
 function getUserEmails(req, res) {
 
     httpRequestPromise(`${API_END_POINT}/user/emails`)
@@ -70,6 +115,7 @@ function getUserEmails(req, res) {
             throw new Error("failed to fetch user's emails")
         })
 }
+
 function getReadMeAsHtml(req, res) {
     const owner = req.params.owner
     const repo = req.params.repo
