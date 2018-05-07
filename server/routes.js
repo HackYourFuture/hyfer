@@ -52,9 +52,9 @@ module.exports = function (app) {
     app.get('/auth/github/callback', passport.authenticate('github', { session: false, failureRedirect: '/login' }),
         auth.gitHubCallback, auth.setTokenCookie)
 
-    app.get('/api/teams', auth.hasRole('teacher'), github.getTeams)
-    app.get('/team/:id/members', auth.hasRole('teacher'), github.getTeamMembers)
+    app.get('/api/students', auth.hasRole('teacher'), github.getTeamMembers)
     app.get('/user/emails', auth.hasRole('teacher'), github.getUserEmails)
+
 
     app.route('/*')
         .get((req, res) => res.sendFile('index.html', { root: app.get('docRoot') }))
