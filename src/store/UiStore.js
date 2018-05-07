@@ -1,44 +1,46 @@
 import {
   AVATAR_URL_CHANGED,
   ISTEACHER_STATE_CHANGED,
+  ISSTUDENT_STATE_CHANGED,
   LOGIN_STATE_CHANGED
 } from './';
 
-const CURRENT_USER_INFO_URL = 'http://localhost:3005/api/user';
+const CURRENT_USER_INFO_URL = 'http://localhost:3005/api/user'
 
-export default function() {
-  let _observers = [];
-  let _data = {};
+export default function () {
+    let _observers = []
+    let _data = {}
 
-  const subscribe = observer => {
-    _observers.push(observer);
-  };
-
-  const unsubscribe = observer => {
-    _observers = _observers.filter(item => item !== observer);
-  };
-
-  const isSubscribed = observer => {
-    return _observers.includes(observer);
-  };
-
-  const setState = merge => {
-    let old = {};
-    for (let changedItemKey in merge.payload) {
-      if (_data.hasOwnProperty(changedItemKey)) {
-        old[changedItemKey] = merge.payload[changedItemKey];
-      }
-      _data[changedItemKey] = merge.payload[changedItemKey];
+    const subscribe = observer => {
+        _observers.push(observer)
     }
 
-    _observers.forEach(observer => observer(merge, old));
-  };
+    const unsubscribe = observer => {
+        _observers = _observers.filter(item => item !== observer)
+    }
 
-  const getState = () => {
-    return _data;
-  };
+    const isSubscribed = observer => {
+        return _observers.includes(observer)
+    }
 
-  //Normal methods
+    const setState = merge => {
+        let old = {}
+        for (let changedItemKey in merge.payload) {
+            if (_data.hasOwnProperty(changedItemKey)) {
+                old[changedItemKey] = merge.payload[changedItemKey]
+            }
+            _data[changedItemKey] = merge.payload[changedItemKey]
+        }
+
+        _observers.forEach(observer => observer(merge, old))
+    }
+
+    const getState = () => {
+        return _data
+    }
+
+    //Normal methods
+
 
   const getUserInfo = () => {
     const token = localStorage.getItem("token")
@@ -51,8 +53,8 @@ export default function() {
       .then(jsonRes => {
         const isLoggedIn = true;
         const isATeacher = jsonRes.role === 'teacher' ? true : false;
+        const isStudent = jsonRes.role === 'student' ? true : false;        
         _getProfileImg(jsonRes.username);
-
         // notify login
         setState({
           type: LOGIN_STATE_CHANGED,
@@ -60,12 +62,17 @@ export default function() {
             isLoggedIn
           }
         });
-
         //notify a teacher
         setState({
           type: ISTEACHER_STATE_CHANGED,
           payload: {
             isATeacher
+          }
+        });
+        setState({
+          type: ISSTUDENT_STATE_CHANGED,
+          payload: {
+            isStudent
           }
         });
       })
@@ -84,12 +91,13 @@ export default function() {
     });
   };
 
-  return {
-    subscribe,
-    unsubscribe,
-    isSubscribed,
-    getState,
-    setState,
-    getUserInfo
-  };
+
+    return {
+        subscribe,
+        unsubscribe,
+        isSubscribed,
+        getState,
+        setState,
+        getUserInfo
+    }
 }

@@ -1,30 +1,30 @@
-import React, { Component } from 'react';
-import Dropdown from '../../../../Helpers/Dropdown/Dropdown';
-import classes from './addDropdownList.css';
-import AddClassModal from './AddClassModal/AddClassModal';
-import AddNewModuleModal from './AddNewModuleModal/AddNewModuleModal';
+import React, { Component } from 'react'
+import Dropdown from '../../../../Helpers/Dropdown/Dropdown'
+import classes from './addDropdownList.css'
+import AddClassModal from './AddClassModal/AddClassModal'
+import AddNewModuleModal from './AddNewModuleModal/AddNewModuleModal'
 
 export default class AddDrodownList extends Component {
   state = {
     classModalIsToggled: false,
     newModuleModalIsToggled: false
-  };
+  }
 
   toggleClassModal = e => {
-    this.setState({ classModalIsToggled: true });
-  };
+    this.setState({ classModalIsToggled: true })
+  }
 
   closeClassModal = e => {
-    this.setState({ classModalIsToggled: false });
-  };
+    this.setState({ classModalIsToggled: false })
+  }
 
   toggleNewModuleModal = e => {
-    this.setState({ newModuleModalIsToggled: true });
-  };
+    this.setState({ newModuleModalIsToggled: true })
+  }
 
   closeNewModuleModal = e => {
-    this.setState({ newModuleModalIsToggled: false });
-  };
+    this.setState({ newModuleModalIsToggled: false })
+  }
 
   render() {
     return (
@@ -60,6 +60,6 @@ export default class AddDrodownList extends Component {
           closeModal={this.closeNewModuleModal}
         />
       </div>
-    );
+    )
   }
 }

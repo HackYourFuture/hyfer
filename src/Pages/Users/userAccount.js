@@ -1,35 +1,11 @@
-import React from 'react'
-import store from '../../store/UserStore'
-import styles from '../../assets/styles/profile.css'
-import { Link } from 'react-router-dom'
-import Notifications from 'react-notify-toast'
-import { getAllGroupsWithIds } from '../../util'
+import React, { Component } from 'react'
+import store from '../../store/UserStore';
+import styles from '../../assets/styles/profile.css';
+import { Link } from 'react-router-dom';
+import Notifications from 'react-notify-toast';
 
-export default class Profile extends React.Component {
-  state = {
-    classOptions: []
-  } 
+class userAccount extends Component {
   
-  componentDidMount() {
-    let getData = async () => {
-
-      let groupData = await getAllGroupsWithIds()
-
-      groupData.map(group => {
-        return {
-          groupsName: group.group_name,
-          groupsId: group.id
-        }
-      })
-
-      this.setState({
-        classOptions: groupData
-      })
-    }
-    getData()
-    window.scrollTo(0, 0)
-  }
-
   componentWillMount = () => {
     this.subscription = store.subscribe(state => {
       this.setState(state);
@@ -45,16 +21,18 @@ export default class Profile extends React.Component {
     this.subscription.remove();
   }
 
+  componentDidMount() {
+    window.scrollTo(0, 0)
+  }
   checkHasValue(val) {
     return (!val || val.length === 0) ? '' : styles.isCompleted;
   }
-
-
+  
   render() {
     return (
       <div className={styles.profilePage}>
         <Notifications />
-        <Link to='/users'>
+        <Link to='/currentUserProfile'>
           <input className={styles.backButton}
             type="button"
             value="&#8249;"
@@ -74,38 +52,23 @@ export default class Profile extends React.Component {
 
           <div className={styles.small + ' ' + styles.matDiv + ' ' + styles.isCompleted}>
             <label htmlFor="role" className={styles.matLabel}>Role</label>
-            <select value={store.state.role}
-              id="role"
+            <input type="text"
               className={styles.matInput}
-              onChange={(e) => { store.setState({ role: e.target.value }); }}
-            >
-              <option value="guest" disabled hidden>Role</option>
-              <option value="teacher">Teacher</option>
-              <option value="student">Student</option>
-            </select>
+              value={store.state.role}
+              disabled='true' />
           </div>
 
           <div className={styles.small + ' ' + styles.matDiv + ' ' + styles.isCompleted}>
             <label htmlFor="Class" className={styles.matLabel}>Class</label>
-            <select className={styles.matInput}
-              value={'{"name":"' + store.state.group_name + '","id":"' + store.state.group_id + '"}'}
-              onChange={(e) => {
-                store.setState({ group_name: JSON.parse(e.target.value).name, group_id: +JSON.parse(e.target.value).id })
-              }}>
-
-              {this.state.classOptions.map(group => {
-
-                let optionValue = `{"name":"${group.group_name}","id":"${group.id}"}`
-                return (<option key={group.id} value={optionValue}>{group.group_name}</option>)
-
-              })}
-            </select>
+            <input type="text"
+              className={styles.matInput}
+              value={store.state.group_name}
+              disabled='true'/>
           </div>
           <div className={styles.matDiv + ' ' + this.checkHasValue(store.state.email)}>
             <label htmlFor="e-mail" className={styles.matLabel}>e-mail</label>
             <input type="email"
               className={styles.matInput}
-              //The default props 'value' of an input should be an empty string
               value={store.state.email || ''}
               id="e-mail"
               onChange={(e) => { store.setState({ email: e.target.value }); }}
@@ -141,11 +104,11 @@ export default class Profile extends React.Component {
               onFocus={(e) => { this.setInputActive(e) }}
             />
           </div>
-          <Link to='/users'>
+          <Link to='/currentUserProfile'>
             <input className={styles.saveProfile}
               type="submit"
               value="Save"
-              onClick={()=>store.saveProfile('loadUsers')}
+              onClick={() => store.saveProfile('loadUser')}
             />
           </Link>
           <input className={styles.resetProfile}
@@ -159,3 +122,5 @@ export default class Profile extends React.Component {
     )
   }
 }
+
+export default userAccount

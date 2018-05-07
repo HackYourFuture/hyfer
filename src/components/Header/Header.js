@@ -1,62 +1,100 @@
-import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { Component } from 'react'
+import { NavLink } from 'react-router-dom'
 
-import hyfIcon from '../../assets/images/icon.png';
-import styles from '../../assets/styles/header.css';
+import hyfIcon from '../../assets/images/icon.png'
+import styles from '../../assets/styles/header.css'
 import {
   uiStore,
   AVATAR_URL_CHANGED,
   ISTEACHER_STATE_CHANGED,
+  ISSTUDENT_STATE_CHANGED,
   LOGIN_STATE_CHANGED
-} from '../../store';
-import cookie from 'react-cookies';
+} from '../../store'
+import cookie from 'react-cookies'
 
 export default class Header extends Component {
   state = {
     isLoggedIn: false,
     isATeacher: false,
+    isStudent: false,
     avatarUrl: null
-  };
+  }
 
   componentDidMount = () => {
     uiStore.subscribe(mergedData => {
       switch (mergedData.type) {
         case AVATAR_URL_CHANGED:
-          this.setState({ avatarUrl: mergedData.payload.avatarUrl });
-          break;
+          this.setState({ avatarUrl: mergedData.payload.avatarUrl })
+          break
         case LOGIN_STATE_CHANGED:
-          this.setState({ isLoggedIn: mergedData.payload.isLoggedIn });
-          break;
+          this.setState({ isLoggedIn: mergedData.payload.isLoggedIn })
+          break
         case ISTEACHER_STATE_CHANGED:
           this.setState({ isATeacher: mergedData.payload.isATeacher });
           break;
-        default:
+        case ISSTUDENT_STATE_CHANGED:
+          this.setState({ isStudent: mergedData.payload.isStudent });
           break;
+        default:
+          break
       }
-    });
+    })
 
-    const token = localStorage.getItem('token');
-    let login = false;
-    if (token && token !== '') login = true;
+    const token = localStorage.getItem('token')
+    let login = false
+    if (token && token !== '') login = true
 
     uiStore.setState({
       type: LOGIN_STATE_CHANGED,
       payload: {
         isLoggedIn: login
       }
-    });
+    })
 
     if (login) {
-      uiStore.getUserInfo();
+      uiStore.getUserInfo()
     }
-  };
+  }
 
   SignOut = () => {
-    localStorage.removeItem('token');
-    cookie.save('token', '');
-  };
+    localStorage.removeItem('token')
+    cookie.save('token', '')
+  }
 
   render() {
+    const student = (
+      <ul className={styles.signed_in}>
+        <li>
+          <img
+            src={this.state.avatarUrl}
+            alt="user icon"
+            className={styles.userIcon}
+          />
+        </li>
+        <ul className={styles.subNav}>
+          <li >
+              <a href="http://localhost:3000/"
+                onClick={this.SignOut}
+            >
+              <span className={styles.subNavItem}>
+                Sign Out
+              </span>
+            </a>
+          </li>
+          <li>
+              <NavLink
+                exact
+                to="/currentUserProfile"
+            >
+              <span className={styles.subNavItem}>
+                My Profile
+              </span>
+          </NavLink>
+          </li>
+        </ul>
+      </ul>
+    )
+
     let user = null;
     if (!this.state.isLoggedIn) {
       user = (
@@ -73,25 +111,30 @@ export default class Header extends Component {
             </a>
           </div>
         </div>
-      );
+      )
     } else {
       user = (
         <ul className={styles.signed_in}>
-          <li><img
-            src={this.state.avatarUrl}
-            alt="user icon"
-            className={styles.userIcon}
-          /></li>
-          <li><div className={styles.menu}>
-            <a
-              href="http://localhost:3000/"
-              onClick={this.SignOut}
-            >
-              Sign Out
-            </a>
-          </div></li>
+          <li>
+            <img
+              src={this.state.avatarUrl}
+              alt="user icon"
+              className={styles.userIcon}
+            />
+          </li>
+          <ul className={styles.subNav}>
+            <li>
+              <a href="http://localhost:3000/"
+                onClick={this.SignOut}
+              >
+                <span className={styles.subNavItem}>
+                  Sign Out
+              </span>
+              </a>
+            </li>
+            </ul>
         </ul>
-      );
+      )
     }
 
     if (this.state.isLoggedIn && this.state.isATeacher) {
@@ -135,33 +178,93 @@ export default class Header extends Component {
                 >
                   Users
                 </NavLink>
+                </li>
+                    <li>
+                        <NavLink
+                            exact
+                            to="/homework"
+                            className={styles.item}
+                            activeClassName={styles.activeNav}
+                        >
+                            Homework
+                        </NavLink>
+                    </li>  
+                </li>
+              <li>
+                <NavLink
+                  exact
+                  to="/TrainTicket"
+                  className={styles.item}
+                  activeClassName={styles.activeNav}
+                >
+                  Ticket
+                </NavLink>
               </li>
             </ul>
           </nav>
           {user}
         </header>
       );
-    } else { return (
-      <header className={styles.header}>
-        <a href="http://hackyourfuture.net/">
-          <img
-            src={hyfIcon}
-            alt="HackYourFuture logo"
-            className={styles.hyfIcon}
-          />
-        </a>
-        <nav className={styles.nav}>
-          <ul className={styles.list}>
-            <li>
-              <NavLink
-                exact
-                to="/timeline"
-                className={styles.item}
-                activeClassName={styles.activeNav}
-              >
-                Timeline
+    } else if (this.state.isLoggedIn && this.state.isStudent) {
+      return (
+        <header className={styles.header}>
+          <a href="http://hackyourfuture.net/">
+            <img
+              src={hyfIcon}
+              alt="HackYourFuture logo"
+              className={styles.hyfIcon}
+            />
+          </a>
+          <nav className={styles.nav}>
+            <ul className={styles.list}>
+              <li>
+                <NavLink
+                  exact
+                  to="/timeline"
+                  className={styles.item}
+                  activeClassName={styles.activeNav}
+                >
+                  Timeline
               </NavLink>
+              </li>
+            </ul>
+          </nav>
+          {student}
+        </header>
+      )
+    } else {
+      return (
+        <header className={styles.header}>
+          <a href="http://hackyourfuture.net/">
+            <img
+              src={hyfIcon}
+              alt="HackYourFuture logo"
+              className={styles.hyfIcon}
+            />
+          </a>
+          <nav className={styles.nav}>
+            <ul className={styles.list}>
+              <li>
+                <NavLink
+                  exact
+                  to="/timeline"
+                  className={styles.item}
+                  activeClassName={styles.activeNav}
+                >
+                  Timeline
+              </NavLink>
+
             </li>
+            <li>
+                <NavLink
+                    exact
+                    to="/homework"
+                    className={styles.item}
+                    activeClassName={styles.activeNav}
+                >
+                    Homework
+                </NavLink>
+            </li>         
           </ul>
         </nav>
         {user}

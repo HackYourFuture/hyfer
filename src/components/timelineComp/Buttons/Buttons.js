@@ -1,21 +1,21 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment } from 'react'
 
-import RoundButton from '../../../Helpers/RoundButton/RoundButton';
-import classes from './buttons.css';
-import AddDropdownList from './AddDropdownList/AddDropdownList';
+import RoundButton from '../../../Helpers/RoundButton/RoundButton'
+import classes from './buttons.css'
+import AddDropdownList from './AddDropdownList/AddDropdownList'
 
 export default class Button extends Component {
   state = {
     isToggled: false
-  };
+  }
 
   toggleDropdown = e => {
-    this.setState({ isToggled: !this.state.isToggled });
-  };
+    this.setState({ isToggled: !this.state.isToggled })
+  }
 
   render() {
-    let addGroupBtn = null;
-    const { isTeacher } = this.props;
+    let addGroupBtn = null
+    const { isTeacher } = this.props
     if (isTeacher) {
       addGroupBtn = (
         <Fragment>
@@ -32,7 +32,7 @@ export default class Button extends Component {
             isToggled={this.state.isToggled}
           />
         </Fragment>
-      );
+      )
     }
     return (
       <div className={classes.buttonsWrapper}>
@@ -43,6 +43,6 @@ export default class Button extends Component {
           title="Go to today"
         />
       </div>
-    );
+    )
   }
 }
