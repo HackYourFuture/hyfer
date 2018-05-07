@@ -1,14 +1,39 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
+import classes from './classRowComp.css'
 
-import classes from './classRowComp.css';
+const token = localStorage.getItem("token")
 
 export default class ClassRowComp extends Component {
-  render() {
-    const { classId, height } = this.props;
+
+    handleClassArchive = async (id) => {
+        const group = await this.props.groupsWithIds.filter(group => group.group_name.split(' ')[1] === id)
+
+        if (window.confirm(`Are you sure you want to archive ${group[0].group_name} !!?`)) {
+            try {
+                await fetch(`http://localhost:3005/api/groups/${group[0].id}`, {
+                    method: 'PATCH',
+                    credentials: 'same-origin',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token,
+                    },
+                    body: JSON.stringify({
+                        'archived': 1
+                    })
+                })
+            } catch (error) {
+                console.log(error)
+                throw new Error('Problem with Server :  PATCH DATA')
+            }
+        }  
+    }  
+    
+    render() {
+        const { classId, height } = this.props
     return (
       <div style={{ height: height + 'px' }} className={classes.container}>
-        <span className={this.props.classId && classes.groupId}>{classId}</span>
+            <button onClick={() => this.handleClassArchive(classId)} className={this.props.classId && classes.groupId}>{classId}</button>
       </div>
-    );
+    )
   }
 }

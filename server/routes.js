@@ -53,6 +53,8 @@ module.exports = function (app) {
         auth.gitHubCallback, auth.setTokenCookie)
 
     app.get('/api/students', auth.hasRole('teacher'), github.getTeamMembers)
+    app.get('/user/emails', auth.hasRole('teacher'), github.getUserEmails)
+
 
     app.route('/*')
         .get((req, res) => res.sendFile('index.html', { root: app.get('docRoot') }))
