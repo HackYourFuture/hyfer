@@ -20,21 +20,21 @@ function httpRequestPromise(url) {
             json: true,
             headers: {
                 'User-Agent': 'hackyourfuture',
-                'Authorization': 'token ' + config.githubToken
+                'Authorization': 'token ' + config.githubTeamKey
             }
         }
         httpRequest.get(request, (error, response, body) => {
             if (!error && response.statusCode === 200) {
                 resolve(response.body)
             } else {
+
                 reject(error)
-            
+
             }
         })
     })
+
 }
-
-
 
 async function getTeamMembers(req, res) {
     try {
@@ -43,7 +43,6 @@ async function getTeamMembers(req, res) {
         const teamsInfo = await Promise.all(teamsUrl)
         const classTeamPromises = teams.map(classTeam => httpRequestPromise(`https://api.github.com/teams/${classTeam.id}/members`))
         const allClassTeams = await Promise.all(classTeamPromises)
-
         const studentsPromises = allClassTeams.map(team => {
             const userPromises = team.map(user => httpRequestPromise(user.url))
             return Promise.all(userPromises)
@@ -57,11 +56,11 @@ async function getTeamMembers(req, res) {
             }
         })
         res.send(modifiedTeamsStudents)
-    }
-    catch (error) {
+    } catch (error) {
         console.log(res.statusCode)
     }
 }
+
 function getTeams(req, res) {
     const allTeams = []
 
@@ -69,7 +68,10 @@ function getTeams(req, res) {
         .then(result => res.send(result))
         .then(fetchedTeams => fetchedTeams.map(team => {
             if (team.name.slice(0, 5) === "class") {
-                allTeams.push({ teamName: team.name, teamId: team.id })
+                allTeams.push({
+                    teamName: team.name,
+                    teamId: team.id
+                })
             }
         }))
         .then(() => allTeams)
@@ -79,26 +81,27 @@ function getTeams(req, res) {
         })
 }
 
-function getTeamMembers(req, res) {
-    const teamId = req.params.id
-    const teamMembers = []
+// function getTeamMembers(req, res) {
+//     const teamId = req.params.id
+//     const teamMembers = []
 
-    httpRequestPromise(`${API_END_POINT}/teams/${teamId}/members`)
-        .then(result => res.send(result))
-        .then(fetchedTeam => fetchedTeam.map(member => {
-            teamMembers.push({
-                memberLogin: member.login,
-                memberId: member.id,
-                memberAvatar: member.avatar_url
-            })
+//     httpRequestPromise(`${API_END_POINT}/teams/${teamId}/members`)
+//         .then(result => res.send(result))
+//         .then(fetchedTeam => fetchedTeam.map(member => {
+//             teamMembers.push({
+//                 memberLogin: member.login,
+//                 memberId: member.id,
+//                 memberAvatar: member.avatar_url
+//             })
 
-        }))
-        .then(() => teamMembers)
-        .catch(err => {
-            console.log(err)
-            throw new Error("failed to fetch teams members")
-        })
-}
+//         }))
+//         .then(() => teamMembers)
+//         .catch(err => {
+//             console.log(err)
+//             throw new Error("failed to fetch teams members")
+//         })
+// }
+
 
 function getUserEmails(req, res) {
 
@@ -112,6 +115,7 @@ function getUserEmails(req, res) {
             throw new Error("failed to fetch user's emails")
         })
 }
+
 function getReadMeAsHtml(req, res) {
     const owner = req.params.owner
     const repo = req.params.repo
@@ -155,7 +159,6 @@ function getReadMeAsHtml(req, res) {
 
 module.exports = {
     getReadMeAsHtml,
-    getTeams,
     getTeamMembers,
     getUserEmails
 }
