@@ -1,14 +1,10 @@
-body {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: sans-serif;
-    padding: 0vh 3vw;
+.classPage {
+    padding: 0vh 5vw;
 }
 
 .navBar {
     margin-bottom: 5vh;
-    margin-top: -4vh;
+    margin-top: -4.5vh;
 }
 
 .navBar button {
@@ -28,7 +24,7 @@ h2 {
     color: rebeccapurple;
 }
 
-.classPage {
+.submissionsContainer {
     display: flex;
     justify-content: space-between;
     margin-top: 7vh;

@@ -66,7 +66,7 @@ export default class ClassPage extends Component {
         const { students, submissions, reviews } = this.state
 
         return (
-            <div>
+            <div className={styles.classPage}>
                 <div className={styles.navBar}>
                     {studentClasses.map(studentClass => (
                         <a key={studentClass} href={"/homework/" + studentClass}>
@@ -77,7 +77,7 @@ export default class ClassPage extends Component {
 
                 <AddHomework addSubmission={this.addSubmission} />  
                 
-                <section className={styles.classPage}>
+                <section className={styles.submissionsContainer}>
                     <Submission
                         students={students}
                         submissions={submissions}
