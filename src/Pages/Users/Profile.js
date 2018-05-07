@@ -5,8 +5,6 @@ import { Link } from 'react-router-dom'
 import Notifications from 'react-notify-toast'
 import { getAllGroupsWithIds } from '../../util'
 
-const token = localStorage.getItem("token")
-
 export default class Profile extends React.Component {
   state = {
     classOptions: []
