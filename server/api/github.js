@@ -61,48 +61,6 @@ async function getTeamMembers(req, res) {
     }
 }
 
-function getTeams(req, res) {
-    const allTeams = []
-
-    httpRequestPromise(`${API_END_POINT}/orgs/hackyourfuture/teams`)
-        .then(result => res.send(result))
-        .then(fetchedTeams => fetchedTeams.map(team => {
-            if (team.name.slice(0, 5) === "class") {
-                allTeams.push({
-                    teamName: team.name,
-                    teamId: team.id
-                })
-            }
-        }))
-        .then(() => allTeams)
-        .catch(err => {
-            console.log(err)
-            throw new Error("failed to fetch teams names")
-        })
-}
-
-// function getTeamMembers(req, res) {
-//     const teamId = req.params.id
-//     const teamMembers = []
-
-//     httpRequestPromise(`${API_END_POINT}/teams/${teamId}/members`)
-//         .then(result => res.send(result))
-//         .then(fetchedTeam => fetchedTeam.map(member => {
-//             teamMembers.push({
-//                 memberLogin: member.login,
-//                 memberId: member.id,
-//                 memberAvatar: member.avatar_url
-//             })
-
-//         }))
-//         .then(() => teamMembers)
-//         .catch(err => {
-//             console.log(err)
-//             throw new Error("failed to fetch teams members")
-//         })
-// }
-
-
 function getUserEmails(req, res) {
 
     httpRequestPromise(`${API_END_POINT}/user/emails`)
@@ -130,7 +88,7 @@ function getReadMeAsHtml(req, res) {
         console.log('README cache miss for: ' + ownerAndRepo)
         promise = new Promise((resolve, reject) => {
             const request = {
-                url: `${API_END_POINT}/repos/${ownerAndRepo}/readme`,
+                url: `${API_END_POINT}/${ownerAndRepo}/readme`,
                 json: true,
                 headers: {
                     'User-Agent': 'hackyourfuture'
