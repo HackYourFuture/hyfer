@@ -4,7 +4,7 @@ import ModuleButton from './ModuleButton'
 import ModuleObservable from './ModuleObservable'
 import ModuleServiceBack from './ModuleServiceBack'
 import ModuleForm from './ModuleForm'
-import Notifications, { notify } from 'react-notify-toast'
+import { notify } from 'react-notify-toast'
 
 
 export default class ModuleFooter extends Component {
@@ -58,7 +58,6 @@ export default class ModuleFooter extends Component {
     render() {
         return (
             <div className={style.moduleFooter}>
-                <Notifications />
                 <ModuleButton action="undo"
                     title="Undo Changes"
                     disabled={!this.state.isChanged}
