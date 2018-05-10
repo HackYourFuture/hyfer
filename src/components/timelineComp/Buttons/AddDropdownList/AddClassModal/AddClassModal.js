@@ -3,6 +3,7 @@ import Modal from '../../../../../Helpers/Modal/Modal'
 import classes from './addClassModal.css'
 import { timelineStore } from '../../../../../store/'
 import moment from 'moment'
+import { error_bundle } from '../../../../../notify'
 
 export default class AddClassModal extends Component {
   state = {
@@ -63,8 +64,9 @@ export default class AddClassModal extends Component {
         this.props.closeModal()
       })
       .catch(err => {
-        console.log(err)
-        this.setState({ errorMessage: 'There was a network error!' })
+        const e = new Error('network error!')
+        error_bundle(e)
+        this.setState({ errorMessage: e.message })
       })
   }
   render() {
