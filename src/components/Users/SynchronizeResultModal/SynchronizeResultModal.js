@@ -9,6 +9,7 @@ export default class SynchronizeResultModal extends Component {
     state = {
         updateList: [],
         startingDate: [],
+        notification:'',
         selected: false
     }
 
@@ -51,11 +52,17 @@ export default class SynchronizeResultModal extends Component {
                 return team
             }) 
             this.setState({
-                updateList
+                updateList,
+                notification:'You have successfully changed the starting date!'
             })
         }
 
     }
+
+    handelFirstToUpperCase = (str)=> {
+    return str.substr(0, 1).toUpperCase() + str.substr(1);
+    }
+
 
     handelSaveUpdate = async () => {
 
@@ -94,15 +101,19 @@ export default class SynchronizeResultModal extends Component {
                             <h3>Update</h3>
                         </div>
                         <div className={style.resultSelector}>
-                            <ul>
+                            <ul className={style.resultBox}>
                                 {this.props.conflictData.map(team => {
                                     return (
-                                        <li key={team.created_at}>
-                                            <input type="checkbox" onChange={() => { this.handelSelectedData(team) }} />{team.teamName}
+                                        <li key={team.created_at} className={style.teamList}>
+                                            <input type="checkbox" onChange={() => { this.handelSelectedData(team) }} />
+                                            {this.handelFirstToUpperCase(team.teamName)}
                                             <ul>
                                                 {team.members.map(member => {
                                                     return (
-                                                        <li key={member.id}><input type="checkbox" onChange={() => { }}/>{member.name || member.login}</li>
+                                                        <li key={member.id} className={style.memberList}>
+                                                            <input type="checkbox" onChange={() => { }} />
+                                                            {member.name || this.handelFirstToUpperCase(member.login)}
+                                                        </li>
                                                     )
                                                 })}
                                             </ul>
@@ -112,21 +123,21 @@ export default class SynchronizeResultModal extends Component {
                             </ul>
                         </div>
                         <div className={style.resultSelector}>
-                            <ul>
+                            <ul className={style.resultBox}>
                                 {this.state.updateList.map(team => {
                                     return (
-                                        <li key={team.created_at}>
-                                            {team.teamName }
-                                            <input type="date" placeholder={team.created_at} value={this.state.startingDate} onChange={(e) => { this.handelNewDateValue(e) }} />
-                                            <button className={style.modalButtons} onClick={() => { this.handelNewStartingDate(team.teamName,this.state.startingDate) }}>Save</button>
+                                        <li key={team.created_at} className={style.teamList}>
+                                            {this.handelFirstToUpperCase(team.teamName)}
+                                            <input className={style.dateSelector} type="date" placeholder={team.created_at} value={this.state.startingDate} onChange={(e) => { this.handelNewDateValue(e) }} />
+                                            <button className={style.button_save} onClick={() => { this.handelNewStartingDate(team.teamName, this.state.startingDate) }}>Save</button><p>{this.state.notification}</p>
                                         </li>
                                     )
                                 })}
                             </ul>
                         </div>
                     </div>
-                    <button className={style.modalButtons} onClick={() => { this.handelSaveUpdate() }}>Save</button>
-                    <button className={style.modalButtons} onClick={(e) => { this.handelClose(e) }}>Close</button>
+                    <button className={style.button_save} onClick={() => { this.handelSaveUpdate() }}>Save</button>
+                    <button className={style.button_cancel} onClick={(e) => { this.handelClose(e) }}>Cancel</button>
                 </div>
             </div>
 
