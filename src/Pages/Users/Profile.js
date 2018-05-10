@@ -4,8 +4,6 @@ import styles from '../../assets/styles/profile.css'
 import { Link } from 'react-router-dom'
 import { getAllGroupsWithIds } from '../../util'
 
-const token = localStorage.getItem("token")
-
 export default class Profile extends React.Component {
   state = {
     classOptions: []
