@@ -1,3 +1,5 @@
+import { error_bundle } from '../../notify'
+
 const api_url = 'http://localhost:3000/api'
 
 class moduleServiceBack {
@@ -13,10 +15,7 @@ class moduleServiceBack {
             })
             const resJson = await res.json()
             callBack(resJson)
-        } catch (error) {
-            console.log(error)
-            throw new Error('Server error!')
-        }
+        } catch (err) { error_bundle(err) }
     }
 
     async saveModules(modules, callBack) {
@@ -32,10 +31,7 @@ class moduleServiceBack {
                 body: JSON.stringify(modules)
             })
             await callBack()
-        } catch (error) {
-            console.log(error)
-            throw new Error('Server error!')
-        }
+        } catch (err) { error_bundle(err) }
     }
 }
 
