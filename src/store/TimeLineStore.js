@@ -28,6 +28,8 @@ import {
     getAllGroupsWithIds
 } from "../util"
 
+import { error_bundle } from '../notify'
+
 const BASE_URL = "http://localhost:3005"
 
 export default function () {
@@ -65,7 +67,7 @@ export default function () {
     const fetchItems = async isTeacher => {
         const timelineItems = await getTimelineItems(
             BASE_URL + "/api/timeline"
-        ).catch(err => console.log(err))
+        ).catch(error_bundle)
 
         // set the state with the array of all current groups [maybe needed for sidecolumn group names]
         const groups = Object.keys(timelineItems)
@@ -96,9 +98,7 @@ export default function () {
         })
 
         // get all possible modules for addition
-        const allPossibleModules = await getALlPossibleModules().catch(err =>
-            console.log(err)
-        )
+        const allPossibleModules = await getALlPossibleModules().catch(error_bundle)
         setState({
             type: ALL_POSSIBLE_MODULES_CHANGED,
             payload: {
@@ -177,7 +177,7 @@ export default function () {
             .then(() => {
                 return fetchItems()
             })
-            .catch(err => console.log(err))
+            .catch(error_bundle)
     }
 
     const handleAssignTeachers = (item, teacher1, teacher2) => {
@@ -188,7 +188,7 @@ export default function () {
             .then(() => {
                 fetchItems()
             })
-            .catch(err => console.log(err))
+                .catch(error_bundle)
         )
     }
 
@@ -234,7 +234,7 @@ export default function () {
                     }
                 })
             })
-            .catch(err => console.log(err))
+            .catch(error_bundle)
     }
 
     return {

@@ -5,6 +5,8 @@ import {
   LOGIN_STATE_CHANGED
 } from './';
 
+import { error_bundle } from '../notify'
+
 const CURRENT_USER_INFO_URL = 'http://localhost:3005/api/user'
 
 export default function () {
@@ -76,7 +78,7 @@ export default function () {
           }
         });
       })
-      .catch(err => console.log(err));
+        .catch(error_bundle);
   };
 
   // Helper methods
