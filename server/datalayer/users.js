@@ -25,7 +25,8 @@ function getUserById(con, id) {
 
 function addUser(con, user) {
   return db.execQuery(con, `INSERT INTO users (username, access_token, full_name, email, role) VALUES(?,?,?,?,?)`,
-    [user.username, user.access_token, user.full_name, user.email, user.role])
+      [user.username, user.access_token, user.full_name, user.email, user.role])
+    .then(result => result.insertId)
 }
 
 function updateUser(con, id, user) {

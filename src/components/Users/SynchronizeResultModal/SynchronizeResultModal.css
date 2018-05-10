@@ -1,0 +1,137 @@
+@keyframes backDropAnimation {
+    from {
+        background-color: rgba(212, 211, 211, 0);
+    }
+    to {
+        background-color: rgba(194, 194, 194, 0.5);
+    }
+}
+
+@-webkit-keyframes backDropAnimation {
+    from {
+        background-color: rgba(212, 211, 211, 0);
+    }
+    to {
+        background-color: rgba(194, 194, 194, 0.5);
+    }
+}
+
+.backDrop{
+    position: fixed;
+    z-index: 999;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    padding: 50;
+    background-color:rgba(212, 211, 211, 0);
+    animation-name: backDropAnimation;
+    animation-duration: 1.4s;
+    -webkit-animation-name: backDropAnimation;
+    -webkit-animation-duration: 1.4s;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+
+@keyframes syncModalAnimation {
+    from {
+        box-shadow: 0px 0px 0px 0px #444444;
+    }
+
+    to {
+        box-shadow: 0px 0px 0px 2px #4444446c;
+    }
+}
+
+@-webkit-keyframes syncModalAnimation {
+    from {
+        box-shadow: 0px 0px 0px 0px #444444;
+    }
+    to {
+        box-shadow: 0px 0px 0px 2px #4444446c;
+    }
+}
+
+.syncModal{
+    background-color: whitesmoke;
+    border-radius: 3px;
+    max-width: 800px;
+    min-height:400px;
+    margin: 0px auto;
+    margin-top: 10%;
+    padding: 30px;
+    padding-top: 0px;
+    position: relative;
+    box-shadow: 0px 0px 0px 0px #444444;
+    animation-name: syncModalAnimation;
+    animation-duration: 4.4s;
+    -webkit-animation-name: syncModalAnimation;
+    -webkit-animation-duration: 4.4s;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+
+.resultSelector{
+    width: 45%;
+    height: 270px;
+    overflow: auto;
+    float: left;
+    border-style: groove;
+    background-color: white;
+}
+
+.resultBox{
+    padding: 10px;
+    margin: 0px;
+}
+
+.teamList{
+    font-weight: bold;
+    font-family: 'Open Sans',
+    sans-serif;
+}
+
+.memberList{
+    font-weight: normal;
+    font-family: 'Open Sans',
+    sans-serif;
+}
+
+modalButtons{
+    position: absolute;
+    bottom: 20px;
+}
+
+.button_save {
+    width: 110px;
+    height: 35px;
+    border-radius: 17.5px;
+    margin: 15px 5px 20px 5px;
+    color: #e0f3eb;
+    background-color: #38c18b;
+    border: none;
+    cursor: pointer;
+}
+
+.button_cancel {
+    width: 110px;
+    height: 35px;
+    border-radius: 17.5px;
+    margin: 15px 5px 20px 5px;
+    color: #9da2a9;
+    background-color: #e7eaec;
+    border: none;
+    cursor: pointer;
+}
+
+.button_save:hover{background-color: #299a6d;}
+.button_cancel:hover{background-color: #c8cccf;
+  color: #e0f3eb;
+}
+
+.dateSelector {
+    width: 200px;
+    height: 20px;
+    padding: 8px;
+    font-size: 15px
+}
