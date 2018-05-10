@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import classes from './classRowComp.css'
+import { error_bundle } from '../../../../notify'
 
 const token = localStorage.getItem("token")
 
@@ -21,12 +22,11 @@ export default class ClassRowComp extends Component {
                         'archived': 1
                     })
                 })
-            } catch (error) {
-                console.log(error)
-                throw new Error('Problem with Server :  PATCH DATA')
+            } catch (err) {
+                error_bundle(err)
             }
-        }  
-    }  
+        }
+    }
     
     render() {
         const { classId, height } = this.props

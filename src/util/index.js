@@ -1,4 +1,5 @@
 import moment from 'moment'
+import { error_bundle } from '../notify'
 
 const BASE_URL = 'http://localhost:3005'
 const token = localStorage.getItem("token")
@@ -8,10 +9,9 @@ export async function getTimelineItems() {
     try {
         const res = await fetch(BASE_URL + '/api/timeline')
         return await res.json()
-    } catch (error) {
-        console.log(error)
+    } catch (err) {
+        error_bundle(err)
     }
-
 }
 
 export function setEndingDateForModules(allItems, groups) {
@@ -24,9 +24,7 @@ export function setEndingDateForModules(allItems, groups) {
     items.map(item => {
       if (lastDate === '') lastDate = item.starting_date
       item.starting_date = moment(lastDate)
-
       if (item.starting_date.day() !== 0) {
-        console.error(item.starting_date.toString())
         item.starting_date.weekday(0)
       }
 
@@ -46,8 +44,8 @@ export async function getAllGroupsWithIds() {
             }
         })
         return await res.json()
-    } catch (error) {
-        console.log(error)
+    } catch (err) {
+        error_bundle(err)
     }
 }
 
@@ -72,8 +70,8 @@ export async function getTeachers() {
             }
         })
         return await res.json()
-    } catch (error) {
-        console.log(error)
+    } catch (err) {
+        error_bundle(err)
     }
 }
 
@@ -185,8 +183,8 @@ export async function removeModule(chosenModule) {
             },
         })
         return await res.json()
-    } catch (error) {
-        console.log(error)
+    } catch (err) {
+        error_bundle(err)
     }
 
 }
@@ -199,8 +197,8 @@ export async function getModulesOfGroup(groupId) {
             }
         })
         return await res.json()
-    } catch (error) {
-        console.log(error)
+    } catch (err) {
+        error_bundle(err)
     }
 }
 
@@ -235,8 +233,8 @@ async function _patchGroupsModules(
             body: JSON.stringify(body)
         })
         return await res.json()
-    } catch (error) {
-        console.log(error)
+    } catch (err) {
+        error_bundle(err)
     }
 }
 
@@ -288,8 +286,8 @@ export async function addNewClass(className, starting_date) {
             },
             body: JSON.stringify(body)
         })
-    } catch (error) {
-        console.log(error)
+    } catch (err) {
+        error_bundle(err)
     }
 }
 
@@ -303,8 +301,8 @@ export async function getALlPossibleModules() {
             }
         })
         return await res.json()
-    } catch (error) {
-        console.log(error)
+    } catch (err) {
+        error_bundle(err)
     }
 }
 
@@ -446,15 +444,9 @@ function _patchNewModuleForOneGroup(
                   })
               )
             })
-            .catch(err => {
-              console.log(err)
-              return Promise.reject() // maybe to give the user indication that it went wrong
-            })
+            .catch(error_bundle)
         })
-        .catch(err => {
-          console.log(err)
-          return Promise.reject() // maybe to give the user indication that it went wrong
-        })
+        .catch(error_bundle)
     }
     if (selectedDateMoment.diff(item.ending_date, 'weeks') === 0) {
       // case 2 the new module is at the end of an existing one (GREAT!)//////////////////////////////////////////////////
@@ -485,8 +477,8 @@ async function _addModule(moduleId, groupId, position) {
 
         })
         return await res.json()
-    } catch (error) {
-        console.log(error)
+    } catch (err) {
+        error_bundle(err)
     }
 }
 

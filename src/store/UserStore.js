@@ -1,3 +1,5 @@
+import { error_bundle } from '../notify'
+
 const token = localStorage.getItem("token")
 
 class store {
@@ -75,10 +77,7 @@ class store {
 			return;
 		}
 
-		catch (error) {
-			console.log(error);
-			throw new Error('Problem with Server: GET DATA');
-		}
+        catch (err) { error_bundle(err)	}
 	}
 	async loadUsers() {
 		try {
@@ -96,10 +95,7 @@ class store {
 			});
 			return;
 		}
-		catch (error) {
-			console.log(error);
-			throw new Error('Problem with Server: GET DATA');
-		}
+        catch (err) { error_bundle(err) }
 	}
 	saveProfile = async (loadData) => {
 		const updatedUser = {
@@ -130,10 +126,7 @@ class store {
 				this.loadUsers()
 			}
 		}
-		catch (error) {
-			console.log(error)
-			throw new Error('Problem with Server :  PATCH DATA')
-		}
+        catch (err) { error_bundle(err) }
 	}
 
 	resetProfile = () => {

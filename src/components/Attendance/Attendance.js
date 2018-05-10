@@ -2,7 +2,7 @@ import React from 'react'
 import StudentWithWeeks from './StudentWithWeeks'
 import WeekIndicator from './WeekIndicator'
 import styles from '../../assets/styles/attendance.css'
-import Notifications, { notify } from 'react-notify-toast'
+import { notify } from 'react-notify-toast'
 import * as attendanceStore from '../../store/attendanceStore'
 import {
     moduleInfoStore,
@@ -123,7 +123,6 @@ export default class Attendance extends React.Component {
                     </div>
                     {buttons}
                 </div>
-                <Notifications />
             </div>
         )
     }

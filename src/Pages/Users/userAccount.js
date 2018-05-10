@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import store from '../../store/UserStore';
 import styles from '../../assets/styles/profile.css';
 import { Link } from 'react-router-dom';
-import Notifications from 'react-notify-toast';
 
 class userAccount extends Component {
   
@@ -31,7 +30,6 @@ class userAccount extends Component {
   render() {
     return (
       <div className={styles.profilePage}>
-        <Notifications />
         <Link to='/currentUserProfile'>
           <input className={styles.backButton}
             type="button"

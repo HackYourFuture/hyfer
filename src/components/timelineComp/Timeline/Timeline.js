@@ -86,7 +86,6 @@ export default class Timeline extends Component {
 
     handleClickTodayMarker = e => {
         const todayMarker = this.state.todayMarkerRef
-        console.log('todayMarker' + todayMarker)
         const classesContainer = this.refs.classesContainer.refs.groupsRowContainer // hackish way, hope good
         const scrollEl = this.refs.timelineWrapper
         let leftPos = todayMarker.parentNode.getBoundingClientRect().x

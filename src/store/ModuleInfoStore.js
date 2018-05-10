@@ -1,5 +1,6 @@
 import marked from 'marked'
 import moment from 'moment'
+import { error_bundle } from '../notify'
 
 import {
     REPO_NAME_CHANGED,
@@ -82,8 +83,8 @@ export default function () {
                         group_name: group
                     }
                 })
-            } catch (error) {
-                console.log(error)
+            } catch (err) {
+                error_bundle(err)
             }
         }
     }
@@ -104,8 +105,8 @@ export default function () {
                 }
             })
 
-        } catch (error) {
-            console.log(error)
+        } catch (err) {
+            error_bundle(err)
         }
     }
 
@@ -176,8 +177,8 @@ export default function () {
                 }
             })
 
-        } catch (error) {
-            console.log(error)
+        } catch (err) {
+            error_bundle(err)
         }
     }
 
