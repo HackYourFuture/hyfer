@@ -47,7 +47,8 @@ function deleteGroup(con, id) {
 function addGroup(con, group) {
   const data = {
     group_name: group.group_name,
-    starting_date: new Date(group.starting_date)
+    starting_date: new Date(group.starting_date),
+    archived: group.archived
   }
 
   return new Promise((resolve, reject) => {
@@ -65,14 +66,15 @@ function addGroup(con, group) {
             const valueList = makeValueList(runningModules)
             const sql = ADD_RUNNING_MODULES_QUERY + valueList
             return db.execQuery(con, sql)
-          })
+            })
+        .then(() => groupId)
       })
-      .then(() => {
+      .then((groupId) => {
         con.commit(err => {
           if (err) {
             throw err
           }
-          resolve()
+          resolve(groupId)
         })
       })
       .catch(err => {
