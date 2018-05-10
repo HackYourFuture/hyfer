@@ -4,6 +4,7 @@ require('./auth/github-auth')
 const auth = require('./auth/auth-service')
 const github = require('./api/github')
 const users = require('./api/users')
+const githubSync = require('./api/githubSync')
 
 const modules = require('./api/modules')
 const runningModules = require('./api/running-modules')
@@ -54,6 +55,8 @@ module.exports = function (app) {
 
     app.get('/api/students', auth.hasRole('teacher'), github.getTeamMembers)
     app.get('/user/emails', auth.hasRole('teacher'), github.getUserEmails)
+
+    app.post('/api/githubSync', auth.hasRole('teacher'), githubSync.githubSync)
 
 
     app.route('/*')
