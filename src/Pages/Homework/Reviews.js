@@ -1,6 +1,4 @@
 import React, { Component } from "react"
-import moment from "moment"
-
 
 export default class Reviews extends Component {
 
