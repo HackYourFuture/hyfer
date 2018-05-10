@@ -1,0 +1,85 @@
+@keyframes backDropAnimation {
+    from {
+        background-color: rgba(212, 211, 211, 0);
+    }
+    to {
+        background-color: rgba(194, 194, 194, 0.5);
+    }
+}
+
+@-webkit-keyframes backDropAnimation {
+    from {
+        background-color: rgba(212, 211, 211, 0);
+    }
+    to {
+        background-color: rgba(194, 194, 194, 0.5);
+    }
+}
+
+.backDrop{
+    position: fixed;
+    z-index: 999;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    padding: 50;
+    background-color:rgba(212, 211, 211, 0);
+    animation-name: backDropAnimation;
+    animation-duration: 1.4s;
+    -webkit-animation-name: backDropAnimation;
+    -webkit-animation-duration: 1.4s;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+
+@keyframes syncModalAnimation {
+    from {
+        box-shadow: 0px 0px 0px 0px #444444;
+    }
+
+    to {
+        box-shadow: 0px 0px 0px 2px #4444446c;
+    }
+}
+
+@-webkit-keyframes syncModalAnimation {
+    from {
+        box-shadow: 0px 0px 0px 0px #444444;
+    }
+    to {
+        box-shadow: 0px 0px 0px 2px #4444446c;
+    }
+}
+
+.syncModal{
+    background-color: whitesmoke;
+    border-radius: 3px;
+    max-width: 800px;
+    min-height:400px;
+    margin: 0px auto;
+    margin-top: 10%;
+    padding: 30px;
+    padding-top: 0px;
+    position: relative;
+    box-shadow: 0px 0px 0px 0px #444444;
+    animation-name: syncModalAnimation;
+    animation-duration: 4.4s;
+    -webkit-animation-name: syncModalAnimation;
+    -webkit-animation-duration: 4.4s;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+
+.resultSelector{
+    width: 45%;
+    height: 300px;
+    overflow: auto;
+    float: left;
+    background-color: white;
+}
+
+modalButtons{
+    position: absolute;
+    bottom: 20px;
+}
