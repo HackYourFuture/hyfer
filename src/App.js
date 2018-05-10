@@ -42,6 +42,7 @@ class App extends Component {
             <Route path="/modules" exact component={Modules} />
             <Route path="/users" exact component={Users} /> 
             <Route path="/profile" exact component={Profile} />
+
             <Route path="/homework" exact
                 render={props => <ClassPage {...props} studentClass={studentClasses[0]} />} />
                     

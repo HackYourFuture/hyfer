@@ -27,7 +27,9 @@ class TrainTicket extends Component {
         <h5>Step</h5>
         <p>available ticket: {this.state.couponCodes.length}</p>
         <VoucherCodes
-          handleChange={this.handleCouponCodesChange}
+          handleCouponCodesChange = {
+            this.handleCouponCodesChange
+          }
         />
       </div>
     );
