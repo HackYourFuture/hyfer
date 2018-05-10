@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { inject, observer } from "mobx-react"
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 import { studentClasses } from "../src/store/HomeworkStore"
 
@@ -16,7 +17,8 @@ import TrainTicket from './Pages/TrainTicket/TrainTicket'
 import ClassPage from "./Pages/Homework/ClassPage"
 import cookie from 'react-cookies'
 
-
+@inject("HomeworkStore")
+@observer    
 class App extends Component {
   
   componentWillMount() {
@@ -32,6 +34,7 @@ class App extends Component {
   }
 
     render() {
+        const { activeGroups } = this.props.HomeworkStore
     return (
       <BrowserRouter>
         <React.Fragment>
@@ -43,11 +46,11 @@ class App extends Component {
             <Route path="/profile" exact component={Profile} />
 
             <Route path="/homework" exact
-                render={props => <ClassPage {...props} studentClass={studentClasses[0]} />} />
+                render={props => <ClassPage {...props} studentClass={activeGroups[0]} />} />
                     
-            {studentClasses.map(studentClass => (
-                <Route key={studentClass} path={"/homework/" + studentClass} exact
-                    render={props => <ClassPage {...props} studentClass={studentClass} />} />
+            {activeGroups.map(group => (
+                <Route key={group} path={"/homework/" + group} exact
+                    render={props => <ClassPage {...props} studentClass={group} />} />
             ))}  
             <Route path="/currentUserProfile" exact component={currentUserProfile} />
             <Route path="/userAccount" exact component={userAccount} /> 

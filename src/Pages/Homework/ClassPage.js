@@ -1,42 +1,19 @@
 import React, { Component } from "react"
+import { Provider, inject, observer } from "mobx-react"
 import AddHomework from "./AddHomework"
 import Submission from "./Submission"
 import Reviews from "./Reviews"
-import { studentClasses, students, submissions, reviews } from "../../store/HomeworkStore"
+import HomeworkStore from "../../store/HomeworkStore"
 import styles from "../../assets/styles/homework.css"
 
-
+@inject("HomeworkStore")
+@observer    
 export default class ClassPage extends Component {
 
-    state = {
-        currentUser: {},
-        students: students[this.props.studentClass],
-        submissions: submissions[this.props.studentClass],
-        reviews: reviews[this.props.studentClass]    
-    }
-
-    async componentWillMount() {
-
-        const CURRENT_USER_INFO_URL = 'http://localhost:3005/api/user'
-        const token = localStorage.getItem("token")
-
-        const res = await fetch(CURRENT_USER_INFO_URL, {
-            credentials: "same-origin",
-            headers: {
-                "Authorization": "Bearer " + token,
-            }
-        })       
-        const userData = await res.json()
-        const currentUser = {
-            name: userData.full_name || userData.username,
-            email: userData.email,
-            avatar: `https://avatars.githubusercontent.com/${userData.username}`
-        }
-
-        this.setState({
-            currentUser,
-            students: [...this.state.students, currentUser]
-        })
+    componentWillMount() {
+        this.props.HomeworkStore.getActiveGroups()
+        this.props.HomeworkStore.getCurrentUser()
+        this.props.HomeworkStore.getStudents()
     }
 
     addSubmission = (githubLink) => {
@@ -63,14 +40,20 @@ export default class ClassPage extends Component {
     }
 
     render() {
-        const { students, submissions, reviews } = this.state
+        const { activeGroups, students, submissions, reviews } = this.props.HomeworkStore
+
+        const groupStudents = students.filter(student => student.group === this.props.studentClass)
+        const groupSubmissions = submissions.filter(submission => submission.group === this.props.studentClass)
+        const groupReviews = reviews.filter(review => review.group === this.props.studentClass)
+
+
 
         return (
             <div className={styles.classPage}>
                 <div className={styles.navBar}>
-                    {studentClasses.map(studentClass => (
-                        <a key={studentClass} href={"/homework/" + studentClass}>
-                            <button>Class {studentClass.substr(5)}</button>
+                    {activeGroups.map(group => (
+                        <a key={group} href={"/homework/" + group}>
+                            <button>Class {group.substr(5)}</button>
                         </a>
                     ))}
                 </div>
@@ -79,17 +62,18 @@ export default class ClassPage extends Component {
                 
                 <section className={styles.submissionsContainer}>
                     <Submission
-                        students={students}
-                        submissions={submissions}
+                        students={groupStudents}
+                        submissions={groupSubmissions}
                         addReview={this.addReview}
                         requestReview={this.requestReview}
                     />
-                         
+                        
                     <div className={styles.reviewsContainer}>
-                         <Reviews reviews={reviews}/>
+                        <Reviews reviews={groupReviews}/>
                     </div> 
                 </section>    
             </div>
+                    
         )
     }
 }
