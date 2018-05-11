@@ -2,11 +2,13 @@ body {
   margin: 0px;
   padding: 0px;
   box-sizing: border-box;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-family: 'Open Sans',
+    sans-serif;
 }
 
 .header {
   width: 100%;
+  text-align: center;
   background-color: rgb(63, 81, 181);
   display: flex;
   padding: 0 10px 0 10px;
@@ -45,7 +47,7 @@ body {
   font-size: 1.5em;
   width: 100px;
   display: block;
-  padding: 20px 15px 15px 5px;
+  padding: 20px 0px 15px 0px;
   color: white;
   text-decoration: none;
 }

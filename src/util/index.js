@@ -275,7 +275,8 @@ export async function addNewClass(className, starting_date) {
     const date = new Date(starting_date)
     const body = {
         group_name: className,
-        starting_date: date.toISOString()
+        starting_date: date.toISOString(),
+        archived: 0
     }
     const token = localStorage.getItem('token')
     try {

@@ -4,6 +4,7 @@ require('./auth/github-auth')
 const auth = require('./auth/auth-service')
 const github = require('./api/github')
 const users = require('./api/users')
+const githubSync = require('./api/githubSync')
 
 const modules = require('./api/modules')
 const runningModules = require('./api/running-modules')
@@ -57,6 +58,9 @@ module.exports = function (app) {
     app.get('/user/emails', auth.hasRole('teacher'), github.getUserEmails)
     
     app.patch('/api/set-email', auth.isAuthenticated(), setEmail)
+
+    app.post('/api/githubSync', auth.hasRole('teacher'), githubSync.githubSync)
+
 
     app.route('/*')
         .get((req, res) => res.sendFile('index.html', { root: app.get('docRoot') }))
