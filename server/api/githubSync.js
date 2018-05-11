@@ -1,9 +1,6 @@
 'use strict'
-const _ = require('lodash')
 const db = require('../datalayer/githubSync')
-const {
-    getConnection
-} = require('./connection')
+const {getConnection} = require('./connection')
 
 function githubSync(req, res) {
     getConnection(req, res)

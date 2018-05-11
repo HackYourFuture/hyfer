@@ -7,30 +7,52 @@ const token = localStorage.getItem("token")
 export default class SynchronizeResultModal extends Component {
 
     state = {
-        updateList: [],
-        startingDate: [],
-        notification:'',
+        startingDate: '',
+        className:null,
+        conflictData: [],
+        notification: '',
         selected: false
     }
 
-    handelSelectedData = (data) => {
-        let result = []
-
-        if (this.state.updateList.includes(data) === true) {
-            result = this.state.updateList.filter(team => team !== data)
-
+    componentWillUpdate(nextProps) {
+        if (nextProps.conflictData.length !== 0 && this.state.conflictData.length === 0) {
             this.setState({
-                updateList: result
-            })
-        } else {
-            result = this.props.githubApi.filter(team => team === data)
-            this.setState({
-                updateList: [
-                    ...this.state.updateList,
-                    result[0]
-                ]
+                conflictData: this.props.conflictData
             })
         }
+    }
+
+    handelSelectedData = (e, data) => {
+        let conflictData = this.state.conflictData.map(team => {
+            if (team.teamName === data.teamName && !data.selected) {
+                return {
+                    ...team,
+                    selected: true,
+                    members: team.members.map(member => {
+                        return {
+                            ...member,
+                            selected: true
+                        }
+                    })
+                }
+            } else if (team.teamName === data.teamName && data.selected) {
+                return {
+                    ...team,
+                    selected: false,
+                    members: team.members.map(member => {
+                        return {
+                            ...member,
+                            selected: false
+                        }
+                    })
+                }
+            }
+            return team
+        })
+
+        this.setState({
+            conflictData
+        })
     }
 
     handelNewDateValue = (e) => {
@@ -41,31 +63,37 @@ export default class SynchronizeResultModal extends Component {
 
     handelNewStartingDate = (teamName, startingDate) => {
         if (startingDate) {
-            let updateList = this.state.updateList.map(team => {
+            let conflictData = this.state.conflictData.map(team => {
                 if (teamName === team.teamName) {
                     return {
-                        teamName: teamName,
-                        created_at: startingDate,
-                        members:team.members
+                        ...team,
+                        created_at: new Date(startingDate).toISOString(),
                     }
                 }
                 return team
-            }) 
+            })
+            console.log(conflictData)
             this.setState({
-                updateList,
-                notification:'You have successfully changed the starting date!'
+                conflictData,
+                notification: 'You have successfully changed the starting date!'
             })
         }
 
     }
 
-    handelFirstToUpperCase = (str)=> {
-    return str.substr(0, 1).toUpperCase() + str.substr(1);
+    handelFirstToUpperCase = (str) => {
+        return str.substr(0, 1).toUpperCase() + str.substr(1);
     }
 
-
     handelSaveUpdate = async () => {
-
+        let updateList = this.state.conflictData
+            .filter(team => team.selected)
+            .map(team => {
+                return {
+                    ...team,
+                    members: team.members.filter(member => member.selected)
+                }
+            })
         try {
             await fetch('http://localhost:3005/api/githubSync', {
                 method: 'post',
@@ -73,16 +101,43 @@ export default class SynchronizeResultModal extends Component {
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + token,
                 },
-                body: JSON.stringify(this.state.updateList)
+                body: JSON.stringify(updateList)
             })
         } catch (err) {
             console.log(err)
         }
-        this.setState({
-            updateList: []
-        })
         this.handelClose()
         store.loadUsers()
+    }
+
+    handelSelectUser(e, data, userId) {
+        let conflictData = this.state.conflictData.map(team => {
+            if (team.teamName === data.teamName) {
+                return {
+                    ...team,
+                    selected: true,
+                    members: team.members.map(member => {
+                        if (member.id === userId && !member.selected) {
+                            return {
+                                ...member,
+                                selected: true
+                            }
+                        } else if (member.id === userId && member.selected) {
+                            return {
+                                ...member,
+                                selected: false
+                            }
+                        }
+                        return member
+                    })
+                }
+            }
+            return team
+        })
+        this.setState({
+            conflictData
+        })
+
     }
 
     handelClose = (e) => {
@@ -102,16 +157,16 @@ export default class SynchronizeResultModal extends Component {
                         </div>
                         <div className={style.resultSelector}>
                             <ul className={style.resultBox}>
-                                {this.props.conflictData.map(team => {
+                                {this.state.conflictData.map(team => {
                                     return (
                                         <li key={team.created_at} className={style.teamList}>
-                                            <input type="checkbox" onChange={() => { this.handelSelectedData(team) }} />
+                                            <input type="checkbox" checked={team.selected} onChange={(e) => { this.handelSelectedData(e, team) }} />
                                             {this.handelFirstToUpperCase(team.teamName)}
                                             <ul>
                                                 {team.members.map(member => {
                                                     return (
                                                         <li key={member.id} className={style.memberList}>
-                                                            <input type="checkbox" onChange={() => { }} />
+                                                            <input type="checkbox" checked={member.selected} onChange={(e) => { this.handelSelectUser(e, team, member.id) }} />
                                                             {member.name || this.handelFirstToUpperCase(member.login)}
                                                         </li>
                                                     )
@@ -124,20 +179,24 @@ export default class SynchronizeResultModal extends Component {
                         </div>
                         <div className={style.resultSelector}>
                             <ul className={style.resultBox}>
-                                {this.state.updateList.map(team => {
-                                    return (
-                                        <li key={team.created_at} className={style.teamList}>
-                                            {this.handelFirstToUpperCase(team.teamName)}
-                                            <input className={style.dateSelector} type="date" placeholder={team.created_at} value={this.state.startingDate} onChange={(e) => { this.handelNewDateValue(e) }} />
-                                            <button className={style.button_save} onClick={() => { this.handelNewStartingDate(team.teamName, this.state.startingDate) }}>Save</button><p>{this.state.notification}</p>
-                                        </li>
-                                    )
+                                {this.state.conflictData.map(team => {
+                                    if (team.selected) {
+                                        return (
+                                            <li key={team.created_at} className={style.teamList}>
+                                                {this.handelFirstToUpperCase(team.teamName)}
+                                                <input type="date" className={style.dateSelector} onChange={(e) => { this.handelNewDateValue(e) }} />
+                                                <button className={style.button_save} onClick={() => { this.handelNewStartingDate(team.teamName, this.state.startingDate) }}>Save</button>
+                                            </li>
+                                        )
+                                    }
+                                    return false
                                 })}
                             </ul>
                         </div>
                     </div>
                     <button className={style.button_save} onClick={() => { this.handelSaveUpdate() }}>Save</button>
                     <button className={style.button_cancel} onClick={(e) => { this.handelClose(e) }}>Cancel</button>
+                    <p>{this.state.notification}</p>
                 </div>
             </div>
 
