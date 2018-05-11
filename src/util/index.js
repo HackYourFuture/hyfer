@@ -8,6 +8,7 @@ const token = localStorage.getItem("token")
 export async function getTimelineItems() {
     try {
         const res = await fetch(BASE_URL + '/api/timeline')
+        if (!res.ok) throw res
         return await res.json()
     } catch (err) {
         error_bundle(err)
@@ -43,6 +44,7 @@ export async function getAllGroupsWithIds() {
                 'Authorization': 'Bearer ' + token,
             }
         })
+        if (!res.ok) throw res
         return await res.json()
     } catch (err) {
         error_bundle(err)
@@ -69,6 +71,7 @@ export async function getTeachers() {
                 'Authorization': 'Bearer ' + token,
             }
         })
+        if (!res.ok) throw res
         return await res.json()
     } catch (err) {
         error_bundle(err)
@@ -182,6 +185,7 @@ export async function removeModule(chosenModule) {
                 'Authorization': 'Bearer ' + token,
             },
         })
+        if (!res.ok) throw res
         return await res.json()
     } catch (err) {
         error_bundle(err)
@@ -196,6 +200,7 @@ export async function getModulesOfGroup(groupId) {
                 'Authorization': 'Bearer ' + token,
             }
         })
+        if (!res.ok) throw res
         return await res.json()
     } catch (err) {
         error_bundle(err)
@@ -232,6 +237,7 @@ async function _patchGroupsModules(
             },
             body: JSON.stringify(body)
         })
+        if (!res.ok) throw res
         return await res.json()
     } catch (err) {
         error_bundle(err)
@@ -278,7 +284,7 @@ export async function addNewClass(className, starting_date) {
     }
     const token = localStorage.getItem('token')
     try {
-        return await fetch(`${BASE_URL}/api/groups`, {
+        const res = await fetch(`${BASE_URL}/api/groups`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'Application/json',
@@ -286,6 +292,8 @@ export async function addNewClass(className, starting_date) {
             },
             body: JSON.stringify(body)
         })
+        if (!res.ok) throw res
+        return res
     } catch (err) {
         error_bundle(err)
     }
@@ -300,6 +308,7 @@ export async function getALlPossibleModules() {
                 Authorization: 'Bearer ' + token
             }
         })
+        if (!res.ok) throw res
         return await res.json()
     } catch (err) {
         error_bundle(err)
@@ -476,6 +485,7 @@ async function _addModule(moduleId, groupId, position) {
             }
 
         })
+        if (!res.ok) throw res
         return await res.json()
     } catch (err) {
         error_bundle(err)
