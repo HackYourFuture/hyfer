@@ -6,10 +6,17 @@ export const error_bundle = (e) => {
     const isNumber = typeof e === 'number'
     const error = param => notify.show(param, 'error')
 
-    if (e.message)
+    if (e.status && e.statusText) {
+        // check any status Messages First
+        return error(`${e.status} | ${e.statusText}`)
+    }
+    if (e.message) {
         return error(e.message)
-    if (isString || isNumber)
+    }
+    if (isString || isNumber) {
+        // a normal plain text?
         return error(e)
-    else
-        return error('Oops Something Went Wrong!')
+    }
+    // in fail all Cases!!
+    return error('Oops Something Went Wrong!')
 }
