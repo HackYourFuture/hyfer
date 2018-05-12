@@ -87,7 +87,8 @@ class store {
 					'Content-Type': 'application/json',
 					'Authorization': 'Bearer ' + token,
 				}
-			})
+            })
+            if (!res.ok) throw res
 			const data = await res.json()
 			this.setState({
 				users: data,
