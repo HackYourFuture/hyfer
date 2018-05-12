@@ -1,23 +1,30 @@
 
-.classPage {
+.mainContainer {
     padding: 0vh 5vw;
 }
 
 .navBar {
     margin-bottom: 5vh;
-    margin-top: -4vh;
+    margin-top: -3vh;
 }
 
-.navBar button {
-    cursor: pointer;
+.navLink {
     padding: 1vh 1vw;
-    margin-left: 0.5vw;
+    border: 2px solid;
+    color: green;
+    margin-right: 0.5vw;
     font-size: 110%;
 }
 
-.navBar button:hover {
+
+.navLink:hover {
     padding: 1vh 1.5vw;
     font-weight: bold;
+    background-color: beige;
+}
+
+.navLinkActive {
+    background-color: beige;
 }
 
 h2 {

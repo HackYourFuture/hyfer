@@ -179,16 +179,16 @@ export default class Header extends Component {
                   Users
                 </NavLink>
                 </li>
-                    <li>
-                        <NavLink
-                            exact
-                            to="/homework"
-                            className={styles.item}
-                            activeClassName={styles.activeNav}
-                        >
-                            Homework
-                        </NavLink>
-                    </li>  
+                <li>
+                    <NavLink
+                        exact
+                        to="/homework"
+                        className={styles.item}
+                        activeClassName={styles.activeNav}
+                    >
+                        Homework
+                    </NavLink>
+                </li>  
               <li>
                 <NavLink
                   exact
@@ -225,7 +225,17 @@ export default class Header extends Component {
                 >
                   Timeline
               </NavLink>
-              </li>
+            </li>
+            <li>
+                <NavLink
+                    exact
+                    to="/homework"
+                    className={styles.item}
+                    activeClassName={styles.activeNav}
+                >
+                    Homework
+                </NavLink>
+            </li>          
             </ul>
           </nav>
           {student}
@@ -253,17 +263,7 @@ export default class Header extends Component {
                   Timeline
               </NavLink>
 
-            </li>
-            <li>
-                <NavLink
-                    exact
-                    to="/homework"
-                    className={styles.item}
-                    activeClassName={styles.activeNav}
-                >
-                    Homework
-                </NavLink>
-            </li>         
+            </li>     
           </ul>
         </nav>
         {user}

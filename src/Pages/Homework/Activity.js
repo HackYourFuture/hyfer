@@ -1,15 +1,19 @@
 import React, { Component } from "react"
-import moment from "moment"
+import { inject, observer } from "mobx-react"
+//import moment from "moment"
 
 
-export default class Reviews extends Component {
+@inject("HomeworkStore")
+@observer   
+export default class Activity extends Component {
 
     render() {
-        const { reviews } = this.props
+        const { currentGroupReviews } = this.props.HomeworkStore
+
         return (
             <section>
-                <h2>Reviews</h2>    
-                {reviews.map((review, i) => (
+                <h2>Activity</h2>    
+                {currentGroupReviews.map((review, i) => (
                     <div key={review.reviewer + i}>
                         <h4>{review.reviewer} reviewed {review.reviewee}</h4>
                         <p>{review.comments}</p>

@@ -13,13 +13,17 @@ const history = require('./api/history')
 const states = require('./api/states')
 
 module.exports = function (app) {
-    app.get('/api/modules', auth.hasRole('teacher'), modules.getModules)
-    app.post('/api/modules', auth.hasRole('teacher'), modules.addModule)
+    app.get('/api/modules', auth.hasRole('teacher|student'), modules.getModules)
+    ///////
+    app.get('/api/modules/active', auth.hasRole('teacher|student'), modules.getActiveModules)
+    ///////
+    app.post('/api/modules', auth.hasRole('teacher|student'), modules.addModule)
     app.patch('/api/modules', auth.hasRole('teacher'), modules.updateModules)
     app.patch('/api/modules/:id', auth.hasRole('teacher'), modules.updateModule)
     app.delete('/api/modules/:id', auth.hasRole('teacher'), modules.deleteModule)
 
     app.get('/api/running/:groupId', auth.hasRole('teacher'), runningModules.getRunningModules)
+
     app.patch('/api/running/update/:groupId/:position', auth.hasRole('teacher'), runningModules.updateRunningModule)
     app.patch('/api/running/split/:groupId/:position', auth.hasRole('teacher'), runningModules.splitRunningModule)
     app.patch('/api/running/add/:moduleId/:groupId/:position', auth.hasRole('teacher'), runningModules.addModuleToRunningModules)
@@ -27,8 +31,8 @@ module.exports = function (app) {
 
     app.get('/api/timeline', groups.getTimeline)
 
-    app.get('/api/groups', groups.getGroups)
-    //app.get('/api/groups', auth.isAuthenticated(), groups.getGroups)
+    //app.get('/api/groups', groups.getGroups)
+    app.get('/api/groups', auth.isAuthenticated(), groups.getGroups)
     app.post('/api/groups', auth.hasRole('teacher'), groups.addGroup)
     app.patch('/api/groups/:id', auth.hasRole('teacher'), groups.updateGroup)
     app.delete('/api/groups/:id', auth.hasRole('teacher'), groups.deleteGroup)
@@ -36,8 +40,8 @@ module.exports = function (app) {
     app.get('/api/github/readme/:owner/:repo', github.getReadMeAsHtml)
 
   app.get('/api/user', auth.isAuthenticated(), users.getCurrentUser)  
-  //app.get('/api/users', auth.hasRole('student|teacher'), users.getUsers)
-  app.get('/api/users', users.getUsers)
+  app.get('/api/users', auth.hasRole('student|teacher'), users.getUsers)
+  //app.get('/api/users', users.getUsers)
   app.get('/api/user/:id', auth.hasRole('teacher|student'), users.getUserById)
   app.patch('/api/user/:id', auth.hasRole('teacher|student'), users.updateUser)
 
@@ -53,7 +57,7 @@ module.exports = function (app) {
     app.get('/auth/github/callback', passport.authenticate('github', { session: false, failureRedirect: '/login' }),
         auth.gitHubCallback, auth.setTokenCookie)
 
-    app.get('/api/students', auth.hasRole('teacher'), github.getTeamMembers)
+    app.get('/api/students', auth.hasRole('teacher|student'), github.getTeamMembers)
     app.get('/user/emails', auth.hasRole('teacher'), github.getUserEmails)
 
     app.post('/api/githubSync', auth.hasRole('teacher'), githubSync.githubSync)

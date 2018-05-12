@@ -142,6 +142,58 @@ CREATE TABLE `users` (
 
 
 
+# Dump of table homework
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `homework`;
+
+CREATE TABLE `homework` (
+  `id` int(8) NOT NULL AUTO_INCREMENT,
+  `group_id` int(8) NOT NULL,
+  `module_id` int(8) NOT NULL,
+  `title` varchar(255) NOT NULL DEFAULT '',
+  `deadline` date NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+
+# Dump of table reviews
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `reviews`;
+
+CREATE TABLE `reviews` (
+  `id` int(8) NOT NULL AUTO_INCREMENT,
+  `homework_id` int(8) NOT NULL,
+  `group_id` int(8) NOT NULL,
+  `student_id` int(8) NOT NULL,
+  `reviewer_id` int(8) NOT NULL,
+  `comments` text NOT NULL DEFAULT '',
+  `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table submissions
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `submissions`;
+
+CREATE TABLE `submissions` (
+  `id` int(8) NOT NULL AUTO_INCREMENT,
+  `homework_id` int(8) NOT NULL,
+  `group_id` int(8) NOT NULL,
+  `student_id` int(8) NOT NULL,
+  `github_link` varchar(255) NOT NULL DEFAULT '',
+  `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

@@ -1,79 +1,86 @@
 import React, { Component } from "react"
-import { Provider, inject, observer } from "mobx-react"
+import { inject, observer } from "mobx-react"
 import AddHomework from "./AddHomework"
 import Submission from "./Submission"
-import Reviews from "./Reviews"
-import HomeworkStore from "../../store/HomeworkStore"
+import Activity from "./Activity"
+import DatePicker from "react-datepicker"
+import moment from "moment"
 import styles from "../../assets/styles/homework.css"
+import "react-datepicker/dist/react-datepicker-cssmodules.css"
+
 
 @inject("HomeworkStore")
 @observer    
 export default class ClassPage extends Component {
 
-    componentWillMount() {
-        this.props.HomeworkStore.getActiveGroups()
-        this.props.HomeworkStore.getCurrentUser()
-        this.props.HomeworkStore.getStudents()
+    state = {
+        settingHomework: false,
+        selectedModule: "",
+        title: "",
+        deadline: moment().format("DD-MM-YYYY")
     }
 
-    addSubmission = (githubLink) => {
-        this.setState({  
-            submissions: [
-                ...this.state.submissions,
-                { submitter: this.state.currentUser.name, githubLink }
-            ]           
-        })
+    async componentWillMount() {
+        const {
+            setCurrentGroup,
+            getActiveGroups,
+            getCurrentUser,
+            getStudents,
+            getActiveModules
+        } = this.props.HomeworkStore
+
+        setCurrentGroup(this.props.studentClass)
+        await getActiveGroups()
+        getStudents()
+        getCurrentUser()
+        getActiveModules()
     }
 
-    requestReview = (reviewer, reviewee) => {
-        // *** send email to reviewer - 
-        //"Your review has been requested on {reviewee}'s homework"
-    }
-
-    addReview = (reviewee, comments) => {
+    handleInputChange = (value, field) => {
         this.setState({
-            reviews: [
-                ...this.state.reviews,
-                { reviewer: this.state.currentUser.name, reviewee, comments }
-            ]            
+            [field]: value
         })
     }
 
     render() {
-        const { activeGroups, students, submissions, reviews } = this.props.HomeworkStore
-
-        const groupStudents = students.filter(student => student.group === this.props.studentClass)
-        const groupSubmissions = submissions.filter(submission => submission.group === this.props.studentClass)
-        const groupReviews = reviews.filter(review => review.group === this.props.studentClass)
-
-
-
+        const { studentClass } = this.props
+        const { modules } = this.props.HomeworkStore
+        const { selectedModule, title, deadline } = this.state
+        
         return (
             <div className={styles.classPage}>
-                <div className={styles.navBar}>
-                    {activeGroups.map(group => (
-                        <a key={group} href={"/homework/" + group}>
-                            <button>Class {group.substr(5)}</button>
-                        </a>
-                    ))}
-                </div>
+                <h1>Class {studentClass.substr(5)}</h1>
 
-                <AddHomework addSubmission={this.addSubmission} />  
+                <section>
+                    <select value={selectedModule} onChange={e => this.handleInputChange(e.target.value, "selectedModule")}>
+                        {modules.map(module => (
+                            <option key={module.id} value={module.name}>{module.name}</option>
+                        ))}
+                    </select>
+                    <input type="text"
+                        value={title}
+                        placeholder="homework title . . ."
+                        onChange={e => this.handleInputChange(e.target.value, "title")}
+                    />
+                    <DatePicker
+                        value={deadline}
+                        onChange={date => this.handleInputChange(moment(date).format("DD-MM-YYYY"), "deadline")}
+                    />
+                </section>
+
+
+                <AddHomework />  
                 
                 <section className={styles.submissionsContainer}>
-                    <Submission
-                        students={groupStudents}
-                        submissions={groupSubmissions}
-                        addReview={this.addReview}
-                        requestReview={this.requestReview}
-                    />
+                    
+                    <Submission />
                         
                     <div className={styles.reviewsContainer}>
-                        <Reviews reviews={groupReviews}/>
+                        <Activity />
                     </div> 
+
                 </section>    
-            </div>
-                    
+            </div>           
         )
     }
 }

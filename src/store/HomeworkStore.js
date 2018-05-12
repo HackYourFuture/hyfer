@@ -1,99 +1,156 @@
 import { observable, action, computed, configure, runInAction } from "mobx"
-import { getAllGroupsWithIds, getModulesOfGroup, getAllPossibleModules } from "../util"
+import moment from "moment"
+//import { getAllGroupsWithIds, getModulesOfGroup, getAllPossibleModules } from "../util"
 
+//=====================================
+const githubLink = "hhdjdjdjd"
+const date = moment().format()
 
+const exampleSubmissions = [
+    { group: "class12", submitter: "Nagham", githubLink, date },
+    { group: "class13", submitter: "Student-1", githubLink, date },
+    { group: "class14", submitter: "Student-B", githubLink, date },
+    { group: "class15", submitter: "Student-Y", githubLink, date }
+]
+const exampleReviews = [
+    { group: "class12", reviewer: "Talal", reviewee: "Chileshe", comments: "Your css needs work", date },
+    { group: "class13", reviewer: "Student-1", reviewee: "Student-2", comments: "Good job!", date },
+    { group: "class14", reviewer: "Student-A", reviewee: "Student-B", comments: "Keep it up!", date },
+    { group: "class15", reviewer: "Student-Y", reviewee: "Student-X", comments: "You did a great job!", date }
+]
+//================================================
 configure({ enforceActions: true })
 
 const token = localStorage.getItem("token")
-const fetchConfig = {
-    credentials: "same-origin",
-    headers: {
-        "Authorization": "Bearer " + token,
-    }
+const API_Root = "http://localhost:3005/api"
+
+
+export async function fetchData(dataType) {
+    const res = await fetch(`${API_Root}/${dataType}`, {
+        credentials: "same-origin",
+        headers: {
+            "Authorization": "Bearer " + token,
+        }
+    })
+    return await res.json()
 }
-
-const email = "student-email@email.com"
-const avatar = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8nQvB-OC1ZaSZDN1dhyhyoysd0bDUM20JqcDg2uzc2Nc63smYtA"
-const githubLink = "https://github.com/HackYourFuture"
-
-
-export const studentClasses = ["class12", "class13", "class14", "class15"]
 
 
 class HomeworkStore {
 
     @observable 
     currentUser = {} 
+
+    @observable
+    currentGroup = null    
     
     @observable
     activeGroups = []
 
     @observable
-    students = [
-        { name: "Nagham", group: "class12", avatar, email },
-        { name: "Talal", group: "class12", avatar, email },
-        { name: "Chileshe", group: "class12", avatar, email },
-        { name: "Student-1", group: "class13", avatar, email },
-        { name: "Student-2", group: "class13", avatar, email },
-        { name: "Student-A", group: "class14", avatar, email },
-        { name: "Student-B", group: "class14", avatar, email },
-        { name: "Student-X", group: "class15", avatar, email },
-        { name: "Student-Y", group: "class15", avatar, email },
-    ]
+    students = []
     
+    @observable
+    modules = [] 
 
     @observable
-    submissions = [
-        { group: "class12", submitter: "Nagham", githubLink },
-        { group: "class13", submitter: "Student-1", githubLink },
-        { group: "class14", submitter: "Student-B", githubLink },
-        { group: "class15", submitter: "Student-Y", githubLink }
-    ]
+    homework = []    
+    
+    @observable
+    submissions = [...exampleSubmissions]
 
     @observable
-    reviews = [
-        { group: "class12", reviewer: "Nagham", reviewee: "Talal", comments: "Well done!" },
-        { group: "class12", reviewer: "Talal", reviewee: "Chileshe", comments: "Your css needs work" },
-        { group: "class13", reviewer: "Student-1", reviewee: "Student-2", comments: "Good job!" },
-        { group: "class14", reviewer: "Student-A", reviewee: "Student-B", comments: "Keep it up!" },
-        { group: "class15", reviewer: "Student-Y", reviewee: "Student-X", comments: "You did a great job!" }
-    ]
+    reviews = [...exampleReviews]
 
     @action
-    getCurrentUser = async () => {        
-        const res = await fetch('http://localhost:3005/api/user', fetchConfig)
-        const userData = await res.json()
-        this.currentUser = {
-            name: userData.full_name || userData.username,
-            email: userData.email,
-            avatar: `https://avatars.githubusercontent.com/${userData.username}`,
-            group: null
-        }
+    getCurrentUser = async() => {        
+        const userData = await fetchData("user") 
         runInAction(() => {
-            this.students.push(this.currentUser)
-        })
-        
+            this.currentUser = {
+                name: userData.full_name || userData.username,
+                email: userData.email,
+                avatar: `https://avatars.githubusercontent.com/${userData.username}`,
+                group: null
+            }
+        }) 
     }
 
     @action
+    setCurrentGroup = (group) => {
+        this.currentGroup = group
+    }  
+    
+    @action
     getActiveGroups = async () => {
-        const groups = await getAllGroupsWithIds()
-        const activeGroups = groups.splice(groups.length - 4)
+        const groups = await fetchData("groups")
         runInAction(() => {
-            this.activeGroups = activeGroups.map(group => group.group_name.replace(/ /g, "").toLowerCase())
+            this.activeGroups = groups.filter(group => group.archived === 0)
+                .map(group => ({
+                    id: group.id,
+                    name: group.group_name.replace(/ /g, "").toLowerCase(),
+                    startDate: group.starting_date
+                }))
         })
     }
 
     @action
     getStudents = async () => {
-        const groups = await fetch(`https://api.github.com/orgs/hackyourfuture/teams`, {   
-            headers: {
-                "Authorization": "Bearer " + token,
-                "User-Agent": "hackyourfuture"
-            }   
+        const teams = await fetchData("students")
+        const allStudentGroups = teams.filter(team => this.activeGroups.includes(team.teamName))
+        runInAction(() => {
+            this.students = allStudentGroups
+        })   
+    }
+
+    @action
+    getActiveModules = async () => {
+        const activeModules = await fetchData("modules/active")
+        runInAction(() => {
+            this.modules = activeModules
         })
-        const teams = await groups.json()
-        console.log(teams)
+    }    
+
+    @action
+    addSubmission = (gitHubLink) => {
+        const newSubmission = {
+            group: this.currentGroup,
+            gitHubLink,
+            submitter: this.currentUser.name
+        }
+        this.submissions.push(newSubmission)
+    }
+
+    @action
+    requestReviewer = (reviewee, assignedReviewer) => {
+        // send email to reviewer
+        console.log("email sent to", assignedReviewer)
+    }  
+
+    @action
+    addReview = (reviewee, comments) => {
+        const newReview = {
+            group: this.currentGroup,
+            reviewee,
+            comments,
+            reviewer: this.currentUser.name
+        }
+        this.reviews.push(newReview)
+    }
+
+    @computed
+    get currentGroupStudents() {
+        return this.students.filter(team => team.teamName === this.currentGroup)
+            .map(team => team.members)
+    }
+
+    @computed
+    get currentGroupSubmissions() {
+        return this.submissions.filter(submission => submission.group === this.currentGroup)
+    }
+
+    @computed
+    get currentGroupReviews() {
+        return this.reviews.filter(review => review.group === this.currentGroup)
     }
 
 }

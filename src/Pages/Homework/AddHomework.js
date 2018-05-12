@@ -1,4 +1,5 @@
 import React, { Component } from "react" 
+import { inject, observer } from "mobx-react"
 import styles from "../../assets/styles/homework.css"
 
 
@@ -7,7 +8,8 @@ const defaultState = {
     githubLink: ""
 }
 
-
+@inject("HomeworkStore")
+@observer    
 export default class AddHomework extends Component {
 
     state = defaultState
@@ -28,7 +30,7 @@ export default class AddHomework extends Component {
         const { githubLink } = this.state
 
         if (githubLink) {
-            this.props.addSubmission(githubLink)
+            this.props.HomeworkStore.addSubmission(githubLink)
             this.setState(defaultState)
             this.toggleAddHomework()
         }    
