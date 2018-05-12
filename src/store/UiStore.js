@@ -44,54 +44,59 @@ export default function () {
     //Normal methods
 
 
-  const getUserInfo = () => {
-    const token = localStorage.getItem("token")
-    fetch(CURRENT_USER_INFO_URL , {
-      credentials: "same-origin",
-      headers: {
-      'Authorization':'Bearer ' + token,
-    }})
-      .then(res => res.json())
-      .then(jsonRes => {
-        const isLoggedIn = true;
-        const isATeacher = jsonRes.role === 'teacher' ? true : false;
-        const isStudent = jsonRes.role === 'student' ? true : false;        
-        _getProfileImg(jsonRes.username);
-        // notify login
-        setState({
-          type: LOGIN_STATE_CHANGED,
-          payload: {
-            isLoggedIn
-          }
-        });
-        //notify a teacher
-        setState({
-          type: ISTEACHER_STATE_CHANGED,
-          payload: {
-            isATeacher
-          }
-        });
-        setState({
-          type: ISSTUDENT_STATE_CHANGED,
-          payload: {
-            isStudent
-          }
-        });
-      })
-        .catch(error_bundle);
-  };
+    const getUserInfo = async () => {
+        const token = localStorage.getItem("token")
+        try {
+            const res = await fetch(CURRENT_USER_INFO_URL, {
+                credentials: "same-origin",
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }
+            })
+            // if the response is not Okay or any error attached to it
+            // throw it to the catch and don't continue
+            if (!res.ok) throw res
+            const jsonRes = await res.json()
+            const isLoggedIn = true;
+            const isATeacher = jsonRes.role === 'teacher' ? true : false;
+            const isStudent = jsonRes.role === 'student' ? true : false;
+            _getProfileImg(jsonRes.username);
+            // notify login
+            setState({
+                type: LOGIN_STATE_CHANGED,
+                payload: {
+                    isLoggedIn
+                }
+            });
+            //notify a teacher
+            setState({
+                type: ISTEACHER_STATE_CHANGED,
+                payload: {
+                    isATeacher
+                }
+            });
+            setState({
+                type: ISSTUDENT_STATE_CHANGED,
+                payload: {
+                    isStudent
+                }
+            });
+        } catch (e) {
+            error_bundle(e)
+        }
+    };
 
-  // Helper methods
-  const _getProfileImg = username => {
-    const avatarUrl = `https://avatars.githubusercontent.com/${username}`;
-    //notify avatar url changed
-    setState({
-      type: AVATAR_URL_CHANGED,
-      payload: {
-        avatarUrl
-      }
-    });
-  };
+    // Helper methods
+    const _getProfileImg = username => {
+        const avatarUrl = `https://avatars.githubusercontent.com/${username}`;
+        //notify avatar url changed
+        setState({
+            type: AVATAR_URL_CHANGED,
+            payload: {
+                avatarUrl
+            }
+        });
+    };
 
 
     return {
