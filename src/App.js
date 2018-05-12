@@ -25,6 +25,7 @@ const defaultState = {
 class App extends Component {
     state = { ...defaultState }
 
+    // For any new Secure Routes we can adding them here:
     routes = [
         { exact: true, path: '/modules', component: Modules },
         { exact: true, path: '/users', component: Users },
