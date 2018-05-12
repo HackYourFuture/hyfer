@@ -185,7 +185,7 @@ export default class SynchronizeResultModal extends Component {
                                             <li key={team.created_at} className={style.teamList}>
                                                 {this.handelFirstToUpperCase(team.teamName)}
                                                 <input type="date" className={style.dateSelector} onChange={(e) => { this.handelNewDateValue(e) }} />
-                                                <button className={style.button_save} onClick={() => { this.handelNewStartingDate(team.teamName, this.state.startingDate) }}>Save</button>
+                                                <button className={style.button_save_date} onClick={() => { this.handelNewStartingDate(team.teamName, this.state.startingDate) }}>Save</button>
                                             </li>
                                         )
                                     }
