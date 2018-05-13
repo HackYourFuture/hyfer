@@ -29,7 +29,6 @@ export default class StudentWithWeeks extends React.Component {
     }
 
     getIsHomeworkChecked = (id, student) => {
-        console.log(this.props.allHistory[student][id])
         return (this.props.allHistory[student][id].homework === 1)
     }
 
