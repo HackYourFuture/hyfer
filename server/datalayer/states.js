@@ -2,7 +2,7 @@ const db = require('./database')
 const GET_CURRENT_STATE = `
   SELECT group_id, user_id, u.full_name, u.username, DATE_FORMAT(g.starting_date, "%Y-%m-%d") as date, g.group_name FROM group_students 
   JOIN users u ON user_id = u.id
-  JOIN groups g ON group_id = g.id 
+  JOIN \`groups\` g ON group_id = g.id 
   WHERE group_id=?
 `
 

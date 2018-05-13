@@ -18,7 +18,6 @@ export default class SynchronizeGithubData extends Component {
 
     handelSynchronizeData = async () => {
         this.setState({
-            ...this.state,
             loading: true,
         })
 
@@ -44,6 +43,18 @@ export default class SynchronizeGithubData extends Component {
             return false
         })
 
+        conflictData = conflictData.map(team => {
+            return {
+                ...team,
+                selected: false,
+                members: team.members.map(member => {
+                    return {
+                        ...member,
+                        selected:false
+                    }
+                })
+            }
+        })
 
         this.setState({
             githubApi,
