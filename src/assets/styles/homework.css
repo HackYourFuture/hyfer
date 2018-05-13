@@ -119,15 +119,12 @@ h2 {
 
 .addForm input {
     padding: 1vh 2vw;
-    margin-right: 4vw;
     width: 50%;
     font-size: 110%;
 }
 
 .addForm button {
     padding: 1vh 1vw;
-    margin-bottom: 1vh;
-    margin-right: 4vw;
     cursor: pointer;
 }
 

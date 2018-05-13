@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import { Provider } from "mobx-react"
 import { NavLink, BrowserRouter, Route } from "react-router-dom"
 import ClassPage from "./ClassPage"
-import HomeworkStore, { fetchData } from "../../store/HomeworkStore"
+import HomeworkStore, { getData } from "../../store/HomeworkStore"
 import styles from "../../assets/styles/homework.css"
 
 
@@ -13,7 +13,7 @@ export default class Homework extends Component {
     }
 
     async componentWillMount() {
-        const groups = await fetchData("groups")
+        const groups = await getData("groups")
         const activeGroups = groups.filter(group => group.archived === 0)
             .map(group => group.group_name.replace(/ /g, "").toLowerCase())
         this.setState({ activeGroups })

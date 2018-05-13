@@ -1,22 +1,23 @@
 import React, { Component } from "react" 
 import { inject, observer } from "mobx-react"
+import moment from "moment"
 import styles from "../../assets/styles/homework.css"
 
 
 const defaultState = {
-    addingHomework: false,
+    submittingHomework: false,
     githubLink: ""
 }
 
 @inject("HomeworkStore")
 @observer    
-export default class AddHomework extends Component {
+export default class SubmitHomeworkForm extends Component {
 
     state = defaultState
 
-    toggleAddHomework = () => {
+    toggleSubmitHomework = () => {
         this.setState({
-            addingHomework: !this.state.addingHomework
+            submittingHomework: !this.state.submittingHomework
         })
     }
 
@@ -27,24 +28,26 @@ export default class AddHomework extends Component {
     }
 
     addSubmission = () => {
+        const { homeworkId } = this.props
         const { githubLink } = this.state
-
+        const timestamp = moment().format("YYYY-MM-DD hh:mm:ss")
+        
         if (githubLink) {
-            this.props.HomeworkStore.addSubmission(githubLink)
+            this.props.HomeworkStore.addSubmission(homeworkId, githubLink, timestamp)
             this.setState(defaultState)
-            this.toggleAddHomework()
+            this.toggleSubmitHomework()
         }    
     }
 
     render() {
         const {
-            addingHomework,
+            submittingHomework,
             githubLink
         } = this.state
         
         return (
             <section>
-                {addingHomework
+                {submittingHomework
                     ? <div className={styles.addForm}>
                         
                         <input type="text"
@@ -53,10 +56,10 @@ export default class AddHomework extends Component {
                             onChange={e => this.handleInputChange(e.target.value, "githubLink")}
                         />
                         <button onClick={this.addSubmission}>Submit</button>
-                        <button onClick={this.toggleAddHomework}>Cancel</button>
+                        <button onClick={this.toggleSubmitHomework}>Cancel</button>
                     </div>
 
-                    : <button onClick={this.toggleAddHomework} className={styles.addBtn}>
+                    : <button onClick={this.toggleSubmitHomework} className={styles.addBtn}>
                         Add Homework
                     </button>   
                 }

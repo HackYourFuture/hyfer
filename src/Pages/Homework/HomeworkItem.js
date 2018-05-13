@@ -1,11 +1,12 @@
 import React, { Component } from "react"
 import { inject, observer } from "mobx-react"
+import SubmitHomeworkForm from "./SubmitHomeworkForm"
 import moment from "moment"
 import styles from "../../assets/styles/homework.css"
 
 @inject("HomeworkStore")
 @observer   
-export default class Submission extends Component {
+export default class HomeworkItem extends Component {
 
     state = {
         assignedReviewer: "",
@@ -15,20 +16,22 @@ export default class Submission extends Component {
     }
 
 
-    addReview = (reviewee) => {
+    addReview = (submissionId) => {
         const { comments } = this.state
+        const timestamp = moment().format("YYYY-MM-DD hh:mm:ss")
 
         if (comments) {
-            this.props.HomeworkStore.addReview(reviewee, comments)
+            this.props.HomeworkStore.addReview(submissionId, comments, timestamp)
             this.toggleComments()
             this.setState({ comments: "" })
         }
     }
 
-    requestReview = (submitter) => {
+    requestReview = (submissionId) => {
         const { assignedReviewer } = this.state
+        const { title } = this.props
         if (assignedReviewer) {
-            this.props.HomeworkStore.requestReview(submitter, assignedReviewer)
+            this.props.HomeworkStore.requestReview(submissionId, title, assignedReviewer)
         }
         this.toggleAssignReviewer()
     }
@@ -52,7 +55,12 @@ export default class Submission extends Component {
     }
 
     render() {
-        const { currentGroupStudents, currentGroupSubmissions } = this.props.HomeworkStore
+        const { students, submissions, currentUser } = this.props.HomeworkStore
+        const { id, title, deadline } = this.props
+
+        const currentHomeworkSubmissions = submissions.filter(submission => (
+            submission.homework_id === id
+        ))
        
         const {
             selectingReviewer,
@@ -62,13 +70,18 @@ export default class Submission extends Component {
 
         return (
             <section className={styles.hmwrkSubmission}>
-                {currentGroupSubmissions.map(submission => (
-                    <div key={submission.submitter} className={styles.submitter}>
-                        <h3>{submission.submitter}</h3>
+                <h2>{title}</h2> 
+                <h4>Deadline: {moment(deadline).format("ddd MMMM Do, YYYY")}</h4>
+
+                <SubmitHomeworkForm homeworkId={id} /> 
+                
+                {currentHomeworkSubmissions.map(submission => (
+                    <div key={submission.id} className={styles.submitter}>
+                        <h3>{submission.username}</h3>
                         <p className={styles.timestamp}>{moment(submission.date).format("LLL")}</p>
-                        {currentGroupStudents.map(student => (
-                            submission.submitter === student.name || submission.submitter === student.login
-                                ? <img src={student.avatar_url} alt={student.login} key={student.id} />
+                        {students.map(student => (
+                            submission.username === student.username
+                                ? <img src={student.avatarUrl} alt={student.username} key={student.id} />
                                 : null
                         ))}
 
@@ -77,18 +90,18 @@ export default class Submission extends Component {
                                 ? <div>
                                     <select placeholder="Students"
                                         onChange={e => this.handleInputChange(e.target.value, "assignedReviewer")}>
-                                        {currentGroupStudents.map(student => (
-                                        <option key={student.id} value={student.name || student.login}>{student.name || student.login}</option>   
+                                        {students.map(student => (
+                                        <option key={student.id} value={student.username}>{student.username}</option>   
                                         ))}    
                                     </select>
-                                    <button onClick={() => this.requestReview(submission.submitter)}>Request</button>
+                                    <button onClick={() => this.requestReview(submission.id)}>Request</button>
                                     <button onClick={this.toggleAssignReviewer}>Cancel</button>
                                 </div>
                                 : <button onClick={this.toggleAssignReviewer} className={styles.assignBtn}>Request Review</button>
                             }
                         </div>    
 
-                        <a href={submission.githubLink}>View homework</a>
+                        <a href={submission.github_link}>View homework</a>
                         
                         <div className={styles.replyContainer}>
                             {commentsOpen
@@ -96,7 +109,7 @@ export default class Submission extends Component {
                                     <textarea value={comments} placeholder="enter review . . ."
                                         onChange={e => this.handleInputChange(e.target.value, "comments")}
                                     />
-                                    <button onClick={() => this.addReview(submission.submitter)}>Submit</button>
+                                    <button onClick={() => this.addReview(submission.id)}>Submit</button>
                                     <button onClick={this.toggleComments}>Cancel</button>
                                 </div>
                                 : <button onClick={this.toggleComments} className={styles.replyBtn}>Reply</button>

@@ -11,6 +11,7 @@ const runningModules = require('./api/running-modules')
 const groups = require('./api/groups')
 const history = require('./api/history')
 const states = require('./api/states')
+const homework = require('./api/homework')
 
 module.exports = function (app) {
     app.get('/api/modules', auth.hasRole('teacher|student'), modules.getModules)
@@ -61,6 +62,17 @@ module.exports = function (app) {
     app.get('/user/emails', auth.hasRole('teacher'), github.getUserEmails)
 
     app.post('/api/githubSync', auth.hasRole('teacher'), githubSync.githubSync)
+
+    ////========= homework / studentsByGroup / reviews /submissions =======
+    app.get('/api/homework/:groupId', auth.hasRole('teacher|student'), homework.getGroupHomework)
+    app.post('/api/homework', auth.hasRole('teacher|student'), homework.addHomework)
+    app.get('/api/students/:groupId', auth.hasRole('teacher|student'), homework.getGroupStudents)
+    app.post('/api/submissions', auth.hasRole('teacher|student'), homework.addSubmission)
+    app.get('/api/submissions/:groupId', auth.hasRole('teacher|student'), homework.getGroupSubmissions)
+    app.post('/api/reviews', auth.hasRole('teacher|student'), homework.addReview)
+    app.get('/api/reviews/:groupId', auth.hasRole('teacher|student'), homework.getGroupReviews)
+
+
 
 
     app.route('/*')
