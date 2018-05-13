@@ -92,7 +92,9 @@ class App extends Component {
                                     render={props => <ClassPage {...props} studentClass={studentClass} />} />
                             ))
                         }
-                        <Route path="*" exact render={() => <NotFound />} />
+                        {
+                            <Route path="*" exact render={()=> {if (!passToSecureRoute) return <NotFound/>}} />
+                        }
                     </Switch>
                     <Footer />
                 </React.Fragment>
