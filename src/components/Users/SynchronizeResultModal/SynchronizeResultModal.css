@@ -129,9 +129,23 @@ modalButtons{
   color: #e0f3eb;
 }
 
-.dateSelector {
-    width: 200px;
-    height: 20px;
-    padding: 8px;
-    font-size: 15px
+.dateSelector[  type='date']{
+    width: 130px !important;
+    height: 20px !important;
+    padding: 0px !important;
+    margin: 0px;
+    position: relative;
+    float: right;
+    font-size: 15px !important;
 }
+.button_save_date{
+    width: 65px;
+    height: 20px;
+    border-radius: 17.5px;
+    margin: 15px 30% 20px 5px;
+    color: #e0f3eb;
+    background-color: #38c18b;
+    border: none;
+    cursor: pointer;
+}
+.button_save_date:hover{background-color: #299a6d;}
