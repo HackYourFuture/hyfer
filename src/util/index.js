@@ -311,6 +311,10 @@ export async function getALlPossibleModules() {
         if (!res.ok) throw res
         return await res.json()
     } catch (err) {
+        // we don't need any return on all of the users
+        // On 403 Forbidden
+        if (err.status === 403) return
+        // if the user has any other problems?!
         error_bundle(err)
     }
 }

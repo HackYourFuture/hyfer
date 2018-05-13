@@ -13,6 +13,7 @@ class moduleServiceBack {
                     Authorization: 'Bearer ' + token
                 }
             })
+            if (!res.ok) throw res
             const resJson = await res.json()
             callBack(resJson)
         } catch (err) { error_bundle(err) }

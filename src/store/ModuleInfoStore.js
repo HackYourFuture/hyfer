@@ -71,6 +71,7 @@ export default function () {
                         'Authorization': 'Bearer ' + token,
                     }
                 })
+                if (!res.ok) throw res
                 const response = await res.json()
                 const students = Object.keys(response)
                 setState({

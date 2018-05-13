@@ -91,7 +91,7 @@ class App extends Component {
                                     render={props => <ClassPage {...props} studentClass={studentClass} />} />
                             ))
                         }
-                        <Route path="*" exact component={() => NotFound} />
+                        <Route path="*" exact render={() => <NotFound />} />
                     </Switch>
                     <Footer />
                 </React.Fragment>
