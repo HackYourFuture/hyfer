@@ -4,9 +4,9 @@ const db = require('./database')
 const GET_USERS_QUERY =
   `SELECT users.id, users.username, users.full_name, users.role, users.register_date,
   users.slack_username, users.freecodecamp_username, users.email, users.mobile,
-  group_students.group_id, groups.group_name FROM users
+  group_students.group_id, \`groups\`.group_name FROM users
   LEFT JOIN group_students ON users.id=group_students.user_id
-  LEFT JOIN groups ON groups.id=group_students.group_id`
+  LEFT JOIN \`groups\` ON \`groups\`.id=group_students.group_id`
 
 const UPDATE_USER_QUERY =
   `UPDATE users SET full_name=?, role=?, slack_username=?, freecodecamp_username=?, email=?, mobile=? WHERE id=?`
@@ -25,7 +25,8 @@ function getUserById(con, id) {
 
 function addUser(con, user) {
   return db.execQuery(con, `INSERT INTO users (username, access_token, full_name, email, role) VALUES(?,?,?,?,?)`,
-    [user.username, user.access_token, user.full_name, user.email, user.role])
+      [user.username, user.access_token, user.full_name, user.email, user.role])
+    .then(result => result.insertId)
 }
 
 function updateUser(con, id, user) {
