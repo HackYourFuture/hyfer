@@ -1,6 +1,8 @@
 .ticketContainer {
-  margin: 0 auto;
+  margin: 30px auto;
   max-width: 40%;
+  clear: both;
+  padding-top: 60px;
 }
 
 .Tickets {
@@ -34,4 +36,156 @@
 
 .ticketBtnBack {
   float: left;
+}
+
+.codeInput {
+  width: 20vw;
+  height: 50vh;
+  margin: 0% auto;
+  margin-top: 5%;
+  display: block;
+  padding: 1%;
+  border-top-style: hidden !important;
+  border-bottom: 2px solid #3cb0fd;
+  border-left-style: hidden !important;
+  border-right-style: hidden !important;
+  background-image: none !important;
+  margin-bottom: 2%;
+}
+
+.container,
+.inputContainer,
+.footer,
+  {
+  width: 70%;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.inputContainer {
+  width: 105%;
+}
+
+.progressBar {
+  counter-reset: step;
+}
+
+.progressBar li {
+  list-style-type: none;
+  width: 33%;
+  float: left;
+  font-size: 1rem;
+  position: relative;
+  text-align: center;
+  text-transform: uppercase;
+  color: #7d7d7d;
+}
+
+.progressBar li:before {
+  width: 30px;
+  height: 30px;
+  content: counter(step);
+  counter-increment: step;
+  line-height: 30px;
+  border: 3px solid #7d7d7d;
+  display: block;
+  text-align: center;
+  margin: 0 auto 10px auto;
+  border-radius: 50%;
+  background-color: white;
+}
+
+.progressBar li:after {
+  width: 100%;
+  height: 2px;
+  content: '';
+  position: absolute;
+  background-color: #7d7d7d;
+  top: 15px;
+  left: -50%;
+  z-index: -1;
+}
+
+.progressBar li:first-child:after {
+  content: none;
+}
+
+.progressBar li.active {
+  color: green;
+}
+
+.progressBar li.active:before {
+  border-color: #55b776;
+}
+
+.progressBar li.active+li:after {
+  background-color: #55b776;
+}
+
+.btnList {
+  list-style-type: none;
+  width: 50%;
+  margin: 0 auto;
+}
+
+.back,
+.next {
+  margin-bottom: 30px;
+  float: left;
+  overflow: hidden;
+  border: 1px solid #15aeec;
+  background: #3498db;
+  background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
+  background-image: -moz-linear-gradient(top, #3498db, #2980b9);
+  background-image: -ms-linear-gradient(top, #3498db, #2980b9);
+  background-image: -o-linear-gradient(top, #3498db, #2980b9);
+  background-image: linear-gradient(to bottom, #3498db, #2980b9);
+  -webkit-border-radius: 9;
+  -moz-border-radius: 9;
+  border-radius: 5px;
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 19px;
+  padding: 10px 20px 10px 20px;
+  ;
+}
+
+.back {
+  float: left;
+}
+
+.next {
+  float: right;
+}
+
+.next:focus,
+.back:focus {
+  outline: none;
+}
+
+.next:hover,
+.back:hover {
+  background: #3cb0fd;
+  background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+  text-decoration: none;
+}
+
+.disabledBtn {
+  float: left;
+  border: 1px solid #dddddd;
+  display: block;
+  border-radius: 9px;
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 19px;
+  padding: 10px 20px 10px 20px;
+}
+.container {
+  content: '';
+  clear: both;
+  overflow: hidden;
 }
