@@ -80,6 +80,7 @@ class store {
 			throw new Error('Problem with Server: GET DATA');
 		}
 	}
+	
 	async loadUsers() {
 		try {
 			const res = await fetch('http://localhost:3000/api/users', {
