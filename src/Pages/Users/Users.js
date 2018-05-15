@@ -8,44 +8,86 @@ import SynchronizeGithubData from '../../components/Users/SynchronizeGithubData'
 
 export default class Users extends React.Component {
 
-  componentWillMount = () => {
-    this.subscription = store.subscribe(state => {
-      this.setState(state)
-    })
-  }
+    state = {
+        selectedList: ''
+    }
 
-  componentWillUnmount() {
-    this.subscription.remove()
-  }
+    componentWillMount = () => {
+        this.subscription = store.subscribe(state => {
+            this.setState(state)
+        })
+    }
 
-  componentDidMount = () => {
-    store.loadUsers()
-    window.scrollTo(0, 0)
-  }
+    componentWillUnmount() {
+        this.subscription.remove()
+    }
 
-  
+    componentDidMount = () => {
+        store.loadUsers()
+        window.scrollTo(0, 0)
+    }
 
-  render() {
-      return (
-        
-          <div>
-              <div className={styles.userSearchDiv}>
-                  <input
-                      className={styles.userSearchBox}
-                      type="text"
-                      placeholder="lookup someone"
-                      onChange={store.searchUser}
-                  />
-                  <SynchronizeGithubData />
-              </div>
-              <div>
-                  <ul className={styles.mainUl}>
-                      <Guest />
-                      <Teachers />
-                      <Students />
-                  </ul>
-              </div>
-          </div>
-    )
-  }
+    handlFilterList = (e) => {
+        this.setState({
+            selectedList: e.target.value
+        })
+    }
+
+    renderSelectedList() {
+        if (this.state.selectedList === 'Guest') {
+            return (
+                <ul className={styles.mainUl}>
+                    <Guest />
+                </ul>
+            )
+        } else if (this.state.selectedList === 'Students') {
+            return (
+                <ul className={styles.mainUl}>
+                    <Students />
+                </ul>
+            )
+        } else if (this.state.selectedList === 'Teachers') {
+            return (
+                <ul className={styles.mainUl}>
+                    <Teachers />
+                </ul>
+            )
+        } else {
+            return (
+                <ul className={styles.mainUl}>
+                    <Guest />
+                    <Teachers />
+                    <Students />
+                </ul>
+            )
+        }
+    }
+
+
+
+    render() {
+        return (
+
+            <div>
+                <div className={styles.userSearchDiv}>
+                    <input
+                        className={styles.userSearchBox}
+                        type="text"
+                        placeholder="lookup someone"
+                        onChange={store.searchUser}
+                    />
+                    <select value={this.state.selectedList} onChange={(e) => { this.handlFilterList(e) }}>
+                        <option value=''>All list</option>
+                        <option value="Guest">Guest</option>
+                        <option value="Teachers">Teachers</option>
+                        <option value="Students">Students</option>
+                    </select>
+                    <SynchronizeGithubData />
+                </div>
+                <div>
+                    {this.renderSelectedList()}
+                </div>
+            </div>
+        )
+    }
 }
