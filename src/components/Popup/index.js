@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { uiStore } from '../../store'
 const defaultState = {
     isEmail: false,
-    isLoggedIn: false,
+    isLoggedIn: true,
     submited: false,
     email_input: '',
     confirm_email_input: ''
@@ -11,7 +11,7 @@ const defaultState = {
 class Popup extends Component {
     state = {
         ...defaultState
-    }
+    }   
     componentDidMount = () => {
         uiStore.subscribe(mergedData => {
             if (mergedData.type) {
