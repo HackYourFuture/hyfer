@@ -15,31 +15,77 @@ import TrainTicket from './Pages/TrainTicket/TrainTicket'
 import ClassPage from "./Pages/Homework/ClassPage"
 import cookie from 'react-cookies'
 import Notifications from 'react-notify-toast'
-import { LOGIN_STATE_CHANGED, uiStore } from './store'
 import NotFound from './Pages/NotFound'
+
+import {
+    LOGIN_STATE_CHANGED,
+    ISTEACHER_STATE_CHANGED,
+    ISSTUDENT_STATE_CHANGED,
+    uiStore
+} from './store'
+
 
 const defaultState = {
     isLoggedIn: false,
+    isATeacher: false,
+    isStudent: false,
+    update: true, // it's just for the shouldcomponentupdate() available
+    scope: ['public'],
 }
 
+const { pathname } = window.location
 class App extends Component {
     state = { ...defaultState }
 
     // For any new Secure Routes we can adding them here:
-    routes = [
-        { exact: true, path: '/modules', component: Modules },
-        { exact: true, path: '/users', component: Users },
-        { exact: true, path: '/profile', component: Profile },
-        { exact: true, path: '/currentUserProfile', component: currentUserProfile },
-        { exact: true, path: '/userAccount', component: userAccount },
-        { exact: true, path: '/TrainTicket', component: TrainTicket },
-        { exact: true, path: '/homework', render: props => <ClassPage {...props} studentClass={studentClasses[0]} /> },
-    ]
-
-    isRoute = path => {
-        return this.routes.find(element => {
-            return element.path === path;
+    routes = {
+        teacher: [
+            { exact: true, path: '/modules', component: Modules },
+            { exact: true, path: '/users', component: Users },
+            { exact: true, path: '/profile', component: Profile },
+            { exact: true, path: '/userAccount', component: userAccount },
+            { exact: true, path: '/TrainTicket', component: TrainTicket },
+        ],
+        student: [
+            { exact: true, path: '/homework', render: props => <ClassPage {...props} studentClass={studentClasses[0]} /> },
+        ],
+        guest: [ // and all of the users can share some stuff
+            { exact: true, path: '/currentUserProfile', component: currentUserProfile },
+        ],
+        public: [
+            { exact: true, path: '/timeline', component: TimeLine },
+        ],
+    }
+    // this will contain the Route props from the user scopes
+    securedRouteProps = []
+    setUserRouteProps = item => {
+        // Only the Objects that has the same path property
+        const value = this.securedRouteProps.find(obj => {
+            return obj.path === item.path
         })
+        // - pushing a clean type of the user scopes routes
+        // -- if the returned from .find() Method is 'undefined'
+        // -- then we need it
+        if (!value) this.securedRouteProps.push(item)
+        return value
+    }
+
+    isRoute = (path, scopes) => {
+        // - this function is responsible on matching in 
+        // -- the routes Object and returning the correct 
+        // -- result if there is a one
+        // the default scope is ['public']
+        if (!scopes) scopes = this.state.scope
+        let routeProps = {}
+        scopes.forEach(scope => {
+            routeProps = this.routes[scope].find((item, index) => {
+                // - calling setUserRouteProps() method that will assign 
+                // -- every route the user has an access to it
+                this.setUserRouteProps(item)
+                return item.path === path
+            })
+        })
+        if (routeProps) return routeProps
     }
 
     componentWillMount() {
@@ -53,37 +99,73 @@ class App extends Component {
         localStorage.setItem('token', token)
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
+        // this is Only for checking if the user has a role Or Not
         uiStore.subscribe(mergedData => {
-            if (mergedData.type === LOGIN_STATE_CHANGED) {
+            const user_state = type => {
                 this.setState({
-                    isLoggedIn: mergedData.payload.isLoggedIn
+                    [type]: mergedData.payload[type],
+                    update: true,
                 })
             }
+            if (mergedData.type === LOGIN_STATE_CHANGED) user_state('isLoggedIn')
+            if (mergedData.type === ISTEACHER_STATE_CHANGED) user_state('isATeacher')
+            if (mergedData.type === ISSTUDENT_STATE_CHANGED) user_state('isStudent')
         })
     }
 
-    render() {
-        // when ever there is props ~> there is a route existed
-        const routeProps = this.isRoute(window.location.pathname)
+    shouldComponentUpdate(nextProps, nextState) {
+        // - if the user is logged in pass him 
+        // -- to the next componentWillUpdate() lifeCycle hook
+        // -- Otherwise keep him on the public scope
+        const { isLoggedIn, update } = nextState
+        return isLoggedIn && update
+    }
 
-        const redirectToDefault = window.location.pathname === '/' && <Redirect from='/' to='/timeline' />
-        const passToSecureRoute = this.state.isLoggedIn && routeProps && <Route {...routeProps} />
+    componentWillUpdate(prevProps, prevState) {
+        // NOTE: NO BODY CAN ARRIVE HERE IF HE IS NOT LOGGED IN
+        const { isATeacher, isStudent, scope } = prevState
+        const rolled_to_be = rolled => {
+            this.setState({
+                scope: scope.concat(rolled),
+                // - without the next line the component will stuck in an infinte loop!!
+                // -- Why?! because componentWillUpdate() Method is called each time the
+                // -- state or the props changes BUT if the shouldComponentUpdate() returned
+                // -- (false) then this will never called again :D
+                update: false,
+            })
+        }
+        // has the user any role?
+        if (isATeacher) return rolled_to_be('teacher')
+        if (isStudent) return rolled_to_be('student')
+        return rolled_to_be('guest') // in All cases he is a guest because he is logged in
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        // After all of the checking for login and Stuff
+        // He need his page!!
+        // - NOTE: this function here Only for assigning 
+        // -- the user routes to the ( securedRouteProps ) Array
+        // - AND NOTE: without this function the user will never
+        // -- arrive to his distenation path
+        this.isRoute(pathname, prevState.scope)
+    }
+
+    render() {
+        // - calling isRoute() method for Initial check for the route
+        // -- and assignin it in the ( securedRouteProps ) Array that
+        // -- will contain all of the same user scope paths & props
+        this.isRoute(pathname)
         return (
             <BrowserRouter>
                 <React.Fragment>
                     <Header />
                     <Notifications />
                     <Switch>
-                        <Route path='/timeline' exact component={TimeLine} />
-                        { // Redirect to the timeline if the pathname doesn't matches
-                            redirectToDefault
-                        }
-                        { // Render wich secure route the user did specify
-                            passToSecureRoute
-                        }
                         {
-                            // For who created this route could you please make it in one line 
+                            this.securedRouteProps.map(item => <Route key={item.path} {...item} />)
+                        }
+                        {   // For who created this route could you please make it in one line
                             // helping Making it secure if it's possible, I don't know if this
                             // will help with a new Ideas :D
                             // https://reacttraining.com/react-router/web/example/url-params
@@ -92,8 +174,11 @@ class App extends Component {
                                     render={props => <ClassPage {...props} studentClass={studentClass} />} />
                             ))
                         }
-                        {
-                            <Route path="*" exact render={()=> {if (!passToSecureRoute) return <NotFound/>}} />
+                        { // if Only the route is the root ~> '/' redirect him to the '/timeline' route
+                            (pathname === '/') && <Redirect from='/' to='/timeline' />
+                        }
+                        { // Checking if the route doesn't existes we can handle it with 404 page
+                            (!this.securedRouteProps.length) && <Route path="*" exact render={<NotFound />} />
                         }
                     </Switch>
                     <Footer />
