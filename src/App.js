@@ -16,6 +16,7 @@ import ClassPage from "./Pages/Homework/ClassPage"
 import cookie from 'react-cookies'
 import Notifications from 'react-notify-toast'
 import NotFound from './Pages/NotFound'
+import Popup from './components/Popup'
 
 import {
     LOGIN_STATE_CHANGED,
@@ -160,6 +161,7 @@ class App extends Component {
             <BrowserRouter>
                 <React.Fragment>
                     <Header />
+                    <Popup />
                     <Notifications />
                     <Switch>
                         {

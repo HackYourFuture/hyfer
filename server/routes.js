@@ -11,6 +11,7 @@ const runningModules = require('./api/running-modules')
 const groups = require('./api/groups')
 const history = require('./api/history')
 const states = require('./api/states')
+const {setEmail} = require('./api/update-email')
 
 module.exports = function (app) {
     app.get('/api/modules', auth.hasRole('teacher'), modules.getModules)
@@ -55,6 +56,8 @@ module.exports = function (app) {
 
     app.get('/api/students', auth.hasRole('teacher'), github.getTeamMembers)
     app.get('/user/emails', auth.hasRole('teacher'), github.getUserEmails)
+    
+    app.patch('/api/set-email', auth.isAuthenticated(), setEmail)
 
     app.post('/api/githubSync', auth.hasRole('teacher'), githubSync.githubSync)
 

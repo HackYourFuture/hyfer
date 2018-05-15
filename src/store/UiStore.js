@@ -2,7 +2,9 @@ import {
     AVATAR_URL_CHANGED,
     ISTEACHER_STATE_CHANGED,
     ISSTUDENT_STATE_CHANGED,
-    LOGIN_STATE_CHANGED
+    LOGIN_STATE_CHANGED,
+    USER_ID,
+    IS_EMAIL_EXISTED
 } from './';
 
 import { error_bundle } from '../notify'
@@ -60,7 +62,9 @@ export default function () {
             const isLoggedIn = true;
             const isATeacher = jsonRes.role === 'teacher' ? true : false;
             const isStudent = jsonRes.role === 'student' ? true : false;
+            const isEmail = jsonRes.email ? true : false;
             _getProfileImg(jsonRes.username);
+            _getProfileId(jsonRes.id);
             // notify login
             setState({
                 type: LOGIN_STATE_CHANGED,
@@ -81,6 +85,13 @@ export default function () {
                     isStudent
                 }
             });
+            // notify set email
+            setState({
+                type: IS_EMAIL_EXISTED,
+                payload: {
+                    isEmail
+                }
+            });
         } catch (e) {
             error_bundle(e)
         }
@@ -94,6 +105,17 @@ export default function () {
             type: AVATAR_URL_CHANGED,
             payload: {
                 avatarUrl
+            }
+        });
+    };
+
+    const _getProfileId = id => {
+
+        //notify set userId
+        setState({
+            type: USER_ID,
+            payload: {
+                id
             }
         });
     };

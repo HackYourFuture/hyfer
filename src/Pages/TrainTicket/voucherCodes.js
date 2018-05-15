@@ -12,9 +12,6 @@ class voucherCodes extends Component {
             placeholder="Enter the voucher codes for the tickets "
             onChange={handleCouponCodesChange}>
           </textarea>
-          <button className={Style.ticketBtnNext}>
-            Next
-          </button>
         </div>
       </div>
     );

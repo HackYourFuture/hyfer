@@ -79,6 +79,7 @@ class store {
 
         catch (err) { error_bundle(err)	}
 	}
+	
 	async loadUsers() {
 		try {
 			const res = await fetch('http://localhost:3000/api/users', {
