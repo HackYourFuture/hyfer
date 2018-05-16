@@ -76,7 +76,7 @@ export default class Users extends React.Component {
                         placeholder="lookup someone"
                         onChange={store.searchUser}
                     />
-                    <select value={this.state.selectedList} onChange={(e) => { this.handlFilterList(e) }}>
+                    <select className = {styles.listSelector}value={this.state.selectedList} onChange={(e) => { this.handlFilterList(e) }}>
                         <option value=''>All list</option>
                         <option value="Guest">Guest</option>
                         <option value="Teachers">Teachers</option>
