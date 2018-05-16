@@ -199,12 +199,12 @@ svg{
 
 .listSelector {
     position: relative;
-    top: 96px;
+    top: 90px;
     margin-right: 5px;
     float: right;
     background: transparent;
     background-color: rgb(226, 226, 226);
-    width: 300px;
+    width: 250px;
     border: none;
     outline: none;
     padding: 8px 0;
