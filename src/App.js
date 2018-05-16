@@ -30,6 +30,7 @@ const defaultState = {
     isLoggedIn: false,
     isATeacher: false,
     isStudent: false,
+    done: false,
     update: true, // it's just for the shouldcomponentupdate() available
     scope: ['public'],
 }
@@ -39,6 +40,8 @@ class App extends Component {
     state = { ...defaultState }
 
     // For any new Secure Routes we can adding them here:
+    // NOTE: if there is any new scope we wanna add here tell me
+    // -- or Figure it your self 😐
     routes = {
         teacher: [
             { exact: true, path: '/modules', component: Modules },
@@ -47,7 +50,7 @@ class App extends Component {
             { exact: true, path: '/userAccount', component: userAccount },
             { exact: true, path: '/TrainTicket', component: TrainTicket },
         ],
-        student: [
+        student: [ // waiting for Chileshe's Update
             { exact: true, path: '/homework', render: props => <ClassPage {...props} studentClass={studentClasses[0]} /> },
         ],
         guest: [ // and all of the users can share some stuff
@@ -56,22 +59,24 @@ class App extends Component {
         public: [
             { exact: true, path: '/timeline', component: TimeLine },
         ],
+        NotFound: {component: NotFound },
     }
     // this will contain the Route props from the user scopes
     securedRouteProps = []
     setUserRouteProps = item => {
+        const { securedRouteProps } = this
         // Only the Objects that has the same path property
-        const value = this.securedRouteProps.find(obj => {
+        const value = securedRouteProps.find(obj => {
             return obj.path === item.path
         })
         // - pushing a clean type of the user scopes routes
         // -- if the returned from .find() Method is 'undefined'
         // -- then we need it
-        if (!value) this.securedRouteProps.push(item)
+        if (!value) securedRouteProps.push(item)
         return value
     }
 
-    isRoute = (path, scopes) => {
+    findRoutes = (path, scopes) => {
         // - this function is responsible on matching in 
         // -- the routes Object and returning the correct 
         // -- result if there is a one
@@ -98,9 +103,6 @@ class App extends Component {
             token = ''
         }
         localStorage.setItem('token', token)
-    }
-
-    componentDidMount = () => {
         // this is Only for checking if the user has a role Or Not
         uiStore.subscribe(mergedData => {
             const user_state = type => {
@@ -120,15 +122,24 @@ class App extends Component {
         // -- to the next componentWillUpdate() lifeCycle hook
         // -- Otherwise keep him on the public scope
         const { isLoggedIn, update } = nextState
+        if (!isLoggedIn && update) {
+            // - if he isn't logged in set the state as the lifecycle is done
+            // -- and update is false making sure this will never called again
+            // NOTE: this.setState() is async function. Why?! check this:
+            // https://stackoverflow.com/questions/41278385/setstate-doesnt-update-the-state-immediately/41278440?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+            // << why am i telling you?! because I Really sufferd with it 💔 >>
+            this.setState({ done: true, update: false })
+        }
         return isLoggedIn && update
     }
 
     componentWillUpdate(prevProps, prevState) {
         // NOTE: NO BODY CAN ARRIVE HERE IF HE IS NOT LOGGED IN
         const { isATeacher, isStudent, scope } = prevState
-        const rolled_to_be = rolled => {
+        const rolled_to_be = someBody => {
             this.setState({
-                scope: scope.concat(rolled),
+                // the next line to make sure that the role will never dublicate
+                scope: scope.filter(item => item !== someBody).concat(someBody),
                 // - without the next line the component will stuck in an infinte loop!!
                 // -- Why?! because componentWillUpdate() Method is called each time the
                 // -- state or the props changes BUT if the shouldComponentUpdate() returned
@@ -149,14 +160,14 @@ class App extends Component {
         // -- the user routes to the ( securedRouteProps ) Array
         // - AND NOTE: without this function the user will never
         // -- arrive to his distenation path
-        this.isRoute(pathname, prevState.scope)
+        if (!this.findRoutes(pathname, prevState.scope)) return this.setState({ done: true, update: false })
     }
 
     render() {
-        // - calling isRoute() method for Initial check for the route
-        // -- and assignin it in the ( securedRouteProps ) Array that
+        // - calling findRoutes() method Here for Initial check for the route
+        // -- and assigning it in the ( securedRouteProps ) Array that
         // -- will contain all of the same user scope paths & props
-        this.isRoute(pathname)
+        this.findRoutes(pathname)
         return (
             <BrowserRouter>
                 <React.Fragment>
@@ -164,23 +175,18 @@ class App extends Component {
                     <Popup />
                     <Notifications />
                     <Switch>
-                        {
+                        { // every Route the user has an access scope to it will be rendered here
                             this.securedRouteProps.map(item => <Route key={item.path} {...item} />)
                         }
-                        {   // For who created this route could you please make it in one line
-                            // helping Making it secure if it's possible, I don't know if this
-                            // will help with a new Ideas :D
-                            // https://reacttraining.com/react-router/web/example/url-params
+                        <Redirect exact strict from='/' to='/timeline' />
+                        { // the user isn't logged in OR the lifecycle done AND No route found render this Component
+                            (!this.state.isLoggedIn || this.state.done) && <Route {...this.routes.NotFound} />
+                        }
+                        { // waiting for Chilelila's Update
                             studentClasses.map(studentClass => (
                                 <Route key={studentClass} path={"/homework/" + studentClass} exact
                                     render={props => <ClassPage {...props} studentClass={studentClass} />} />
                             ))
-                        }
-                        { // if Only the route is the root ~> '/' redirect him to the '/timeline' route
-                            (pathname === '/') && <Redirect from='/' to='/timeline' />
-                        }
-                        { // Checking if the route doesn't existes we can handle it with 404 page
-                            (!this.securedRouteProps.length) && <Route path="*" exact render={<NotFound />} />
                         }
                     </Switch>
                     <Footer />
