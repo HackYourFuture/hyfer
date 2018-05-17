@@ -1,8 +1,41 @@
+.loginInput {
+  cursor: text;
+  transform: translateY(-25px);
+  transition: transform 0.3s ease;
+  left: 0;
+}
+
+.loginInput {
+  width: 100%;
+  height: 40px;
+  font-size: 1rem;
+  transition: 0.6s;
+  border: none;
+  border-bottom: 1px solid #CCC;
+  background-color: transparent;
+}
+
+.loginInput:focus {
+  outline: none;
+  border-bottom: 2px solid #03a9f4;
+}
+
+.animation .loginInput {
+  transform: translateY(-55px);
+  font-size: 10px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.animation-color .loginInput {
+  color: #03a9f4;
+}
+
 .ticketContainer {
-  margin: 30px auto;
-  max-width: 40%;
+  margin: 0 auto;
+  width: 40%;
   clear: both;
-  padding-top: 60px;
+  padding-top: 20px;
 }
 
 .Tickets {
@@ -10,14 +43,16 @@
   overflow: auto;
   display: block;
   width: 34vw;
-  height: 40vh;
-  font-size: 1em;
+  height: 25vh;
+  font-size: 0.9rem;
   font-family: Verdana, Arial, Helvetica, sans-serif;
+  margin-bottom: 5%;
+
 }
 
 .Tickets:focus {
   outline: none !important;
-  border-color: #719ECE;
+  border: 2px solid #03a9f4;
 }
 
 .ticketBtnBack,
@@ -42,7 +77,7 @@
   width: 20vw;
   height: 50vh;
   margin: 0% auto;
-  margin-top: 5%;
+  margin-top: 2%;
   display: block;
   padding: 1%;
   border-top-style: hidden !important;
@@ -50,10 +85,9 @@
   border-left-style: hidden !important;
   border-right-style: hidden !important;
   background-image: none !important;
-  margin-bottom: 2%;
+  margin-bottom: 1%;
 }
 
-.container,
 .inputContainer,
 .footer,
   {
@@ -62,19 +96,26 @@
   overflow: hidden;
 }
 
+.StepContainer {
+  width: 60%;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
 .inputContainer {
-  width: 105%;
+  width: 100%;
 }
 
 .progressBar {
   counter-reset: step;
+  margin-top: 0;
 }
 
 .progressBar li {
   list-style-type: none;
   width: 33%;
   float: left;
-  font-size: 1rem;
+  font-size: 0.8rem;
   position: relative;
   text-align: center;
   text-transform: uppercase;
@@ -130,7 +171,7 @@
 
 .back,
 .next {
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   float: left;
   overflow: hidden;
   border: 1px solid #15aeec;
@@ -145,7 +186,7 @@
   border-radius: 5px;
   font-family: Arial;
   color: #ffffff;
-  font-size: 19px;
+  font-size: 0.9rem;
   padding: 10px 20px 10px 20px;
   ;
 }
@@ -181,11 +222,36 @@
   border-radius: 9px;
   font-family: Arial;
   color: #ffffff;
-  font-size: 19px;
+  font-size: 0.9rem;
   padding: 10px 20px 10px 20px;
 }
-.container {
+
+.container,
+.footer {
   content: '';
   clear: both;
   overflow: hidden;
+}
+
+.container {
+  margin-bottom: 1%;
+}
+
+::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: rgba(0, 0, 0, 0.521);
+  opacity: 1;
+  font-size: 0.8rem;
+  /* Firefox */
+}
+
+.formContainer {
+  border: 1px solid white;
+  width: 50%;
+  margin: 0 auto;
+  background: white;
+  -webkit-box-shadow: 0px -1px 5px 0px rgba(204, 204, 204, 0.65);
+  -moz-box-shadow: 0px -1px 5px 0px rgba(204, 204, 204, 0.65);
+  box-shadow: 0px -1px 5px 0px rgba(204, 204, 204, 0.65);
+  margin-bottom: 2%;
 }
