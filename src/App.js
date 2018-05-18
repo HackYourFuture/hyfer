@@ -18,48 +18,48 @@ import cookie from 'react-cookies'
 import Popup from './components/Popup'
 
 class App extends Component {
-  
-  componentWillMount() {
-    
-    let token = cookie.load('token')
-    if(token && typeof token !== 'undefined'){
-      token = JSON.parse(token)
+
+    componentWillMount() {
+
+        let token = cookie.load('token')
+        if (token && typeof token !== 'undefined') {
+            token = JSON.parse(token)
+        }
+        else {
+            token = ''
+        }
+        localStorage.setItem('token', token)
     }
-    else{
-      token = ''
-    }
-    localStorage.setItem('token', token)
-  }
 
     render() {
-    return (
-      <BrowserRouter>
-        <React.Fragment>
-          <Header />
-          <Popup />      
-          <Switch>
-            <Route path="/timeline" exact component={TimeLine} />
-            <Route path="/modules" exact component={Modules} />
-            <Route path="/users" exact component={Users} /> 
-            <Route path="/profile" exact component={Profile} />
+        return (
+            <BrowserRouter>
+                <React.Fragment>
+                    <Header />
+                    <Popup />
+                    <Switch>
+                        <Route path="/timeline" exact component={TimeLine} />
+                        <Route path="/modules" exact component={Modules} />
+                        <Route path="/users" exact component={Users} />
+                        <Route path="/profile" exact component={Profile} />
 
-            <Route path="/homework" exact
-                render={props => <ClassPage {...props} studentClass={studentClasses[0]} />} />
-                    
-            {studentClasses.map(studentClass => (
-                <Route key={studentClass} path={"/homework/" + studentClass} exact
-                    render={props => <ClassPage {...props} studentClass={studentClass} />} />
-            ))}  
-            <Route path="/currentUserProfile" exact component={currentUserProfile} />
-            <Route path="/userAccount" exact component={userAccount} /> 
-            <Route path="/TrainTicket" exact component={TrainTicket}/>
-            <Redirect from="/" to="/timeline" />
-          </Switch>
-          <Footer />
-        </React.Fragment>
-      </BrowserRouter>
-    )
-  }
+                        <Route path="/homework" exact
+                            render={props => <ClassPage {...props} studentClass={studentClasses[0]} />} />
+
+                        {studentClasses.map(studentClass => (
+                            <Route key={studentClass} path={"/homework/" + studentClass} exact
+                                render={props => <ClassPage {...props} studentClass={studentClass} />} />
+                        ))}
+                        <Route path="/currentUserProfile" exact component={currentUserProfile} />
+                        <Route path="/userAccount" exact component={userAccount} />
+                        <Route path="/TrainTicket" exact component={TrainTicket} />
+                        <Redirect from="/" to="/timeline" />
+                    </Switch>
+                    <Footer />
+                </React.Fragment>
+            </BrowserRouter>
+        )
+    }
 }
 
 export default App
