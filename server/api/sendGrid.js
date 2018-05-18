@@ -19,7 +19,7 @@ function sendAnEmail(req, res) {
             console.log("mail sent successfully")
             res.end()
         })
-        .catch(err => console.log(res.statusCode ,err))
+        .catch(err => console.error(err.toString()))
 }
 
 module.exports = {

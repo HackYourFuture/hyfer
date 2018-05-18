@@ -14,7 +14,7 @@ export async function getTimelineItems() {
 
 }
 
-export async function sendAnEmail(recipient, sender, subject, text) { 
+export async function sendAnEmail(recipient, sender, subject, text) {
     const body = {
         recipient,
         sender,
@@ -22,7 +22,7 @@ export async function sendAnEmail(recipient, sender, subject, text) {
         text
     }
     try {
-       return await fetch(`${BASE_URL}/api/sendEmail`, {
+        const result = await fetch(`${BASE_URL}/api/sendEmail`, {
             method: "POST",
             headers: {
                 "Content-Type": "Application/json",
@@ -30,6 +30,13 @@ export async function sendAnEmail(recipient, sender, subject, text) {
             },
             body: JSON.stringify(body)
         })
+            .then(res => {
+                if (res.status === 200) {
+                    console.log("Email was sent successfully")
+                }
+            })
+            .catch(err => console.log(err))
+        return result
     } catch (error) {
         console.log(error)
     }
