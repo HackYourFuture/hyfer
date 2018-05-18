@@ -91,6 +91,7 @@ class store {
 				}
 			})
 			const data = await res.json()
+			console.log(data)
 			this.setState({
 				users: data,
 				filteredUsers: data,

@@ -5,6 +5,11 @@ const GET_MODULE_QUERY =
   `SELECT id, module_name, display_name, added_on, default_duration, git_url, git_owner, git_repo, color, optional,
         (SELECT COUNT(*) FROM running_modules WHERE running_modules.module_id = modules.id) AS ref_count
         FROM modules`
+
+const GET_HOMEWORK_MODULES_QUERY =
+    `SELECT id, module_name AS name, default_duration AS duration, sort_order, git_url 
+        FROM modules WHERE sort_order != 1000 AND has_homework != 0 ORDER BY sort_order`
+
 const ADD_MODULE_QUERY = `INSERT INTO modules SET ?`
 const UPDATE_MODULE_QUERY = `UPDATE modules SET ? WHERE id = ?`
 const DELETE_MODULE_QUERY = `DELETE FROM modules WHERE id = ?`
@@ -17,6 +22,11 @@ function getModule(con, id) {
 function getModules(con) {
   const sql = GET_MODULE_QUERY + ` ORDER BY sort_order, module_name`
   return db.execQuery(con, sql)
+}
+
+function getHomeworkModules(con) {
+    const sql = GET_HOMEWORK_MODULES_QUERY
+    return db.execQuery(con, sql)
 }
 
 function getCurriculumModules(con) {
@@ -77,6 +87,7 @@ function updateModules(con, batchUpdate) {
 module.exports = {
   getModule,
   getModules,
+  getHomeworkModules,
   getCurriculumModules,
   getOptionalModules,
   addModule,

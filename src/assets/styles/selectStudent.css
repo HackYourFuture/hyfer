@@ -1,9 +1,108 @@
-.imgContainer{
-width: 10%;
+.imgContainer {
+  width: 30%;
 }
-.img{
+
+.img {
   width: 100%;
+  border-radius: 50%;
+  padding: 10% 0 10% 0;
 }
-.studentContainer{
-  border: 1px solid gray;
+
+.studentContent {
+  border-left: 3px solid #80808066;
+  width: 31%;
+  float: left;
+  padding: 1%;
+  margin: 1%;
+  border-bottom: 3px solid #0000000a;
+}
+
+.studentContainer {
+  content: '';
+  clear: both;
+  overflow: hidden;
+  width: 70%;
+  margin: 0 auto;
+  border: 1px solid white;
+  background: white;
+  -webkit-box-shadow: 0px -1px 5px 0px rgba(204, 204, 204, 0.65);
+  -moz-box-shadow: 0px -1px 5px 0px rgba(204, 204, 204, 0.65);
+  box-shadow: 0px -1px 5px 0px rgba(204, 204, 204, 0.65);
+  margin-bottom: 2%;
+}
+
+.sName,
+.sInfo {
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, 0.822);
+  margin: 2%;
+  padding: 1%;
+}
+
+.sInfo {
+  float: left;
+  display: block;
+  margin: 1%;
+  border-left: 2px solid 0000009c;
+  padding-left: 2%;
+  margin-right: 5%;
+}
+
+.btnContainer {
+  width: 30%;
+  margin: 0 auto;
+}
+
+.btn {
+  outline: none;
+  margin: 0 auto;
+  border: 1px solid;
+  border-radius: 5px;
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 0.9rem;
+  background: #808080;
+  padding: 11px 20px 10px 20px;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 5%;
+}
+
+.btn:hover {
+  background: #00ad8a;
+  text-decoration: none;
+}
+
+.emptyStudents {
+  width: 100%;
+  padding: 10%;
+}
+
+.emptyMsg {
+  display: block;
+  font-size: 0.9rem;
+  color: #808080;
+  text-transform: capitalize;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* ------------MEDIA--------- */
+
+@media only screen and (max-width: 890px) {
+  .studentContent {
+    width: 31%;
+  }
+}
+
+@media only screen and (max-width: 650px) {
+  .studentContent {
+    width: 48%;
+  }
+}
+
+@media only screen and (max-width: 460px) {
+  .studentContent {
+    width: 100%;
+  }
 }
