@@ -1,8 +1,9 @@
 "use strict"
 
 const sgMail = require("@sendgrid/mail")
+const config = require("../config/config.js")
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+sgMail.setApiKey(config.SENDGRID_API_KEY)
 
 function sendAnEmail(recipient, sender, subject, text) {
     const msg = {

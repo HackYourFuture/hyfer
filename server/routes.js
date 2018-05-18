@@ -12,6 +12,7 @@ const groups = require('./api/groups')
 const history = require('./api/history')
 const states = require('./api/states')
 const homework = require('./api/homework')
+const {setEmail} = require('./api/update-email')
 
 module.exports = function (app) {
     app.get('/api/modules', auth.hasRole('teacher|student'), modules.getModules)
@@ -38,11 +39,12 @@ module.exports = function (app) {
 
     app.get('/api/github/readme/:owner/:repo', github.getReadMeAsHtml)
 
-    app.get('/api/user', auth.isAuthenticated(), users.getCurrentUser)  
-    app.get('/api/users', auth.hasRole('student|teacher'), users.getUsers)
-    //app.get('/api/users', users.getUsers)
-    app.get('/api/user/:id', auth.hasRole('teacher|student'), users.getUserById)
-    app.patch('/api/user/:id', auth.hasRole('teacher|student'), users.updateUser)
+
+  app.get('/api/user', auth.isAuthenticated(), users.getCurrentUser)  
+  //app.get('/api/users', auth.hasRole('student|teacher'), users.getUsers)
+  app.get('/api/users', auth.hasRole('teacher'), users.getUsers)
+  app.get('/api/user/:id', auth.hasRole('teacher|student'), users.getUserById)
+  app.patch('/api/user/:id', auth.hasRole('teacher|student'), users.updateUser)
 
     app.patch('/api/history/:moduleId/:groupId', auth.isAuthenticated(), history.getHistory)
 
@@ -58,6 +60,8 @@ module.exports = function (app) {
 
     app.get('/api/students', auth.hasRole('teacher|student'), github.getTeamMembers)
     app.get('/user/emails', auth.hasRole('teacher'), github.getUserEmails)
+    
+    app.patch('/api/set-email', auth.isAuthenticated(), setEmail)
 
     app.post('/api/githubSync', auth.hasRole('teacher'), githubSync.githubSync)
 

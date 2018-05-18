@@ -184,11 +184,11 @@ export default function () {
         return (
             // item.id is the id of the group
             assignTeachers(item, item.id, teacher1, teacher2)
-            // when done go back throught the whole procedure to get the items on screen
-            .then(() => {
-                fetchItems()
-            })
-            .catch(err => console.log(err))
+                // when done go back throught the whole procedure to get the items on screen
+                .then(() => {
+                    fetchItems()
+                })
+                .catch(err => console.log(err))
         )
     }
 
