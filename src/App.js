@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
-import { studentClasses } from "../src/store/HomeworkStore"
 
 import './assets/styles/app.css'
 import Header from './components/Header/Header'
@@ -12,7 +11,7 @@ import currentUserProfile from './Pages/Users/currentUserProfile'
 import userAccount from './Pages/Users/userAccount'
 import Profile from './Pages/Users/Profile'
 import TrainTicket from './Pages/TrainTicket/TrainTicket'
-import ClassPage from "./Pages/Homework/ClassPage"
+import Homework from "./Pages/Homework/Homework"
 import cookie from 'react-cookies'
 import Notifications from 'react-notify-toast'
 import NotFound from './Pages/NotFound'
@@ -36,6 +35,7 @@ const defaultState = {
 }
 
 const { pathname } = window.location
+
 class App extends Component {
     state = { ...defaultState }
 
@@ -51,7 +51,7 @@ class App extends Component {
             { exact: true, path: '/TrainTicket', component: TrainTicket },
         ],
         student: [ // waiting for Chileshe's Update
-            { exact: true, path: '/homework', render: props => <ClassPage {...props} studentClass={studentClasses[0]} /> },
+            { exact: true, path:"/homework", component:Homework },
         ],
         guest: [ // and all of the users can share some stuff
             { exact: true, path: '/currentUserProfile', component: currentUserProfile },
@@ -182,18 +182,13 @@ class App extends Component {
                         { // the user isn't logged in OR the lifecycle done AND No route found render this Component
                             (!this.state.isLoggedIn || this.state.done) && <Route {...this.routes.NotFound} />
                         }
-                        { // waiting for Chilelila's Update
-                            studentClasses.map(studentClass => (
-                                <Route key={studentClass} path={"/homework/" + studentClass} exact
-                                    render={props => <ClassPage {...props} studentClass={studentClass} />} />
-                            ))
-                        }
                     </Switch>
                     <Footer />
                 </React.Fragment>
             </BrowserRouter>
         )
     }
+
 }
 
 

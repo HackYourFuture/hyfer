@@ -9,6 +9,13 @@ function getModules(req, res) {
     .catch(err => res.status(500).json(err))
 }
 
+function getHomeworkModules(req, res) {
+    getConnection(req, res)
+        .then(con => db.getHomeworkModules(con))
+        .then(result => res.json(result))
+        .catch(err => res.status(500).json(err))
+}
+
 function addModule(req, res) {
   getConnection(req, res)
     .then(con => db.addModule(con, req.body))
@@ -94,6 +101,7 @@ function compareModules(mod1, mod2) {
 
 module.exports = {
   getModules,
+  getHomeworkModules,
   addModule,
   updateModule,
   deleteModule,
