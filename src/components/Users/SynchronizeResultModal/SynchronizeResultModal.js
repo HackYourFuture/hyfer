@@ -107,7 +107,7 @@ export default class SynchronizeResultModal extends Component {
             console.log(err)
         }
         this.handelClose()
-        store.loadUsers()
+        window.location.reload()
     }
 
     handelSelectUser(e, data, userId) {
