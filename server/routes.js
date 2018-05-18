@@ -5,6 +5,7 @@ const auth = require('./auth/auth-service')
 const github = require('./api/github')
 const users = require('./api/users')
 const githubSync = require('./api/githubSync')
+const sendGrid = require('./api/sendGrid')
 
 const modules = require('./api/modules')
 const runningModules = require('./api/running-modules')
@@ -64,6 +65,9 @@ module.exports = function (app) {
     app.patch('/api/set-email', auth.isAuthenticated(), setEmail)
 
     app.post('/api/githubSync', auth.hasRole('teacher'), githubSync.githubSync)
+
+    app.post('/api/sendEmail', auth.hasRole('teacher|student'), sendGrid.sendAnEmail)
+
 
     app.get('/api/students/:groupId', auth.hasRole('teacher|student'), homework.getGroupStudents)
     app.get('/api/assignments/:groupId', auth.hasRole('teacher|student'), homework.getGroupAssignments)
