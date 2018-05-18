@@ -6,13 +6,9 @@ const token = localStorage.getItem("token")
 
 //return a promise with `then` getting the json formatted data
 export async function getTimelineItems() {
-    try {
-        const res = await fetch(BASE_URL + '/api/timeline')
-        if (!res.ok) throw res
-        return await res.json()
-    } catch (err) {
-        error_bundle(err)
-    }
+    const res = await fetch(BASE_URL + '/api/timeline')
+    if (!res.ok) throw res
+    return await res.json()
 }
 
 export function setEndingDateForModules(allItems, groups) {
