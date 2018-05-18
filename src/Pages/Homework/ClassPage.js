@@ -1,95 +1,102 @@
 import React, { Component } from "react"
-import AddHomework from "./AddHomework"
-import Submission from "./Submission"
-import Reviews from "./Reviews"
-import { studentClasses, students, submissions, reviews } from "../../store/HomeworkStore"
+import { inject, observer } from "mobx-react"
+import Assignment from "./Assignment"
+import DatePicker from "react-datepicker"
+import moment from "moment"
 import styles from "../../assets/styles/homework.css"
+import "react-datepicker/dist/react-datepicker-cssmodules.css"
 
 
+@inject("HomeworkStore")
+@observer    
 export default class ClassPage extends Component {
 
     state = {
-        currentUser: {},
-        students: students[this.props.studentClass],
-        submissions: submissions[this.props.studentClass],
-        reviews: reviews[this.props.studentClass]    
+        addingAssignment: false,
+        selectedModule: "",
+        title: "",
+        githubLink: "",
+        deadline: moment().format("YYYY-MM-DD")
     }
 
     async componentWillMount() {
+        const { getActiveGroups, fetchAllData } = this.props.HomeworkStore
+        await getActiveGroups()
+        fetchAllData(this.props.studentClass)   
+    }
 
-        const CURRENT_USER_INFO_URL = 'http://localhost:3005/api/user'
-        const token = localStorage.getItem("token")
+    handleInputChange = (value, field) => {
+        this.setState({
+            [field]: value
+        })
+    }
 
-        const res = await fetch(CURRENT_USER_INFO_URL, {
-            credentials: "same-origin",
-            headers: {
-                "Authorization": "Bearer " + token,
-            }
-        })       
-        const userData = await res.json()
-        const currentUser = {
-            name: userData.full_name || userData.username,
-            email: userData.email,
-            avatar: `https://avatars.githubusercontent.com/${userData.username}`
+    toggleAddAssignment = () => {
+        this.setState({
+            addingAssignment: !this.state.addingAssignment
+        })
+    }
+
+    addAssignment = () => {
+        const { selectedModule, title, githubLink, deadline } = this.state
+        if (selectedModule && title && githubLink && deadline) {
+            this.props.HomeworkStore.addAssignment(selectedModule, title, githubLink, deadline)
+            this.toggleAddAssignment()
         }
-
-        this.setState({
-            currentUser,
-            students: [...this.state.students, currentUser]
-        })
-    }
-
-    addSubmission = (githubLink) => {
-        this.setState({  
-            submissions: [
-                ...this.state.submissions,
-                { submitter: this.state.currentUser.name, githubLink }
-            ]           
-        })
-    }
-
-    requestReview = (reviewer, reviewee) => {
-        // *** send email to reviewer - 
-        //"Your review has been requested on {reviewee}'s homework"
-    }
-
-    addReview = (reviewee, comments) => {
-        this.setState({
-            reviews: [
-                ...this.state.reviews,
-                { reviewer: this.state.currentUser.name, reviewee, comments }
-            ]            
-        })
     }
 
     render() {
-        const { students, submissions, reviews } = this.state
-
+        const { studentClass } = this.props
+        const { modules, assignments } = this.props.HomeworkStore
+        const latestAssignments = assignments.slice(0, 2)
+        const { addingAssignment, selectedModule, title, githubLink, deadline } = this.state
+        
         return (
             <div className={styles.classPage}>
-                <div className={styles.navBar}>
-                    {studentClasses.map(studentClass => (
-                        <a key={studentClass} href={"/homework/" + studentClass}>
-                            <button>Class {studentClass.substr(5)}</button>
-                        </a>
-                    ))}
-                </div>
-
-                <AddHomework addSubmission={this.addSubmission} />  
-                
-                <section className={styles.submissionsContainer}>
-                    <Submission
-                        students={students}
-                        submissions={submissions}
-                        addReview={this.addReview}
-                        requestReview={this.requestReview}
-                    />
-                         
-                    <div className={styles.reviewsContainer}>
-                         <Reviews reviews={reviews}/>
-                    </div> 
+                <h1>Class {studentClass.substr(5)}</h1>
+                <section className={styles.addAssignmentForm}>
+                    {addingAssignment
+                        ? <div>
+                            <select value={selectedModule} onChange={e => this.handleInputChange(e.target.value, "selectedModule")}>
+                                <option value="" disabled hidden>Select module</option>    
+                                {modules.map(module => (
+                                    <option key={module.id} value={module.name}>{module.name}</option>
+                                ))}
+                            </select>
+                            <input type="text"
+                                value={title}
+                                placeholder="homework title . . ."
+                                onChange={e => this.handleInputChange(e.target.value, "title")}
+                            />
+                            <input type="text"
+                                value={githubLink}
+                                placeholder="paste homework link . . ."
+                                onChange={e => this.handleInputChange(e.target.value, "githubLink")}
+                            />
+                            <DatePicker
+                                value={deadline}
+                                onChange={date => this.handleInputChange(moment(date).format("YYYY-MM-DD"), "deadline")}
+                            />
+                            <button onClick={this.addAssignment}>Save</button>
+                            <button onClick={this.toggleAddAssignment}>Cancel</button>
+                        </div>
+                        : <button onClick={this.toggleAddAssignment}>New Assignment</button>
+                    }
                 </section>    
-            </div>
+
+                <section className={styles.assignmentsContainer}>
+                    {latestAssignments.map(assignment => (
+                        <Assignment
+                            key={assignment.id}
+                            id={assignment.id}
+                            module={assignment.module_name}
+                            title={assignment.title}
+                            deadline={assignment.deadline}
+                            instructions={assignment.assignment_link}
+                        />
+                    ))}
+                </section>    
+            </div>           
         )
     }
 }

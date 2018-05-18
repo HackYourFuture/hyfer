@@ -1,8 +1,10 @@
 import {
-  AVATAR_URL_CHANGED,
-  ISTEACHER_STATE_CHANGED,
-  ISSTUDENT_STATE_CHANGED,
-  LOGIN_STATE_CHANGED
+    AVATAR_URL_CHANGED,
+    ISTEACHER_STATE_CHANGED,
+    ISSTUDENT_STATE_CHANGED,
+    LOGIN_STATE_CHANGED,
+    USER_ID,
+    IS_EMAIL_EXISTED
 } from './';
 
 const CURRENT_USER_INFO_URL = 'http://localhost:3005/api/user'
@@ -42,54 +44,75 @@ export default function () {
     //Normal methods
 
 
-  const getUserInfo = () => {
-    const token = localStorage.getItem("token")
-    fetch(CURRENT_USER_INFO_URL , {
-      credentials: "same-origin",
-      headers: {
-      'Authorization':'Bearer ' + token,
-    }})
-      .then(res => res.json())
-      .then(jsonRes => {
-        const isLoggedIn = true;
-        const isATeacher = jsonRes.role === 'teacher' ? true : false;
-        const isStudent = jsonRes.role === 'student' ? true : false;        
-        _getProfileImg(jsonRes.username);
-        // notify login
-        setState({
-          type: LOGIN_STATE_CHANGED,
-          payload: {
-            isLoggedIn
-          }
-        });
-        //notify a teacher
-        setState({
-          type: ISTEACHER_STATE_CHANGED,
-          payload: {
-            isATeacher
-          }
-        });
-        setState({
-          type: ISSTUDENT_STATE_CHANGED,
-          payload: {
-            isStudent
-          }
-        });
-      })
-      .catch(err => console.log(err));
-  };
+    const getUserInfo = () => {
+        const token = localStorage.getItem("token")
+        fetch(CURRENT_USER_INFO_URL, {
+            credentials: "same-origin",
+            headers: {
+                'Authorization': 'Bearer ' + token,
+            }
+        })
+            .then(res => res.json())
+            .then(jsonRes => {
+                const isLoggedIn = true;
+                const isATeacher = jsonRes.role === 'teacher' ? true : false;
+                const isStudent = jsonRes.role === 'student' ? true : false;
+                const isEmail = jsonRes.email ? true : false;
+                _getProfileImg(jsonRes.username);
+                _getProfileId(jsonRes.id);
+                // notify login
+                setState({
+                    type: LOGIN_STATE_CHANGED,
+                    payload: {
+                        isLoggedIn
+                    }
+                });
+                //notify a teacher
+                setState({
+                    type: ISTEACHER_STATE_CHANGED,
+                    payload: {
+                        isATeacher
+                    }
+                });
+                setState({
+                    type: ISSTUDENT_STATE_CHANGED,
+                    payload: {
+                        isStudent
+                    }
+                });
+                 // notify set email
+                setState({
+                    type: IS_EMAIL_EXISTED,
+                    payload: {
+                        isEmail
+                    }
+                });
+            })
+            .catch(err => console.log(err));
+    };
 
-  // Helper methods
-  const _getProfileImg = username => {
-    const avatarUrl = `https://avatars.githubusercontent.com/${username}`;
-    //notify avatar url changed
-    setState({
-      type: AVATAR_URL_CHANGED,
-      payload: {
-        avatarUrl
-      }
-    });
-  };
+    // Helper methods
+    const _getProfileImg = username => {
+        const avatarUrl = `https://avatars.githubusercontent.com/${username}`;
+        //notify avatar url changed
+        setState({
+            type: AVATAR_URL_CHANGED,
+            payload: {
+                avatarUrl
+            }
+        });
+    };
+
+    const _getProfileId = id => {
+
+        //notify set userId
+        setState({
+            type: USER_ID,
+            payload: {
+                id
+            }
+        });
+    };
 
 
     return {
