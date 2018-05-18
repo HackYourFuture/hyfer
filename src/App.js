@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
-import { studentClasses } from "../src/store/HomeworkStore"
 
 
 import './assets/styles/app.css'
@@ -13,9 +12,10 @@ import currentUserProfile from './Pages/Users/currentUserProfile'
 import userAccount from './Pages/Users/userAccount'
 import Profile from './Pages/Users/Profile'
 import TrainTicket from './Pages/TrainTicket/TrainTicket'
-import ClassPage from "./Pages/Homework/ClassPage"
+import Homework from "./Pages/Homework/Homework"
 import cookie from 'react-cookies'
 import Popup from './components/Popup'
+
 
 class App extends Component {
 
@@ -30,36 +30,29 @@ class App extends Component {
         }
         localStorage.setItem('token', token)
     }
-
+    
     render() {
-        return (
-            <BrowserRouter>
-                <React.Fragment>
-                    <Header />
-                    <Popup />
-                    <Switch>
-                        <Route path="/timeline" exact component={TimeLine} />
-                        <Route path="/modules" exact component={Modules} />
-                        <Route path="/users" exact component={Users} />
-                        <Route path="/profile" exact component={Profile} />
-
-                        <Route path="/homework" exact
-                            render={props => <ClassPage {...props} studentClass={studentClasses[0]} />} />
-
-                        {studentClasses.map(studentClass => (
-                            <Route key={studentClass} path={"/homework/" + studentClass} exact
-                                render={props => <ClassPage {...props} studentClass={studentClass} />} />
-                        ))}
-                        <Route path="/currentUserProfile" exact component={currentUserProfile} />
-                        <Route path="/userAccount" exact component={userAccount} />
-                        <Route path="/TrainTicket" exact component={TrainTicket} />
-                        <Redirect from="/" to="/timeline" />
-                    </Switch>
-                    <Footer />
-                </React.Fragment>
-            </BrowserRouter>
-        )
-    }
+    return (
+      <BrowserRouter>
+        <React.Fragment>
+          <Header />
+          <Popup />      
+          <Switch>
+            <Route path="/timeline" exact component={TimeLine} />
+            <Route path="/modules" exact component={Modules} />
+            <Route path="/users" exact component={Users} /> 
+            <Route path="/profile" exact component={Profile} />
+            <Route path="/homework" exact component={Homework} /> 
+            <Route path="/currentUserProfile" exact component={currentUserProfile} />
+            <Route path="/userAccount" exact component={userAccount} /> 
+            <Route path="/TrainTicket" exact component={TrainTicket}/>
+            <Redirect from="/" to="/timeline" />
+          </Switch>
+          <Footer />
+        </React.Fragment>
+      </BrowserRouter>
+    )
+  }
 }
 
 export default App

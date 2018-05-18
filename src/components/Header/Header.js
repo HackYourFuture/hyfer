@@ -178,25 +178,26 @@ export default class Header extends Component {
                                 >
                                     Users
                 </NavLink>
-                            </li>
-                            <li>
-                                <NavLink
-                                    exact
-                                    to="/homework"
-                                    className={styles.item}
-                                    activeClassName={styles.activeNav}
-                                >
-                                    Homework
-                        </NavLink>
-                            </li>
-                            <li>
-                                <NavLink
-                                    exact
-                                    to="/TrainTicket"
-                                    className={styles.item}
-                                    activeClassName={styles.activeNav}
-                                >
-                                    Ticket
+                </li>
+                <li>
+                    <NavLink
+                        exact
+                        to="/homework"
+                        className={styles.item}
+                        activeClassName={styles.activeNav}
+                    >
+                        Homework
+                    </NavLink>
+                </li>  
+              <li>
+                <NavLink
+                  exact
+                  to="/TrainTicket"
+                  className={styles.item}
+                  activeClassName={styles.activeNav}
+                >
+                  Ticket
+
                 </NavLink>
                             </li>
                         </ul>
@@ -225,50 +226,49 @@ export default class Header extends Component {
                                 >
                                     Timeline
               </NavLink>
-                            </li>
-                        </ul>
-                    </nav>
-                    {student}
-                </header>
-            )
-        } else {
-            return (
-                <header className={styles.header}>
-                    <a href="http://hackyourfuture.net/">
-                        <img
-                            src={hyfIcon}
-                            alt="HackYourFuture logo"
-                            className={styles.hyfIcon}
-                        />
-                    </a>
-                    <nav className={styles.nav}>
-                        <ul className={styles.list}>
-                            <li>
-                                <NavLink
-                                    exact
-                                    to="/timeline"
-                                    className={styles.item}
-                                    activeClassName={styles.activeNav}
-                                >
-                                    Timeline
+            </li>
+            <li>
+                <NavLink
+                    exact
+                    to="/homework"
+                    className={styles.item}
+                    activeClassName={styles.activeNav}
+                >
+                    Homework
+                </NavLink>
+            </li>          
+            </ul>
+          </nav>
+          {student}
+        </header>
+      )
+    } else {
+      return (
+        <header className={styles.header}>
+          <a href="http://hackyourfuture.net/">
+            <img
+              src={hyfIcon}
+              alt="HackYourFuture logo"
+              className={styles.hyfIcon}
+            />
+          </a>
+          <nav className={styles.nav}>
+            <ul className={styles.list}>
+              <li>
+                <NavLink
+                  exact
+                  to="/timeline"
+                  className={styles.item}
+                  activeClassName={styles.activeNav}
+                >
+                  Timeline
               </NavLink>
 
-                            </li>
-                            <li>
-                                <NavLink
-                                    exact
-                                    to="/homework"
-                                    className={styles.item}
-                                    activeClassName={styles.activeNav}
-                                >
-                                    Homework
-                </NavLink>
-                            </li>
-                        </ul>
-                    </nav>
-                    {user}
-                </header>
-            )
-        }
-    }
+            </li>     
+          </ul>
+        </nav>
+        {user}
+      </header>
+    )}
+  }
 }
