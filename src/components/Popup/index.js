@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
+import styles from './index.css'
 import { uiStore } from '../../store'
+import ModalDialog from '../../Helpers/Modal/Modal'
 const defaultState = {
     isEmail: false,
     isLoggedIn: true,
@@ -11,7 +13,7 @@ const defaultState = {
 class Popup extends Component {
     state = {
         ...defaultState
-    }   
+    }
     componentDidMount = () => {
         uiStore.subscribe(mergedData => {
             if (mergedData.type) {
@@ -38,7 +40,7 @@ class Popup extends Component {
         /* UiStore.getState(): to continue*/
         const { email_input, confirm_email_input } = this.state
         if (email_input !== confirm_email_input) {
-            return console.error("the emails didn't match ")             
+            return console.error("the emails didn't match ")
         }
         const { id } = uiStore.getState()
         const data = {
@@ -61,26 +63,25 @@ class Popup extends Component {
             .then(console.log)
             .catch(error => console.error('Error:', error))
     }
-    PopUpContent = () => {
+    PopUpContent = (visible) => {
         return (
-            <div className='Popup'>
-                <input
-                    onChange={this.handleChange}
-                    value={this.state.email_input}
-                    type='email'
-                    placeholder='Please Enter Your Email'
-                />
-                <input
-                    onChange={this.handleConfirmChange}
-                    value={this.state.confirm_email_input}
-                    type='email'
-                    placeholder='Confirm Your Email'
-                />
-                <button onClick={this.handleSubmit /* UiStore.getState(): to continue*/}>
-                    Submit
+            <ModalDialog visible={visible} closeModal={this.state.submited} close={true/*if close true the Closing X button will not be showed*/}>
+                    <input className={styles.Popup_input}
+                        onChange={this.handleChange}
+                        value={this.state.email_input}
+                        type='email'
+                        placeholder='Please Enter Your Email'
+                    />
+                    <input className={styles.Popup_input}
+                        onChange={this.handleConfirmChange}
+                        value={this.state.confirm_email_input}
+                        type='email'
+                        placeholder='Confirm Your Email'
+                    />
+                    <button className={styles.Popup_button} onClick={this.handleSubmit /* UiStore.getState(): to continue*/}>
+                        Submit
                     </button>
-
-            </div>
+            </ModalDialog>
         )
     }
     render() {
@@ -88,7 +89,7 @@ class Popup extends Component {
         const { isEmail, isLoggedIn, submited } = this.state
         const { PopUpContent } = this
         if (notUndefined && !isEmail && !isLoggedIn && !submited) {
-            return PopUpContent()
+            return PopUpContent(true)
         } else {
             return ''
         }
