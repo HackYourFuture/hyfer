@@ -33,7 +33,7 @@ function getTimeline(con) {
 }
 
 function getGroups(con) {
-  return db.execQuery(con, 'SELECT id, group_name, starting_date FROM \`groups\` ORDER BY starting_date')
+  return db.execQuery(con, 'SELECT id, group_name, starting_date, archived FROM \`groups\` ORDER BY starting_date')
 }
 
 function updateGroup(con, module, id) {
