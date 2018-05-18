@@ -45,13 +45,13 @@ class HomeworkStore {
     activeGroups = []
 
     @observable
-    students = []
+    students = []   
     
     @observable
     modules = [] 
 
     @observable
-    homework = []    
+    assignments = []    
     
     @observable
     submissions = []
@@ -59,13 +59,20 @@ class HomeworkStore {
     @observable
     reviews = []
 
+    @observable
+    assignmentSubmitters = []  
+
+    @observable
+    unassignedReviewers = []
+    
     @action
     getCurrentUser = async() => {        
         const userData = await getData("user") 
         runInAction(() => {
             this.currentUser = {
                 id: userData.id,
-                name: userData.full_name || userData.username,
+                username: userData.username,
+                full_name: userData.full_name,
                 email: userData.email,
                 avatarUrl: `https://avatars.githubusercontent.com/${userData.username}`,
                 group: null
@@ -76,13 +83,13 @@ class HomeworkStore {
     @action
     fetchAllData = async (groupName) => {
         this.currentGroup = this.activeGroups.filter(group => group.name === groupName)[0]
-        await this.getHomework()
+        await this.getHomework("assignments")
         await this.getActiveGroups()
         await this.getCurrentUser()
         await this.getStudents()
-        await this.getSubmissions()
-        await this.getReviews()
-        await this.getActiveModules()
+        await this.getHomework("submissions")
+        await this.getHomework("reviews")
+        await this.getHomeworkModules()
     }  
     
     @action
@@ -108,97 +115,99 @@ class HomeworkStore {
             this.students = studentsWithAvatars
         })   
     }
+    
 
-    @action
-    getHomework = async () => {
-        const currentGroupHomework = await getData(`homework/${this.currentGroup.id}`)
+    @action 
+    getHomework = async (dataType) => {
+        const homeworkData = await getData(`${dataType}/${this.currentGroup.id}`)
         runInAction(() => {
-            this.homework = currentGroupHomework
-        })  
-    }   
+            this[dataType] = homeworkData
+        }) 
+    } 
     
     @action
-    getSubmissions = async () => {
-        const currentGroupSubmissions = await getData(`submissions/${this.currentGroup.id}`)
+    getAssignmentSubmitters = async (assignmentId) => {
+        const submitters = await getData(`submitters/${assignmentId}`)
         runInAction(() => {
-            this.submissions = currentGroupSubmissions
+            this.assignmentSubmitters = submitters
+            this.unassignedReviewers = submitters
         })
-    }  
+    }
     
     @action
-    getReviews = async () => {
-        const currentGroupReviews = await getData(`reviews/${this.currentGroup.id}`)
+    getHomeworkModules = async () => {
+        const homeworkModules = await getData("modules/homework")
         runInAction(() => {
-            this.reviews = currentGroupReviews
+            this.modules = homeworkModules
         })
-    }    
+    } 
+    
+    @action
+    updateReviewers = (selectedReviewer) => {
+        const availableReviewers = this.unassignedReviewers.filter(reviewer => reviewer.username !== selectedReviewer)
+        this.unassignedReviewers = availableReviewers
+    }
 
     @action
-    getActiveModules = async () => {
-        const activeModules = await getData("modules/active")
-        runInAction(() => {
-            this.modules = activeModules
-        })
-    }    
+    updateSubmitters = (submitterName) => {
+        const updatedSubmitters = this.assignmentSubmitters.filter(submitter => submitter.username !== submitterName)
+        this.assignmentSubmitters = updatedSubmitters
+    } 
 
     @action
-    setHomework = async (moduleName, title, githubLink, deadline) => {
-        // ADD githublink column to db table
+    addAssignment = async (moduleName, title, assignment_link, deadline) => {
         const module_id = this.modules.filter(module => module.name === moduleName)[0].id
         
         const newHomework = {
             group_id: this.currentGroup.id,
             module_id,
             title,
+            assignment_link,
             deadline
         }
-        await postData("homework", newHomework)
-        this.getHomework()
+        await postData("assignments", newHomework)
+        this.getHomework("assignments")
     }
 
     @action
-    addSubmission = async (homework_id, github_link, date) => {
+    addSubmission = async (assignment_id, github_link, date) => {
 
         const newSubmission = {
-            homework_id,
-            group_id: this.currentGroup.id,
-            student_id: this.currentUser.id,
+            assignment_id,
+            submitter_id: this.currentUser.id,
             github_link,
             date
         }
         await postData("submissions", newSubmission)
-        this.getSubmissions()
+        this.getHomework("submissions")
+
     }
 
-
     @action
-    addReview = async (homework_id, comments, date) => {
-        // change homework_id in db to submission_id
-        // REMOVE student_id column
+    addReview = async (submission_id, comments, date) => {
 
         const newReview = {
-            homework_id,
-            group_id: this.currentGroup.id,
-            student_id: 0,
+            submission_id,
             reviewer_id: this.currentUser.id,
             comments,
             date
         }
         await postData("reviews", newReview)
-        this.getReviews()
+        this.getHomework("reviews")
     }
 
     @action
-    requestReview = (submissionId, title, assignedReviewer) => {
+    requestReview = (submitter, assignmentTitle, assignedReviewer) => {
         
-        const submitter = this.submissions.filter(submission => submission.id === submissionId)
-            .map(submission => submission.username)[0]
 
         const reviewerEmail = this.students.filter(student => student.username === assignedReviewer)
             .map(student => student.email)[0]
 
         // send email to reviewerEmail using SendGrid
-        // "[assignedReviewer], your review has been requested on [submitter]'s [title] homework"
+        console.log(`
+        Email sent to ${reviewerEmail} -- 
+        ${assignedReviewer}, your review has been requested on ${submitter}'s "${assignmentTitle}" homework
+        `)
     }  
 
 }

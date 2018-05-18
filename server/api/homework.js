@@ -2,9 +2,9 @@
 const db = require('../datalayer/homework')
 const getConnection = require('./connection').getConnection
 
-function getGroupHomework(req, res) {
+function getGroupAssignments(req, res) {
     getConnection(req, res)
-        .then(con => db.getGroupHomework(con, req.params.groupId))
+        .then(con => db.getGroupAssignments(con, req.params.groupId))
         .then(result => res.json(result))
         .catch(err => res.status(500).json(err))
 }
@@ -30,9 +30,16 @@ function getGroupReviews(req, res) {
         .catch(err => res.status(500).json(err))
 }
 
-function addHomework(req, res) {
+function getAssignmentSubmitters(req, res) {
     getConnection(req, res)
-        .then(con => db.addHomework(con, req.body))
+        .then(con => db.getAssignmentSubmitters(con, req.params.assignmentId))
+        .then(result => res.json(result))
+        .catch(err => res.status(500).json(err))
+}
+
+function addAssignment(req, res) {
+    getConnection(req, res)
+        .then(con => db.addAssignment(con, req.body))
         .then(() => res.sendStatus(200))
         .catch(err => res.status(500).json(err))
 }
@@ -52,11 +59,12 @@ function addReview(req, res) {
 }
 
 module.exports = {
-    getGroupHomework,
+    getGroupAssignments,
     getGroupSubmissions,
     getGroupReviews,
     getGroupStudents,
-    addHomework,
+    getAssignmentSubmitters,
+    addAssignment,
     addSubmission,
     addReview
 }

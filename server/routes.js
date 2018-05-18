@@ -15,9 +15,7 @@ const homework = require('./api/homework')
 
 module.exports = function (app) {
     app.get('/api/modules', auth.hasRole('teacher|student'), modules.getModules)
-    ///////
-    app.get('/api/modules/active', auth.hasRole('teacher|student'), modules.getActiveModules)
-    ///////
+    app.get('/api/modules/homework', auth.hasRole('teacher|student'), modules.getHomeworkModules)
     app.post('/api/modules', auth.hasRole('teacher|student'), modules.addModule)
     app.patch('/api/modules', auth.hasRole('teacher'), modules.updateModules)
     app.patch('/api/modules/:id', auth.hasRole('teacher'), modules.updateModule)
@@ -32,19 +30,19 @@ module.exports = function (app) {
 
     app.get('/api/timeline', groups.getTimeline)
 
-    //app.get('/api/groups', groups.getGroups)
-    app.get('/api/groups', auth.isAuthenticated(), groups.getGroups)
+    app.get('/api/groups', groups.getGroups)
+    //app.get('/api/groups', auth.isAuthenticated(), groups.getGroups)
     app.post('/api/groups', auth.hasRole('teacher'), groups.addGroup)
     app.patch('/api/groups/:id', auth.hasRole('teacher'), groups.updateGroup)
     app.delete('/api/groups/:id', auth.hasRole('teacher'), groups.deleteGroup)
 
     app.get('/api/github/readme/:owner/:repo', github.getReadMeAsHtml)
 
-  app.get('/api/user', auth.isAuthenticated(), users.getCurrentUser)  
-  app.get('/api/users', auth.hasRole('student|teacher'), users.getUsers)
-  //app.get('/api/users', users.getUsers)
-  app.get('/api/user/:id', auth.hasRole('teacher|student'), users.getUserById)
-  app.patch('/api/user/:id', auth.hasRole('teacher|student'), users.updateUser)
+    app.get('/api/user', auth.isAuthenticated(), users.getCurrentUser)  
+    app.get('/api/users', auth.hasRole('student|teacher'), users.getUsers)
+    //app.get('/api/users', users.getUsers)
+    app.get('/api/user/:id', auth.hasRole('teacher|student'), users.getUserById)
+    app.patch('/api/user/:id', auth.hasRole('teacher|student'), users.updateUser)
 
     app.patch('/api/history/:moduleId/:groupId', auth.isAuthenticated(), history.getHistory)
 
@@ -63,14 +61,14 @@ module.exports = function (app) {
 
     app.post('/api/githubSync', auth.hasRole('teacher'), githubSync.githubSync)
 
-    ////========= homework / studentsByGroup / reviews /submissions =======
-    app.get('/api/homework/:groupId', auth.hasRole('teacher|student'), homework.getGroupHomework)
-    app.post('/api/homework', auth.hasRole('teacher|student'), homework.addHomework)
     app.get('/api/students/:groupId', auth.hasRole('teacher|student'), homework.getGroupStudents)
-    app.post('/api/submissions', auth.hasRole('teacher|student'), homework.addSubmission)
+    app.get('/api/assignments/:groupId', auth.hasRole('teacher|student'), homework.getGroupAssignments)
     app.get('/api/submissions/:groupId', auth.hasRole('teacher|student'), homework.getGroupSubmissions)
-    app.post('/api/reviews', auth.hasRole('teacher|student'), homework.addReview)
+    app.get('/api/submitters/:assignmentId', auth.hasRole('teacher|student'), homework.getAssignmentSubmitters)
     app.get('/api/reviews/:groupId', auth.hasRole('teacher|student'), homework.getGroupReviews)
+    app.post('/api/assignments', auth.hasRole('teacher|student'), homework.addAssignment)
+    app.post('/api/submissions', auth.hasRole('teacher|student'), homework.addSubmission)
+    app.post('/api/reviews', auth.hasRole('teacher|student'), homework.addReview)
 
 
 

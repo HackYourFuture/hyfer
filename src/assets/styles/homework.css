@@ -1,5 +1,5 @@
 
-.mainContainer {
+.homeworkPage {
     padding: 0vh 5vw;
 }
 
@@ -32,40 +32,27 @@ h2 {
     color: rebeccapurple;
 }
 
-.submissionsContainer {
+.addAssignmentForm button {
+    padding: 1vh 1vw;
+    cursor: pointer;
+}
+
+.assignmentsContainer {
     display: flex;
     justify-content: space-between;
     margin-top: 7vh;
 }
 
-.reviewsContainer {
-    padding: 2vh 3vw;
-    width: 40%;
-}
-
-.hmwrkSubmission {
+.assignmentDiv {
     margin: 5vh 0vw;
     width: 45%;
 }
 
-.hmwrkSubmission .submitter {
-    border: 2px dashed rgb(66, 143, 66);
-    padding: 2vh 3vw;
-    margin-bottom: 3vh;
-    position: relative;
-}
-
-.hmwrkSubmission h3 {
+.assignmentDiv h3 {
    display: block;
 }
 
-.hmwrkSubmission a {
-    position: absolute;
-    top: 13vh;
-    right: 15vw;    
-}
-
-.hmwrkSubmission img {
+.assignmentDiv img {
     display: block;
     width: 20%;
     margin: -2vh 0vw 2vh 0vw;
@@ -74,60 +61,88 @@ h2 {
     border-radius: 50%;
 }
 
-.timestamp {
-    position: absolute;
-    bottom: 0vh;
-    right: 1vw;
-    font-size: 80%;
-    color: gray;
-}
-
-.hmwrkSubmission textarea {
+.assignmentDiv textarea {
     width: 100%;
     padding: 2vh 1vw;
     font-size: 110%;
 }
 
+.submission {
+    border: 2px dashed rgb(66, 143, 66);
+    padding: 2vh 3vw 4vh 3vw;;
+    margin-bottom: 3vh;
+    position: relative;
+}
+
+.timestamp {
+    position: absolute;
+    top: 0vh;
+    right: 1.5vw;
+    font-size: 80%;
+    color: gray;
+}
+
 .assignReviewer {
     position: absolute;
-    top: 2vh;
+    top: 7vh;
     right: 1vw;
 }
 
+.assignReviewer h4 {
+    color: green;
+}
+
 .assignReviewer button,
-.replyContainer button {
-    margin-left: 1vw;
+.commentsDiv button {
     padding: 1vh 1vw;
     cursor: pointer;
 }
 
-.replyContainer button:nth-child(2) {
-    margin-left: 10vw;
-    margin-top: 1vh;   
+.commentsDiv {
+    margin-top: 2vh;
 }
 
-.addBtn {
-    margin-left: 40vw;
+.submitBtn {
     padding: 1vh 2vw;
     cursor: pointer;
 }
 
-.addForm {
-    margin: auto;
-    width: 60%;
+.expandBtn {
+    position: absolute;
+    bottom: 2vh;
+    right: 2vw;
+}
+.hideBtn {
+    position: absolute;
+    top: 17vh;
+    right: 2vw; 
 }
 
-.addForm input {
+.submitCommentBtn {
+    margin-left: 14vw;
+    margin-top: 1vh;
+}
+
+.review {
+    padding: 0.5vh 1.5vw;
+    width: 100%;
+    border: 2px dotted purple;
+    margin-top: 3vh;
+    position: relative;
+}
+
+.submitForm {
+    margin: 1vh 0vw;
+}
+
+.submitForm input {
     padding: 1vh 2vw;
     width: 50%;
     font-size: 110%;
 }
 
-.addForm button {
+.submitForm button {
     padding: 1vh 1vw;
+    margin: 1vh 1vw;
     cursor: pointer;
 }
-
-
-
-

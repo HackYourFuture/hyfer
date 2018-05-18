@@ -67,6 +67,7 @@ CREATE TABLE `modules` (
   `git_repo` varchar(50) DEFAULT NULL,
   `color` varchar(8) DEFAULT NULL,
   `optional` tinyint(1) DEFAULT '0',
+  `has_homework` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -142,16 +143,17 @@ CREATE TABLE `users` (
 
 
 
-# Dump of table homework
+# Dump of table homework_assignments
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `homework`;
+DROP TABLE IF EXISTS `homework_assignments`;
 
-CREATE TABLE `homework` (
+CREATE TABLE `homework_assignments` (
   `id` int(8) NOT NULL AUTO_INCREMENT,
   `group_id` int(8) NOT NULL,
   `module_id` int(8) NOT NULL,
   `title` varchar(255) NOT NULL DEFAULT '',
+  `assignment_link` varchar(255) NOT NULL DEFAULT '',
   `deadline` date NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -159,38 +161,37 @@ CREATE TABLE `homework` (
 
 
 
-# Dump of table reviews
+# Dump of table homework_submissions
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `reviews`;
+DROP TABLE IF EXISTS `homework_submissions`;
 
-CREATE TABLE `reviews` (
+CREATE TABLE `homework_submissions` (
   `id` int(8) NOT NULL AUTO_INCREMENT,
-  `homework_id` int(8) NOT NULL,
-  `group_id` int(8) NOT NULL,
-  `student_id` int(8) NOT NULL,
+  `assignment_id` int(8) NOT NULL,
+  `submitter_id` int(8) NOT NULL,
+  `github_link` varchar(255) NOT NULL DEFAULT '',
+  `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+
+# Dump of table homework_reviews
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `homework_reviews`;
+
+CREATE TABLE `homework_reviews` (
+  `id` int(8) NOT NULL AUTO_INCREMENT,
+  `submission_id` int(8) NOT NULL,
   `reviewer_id` int(8) NOT NULL,
   `comments` text NOT NULL DEFAULT '',
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-
-# Dump of table submissions
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `submissions`;
-
-CREATE TABLE `submissions` (
-  `id` int(8) NOT NULL AUTO_INCREMENT,
-  `homework_id` int(8) NOT NULL,
-  `group_id` int(8) NOT NULL,
-  `student_id` int(8) NOT NULL,
-  `github_link` varchar(255) NOT NULL DEFAULT '',
-  `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 

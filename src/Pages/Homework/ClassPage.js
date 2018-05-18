@@ -1,7 +1,6 @@
 import React, { Component } from "react"
 import { inject, observer } from "mobx-react"
-import HomeworkItem from "./HomeworkItem"
-import Activity from "./Activity"
+import Assignment from "./Assignment"
 import DatePicker from "react-datepicker"
 import moment from "moment"
 import styles from "../../assets/styles/homework.css"
@@ -13,7 +12,7 @@ import "react-datepicker/dist/react-datepicker-cssmodules.css"
 export default class ClassPage extends Component {
 
     state = {
-        settingHomework: false,
+        addingAssignment: false,
         selectedModule: "",
         title: "",
         githubLink: "",
@@ -32,71 +31,70 @@ export default class ClassPage extends Component {
         })
     }
 
-    toggleSetHomework = () => {
+    toggleAddAssignment = () => {
         this.setState({
-            settingHomework: !this.state.settingHomework
+            addingAssignment: !this.state.addingAssignment
         })
     }
 
-    setHomework = () => {
+    addAssignment = () => {
         const { selectedModule, title, githubLink, deadline } = this.state
         if (selectedModule && title && githubLink && deadline) {
-            this.props.HomeworkStore.setHomework(selectedModule, title, githubLink, deadline)
-            this.toggleSetHomework()
+            this.props.HomeworkStore.addAssignment(selectedModule, title, githubLink, deadline)
+            this.toggleAddAssignment()
         }
     }
 
     render() {
         const { studentClass } = this.props
-        const { modules, homework } = this.props.HomeworkStore
-        const latestHomework = homework.slice(0, 2)
-        const { settingHomework, selectedModule, title, githubLink, deadline } = this.state
+        const { modules, assignments } = this.props.HomeworkStore
+        const latestAssignments = assignments.slice(0, 2)
+        const { addingAssignment, selectedModule, title, githubLink, deadline } = this.state
         
         return (
             <div className={styles.classPage}>
                 <h1>Class {studentClass.substr(5)}</h1>
-                {settingHomework
-                    ? <section>
-                        <select value={selectedModule} onChange={e => this.handleInputChange(e.target.value, "selectedModule")}>
-                            {modules.map(module => (
-                                <option key={module.id} value={module.name}>{module.name}</option>
-                            ))}
-                        </select>
-                        <input type="text"
-                            value={title}
-                            placeholder="homework title . . ."
-                            onChange={e => this.handleInputChange(e.target.value, "title")}
-                        />
-                        <input type="text"
-                            value={githubLink}
-                            placeholder="paste homework link . . ."
-                            onChange={e => this.handleInputChange(e.target.value, "githubLink")}
-                        />
-                        <DatePicker
-                            value={deadline}
-                            onChange={date => this.handleInputChange(moment(date).format("YYYY-MM-DD"), "deadline")}
-                        />
-                        <button onClick={this.setHomework}>Save</button>
-                        <button onClick={this.toggleSetHomework}>Cancel</button>
-                    </section>
-                    : <button onClick={this.toggleSetHomework}>Set Homework</button>
-                }
+                <section className={styles.addAssignmentForm}>
+                    {addingAssignment
+                        ? <div>
+                            <select value={selectedModule} onChange={e => this.handleInputChange(e.target.value, "selectedModule")}>
+                                <option value="" disabled hidden>Select module</option>    
+                                {modules.map(module => (
+                                    <option key={module.id} value={module.name}>{module.name}</option>
+                                ))}
+                            </select>
+                            <input type="text"
+                                value={title}
+                                placeholder="homework title . . ."
+                                onChange={e => this.handleInputChange(e.target.value, "title")}
+                            />
+                            <input type="text"
+                                value={githubLink}
+                                placeholder="paste homework link . . ."
+                                onChange={e => this.handleInputChange(e.target.value, "githubLink")}
+                            />
+                            <DatePicker
+                                value={deadline}
+                                onChange={date => this.handleInputChange(moment(date).format("YYYY-MM-DD"), "deadline")}
+                            />
+                            <button onClick={this.addAssignment}>Save</button>
+                            <button onClick={this.toggleAddAssignment}>Cancel</button>
+                        </div>
+                        : <button onClick={this.toggleAddAssignment}>New Assignment</button>
+                    }
+                </section>    
 
-                <section className={styles.submissionsContainer}>
-                    
-                    {latestHomework.map(homework => (
-                        <HomeworkItem
-                            key={homework.id}
-                            id={homework.id}
-                            title={homework.title}
-                            deadline={homework.deadline}
+                <section className={styles.assignmentsContainer}>
+                    {latestAssignments.map(assignment => (
+                        <Assignment
+                            key={assignment.id}
+                            id={assignment.id}
+                            module={assignment.module_name}
+                            title={assignment.title}
+                            deadline={assignment.deadline}
+                            instructions={assignment.assignment_link}
                         />
                     ))}
-                    
-                    <div className={styles.reviewsContainer}>
-                        <Activity />
-                    </div> 
-
                 </section>    
             </div>           
         )
