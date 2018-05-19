@@ -279,20 +279,16 @@ export async function addNewClass(className, starting_date) {
         archived: 0
     }
     const token = localStorage.getItem('token')
-    try {
-        const res = await fetch(`${BASE_URL}/api/groups`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'Application/json',
-                'Authorization': 'Bearer ' + token,
-            },
-            body: JSON.stringify(body)
-        })
-        if (!res.ok) throw res
-        return res
-    } catch (err) {
-        error_bundle(err)
-    }
+    const res = await fetch(`${BASE_URL}/api/groups`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'Application/json',
+            'Authorization': 'Bearer ' + token,
+        },
+        body: JSON.stringify(body)
+    })
+    if (!res.ok) throw res
+    return res
 }
 
 export async function getALlPossibleModules() {
