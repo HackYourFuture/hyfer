@@ -99,7 +99,7 @@ export default class Timeline extends Component {
     }
 
     componentDidMount = () => {
-        if (this.props.teachers === null) {
+        if (!this.props.teachers) {
             timelineStore.fetchItems(false).then(() => {
                 this.setState({ loaded: true })
             })

@@ -128,16 +128,17 @@ export default function () {
             }
         })
 
-
-        getTeachers().then(res => {
-            const teachers = res.filter(user => user.role === "teacher")
-            setState({
-                type: ALL_TEACHERS_CHAGNED,
-                payload: {
-                    teachers
-                }
+        if (isTeacher) {
+            getTeachers().then(res => {
+                const teachers = res.filter(user => user.role === "teacher")
+                setState({
+                    type: ALL_TEACHERS_CHAGNED,
+                    payload: {
+                        teachers
+                    }
+                })
             })
-        })
+        }
 
 
         setState({
