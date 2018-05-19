@@ -11,6 +11,34 @@ export async function getTimelineItems() {
     return await res.json()
 }
 
+export async function sendAnEmail(recipient, sender, subject, text) {
+    const body = {
+        recipient,
+        sender,
+        subject,
+        text
+    }
+    try {
+        const result = await fetch(`${BASE_URL}/api/sendEmail`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "Application/json",
+                "Authorization": "Bearer " + token,
+            },
+            body: JSON.stringify(body)
+        })
+            .then(res => {
+                if (res.status === 200) {
+                    console.log("Email was sent successfully")
+                }
+            })
+            .catch(err => console.log(err))
+        return result
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export function setEndingDateForModules(allItems, groups) {
     groups.forEach(group => {
         const items = allItems[group]

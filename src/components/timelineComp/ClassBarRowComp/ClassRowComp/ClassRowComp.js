@@ -9,7 +9,7 @@ export default class ClassRowComp extends Component {
     handleClassArchive = async (id) => {
         const group = this.props.groupsWithIds.filter(group => group.group_name.replace(/ /g, '').substr(5) === id)
 
-        if (window.confirm(`Are you sure you want to archive ${group[0].group_name}?`)) {
+        if (window.confirm(`Are you sure you want to delete ${group[0].group_name}?`)) {
             try {
                 await fetch(`http://localhost:3005/api/groups/${group[0].id}`, {
                     method: 'PATCH',
@@ -23,6 +23,7 @@ export default class ClassRowComp extends Component {
                     })
                 })
             } catch (err) {
+                window.location.reload()
                 error_bundle(err)
             }
         }

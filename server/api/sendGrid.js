@@ -5,15 +5,21 @@ const config = require("../config/config.js")
 
 sgMail.setApiKey(config.SENDGRID_API_KEY)
 
-function sendAnEmail(recipient, sender, subject, text) {
+function sendAnEmail(req, res) {
     const msg = {
-        to: recipient,
-        from: sender,
-        subject: subject,
-        text: text,
-        html: `<strong>${text}</strong>`,
+        to: req.body.recipient,
+        from: req.body.sender,
+        subject: req.body.subject,
+        text: req.body.text,
+        html: `<strong>${req.body.text}</strong>`,
     }
-    sgMail.send(msg)
+    sgMail
+        .send(msg)
+        .then(() => {
+            console.log("mail sent successfully")
+            res.end()
+        })
+        .catch(err => console.error(err.toString()))
 }
 
 module.exports = {
