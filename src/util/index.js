@@ -62,17 +62,13 @@ export function setEndingDateForModules(allItems, groups) {
 }
 
 export async function getAllGroupsWithIds() {
-    try {
-        const res = await fetch(`${BASE_URL}/api/groups`, {
-            headers: {
-                'Authorization': 'Bearer ' + token,
-            }
-        })
-        if (!res.ok) throw res
-        return await res.json()
-    } catch (err) {
-        error_bundle(err)
-    }
+    const res = await fetch(`${BASE_URL}/api/groups`, {
+        headers: {
+            'Authorization': 'Bearer ' + token,
+        }
+    })
+    if (!res.ok) throw res
+    return await res.json()
 }
 
 export function getAllTotalWeeksAndSundays(allItems) {

@@ -67,7 +67,7 @@ export default function () {
     const fetchItems = async isTeacher => {
         const timelineItems = await getTimelineItems(
             BASE_URL + "/api/timeline"
-        ).catch(error_bundle)
+        ) // if any error appears we will catch it by propagation
 
         // set the state with the array of all current groups [maybe needed for sidecolumn group names]
         const groups = Object.keys(timelineItems)
@@ -79,7 +79,7 @@ export default function () {
             orderedTimelineItems[group] = timelineItems[group]
         })
 
-        const groupsWithIds = await getAllGroupsWithIds()
+        const groupsWithIds = await getAllGroupsWithIds() // the error has been throwed
 
         setState({
             type: GROUPS_WITH_IDS_CHANGED,
@@ -99,6 +99,7 @@ export default function () {
 
         // get all possible modules for addition
         const allPossibleModules = await getALlPossibleModules().catch(e => {
+            // specific error catch it here.
             // we don't need any return on all of the users
             // On 403 Forbidden
             if (e.status === 403) return
@@ -143,7 +144,7 @@ export default function () {
                         teachers
                     }
                 })
-            }).catch(error_bundle)
+            }) // if any error appears we will catch it by propagation
         }
 
 
