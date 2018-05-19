@@ -223,6 +223,7 @@ export default function () {
     }
 
     const addTheClass = (className, starting_date) => {
+        // used for a once in src\components\timelineComp\Buttons\AddDropdownList\AddClassModal\AddClassModal.js
         return addNewClass(className, starting_date).then(() => fetchItems())
     }
 
