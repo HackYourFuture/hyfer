@@ -9,7 +9,7 @@ export async function getTimelineItems() {
     const res = await fetch(BASE_URL + '/api/timeline')
     if (!res.ok) throw res
     return await res.json()
-}
+} // used for a once catched there src/store/TimeLineStore.js
 
 export async function sendAnEmail(recipient, sender, subject, text) {
     const body = {
@@ -321,23 +321,15 @@ export async function addNewClass(className, starting_date) {
 
 export async function getALlPossibleModules() {
     const token = localStorage.getItem('token')
-    try {
-        const res = await fetch(`${BASE_URL}/api/modules`, {
-            credentials: 'same-origin',
-            headers: {
-                Authorization: 'Bearer ' + token
-            }
-        })
-        if (!res.ok) throw res
-        return await res.json()
-    } catch (err) {
-        // we don't need any return on all of the users
-        // On 403 Forbidden
-        if (err.status === 403) return
-        // if the user has any other problems?!
-        error_bundle(err)
-    }
-}
+    const res = await fetch(`${BASE_URL}/api/modules`, {
+        credentials: 'same-origin',
+        headers: {
+            Authorization: 'Bearer ' + token
+        }
+    })
+    if (!res.ok) throw res
+    return await res.json()
+} // used for a once and catched there src/store/TimeLineStore
 
 export function getAllSharedDates(items) {
     const keys = Object.keys(items)

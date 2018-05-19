@@ -98,7 +98,13 @@ export default function () {
         })
 
         // get all possible modules for addition
-        const allPossibleModules = await getALlPossibleModules()
+        const allPossibleModules = await getALlPossibleModules().catch(e => {
+            // we don't need any return on all of the users
+            // On 403 Forbidden
+            if (e.status === 403) return
+            // if the user has any other problems?!
+            error_bundle(e)
+        })
         setState({
             type: ALL_POSSIBLE_MODULES_CHANGED,
             payload: {
