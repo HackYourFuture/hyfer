@@ -1,5 +1,5 @@
 import moment from 'moment'
-import { error_bundle } from '../notify'
+import { error_bundle, success_bundle } from '../notify'
 
 const BASE_URL = 'http://localhost:3005'
 const token = localStorage.getItem("token")
@@ -18,25 +18,18 @@ export async function sendAnEmail(recipient, sender, subject, text) {
         subject,
         text
     }
-    try {
-        const result = await fetch(`${BASE_URL}/api/sendEmail`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "Application/json",
-                "Authorization": "Bearer " + token,
-            },
-            body: JSON.stringify(body)
-        })
-            .then(res => {
-                if (res.status === 200) {
-                    console.log("Email was sent successfully")
-                }
-            })
-            .catch(err => console.log(err))
-        return result
-    } catch (error) {
-        console.log(error)
-    }
+    const res = await fetch(`${BASE_URL}/api/sendEmail`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "Application/json",
+            "Authorization": "Bearer " + token,
+        },
+        body: JSON.stringify(body)
+    })
+    if (!res.ok) throw new Error(res)
+    else success_bundle("Email was sent successfully")
+    const jsonRes = await res.json()
+    return jsonRes
 }
 
 export function setEndingDateForModules(allItems, groups) {
