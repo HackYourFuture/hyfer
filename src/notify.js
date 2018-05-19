@@ -22,7 +22,7 @@ export const error_bundle = (e) => {
 }
 export const success_bundle = (note) => {
 
-    const message = param => notify.show(param, 'error')
+    const message = param => notify.show(param, 'success')
 
     if (!note) {
         // contains something?!
