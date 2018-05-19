@@ -3,6 +3,7 @@ import style from '../../assets/styles/SynchronizeGithubData.css'
 import loader from '../../assets/images/Eclipse.gif'
 import SynchronizeResultModal from '../../components/Users/SynchronizeResultModal/SynchronizeResultModal'
 import { getAllGroupsWithIds } from '../../util'
+import { error_bundle } from '../../notify';
 
 const token = localStorage.getItem("token")
 
@@ -26,8 +27,8 @@ export default class SynchronizeGithubData extends Component {
                 'Authorization': 'Bearer ' + token,
             }
         })
-        const githubApi = await res.json()
-        const hyferApi = await getAllGroupsWithIds()
+        const githubApi = await res.json().catch(error_bundle)
+        const hyferApi = await getAllGroupsWithIds().catch(error_bundle)
 
         let groups = hyferApi.map(group => group.group_name)
         let conflictData = githubApi.filter(team => {
