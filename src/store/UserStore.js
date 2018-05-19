@@ -77,26 +77,26 @@ class store {
             return;
         }
 
-        catch (err) { error_bundle(err)	}
-	}
-	
-	async loadUsers() {
-		try {
-			const res = await fetch('http://localhost:3000/api/users', {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': 'Bearer ' + token,
-				}
+        catch (err) { error_bundle(err) }
+    }
+
+    async loadUsers() {
+        try {
+            const res = await fetch('http://localhost:3000/api/users', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                }
             })
             if (!res.ok) throw res
-			const data = await res.json()
-			this.setState({
-				users: data,
-				filteredUsers: data,
-			});
-			return;
-		}
+            const data = await res.json()
+            this.setState({
+                users: data,
+                filteredUsers: data,
+            });
+            return;
+        }
         catch (err) { error_bundle(err) }
     }
     saveProfile = async (loadData) => {
