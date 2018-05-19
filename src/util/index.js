@@ -192,25 +192,21 @@ export function moveLeft(chosenModule, groups) {
 }
 
 export async function removeModule(chosenModule) {
+    // used for a once in src\store\TimeLineStore.js
     const {
         id,
         position
     } = chosenModule
     const token = localStorage.getItem("token")
-    try {
-        const res = await fetch(`${BASE_URL}/api/running/${id}/${position}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'Application/json',
-                'Authorization': 'Bearer ' + token,
-            },
-        })
-        if (!res.ok) throw res
-        return await res.json()
-    } catch (err) {
-        error_bundle(err)
-    }
-
+    const res = await fetch(`${BASE_URL}/api/running/${id}/${position}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'Application/json',
+            'Authorization': 'Bearer ' + token,
+        },
+    })
+    if (!res.ok) throw res
+    return await res.json()
 }
 
 export async function getModulesOfGroup(groupId) {
