@@ -188,6 +188,7 @@ export default function () {
     }
 
     const handleAssignTeachers = (item, teacher1, teacher2) => {
+        // used for a once in src\components\timelineComp\ClassTaskRowComp\DropdownList\AssignTeacherModal\AssignTeacherModal.js
         return (
             // item.id is the id of the group
             assignTeachers(item, item.id, teacher1, teacher2)
@@ -195,7 +196,6 @@ export default function () {
             .then(() => {
                 fetchItems()
             })
-                .catch(error_bundle)
         )
     }
 
