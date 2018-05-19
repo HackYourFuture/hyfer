@@ -234,6 +234,7 @@ export default function () {
 
     const getSelectedModuleInfo = item => {
         // give it to util to handle
+        // nothing is returning from it as a promise we can handle it here
         getModulesOfGroup(item.id)
             .then(res => {
                 setState({
