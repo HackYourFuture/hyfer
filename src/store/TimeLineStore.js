@@ -98,7 +98,7 @@ export default function () {
         })
 
         // get all possible modules for addition
-        const allPossibleModules = await getALlPossibleModules().catch(error_bundle)
+        const allPossibleModules = await getALlPossibleModules()
         setState({
             type: ALL_POSSIBLE_MODULES_CHANGED,
             payload: {
