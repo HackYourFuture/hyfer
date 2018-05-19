@@ -88,18 +88,14 @@ export function getAllTotalWeeksAndSundays(allItems) {
     return _getAllWeeks(firstDate, lastDate)
 }
 
-export async function getTeachers() {
-    try {
-        const res = await fetch(`${BASE_URL}/api/users`, {
-            headers: {
-                'Authorization': 'Bearer ' + token,
-            }
-        })
-        if (!res.ok) throw res
-        return await res.json()
-    } catch (err) {
-        error_bundle(err)
-    }
+export async function getTeachers() { // used for a once in src/store/TimeLineStore.js
+    const res = await fetch(`${BASE_URL}/api/users`, {
+        headers: {
+            'Authorization': 'Bearer ' + token,
+        }
+    })
+    if (!res.ok) throw res
+    return await res.json()
 }
 
 export function getWeeksBeforeAndAfter(allWeeks, classModules) {

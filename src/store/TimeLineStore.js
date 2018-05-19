@@ -143,7 +143,7 @@ export default function () {
                         teachers
                     }
                 })
-            })
+            }).catch(error_bundle)
         }
 
 
