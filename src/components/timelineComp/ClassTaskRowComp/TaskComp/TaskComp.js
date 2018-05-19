@@ -3,7 +3,6 @@ import React, { Component } from 'react'
 import DropdownList from '../DropdownList/DropdownList'
 import classes from './taskComp.css'
 import AssignTeacherModal from '../DropdownList/AssignTeacherModal/AssignTeacherModal'
-import { timelineStore } from '../../../../store'
 
 export default class TaskComp extends Component {
   state = {
@@ -72,7 +71,6 @@ export default class TaskComp extends Component {
           infoSelectedModule={this.props.infoSelectedModule}
           visible={this.state.assignTeacherModalIsToggled}
           selectedModule={this.props.selectedModule}
-          assignTeachersFunc={timelineStore.handleAssignTeachers}
           closeModal={this.hideAssignTeacherModal}
         />
         <div
