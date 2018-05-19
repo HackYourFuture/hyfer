@@ -183,7 +183,7 @@ export default function () {
         result
             .then(() => {
                 return fetchItems()
-            })
+            }) // catching it here so we don't need to catch it any more especially it's switch cases
             .catch(error_bundle)
     }
 
