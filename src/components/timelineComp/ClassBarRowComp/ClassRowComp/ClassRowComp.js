@@ -1,39 +1,80 @@
 import React, { Component } from 'react'
 import classes from './classRowComp.css'
+import popUpStyle from './archivingPopUp.css'
 
 const token = localStorage.getItem("token")
 
 export default class ClassRowComp extends Component {
 
+    state = {
+        popUp: false,
+        archiving: false
+    }
+
+    confirmArchiving = () => {
+        const { classId } = this.props
+        this.handleClassArchive(classId)
+        this.setState({
+            popUp: false
+        })
+    }
+
+    cancelArchiving = () => {
+        this.setState({
+            popUp: false
+        })
+    }
+
+    popUpDiv = () => {
+        return (
+            <div className={popUpStyle.backDrop}>
+                <div className={popUpStyle.popUp_window}>
+                    <p className={popUpStyle.confirm_q}>{`Are you sure you want to archive this class ??`}</p>
+                    <button className={popUpStyle.button_cancel} onClick={() => this.cancelArchiving()}>No</button>
+                    <button className={popUpStyle.button_yes} onClick={() => this.confirmArchiving()}>Yes</button>
+                </div>
+            </div>
+        )
+    }
+
     handleClassArchive = async (id) => {
         const group = this.props.groupsWithIds.filter(group => group.group_name.replace(/ /g, '').substr(5) === id)
 
-        if (window.confirm(`Are you sure you want to archive ${group[0].group_name}?`)) {
-            try {
-                await fetch(`http://localhost:3005/api/groups/${group[0].id}`, {
-                    method: 'PATCH',
-                    credentials: 'same-origin',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + token,
-                    },
-                    body: JSON.stringify({
-                        'archived': 1
-                    })
+        try {
+            await fetch(`http://localhost:3005/api/groups/${group[0].id}`, {
+                method: 'PATCH',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                },
+                body: JSON.stringify({
+                    'archived': 1
                 })
-            } catch (error) {
-                console.log(error)
-                throw new Error('Problem with Server :  PATCH DATA')
-            }
-        }  
-    }  
-    
+            })
+        } catch (error) {
+            console.log(error)
+            throw new Error('Problem with Server :  PATCH DATA')
+        }
+    }
+
+    archivingPopUp = () => {
+        this.setState({
+            popUp: true
+        })
+    }
+
     render() {
         const { classId, height } = this.props
-    return (
-      <div style={{ height: height + 'px' }} className={classes.container}>
-            <button onClick={() => this.handleClassArchive(classId)} className={this.props.classId && classes.groupId}>{classId}</button>
-      </div>
-    )
-  }
+
+        if (this.state.popUp) {
+            return this.popUpDiv()
+        } else {
+            return (
+                <div style={{ height: height + 'px' }} className={classes.container}>
+                    <button onClick={() => this.archivingPopUp()} className={this.props.classId && classes.groupId}>{classId}</button>
+                </div>
+            )
+        }
+    }
 }
