@@ -409,7 +409,7 @@ export function addNewModuleToClass(
                 )
             )
         })
-        return Promise.all(allPromises).then('Fulfilled')
+        return Promise.all(allPromises).then('Fulfilled') // used one time in src/store/TimeLineStore
     }
 }
 

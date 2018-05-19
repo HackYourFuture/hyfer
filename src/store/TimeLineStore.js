@@ -211,7 +211,7 @@ export default function () {
             selectedDate,
             items,
             modules
-        ).then(res => {
+        ).then(res => { // catching the error By propagation in  src/components/timelineComp/Buttons/AddDropdownList/AddNewModuleModal/AddNewModuleModal.js
             fetchItems()
         })
     }

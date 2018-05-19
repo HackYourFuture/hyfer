@@ -3,6 +3,7 @@ import Modal from '../../../../../Helpers/Modal/Modal'
 import classes from './addNewModuleModal.css'
 import { timelineStore } from '../../../../../store'
 import moment from 'moment'
+import { error_bundle } from '../../../../../notify';
 
 export default class AddNewModuleModal extends Component {
     state = {
@@ -181,9 +182,8 @@ export default class AddNewModuleModal extends Component {
                 modulesOfGroup
             )
             .then(() => {
-                // this.setInitialState(this.props)
                 this.props.closeModal()
-            })
+            }).catch(error_bundle) // catching the error By propagation from src/store/TimeLineStore
     }
 
     setInitialState = props => {
