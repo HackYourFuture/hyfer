@@ -458,9 +458,7 @@ function _patchNewModuleForOneGroup(
                                     })
                             )
                         })
-                        .catch(error_bundle)
                 })
-                .catch(error_bundle)
         }
         if (selectedDateMoment.diff(item.ending_date, 'weeks') === 0) {
             // case 2 the new module is at the end of an existing one (GREAT!)//////////////////////////////////////////////////
