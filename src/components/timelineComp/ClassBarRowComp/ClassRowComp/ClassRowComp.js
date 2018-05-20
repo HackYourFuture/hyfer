@@ -8,7 +8,6 @@ export default class ClassRowComp extends Component {
 
     state = {
         popUp: false,
-        archiving: false
     }
 
     confirmArchiving = () => {
@@ -26,13 +25,29 @@ export default class ClassRowComp extends Component {
     }
 
     popUpDiv = () => {
+        const { classId } = this.props
+        const group = this.props.groupsWithIds.filter(group => group.group_name.replace(/ /g, '').slice(-2) === classId)
+
         return (
-            <div className={popUpStyle.backDrop}>
-                <div className={popUpStyle.popUp_window}>
-                    <p className={popUpStyle.confirm_q}>{`Are you sure you want to archive this class ??`}</p>
-                    <button className={popUpStyle.button_cancel} onClick={() => this.cancelArchiving()}>No</button>
-                    <button className={popUpStyle.button_yes} onClick={() => this.confirmArchiving()}>Yes</button>
+            <div>
+                <div className={popUpStyle.backDrop}>
+                    <div className={popUpStyle.popUp_window}>
+                        <p className={popUpStyle.confirm_q}>{`Are you sure you want to delete ${group[0].group_name} ??`}</p>
+                        <button className={popUpStyle.button_cancel} onClick={() => this.cancelArchiving()}>No</button>
+                        <button className={popUpStyle.button_yes} onClick={() => this.confirmArchiving()}>Yes</button>
+                    </div>
                 </div>
+                {this.rowButton()}
+            </div>
+        )
+    }
+
+    rowButton = () => {
+        const { classId, height } = this.props
+
+        return (
+            <div style={{ height: height + 'px' }} className={classes.container}>
+                <button onClick={() => this.archivingPopUp()} className={this.props.classId && classes.groupId}>{classId}</button>
             </div>
         )
     }
@@ -52,6 +67,7 @@ export default class ClassRowComp extends Component {
                     'archived': 1
                 })
             })
+            window.location.reload()
         } catch (error) {
             console.log(error)
             throw new Error('Problem with Server :  PATCH DATA')
@@ -65,16 +81,12 @@ export default class ClassRowComp extends Component {
     }
 
     render() {
-        const { classId, height } = this.props
-
         if (this.state.popUp) {
-            return this.popUpDiv()
-        } else {
             return (
-                <div style={{ height: height + 'px' }} className={classes.container}>
-                    <button onClick={() => this.archivingPopUp()} className={this.props.classId && classes.groupId}>{classId}</button>
-                </div>
+                this.popUpDiv()
             )
         }
+        return this.rowButton()
+
     }
 }
