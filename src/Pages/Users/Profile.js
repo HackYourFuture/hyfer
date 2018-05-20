@@ -144,7 +144,7 @@ export default class Profile extends React.Component {
                         <input className={styles.saveProfile}
                             type="submit"
                             value="Save"
-                            onClick={() => store.saveProfile('loadUsers')}
+                            onClick={() => store.saveProfile('loadUsers').catch(error_bundle)}
                         />
                     </Link>
                     <input className={styles.resetProfile}

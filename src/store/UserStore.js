@@ -1,4 +1,4 @@
-import { error_bundle } from '../notify'
+import { success_bundle } from "../notify";
 
 const token = localStorage.getItem("token")
 
@@ -62,22 +62,19 @@ class store {
         }
     }
     async loadUser() {
-        try {
-            const res = await fetch('http://localhost:3000/api/user', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token,
-                }
-            })
-            const data = await res.json()
-            this.setState({
-                currentUser: data,
-            });
-            return;
-        }
-
-        catch (err) { error_bundle(err) }
+        const res = await fetch('http://localhost:3000/api/user', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token,
+            }
+        })
+        if (!res.ok) throw res
+        const data = await res.json()
+        this.setState({
+            currentUser: data,
+        })
+        return
     }
 
     async loadUsers() {
@@ -110,22 +107,22 @@ class store {
             "mobile": this.state.mobile,
             "group_id": this.state.group_id
         }
-        try {
-            await fetch(`http://localhost:3005/api/user/${this.state.id}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token,
-                },
-                body: JSON.stringify(updatedUser),
-            })
-            if (loadData === 'loadUser') {
-                this.loadUser()
-            } else if (loadData === 'loadUsers') {
-                this.loadUsers() // this error handeling is prograted
-            }
+        const res = await fetch(`http://localhost:3005/api/user/${this.state.id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token,
+            },
+            body: JSON.stringify(updatedUser),
+        })
+        if (loadData === 'loadUser') {
+            this.loadUser() // this error handeling is prograted
+        } else if (loadData === 'loadUsers') {
+            this.loadUsers() // this error handeling is prograted
         }
-        catch (err) { error_bundle(err) }
+        // throwing it in the end of the file because of the loading if it does happen an error the loading will be blocked
+        if (!res.ok) throw res
+        else success_bundle('Success saving profile changes')
     }
 
     resetProfile = () => {
