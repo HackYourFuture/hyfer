@@ -23,6 +23,7 @@ import {
   ALL_TEACHERS_CHAGNED,
   INFO_SELECTED_MDOULE_CHANGED
 } from "../../store/index"
+import { error_bundle } from '../../notify';
 
 export default class TimeLine extends Component {
   state = {
@@ -117,7 +118,7 @@ export default class TimeLine extends Component {
     })
 
     if (localStorage.token) {
-      uiStore.getUserInfo()
+      uiStore.getUserInfo().catch(error_bundle)
     }
   }
 
