@@ -81,23 +81,20 @@ class store {
     }
 
     async loadUsers() {
-        try {
-            const res = await fetch('http://localhost:3000/api/users', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token,
-                }
-            })
-            if (!res.ok) throw res
-            const data = await res.json()
-            this.setState({
-                users: data,
-                filteredUsers: data,
-            });
-            return;
-        }
-        catch (err) { error_bundle(err) }
+        const res = await fetch('http://localhost:3000/api/users', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token,
+            }
+        })
+        if (!res.ok) throw res
+        const data = await res.json()
+        this.setState({
+            users: data,
+            filteredUsers: data,
+        });
+        return
     }
     saveProfile = async (loadData) => {
         const updatedUser = {
@@ -125,7 +122,7 @@ class store {
             if (loadData === 'loadUser') {
                 this.loadUser()
             } else if (loadData === 'loadUsers') {
-                this.loadUsers()
+                this.loadUsers() // this error handeling is prograted
             }
         }
         catch (err) { error_bundle(err) }
