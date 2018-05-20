@@ -43,7 +43,7 @@ module.exports = function (app) {
 
   app.get('/api/user', auth.isAuthenticated(), users.getCurrentUser)  
   //app.get('/api/users', auth.hasRole('student|teacher'), users.getUsers)
-  app.get('/api/users', auth.hasRole('teacher'), users.getUsers)
+  app.get('/api/users', users.getUsers)
   app.get('/api/user/:id', auth.hasRole('teacher|student'), users.getUserById)
   app.patch('/api/user/:id', auth.hasRole('teacher|student'), users.updateUser)
 
