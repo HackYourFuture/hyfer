@@ -185,6 +185,20 @@ svg{
   position: relative;
 }
 
+.listSelector {
+    position: relative;
+    top: 90px;
+    margin-right: 5px;
+    float: right;
+    background: transparent;
+    background-color: rgb(226, 226, 226);
+    width: 250px;
+    border: none;
+    outline: none;
+    padding: 8px 0;
+    font-size: 16px;
+  }
+
 
 
 

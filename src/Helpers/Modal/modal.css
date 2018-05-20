@@ -18,12 +18,12 @@
   border-radius: 10px;
 }
 .popup_header {
-  height: 10vh;
-  line-height: 10vh;
+  height: 7vh;
+  line-height: 7vh;
   background-color: rgb(63, 81, 181);
   color: rgba(255, 255, 255, 0.87);
   text-align: left;
-  font-size: 1.1em;
+  font-size: 0.9rem;
   position: relative;
   padding-left: 20px;
   box-sizing: border-box;

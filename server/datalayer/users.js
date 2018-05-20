@@ -4,7 +4,7 @@ const db = require('./database')
 const GET_USERS_QUERY =
   `SELECT users.id, users.username, users.full_name, users.role, users.register_date,
   users.slack_username, users.freecodecamp_username, users.email, users.mobile,
-  group_students.group_id, \`groups\`.group_name FROM users
+  group_students.group_id, \`groups\`.group_name, \`groups\`.archived, \`groups\`.starting_date FROM users
   LEFT JOIN group_students ON users.id=group_students.user_id
   LEFT JOIN \`groups\` ON \`groups\`.id=group_students.group_id`
 

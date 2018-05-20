@@ -1,23 +1,41 @@
 import React, { Component } from 'react'
-import Style from "../../assets/styles/TrainTicket.css"
+import Style from '../../assets/styles/TrainTicket.css'
 
 class voucherCodes extends Component {
   render() {
-    const { handleCouponCodesChange }=this.props
+    const { couponCodes,
+      handleCouponCodesChange,
+      handleFieldChange} = this.props
     return (
-      <div>
+      <div className={Style.formContainer}>
         <div className={Style.ticketContainer}>
+          <div >
+            <p className={Style.inputContainer}>
+              <input type="text" name='senderName'
+                className={Style.loginInput}
+                placeholder='Enter Your Name'
+                onChange={(e) => handleFieldChange(e, 'senderName')}
+              />
+            </p>
+            <p className={Style.inputContainer}>
+              <input type="email" name='senderEmail'
+                className={Style.loginInput}
+                placeholder='Enter Your Email'
+                onChange={(e) => handleFieldChange(e, 'senderEmail')}
+              />
+            </p>
+          </div>
+        </div>
+      <div>         
           <textarea className={Style.Tickets}
             type="text"
+            // value={couponCodes}
             placeholder="Enter the voucher codes for the tickets "
             onChange={handleCouponCodesChange}>
           </textarea>
-          <button className={Style.ticketBtnNext}>
-            Next
-          </button>
         </div>
       </div>
-    );
+    )
   }
 }
 
