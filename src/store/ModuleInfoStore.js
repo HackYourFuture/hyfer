@@ -1,6 +1,5 @@
 import marked from 'marked'
 import moment from 'moment'
-import { error_bundle } from '../notify'
 
 import {
     REPO_NAME_CHANGED,
@@ -156,23 +155,19 @@ export default function () {
     }
 
     const defaultReadme = async defaultRepo => {
-        try {
-            const res = await fetch(`${BASE_URL}/${defaultRepo}/readme`)
-            const readmeEncoded = await res.json()
-            const readmeDecoded = atob(readmeEncoded.content)
-            const readmeHtml = marked(readmeDecoded)
+        const res = await fetch(`${BASE_URL}/${defaultRepo}/readme`)
+        if (!res.ok) throw res
+        const readmeEncoded = await res.json()
+        const readmeDecoded = atob(readmeEncoded.content)
+        const readmeHtml = marked(readmeDecoded)
 
-            setState({
-                type: READ_ME_CHANGED,
-                payload: {
-                    readme: readmeHtml,
-                    repoName: defaultRepo
-                }
-            })
-
-        } catch (err) {
-            error_bundle(err)
-        }
+        setState({
+            type: READ_ME_CHANGED,
+            payload: {
+                readme: readmeHtml,
+                repoName: defaultRepo
+            }
+        })
     }
 
     return {

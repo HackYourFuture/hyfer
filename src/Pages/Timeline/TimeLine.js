@@ -107,7 +107,7 @@ export default class TimeLine extends Component {
       }
     })
 
-    moduleInfoStore.defaultReadme("curriculum")
+    moduleInfoStore.defaultReadme("curriculum").catch(error_bundle)
 
     uiStore.subscribe(mergedData => {
       if (mergedData.type === LOGIN_STATE_CHANGED) {
