@@ -123,7 +123,7 @@ export default class TimeLine extends Component {
   }
 
   itemClickHandler = (clickEvent, item) => {
-    moduleInfoStore.getHistory(clickEvent, this.state.isATeacher)
+    moduleInfoStore.getHistory(clickEvent, this.state.isATeacher).catch(error_bundle)
     const selectedItemInStore = timelineStore.getState().selectedModule
     if (
       !item ||
