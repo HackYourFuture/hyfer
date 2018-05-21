@@ -20,7 +20,8 @@ export const error_bundle = (e) => {
     // in fail all Cases!!
     return error('Oops Something Went Wrong!')
 }
-export const success_bundle = (note) => {
+
+export const success = (note) => {
 
     const message = param => notify.show(param, 'success')
 
@@ -29,4 +30,15 @@ export const success_bundle = (note) => {
         return error_bundle(note)
     }
     return message(note)
+}
+
+export const warning = (warn) => {
+
+    const message = param => notify.show(param, 'warning')
+
+    if (!warn) {
+        // contains something?!
+        return error_bundle(warn)
+    }
+    return message(warn)
 }
