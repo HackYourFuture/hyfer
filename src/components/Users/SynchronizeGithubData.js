@@ -3,7 +3,7 @@ import style from '../../assets/styles/SynchronizeGithubData.css'
 import loader from '../../assets/images/Eclipse.gif'
 import SynchronizeResultModal from '../../components/Users/SynchronizeResultModal/SynchronizeResultModal'
 import { getAllGroupsWithIds } from '../../util'
-import { error_bundle } from '../../notify';
+import { errorMessage } from '../../notify';
 
 const token = localStorage.getItem("token")
 
@@ -31,10 +31,10 @@ export default class SynchronizeGithubData extends Component {
             this.setState({
                 loading: false,
             })
-            return error_bundle() // Oops Something went wrong!
+            return errorMessage() // Oops Something went wrong!
         }
-        const githubApi = await res.json().catch(error_bundle)
-        const hyferApi = await getAllGroupsWithIds().catch(error_bundle)
+        const githubApi = await res.json().catch(errorMessage)
+        const hyferApi = await getAllGroupsWithIds().catch(errorMessage)
 
         let groups = hyferApi.map(group => group.group_name)
         let conflictData = githubApi.filter(team => {

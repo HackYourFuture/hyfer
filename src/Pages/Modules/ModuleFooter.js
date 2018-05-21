@@ -4,7 +4,7 @@ import ModuleButton from './ModuleButton'
 import ModuleObservable from './ModuleObservable'
 import ModuleServiceBack from './ModuleServiceBack'
 import ModuleForm from './ModuleForm'
-import { success, warning, error_bundle } from '../../notify';
+import { success, warning, errorMessage } from '../../notify';
 
 
 export default class ModuleFooter extends Component {
@@ -34,8 +34,8 @@ export default class ModuleFooter extends Component {
         } catch (e) {
             // try catch because a small code and multy unexpected errors
             // if nothing passed into errorMessage the default is:
-            if (!e) error_bundle(/* Oops something went wrong */)
-            else error_bundle(e) // if the user has a specific error
+            if (!e) errorMessage(/* Oops something went wrong */)
+            else errorMessage(e) // if the user has a specific error
         }
     }
 

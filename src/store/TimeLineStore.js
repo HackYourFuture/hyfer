@@ -28,7 +28,7 @@ import {
     getAllGroupsWithIds
 } from "../util"
 
-import { error_bundle } from '../notify'
+import { errorMessage } from '../notify'
 
 const BASE_URL = "http://localhost:3005"
 
@@ -104,7 +104,7 @@ export default function () {
             // On 403 Forbidden
             if (e.status === 403) return
             // if the user has any other problems?!
-            error_bundle(e)
+            errorMessage(e)
         })
         setState({
             type: ALL_POSSIBLE_MODULES_CHANGED,
@@ -185,7 +185,7 @@ export default function () {
             .then(() => {
                 return fetchItems()
             }) // catching it here so we don't need to catch it any more especially it's switch cases
-            .catch(error_bundle)
+            .catch(errorMessage)
     }
 
     const handleAssignTeachers = (item, teacher1, teacher2) => {
@@ -244,7 +244,7 @@ export default function () {
                     }
                 })
             })
-            .catch(error_bundle)
+            .catch(errorMessage)
     }
 
     return {

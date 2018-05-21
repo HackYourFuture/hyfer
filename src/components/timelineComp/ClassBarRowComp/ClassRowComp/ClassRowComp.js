@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import classes from './classRowComp.css'
-import { error_bundle } from '../../../../notify'
+import { errorMessage } from '../../../../notify'
 
 const token = localStorage.getItem("token")
 
@@ -24,7 +24,7 @@ export default class ClassRowComp extends Component {
                 })
             } catch (err) {
                 window.location.reload()
-                error_bundle(err)
+                errorMessage(err)
             }
         }
     }

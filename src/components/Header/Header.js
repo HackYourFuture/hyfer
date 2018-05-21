@@ -11,7 +11,7 @@ import {
     LOGIN_STATE_CHANGED
 } from '../../store'
 import cookie from 'react-cookies'
-import { error_bundle } from '../../notify';
+import { errorMessage } from '../../notify';
 
 export default class Header extends Component {
     state = {
@@ -53,7 +53,7 @@ export default class Header extends Component {
         })
 
         if (login) {
-            uiStore.getUserInfo().catch(error_bundle)
+            uiStore.getUserInfo().catch(errorMessage)
         }
     }
 

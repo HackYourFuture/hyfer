@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import store from '../../store/UserStore';
 import styles from '../../assets/styles/profile.css';
 import { Link } from 'react-router-dom';
-import { error_bundle } from '../../notify';
+import { errorMessage } from '../../notify';
 
 class userAccount extends Component {
   
@@ -107,7 +107,7 @@ class userAccount extends Component {
             <input className={styles.saveProfile}
               type="submit"
               value="Save"
-              onClick={() => store.saveProfile('loadUser').catch(error_bundle)}
+              onClick={() => store.saveProfile('loadUser').catch(errorMessage)}
             />
           </Link>
           <input className={styles.resetProfile}

@@ -23,7 +23,7 @@ import {
   ALL_TEACHERS_CHAGNED,
   INFO_SELECTED_MDOULE_CHANGED
 } from "../../store/index"
-import { error_bundle } from '../../notify';
+import { errorMessage } from '../../notify';
 
 export default class TimeLine extends Component {
   state = {
@@ -107,7 +107,7 @@ export default class TimeLine extends Component {
       }
     })
 
-    moduleInfoStore.defaultReadme("curriculum").catch(error_bundle)
+    moduleInfoStore.defaultReadme("curriculum").catch(errorMessage)
 
     uiStore.subscribe(mergedData => {
       if (mergedData.type === LOGIN_STATE_CHANGED) {
@@ -118,12 +118,12 @@ export default class TimeLine extends Component {
     })
 
     if (localStorage.token) {
-      uiStore.getUserInfo().catch(error_bundle)
+      uiStore.getUserInfo().catch(errorMessage)
     }
   }
 
   itemClickHandler = (clickEvent, item) => {
-    moduleInfoStore.getHistory(clickEvent, this.state.isATeacher).catch(error_bundle)
+    moduleInfoStore.getHistory(clickEvent, this.state.isATeacher).catch(errorMessage)
     const selectedItemInStore = timelineStore.getState().selectedModule
     if (
       !item ||

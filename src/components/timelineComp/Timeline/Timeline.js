@@ -8,7 +8,7 @@ import ClassTaskRowComp from "../ClassTaskRowComp/ClassTaskRowComp"
 import loader from "../../../assets/images/Eclipse.gif"
 import Buttons from "../Buttons/Buttons"
 import classes from "./timeline.css"
-import { error_bundle } from "../../../notify";
+import { errorMessage } from "../../../notify";
 
 
 export default class Timeline extends Component {
@@ -103,11 +103,11 @@ export default class Timeline extends Component {
         if (!this.props.teachers) {
             timelineStore.fetchItems(false).then(() => {
                 this.setState({ loaded: true })
-            }).catch(error_bundle)
+            }).catch(errorMessage)
         } else {
             timelineStore.fetchItems(true).then(() => {
                 this.setState({ loaded: true })
-            }).catch(error_bundle)
+            }).catch(errorMessage)
         }
         // kick in the process by getting the items and changing the state properties
         // in didMount cause it causes side-effects

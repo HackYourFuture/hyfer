@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import Modal from '../../../../../Helpers/Modal/Modal'
 import { timelineStore } from '../../../../../store/'
 import classes from './assignTeacherModal.css'
-import { error_bundle } from '../../../../../notify'
+import { errorMessage } from '../../../../../notify'
 
 export default class AssignTeacherModal extends Component {
   state = {
@@ -20,7 +20,7 @@ export default class AssignTeacherModal extends Component {
     timelineStore
       .handleAssignTeachers(selectedModule, teacher1, teacher2)
       .then(() => this.props.closeModal())
-      .catch(error_bundle)
+      .catch(errorMessage)
   }
 
   handleChangeTeacher = (e, num) => {

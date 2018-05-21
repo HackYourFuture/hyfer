@@ -3,7 +3,7 @@ import store from '../../store/UserStore'
 import styles from '../../assets/styles/profile.css'
 import { Link } from 'react-router-dom'
 import { getAllGroupsWithIds } from '../../util'
-import { error_bundle } from '../../notify';
+import { errorMessage } from '../../notify';
 
 export default class Profile extends React.Component {
     state = {
@@ -13,7 +13,7 @@ export default class Profile extends React.Component {
     componentDidMount() {
         let getData = async () => {
 
-            let groupData = await getAllGroupsWithIds().catch(error_bundle) // catching the error in the end of the line
+            let groupData = await getAllGroupsWithIds().catch(errorMessage) // catching the error in the end of the line
 
             groupData.map(group => {
                 return {
@@ -144,7 +144,7 @@ export default class Profile extends React.Component {
                         <input className={styles.saveProfile}
                             type="submit"
                             value="Save"
-                            onClick={() => store.saveProfile('loadUsers').catch(error_bundle)}
+                            onClick={() => store.saveProfile('loadUsers').catch(errorMessage)}
                         />
                     </Link>
                     <input className={styles.resetProfile}

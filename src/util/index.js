@@ -1,5 +1,5 @@
 import moment from 'moment'
-import { error_bundle, success } from '../notify'
+import { errorMessage, success } from '../notify'
 
 const BASE_URL = 'http://localhost:3005'
 const token = localStorage.getItem("token")
@@ -242,7 +242,7 @@ async function _patchGroupsModules(
         if (!res.ok) throw res
         return await res.json()
     } catch (err) {
-        error_bundle(err)
+        errorMessage(err)
     }
 }
 
@@ -480,7 +480,7 @@ async function _addModule(moduleId, groupId, position) {
         if (!res.ok) throw res
         return await res.json()
     } catch (err) {
-        error_bundle(err)
+        errorMessage(err)
     }
 }
 

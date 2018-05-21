@@ -1,6 +1,6 @@
 import { notify } from 'react-notify-toast'
 
-export const error_bundle = (e) => {
+export const errorMessage = (e) => {
     // no stack creepy Errors
     const isString = e && typeof e === 'string' && e.length < 100 && !e.stack
     const isNumber = typeof e === 'number'
@@ -27,7 +27,7 @@ export const success = (note) => {
 
     if (!note) {
         // contains something?!
-        return error_bundle(note)
+        return errorMessage(note)
     }
     return message(note)
 }
@@ -38,7 +38,7 @@ export const warning = (warn) => {
 
     if (!warn) {
         // contains something?!
-        return error_bundle(warn)
+        return errorMessage(warn)
     }
     return message(warn)
 }

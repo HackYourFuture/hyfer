@@ -3,7 +3,7 @@ import VoucherCodes from "./voucherCodes"
 import StudentList from './StudentList'
 import Wrap from './Wrap'
 import Styles from '../../assets/styles/TrainTicket.css'
-import { error_bundle } from '../../notify';
+import { errorMessage } from '../../notify';
 
 const token = localStorage.getItem("token")
 
@@ -48,7 +48,7 @@ class TrainTicket extends Component {
         this.setState({
           members:newData
         })
-        }).catch(error_bundle)
+        }).catch(errorMessage)
   }
   handleFieldChange = (event, field) => {
     this.setState({ [field]: event.target.value });
