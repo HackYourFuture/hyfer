@@ -4,7 +4,7 @@ import ModuleButton from './ModuleButton'
 import ModuleObservable from './ModuleObservable'
 import ModuleServiceBack from './ModuleServiceBack'
 import ModuleForm from './ModuleForm'
-import { success, warning } from '../../notify';
+import { success, warning, error_bundle } from '../../notify';
 
 
 export default class ModuleFooter extends Component {
@@ -26,10 +26,17 @@ export default class ModuleFooter extends Component {
     }
 
     SaveChanges = () => {
-        ModuleServiceBack.saveModules(ModuleObservable.getModules(), () => {
-            ModuleServiceBack.loadModules((result) => ModuleObservable.initModules(result))
-            success('Your changes are successfully Saved !')
-        })
+        try {
+            ModuleServiceBack.saveModules(ModuleObservable.getModules(), () => {
+                ModuleServiceBack.loadModules((result) => ModuleObservable.initModules(result))
+                success('Your changes are successfully Saved !')
+            })
+        } catch (e) {
+            // try catch because a small code and multy unexpected errors
+            // if nothing passed into errorMessage the default is:
+            if (!e) error_bundle(/* Oops something went wrong */)
+            else error_bundle(e) // if the user has a specific error
+        }
     }
 
     AddModule = (module) => {
