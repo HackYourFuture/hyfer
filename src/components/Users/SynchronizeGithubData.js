@@ -27,6 +27,12 @@ export default class SynchronizeGithubData extends Component {
                 'Authorization': 'Bearer ' + token,
             }
         })
+        if (!res.ok) {
+            this.setState({
+                loading: false,
+            })
+            return error_bundle() // Oops Something went wrong!
+        }
         const githubApi = await res.json().catch(error_bundle)
         const hyferApi = await getAllGroupsWithIds().catch(error_bundle)
 
