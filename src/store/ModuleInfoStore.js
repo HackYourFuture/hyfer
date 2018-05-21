@@ -55,7 +55,7 @@ export default function () {
             repoName,
             start,
             end
-        } = _data
+        } = await _data
         let moduleSundays = _getSundays(start, end)
         let sundays = {
             sundays: moduleSundays
