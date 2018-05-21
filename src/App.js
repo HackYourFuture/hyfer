@@ -37,6 +37,9 @@ const defaultState = {
 const { pathname } = window.location
 
 class App extends Component {
+
+    /*** The Roles In Frontend ***/
+    
     state = { ...defaultState }
 
     // For any new Secure Routes we can adding them here:
