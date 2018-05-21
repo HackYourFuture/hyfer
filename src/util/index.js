@@ -1,5 +1,5 @@
 import moment from 'moment'
-import { error_bundle, success_bundle } from '../notify'
+import { error_bundle, success } from '../notify'
 
 const BASE_URL = 'http://localhost:3005'
 const token = localStorage.getItem("token")
@@ -27,7 +27,7 @@ export async function sendAnEmail(recipient, sender, subject, text) {
         body: JSON.stringify(body)
     })
     if (!res.ok) throw new Error(res)
-    else success_bundle("Email was sent successfully")
+    else success("Email was sent successfully")
     const jsonRes = await res.json()
     return jsonRes
 }

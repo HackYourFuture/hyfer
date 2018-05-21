@@ -4,7 +4,7 @@ import ModuleButton from './ModuleButton'
 import ModuleObservable from './ModuleObservable'
 import ModuleServiceBack from './ModuleServiceBack'
 import ModuleForm from './ModuleForm'
-import { notify } from 'react-notify-toast'
+import { success, warning } from '../../notify';
 
 
 export default class ModuleFooter extends Component {
@@ -22,13 +22,13 @@ export default class ModuleFooter extends Component {
 
     UndoChanges = () => {
         ModuleObservable.resetModules()
-        notify.show('Your changes have been cancelled !', 'warning')
+        warning('Your changes have been cancelled !', 'warning')
     }
 
     SaveChanges = () => {
         ModuleServiceBack.saveModules(ModuleObservable.getModules(), () => {
             ModuleServiceBack.loadModules((result) => ModuleObservable.initModules(result))
-            notify.show('Your changes are successfully Saved !', 'success')
+            success('Your changes are successfully Saved !')
         })
     }
 

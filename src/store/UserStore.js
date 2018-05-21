@@ -1,4 +1,4 @@
-import { success_bundle } from "../notify";
+import { success } from "../notify";
 
 const token = localStorage.getItem("token")
 
@@ -122,7 +122,7 @@ class store {
         }
         // throwing it in the end of the file because of the loading if it does happen an error the loading will be blocked
         if (!res.ok) throw res
-        else success_bundle('Success saving profile changes')
+        else success('Success saving profile changes')
     }
 
     resetProfile = () => {
