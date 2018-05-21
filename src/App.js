@@ -51,7 +51,7 @@ class App extends Component {
             { exact: true, path: '/TrainTicket', component: TrainTicket },
         ],
         student: [ // waiting for Chileshe's Update
-            { exact: true, path:"/homework", component:Homework },
+            { exact: true, path: '/homework', component: Homework },
         ],
         guest: [ // and all of the users can share some stuff
             { exact: true, path: '/currentUserProfile', component: currentUserProfile },
@@ -59,7 +59,7 @@ class App extends Component {
         public: [
             { exact: true, path: '/timeline', component: TimeLine },
         ],
-        NotFound: {component: NotFound },
+        NotFound: { component: NotFound },
     }
     // this will contain the Route props from the user scopes
     securedRouteProps = []
