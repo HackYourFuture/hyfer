@@ -6,11 +6,11 @@ export const error_bundle = (e) => {
     const isNumber = typeof e === 'number'
     const error = param => notify.show(param, 'error')
 
-    if (e.status && e.statusText) {
+    if (e && e.status && e.statusText) {
         // check any status Messages First
         return error(`${e.status} | ${e.statusText}`)
     }
-    if (e.message) {
+    if (e && e.message) {
         return error(e.message)
     }
     if (isString || isNumber) {
