@@ -9,6 +9,7 @@ import FaSlack from 'react-icons/lib/fa/slack';
 import FaFire from 'react-icons/lib/fa/fire';
 import FaGithub from 'react-icons/lib/fa/github';
 import FaMobile from 'react-icons/lib/fa/mobile';
+import { errorMessage } from '../../notify';
 
 class currentUserProfile extends Component {
   
@@ -23,7 +24,7 @@ class currentUserProfile extends Component {
   }
 
   componentDidMount = () => {
-    store.loadUser()
+    store.loadUser().catch(errorMessage)
     window.scrollTo(0, 0);
   };
   render() {

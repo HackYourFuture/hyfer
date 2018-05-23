@@ -3,6 +3,7 @@ import VoucherCodes from "./voucherCodes"
 import StudentList from './StudentList'
 import Wrap from './Wrap'
 import Styles from '../../assets/styles/TrainTicket.css'
+import { errorMessage } from '../../notify';
 
 const token = localStorage.getItem("token")
 
@@ -28,7 +29,7 @@ class TrainTicket extends Component {
       openModal: !this.state.openModal
     })
   }
-  componentDidMount() {
+  componentWillMount() {
     fetch('http://localhost:3000/api/users', {
       method: 'GET',
       headers: {
@@ -47,7 +48,7 @@ class TrainTicket extends Component {
         this.setState({
           members:newData
         })
-        })
+        }).catch(errorMessage)
   }
   handleFieldChange = (event, field) => {
     this.setState({ [field]: event.target.value });
@@ -110,12 +111,8 @@ class TrainTicket extends Component {
 
   handelSelected = (member) => { 
     member.selected=!member.selected
-    console.log(member.selected)
   }
   render() {
-    console.log(this.state.selectedStudents)
-    console.log(this.state.selectedStudents.length)
-    // console.log(this.state.couponCodes)
     const { stepIndex } = this.state
     return (
       <div>

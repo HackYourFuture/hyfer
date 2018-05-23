@@ -29,7 +29,6 @@ function httpRequestPromise(url) {
             } else {
 
                 reject(error)
-
             }
         })
     })

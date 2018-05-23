@@ -28,6 +28,8 @@ import {
     getAllGroupsWithIds
 } from "../util"
 
+import { errorMessage } from '../notify'
+
 const BASE_URL = "http://localhost:3005"
 
 export default function () {
@@ -65,7 +67,7 @@ export default function () {
     const fetchItems = async isTeacher => {
         const timelineItems = await getTimelineItems(
             BASE_URL + "/api/timeline"
-        ).catch(err => console.log(err))
+        ) // if any error appears we will catch it by propagation
 
         // set the state with the array of all current groups [maybe needed for sidecolumn group names]
         const groups = Object.keys(timelineItems)
@@ -77,7 +79,7 @@ export default function () {
             orderedTimelineItems[group] = timelineItems[group]
         })
 
-        const groupsWithIds = await getAllGroupsWithIds()
+        const groupsWithIds = await getAllGroupsWithIds() // the error has been throwed
 
         setState({
             type: GROUPS_WITH_IDS_CHANGED,
@@ -96,9 +98,14 @@ export default function () {
         })
 
         // get all possible modules for addition
-        const allPossibleModules = await getALlPossibleModules().catch(err =>
-            console.log(err)
-        )
+        const allPossibleModules = await getALlPossibleModules().catch(e => {
+            // specific error catch it here.
+            // we don't need any return on all of the users
+            // On 403 Forbidden
+            if (e.status === 403) return
+            // if the user has any other problems?!
+            errorMessage(e)
+        })
         setState({
             type: ALL_POSSIBLE_MODULES_CHANGED,
             payload: {
@@ -128,16 +135,17 @@ export default function () {
             }
         })
 
-
-        getTeachers().then(res => {
-            const teachers = res.filter(user => user.role === "teacher")
-            setState({
-                type: ALL_TEACHERS_CHAGNED,
-                payload: {
-                    teachers
-                }
-            })
-        })
+        if (isTeacher) {
+            getTeachers().then(res => {
+                const teachers = res.filter(user => user.role === "teacher")
+                setState({
+                    type: ALL_TEACHERS_CHAGNED,
+                    payload: {
+                        teachers
+                    }
+                })
+            }) // if any error appears we will catch it by propagation
+        }
 
 
         setState({
@@ -176,19 +184,19 @@ export default function () {
         result
             .then(() => {
                 return fetchItems()
-            })
-            .catch(err => console.log(err))
+            }) // catching it here so we don't need to catch it any more especially it's switch cases
+            .catch(errorMessage)
     }
 
     const handleAssignTeachers = (item, teacher1, teacher2) => {
+        // used for a once in src\components\timelineComp\ClassTaskRowComp\DropdownList\AssignTeacherModal\AssignTeacherModal.js
         return (
             // item.id is the id of the group
             assignTeachers(item, item.id, teacher1, teacher2)
-                // when done go back throught the whole procedure to get the items on screen
-                .then(() => {
-                    fetchItems()
-                })
-                .catch(err => console.log(err))
+            // when done go back throught the whole procedure to get the items on screen
+            .then(() => {
+                fetchItems()
+            })
         )
     }
 
@@ -210,12 +218,13 @@ export default function () {
             selectedDate,
             items,
             modules
-        ).then(res => {
+        ).then(res => { // catching the error By propagation in  src/components/timelineComp/Buttons/AddDropdownList/AddNewModuleModal/AddNewModuleModal.js
             fetchItems()
         })
     }
 
     const addTheClass = (className, starting_date) => {
+        // used for a once in src\components\timelineComp\Buttons\AddDropdownList\AddClassModal\AddClassModal.js
         return addNewClass(className, starting_date).then(() => fetchItems())
     }
 
@@ -225,6 +234,7 @@ export default function () {
 
     const getSelectedModuleInfo = item => {
         // give it to util to handle
+        // nothing is returning from it as a promise we can handle it here
         getModulesOfGroup(item.id)
             .then(res => {
                 setState({
@@ -234,7 +244,7 @@ export default function () {
                     }
                 })
             })
-            .catch(err => console.log(err))
+            .catch(errorMessage)
     }
 
     return {

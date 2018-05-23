@@ -1,18 +1,15 @@
 import moment from 'moment'
+import { errorMessage, success } from '../notify'
 
 const BASE_URL = 'http://localhost:3005'
 const token = localStorage.getItem("token")
 
 //return a promise with `then` getting the json formatted data
 export async function getTimelineItems() {
-    try {
-        const res = await fetch(BASE_URL + '/api/timeline')
-        return await res.json()
-    } catch (error) {
-        console.log(error)
-    }
-
-}
+    const res = await fetch(BASE_URL + '/api/timeline')
+    if (!res.ok) throw res
+    return await res.json()
+} // used for a once catched there src/store/TimeLineStore.js
 
 export async function sendAnEmail(recipient, sender, subject, text) {
     const body = {
@@ -21,25 +18,18 @@ export async function sendAnEmail(recipient, sender, subject, text) {
         subject,
         text
     }
-    try {
-        const result = await fetch(`${BASE_URL}/api/sendEmail`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "Application/json",
-                "Authorization": "Bearer " + token,
-            },
-            body: JSON.stringify(body)
-        })
-            .then(res => {
-                if (res.status === 200) {
-                    console.log("Email was sent successfully")
-                }
-            })
-            .catch(err => console.log(err))
-        return result
-    } catch (error) {
-        console.log(error)
-    }
+    const res = await fetch(`${BASE_URL}/api/sendEmail`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "Application/json",
+            "Authorization": "Bearer " + token,
+        },
+        body: JSON.stringify(body)
+    })
+    if (!res.ok) throw new Error(res)
+    else success("Email was sent successfully")
+    const jsonRes = await res.json()
+    return jsonRes
 }
 
 export function setEndingDateForModules(allItems, groups) {
@@ -52,9 +42,7 @@ export function setEndingDateForModules(allItems, groups) {
         items.map(item => {
             if (lastDate === '') lastDate = item.starting_date
             item.starting_date = moment(lastDate)
-
             if (item.starting_date.day() !== 0) {
-                console.error(item.starting_date.toString())
                 item.starting_date.weekday(0)
             }
 
@@ -67,16 +55,13 @@ export function setEndingDateForModules(allItems, groups) {
 }
 
 export async function getAllGroupsWithIds() {
-    try {
-        const res = await fetch(`${BASE_URL}/api/groups`, {
-            headers: {
-                'Authorization': 'Bearer ' + token,
-            }
-        })
-        return await res.json()
-    } catch (error) {
-        console.log(error)
-    }
+    const res = await fetch(`${BASE_URL}/api/groups`, {
+        headers: {
+            'Authorization': 'Bearer ' + token,
+        }
+    })
+    if (!res.ok) throw res
+    return await res.json()
 }
 
 export function getAllTotalWeeksAndSundays(allItems) {
@@ -92,17 +77,14 @@ export function getAllTotalWeeksAndSundays(allItems) {
     return _getAllWeeks(firstDate, lastDate)
 }
 
-export async function getTeachers() {
-    try {
-        const res = await fetch(`${BASE_URL}/api/users`, {
-            headers: {
-                'Authorization': 'Bearer ' + token,
-            }
-        })
-        return await res.json()
-    } catch (error) {
-        console.log(error)
-    }
+export async function getTeachers() { // used for a once in src/store/TimeLineStore.js
+    const res = await fetch(`${BASE_URL}/api/users`, {
+        headers: {
+            'Authorization': 'Bearer ' + token,
+        }
+    })
+    if (!res.ok) throw res
+    return await res.json()
 }
 
 export function getWeeksBeforeAndAfter(allWeeks, classModules) {
@@ -199,37 +181,32 @@ export function moveLeft(chosenModule, groups) {
 }
 
 export async function removeModule(chosenModule) {
+    // used for a once in src\store\TimeLineStore.js
     const {
         id,
         position
     } = chosenModule
     const token = localStorage.getItem("token")
-    try {
-        const res = await fetch(`${BASE_URL}/api/running/${id}/${position}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'Application/json',
-                'Authorization': 'Bearer ' + token,
-            },
-        })
-        return await res.json()
-    } catch (error) {
-        console.log(error)
-    }
-
+    const res = await fetch(`${BASE_URL}/api/running/${id}/${position}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'Application/json',
+            'Authorization': 'Bearer ' + token,
+        },
+    })
+    if (!res.ok) throw res
+    return await res.json()
 }
 
 export async function getModulesOfGroup(groupId) {
-    try {
-        const res = await fetch(`${BASE_URL}/api/running/${groupId}`, {
-            headers: {
-                'Authorization': 'Bearer ' + token,
-            }
-        })
-        return await res.json()
-    } catch (error) {
-        console.log(error)
-    }
+    // used for a once in src\store\TimeLineStore.js
+    const res = await fetch(`${BASE_URL}/api/running/${groupId}`, {
+        headers: {
+            'Authorization': 'Bearer ' + token,
+        }
+    })
+    if (!res.ok) throw res
+    return await res.json()
 }
 
 ////////////////////////////////////////////////////////////////// helper functions
@@ -262,9 +239,10 @@ async function _patchGroupsModules(
             },
             body: JSON.stringify(body)
         })
+        if (!res.ok) throw res
         return await res.json()
-    } catch (error) {
-        console.log(error)
+    } catch (err) {
+        errorMessage(err)
     }
 }
 
@@ -307,34 +285,29 @@ export async function addNewClass(className, starting_date) {
         archived: 0
     }
     const token = localStorage.getItem('token')
-    try {
-        return await fetch(`${BASE_URL}/api/groups`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'Application/json',
-                'Authorization': 'Bearer ' + token,
-            },
-            body: JSON.stringify(body)
-        })
-    } catch (error) {
-        console.log(error)
-    }
+    const res = await fetch(`${BASE_URL}/api/groups`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'Application/json',
+            'Authorization': 'Bearer ' + token,
+        },
+        body: JSON.stringify(body)
+    })
+    if (!res.ok) throw res
+    return res
 }
 
 export async function getALlPossibleModules() {
     const token = localStorage.getItem('token')
-    try {
-        const res = await fetch(`${BASE_URL}/api/modules`, {
-            credentials: 'same-origin',
-            headers: {
-                Authorization: 'Bearer ' + token
-            }
-        })
-        return await res.json()
-    } catch (error) {
-        console.log(error)
-    }
-}
+    const res = await fetch(`${BASE_URL}/api/modules`, {
+        credentials: 'same-origin',
+        headers: {
+            Authorization: 'Bearer ' + token
+        }
+    })
+    if (!res.ok) throw res
+    return await res.json()
+} // used for a once and catched there src/store/TimeLineStore
 
 export function getAllSharedDates(items) {
     const keys = Object.keys(items)
@@ -406,7 +379,7 @@ export function addNewModuleToClass(
                 )
             )
         })
-        return Promise.all(allPromises).then('Fulfilled')
+        return Promise.all(allPromises).then('Fulfilled') // used one time in src/store/TimeLineStore
     }
 }
 
@@ -474,14 +447,6 @@ function _patchNewModuleForOneGroup(
                                     })
                             )
                         })
-                        .catch(err => {
-                            console.log(err)
-                            return Promise.reject() // maybe to give the user indication that it went wrong
-                        })
-                })
-                .catch(err => {
-                    console.log(err)
-                    return Promise.reject() // maybe to give the user indication that it went wrong
                 })
         }
         if (selectedDateMoment.diff(item.ending_date, 'weeks') === 0) {
@@ -512,9 +477,10 @@ async function _addModule(moduleId, groupId, position) {
             }
 
         })
+        if (!res.ok) throw res
         return await res.json()
-    } catch (error) {
-        console.log(error)
+    } catch (err) {
+        errorMessage(err)
     }
 }
 

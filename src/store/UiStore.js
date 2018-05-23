@@ -44,51 +44,51 @@ export default function () {
     //Normal methods
 
 
-    const getUserInfo = () => {
+    const getUserInfo = async () => {
         const token = localStorage.getItem("token")
-        fetch(CURRENT_USER_INFO_URL, {
+        const res = await fetch(CURRENT_USER_INFO_URL, {
             credentials: "same-origin",
             headers: {
                 'Authorization': 'Bearer ' + token,
             }
         })
-            .then(res => res.json())
-            .then(jsonRes => {
-                const isLoggedIn = true;
-                const isATeacher = jsonRes.role === 'teacher' ? true : false;
-                const isStudent = jsonRes.role === 'student' ? true : false;
-                const isEmail = jsonRes.email ? true : false;
-                _getProfileImg(jsonRes.username);
-                _getProfileId(jsonRes.id);
-                // notify login
-                setState({
-                    type: LOGIN_STATE_CHANGED,
-                    payload: {
-                        isLoggedIn
-                    }
-                });
-                //notify a teacher
-                setState({
-                    type: ISTEACHER_STATE_CHANGED,
-                    payload: {
-                        isATeacher
-                    }
-                });
-                setState({
-                    type: ISSTUDENT_STATE_CHANGED,
-                    payload: {
-                        isStudent
-                    }
-                });
-                 // notify set email
-                setState({
-                    type: IS_EMAIL_EXISTED,
-                    payload: {
-                        isEmail
-                    }
-                });
-            })
-            .catch(err => console.log(err));
+        // if the response is not Okay or any error attached to it
+        // throw it to the catch and don't continue
+        if (!res.ok) throw res
+        const jsonRes = await res.json()
+        const isLoggedIn = true;
+        const isATeacher = jsonRes.role === 'teacher' ? true : false;
+        const isStudent = jsonRes.role === 'student' ? true : false;
+        const isEmail = jsonRes.email ? true : false;
+        _getProfileImg(jsonRes.username);
+        _getProfileId(jsonRes.id);
+        // notify login
+        setState({
+            type: LOGIN_STATE_CHANGED,
+            payload: {
+                isLoggedIn
+            }
+        });
+        //notify a teacher
+        setState({
+            type: ISTEACHER_STATE_CHANGED,
+            payload: {
+                isATeacher
+            }
+        });
+        setState({
+            type: ISSTUDENT_STATE_CHANGED,
+            payload: {
+                isStudent
+            }
+        });
+        // notify set email
+        setState({
+            type: IS_EMAIL_EXISTED,
+            payload: {
+                isEmail
+            }
+        });
     };
 
     // Helper methods

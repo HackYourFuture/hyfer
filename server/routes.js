@@ -49,7 +49,6 @@ module.exports = function (app) {
 
     app.patch('/api/history/:moduleId/:groupId', auth.isAuthenticated(), history.getHistory)
 
-    app.patch('/api/history/:moduleId/:groupId', auth.isAuthenticated(), history.getHistory)
     app.post('/api/history', auth.isAuthenticated(), history.saveAttendances)
 
     app.get('/api/studentsState/:groupId', auth.hasRole('teacher'), states.getStudentsState)

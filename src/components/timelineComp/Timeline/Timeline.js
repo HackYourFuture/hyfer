@@ -8,6 +8,7 @@ import ClassTaskRowComp from "../ClassTaskRowComp/ClassTaskRowComp"
 import loader from "../../../assets/images/Eclipse.gif"
 import Buttons from "../Buttons/Buttons"
 import classes from "./timeline.css"
+import { errorMessage } from "../../../notify";
 
 
 export default class Timeline extends Component {
@@ -86,7 +87,6 @@ export default class Timeline extends Component {
 
     handleClickTodayMarker = e => {
         const todayMarker = this.state.todayMarkerRef
-        console.log('todayMarker' + todayMarker)
         const classesContainer = this.refs.classesContainer.refs.groupsRowContainer // hackish way, hope good
         const scrollEl = this.refs.timelineWrapper
         let leftPos = todayMarker.parentNode.getBoundingClientRect().x
@@ -100,14 +100,14 @@ export default class Timeline extends Component {
     }
 
     componentDidMount = () => {
-        if (this.props.teachers === null) {
+        if (!this.props.teachers) {
             timelineStore.fetchItems(false).then(() => {
                 this.setState({ loaded: true })
-            })
+            }).catch(errorMessage)
         } else {
             timelineStore.fetchItems(true).then(() => {
                 this.setState({ loaded: true })
-            })
+            }).catch(errorMessage)
         }
         // kick in the process by getting the items and changing the state properties
         // in didMount cause it causes side-effects

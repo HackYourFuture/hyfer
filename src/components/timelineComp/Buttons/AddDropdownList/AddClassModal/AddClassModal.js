@@ -63,8 +63,8 @@ export default class AddClassModal extends Component {
         this.props.closeModal()
       })
       .catch(err => {
-        console.log(err)
-        this.setState({ errorMessage: 'There was a network error!' })
+        const e = new Error('network error!')
+        this.setState({ errorMessage: e.message })
       })
   }
   render() {

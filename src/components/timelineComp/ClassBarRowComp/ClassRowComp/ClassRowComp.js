@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import classes from './classRowComp.css'
+import { errorMessage } from '../../../../notify'
 import popUpStyle from './archivingPopUp.css'
 
 const token = localStorage.getItem("token")
@@ -67,10 +68,9 @@ export default class ClassRowComp extends Component {
                     'archived': 1
                 })
             })
+        } catch (err) {
             window.location.reload()
-        } catch (error) {
-            console.log(error)
-            throw new Error('Problem with Server :  PATCH DATA')
+            errorMessage(err)
         }
     }
 
