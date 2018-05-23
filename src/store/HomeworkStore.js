@@ -199,18 +199,24 @@ class HomeworkStore {
 
     @action
     requestReview = (submitter, assignmentTitle, assignedReviewer) => {
-    
+        console.log(this.students.filter(student => student.username === assignedReviewer))
         const reviewerEmail = this.students.filter(student => student.username === assignedReviewer)
             .map(student => student.email)[0]
-
-        // send email to reviewerEmail using SendGrid
-       /* sendAnEmail(
-           "talalalamdar@gmail.com",
-            "hyfer@gmx.com" ,  // a new email account has been created for hyfer
-            "requesting a review for homework",
-            "Hey, would you please give a feedback for "+submitter+"'s homework ("+assignmentTitle+")"
-        )
-       console.log("Email sent successfully")*/
+            
+            // send email to reviewerEmail using SendGrid
+        if (reviewerEmail) {
+            sendAnEmail(
+                reviewerEmail,
+                "hyfer@gmx.com" ,  // a new email account has been created for hyfer
+                "requesting a review for homework",
+                "Hey, would you please give a feedback for "+submitter+"'s homework ("+assignmentTitle+")"
+            )
+           console.log("Email sent successfully")
+        }
+        else {
+            console.log("reviewer email is undefined")
+        }
+      
     }  
 
 }
