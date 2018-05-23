@@ -1,4 +1,5 @@
 import { observable, action, configure, runInAction } from "mobx"
+import { sendAnEmail } from "../util";
 
 configure({ enforceActions: true })
 
@@ -198,16 +199,18 @@ class HomeworkStore {
 
     @action
     requestReview = (submitter, assignmentTitle, assignedReviewer) => {
-        
-
+    
         const reviewerEmail = this.students.filter(student => student.username === assignedReviewer)
             .map(student => student.email)[0]
 
         // send email to reviewerEmail using SendGrid
-        console.log(`
-        Email sent to ${reviewerEmail} -- 
-        ${assignedReviewer}, your review has been requested on ${submitter}'s "${assignmentTitle}" homework
-        `)
+       /* sendAnEmail(
+           "talalalamdar@gmail.com",
+            "hyfer@gmx.com" ,  // a new email account has been created for hyfer
+            "requesting a review for homework",
+            "Hey, would you please give a feedback for "+submitter+"'s homework ("+assignmentTitle+")"
+        )
+       console.log("Email sent successfully")*/
     }  
 
 }

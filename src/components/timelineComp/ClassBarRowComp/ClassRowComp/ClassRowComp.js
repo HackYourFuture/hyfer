@@ -68,8 +68,8 @@ export default class ClassRowComp extends Component {
                     'archived': 1
                 })
             })
-        } catch (err) {
             window.location.reload()
+        } catch (err) {
             errorMessage(err)
         }
     }
