@@ -23,7 +23,7 @@ module.exports = function (app) {
     app.patch('/api/modules/:id', auth.hasRole('teacher'), modules.updateModule)
     app.delete('/api/modules/:id', auth.hasRole('teacher'), modules.deleteModule)
 
-    app.get('/api/running/:groupId',  runningModules.getRunningModules)
+    app.get('/api/running/:groupId', auth.hasRole('teacher'), runningModules.getRunningModules)
 
     app.patch('/api/running/update/:groupId/:position', auth.hasRole('teacher'), runningModules.updateRunningModule)
     app.patch('/api/running/split/:groupId/:position', auth.hasRole('teacher'), runningModules.splitRunningModule)

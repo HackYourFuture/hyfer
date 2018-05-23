@@ -51,14 +51,16 @@ class App extends Component {
             { exact: true, path: '/users', component: Users },
             { exact: true, path: '/profile', component: Profile },
             { exact: true, path: '/userAccount', component: userAccount },
+            { exact: true, path: '/homework', component: Homework },
+            { exact: true, path: '/homework/:classNumber', component: Homework },
             { exact: true, path: '/TrainTicket', component: TrainTicket },
         ],
-        student: [],
+        student: [
+            { exact: true, path: '/homework', component: Homework },
+            { exact: true, path: '/homework/:classNumber', component: Homework },            
+        ],
         guest: [ // and all of the users can share some stuff
             { exact: true, path: '/currentUserProfile', component: currentUserProfile },
-        ],
-        shared: [ // between students and teachers
-            { exact: true, path: '/homework', component: Homework },
         ],
         public: [
             { exact: true, path: '/timeline', component: TimeLine },
@@ -154,7 +156,6 @@ class App extends Component {
         // has the user any role?
         if (isATeacher) return rolled_to_be('teacher')
         if (isStudent) return rolled_to_be('student')
-        if (isStudent || isATeacher) return rolled_to_be('shared')
         return rolled_to_be('guest') // in All cases he is a guest because he is logged in
     }
 
