@@ -17,6 +17,8 @@ import Notifications from 'react-notify-toast'
 import NotFound from './Pages/NotFound'
 import Popup from './components/Popup'
 
+import { Provider, Consumer } from './Provider'
+
 import {
     LOGIN_STATE_CHANGED,
     ISTEACHER_STATE_CHANGED,
@@ -39,7 +41,7 @@ const { pathname } = window.location
 class App extends Component {
 
     /*** The Roles In Frontend ***/
-    
+
     state = { ...defaultState }
 
     // For any new Secure Routes we can adding them here:
@@ -57,7 +59,7 @@ class App extends Component {
         ],
         student: [
             { exact: true, path: '/homework', component: Homework },
-            { exact: true, path: '/homework/:classNumber', component: Homework },            
+            { exact: true, path: '/homework/:classNumber', component: Homework },
         ],
         guest: [ // and all of the users can share some stuff
             { exact: true, path: '/currentUserProfile', component: currentUserProfile },
@@ -170,31 +172,51 @@ class App extends Component {
     }
 
     render() {
+        const { isLoggedIn, isATeacher, isStudent, done, update } = this.state
+        const { securedRouteProps } = this
+        const main = {
+            // main App Object should contain any thing for using on the whole app level
+            main: {
+                auth: {
+                    isLoggedIn, isATeacher, isStudent
+                },
+                routes: securedRouteProps,
+                lifeCycle: {
+                    done, update
+                }
+            }
+        }
         // - calling findRoutes() method Here for Initial check for the route
         // -- and assigning it in the ( securedRouteProps ) Array that
         // -- will contain all of the same user scope paths & props
         this.findRoutes(pathname)
         return (
-            <BrowserRouter>
-                <React.Fragment>
-                    <Header />
-                    <Popup />
-                    <Notifications />
-                    <Switch>
-                        { // every Route the user has an access scope to it will be rendered here
-                            this.securedRouteProps.map(item => <Route key={item.path} {...item} />)
-                        }
-                        <Redirect exact strict from='/' to='/timeline' />
-                        { // the user isn't logged in OR the lifecycle done AND No route found render this Component
-                            (!this.state.isLoggedIn || this.state.done) && <Route {...this.routes.NotFound} />
-                        }
-                    </Switch>
-                    <Footer />
-                </React.Fragment>
-            </BrowserRouter>
+            <Provider>{/* we setted up the Provider value as appStore in src/Provider.js */}
+                <Consumer>{appStore => { // releasing the appStore Object
+                    appStore.set(main) // setting up the appStore Object Content
+                    return (
+                        <BrowserRouter>
+                            <React.Fragment>
+                                <Header />
+                                <Popup />
+                                <Notifications />
+                                <Switch>
+                                    { // every Route the user has an access scope to it will be rendered here
+                                        securedRouteProps.map(item => <Route key={item.path} {...item} />)
+                                    }
+                                    <Redirect exact strict from='/' to='/timeline' />
+                                    { // the user isn't logged in OR the lifecycle done AND No route found render this Component
+                                        (!this.state.isLoggedIn || this.state.done) && <Route {...this.routes.NotFound} />
+                                    }
+                                </Switch>
+                                <Footer />
+                            </React.Fragment>
+                        </BrowserRouter>
+                    )
+                }}</Consumer>
+            </Provider>
         )
     }
-
 }
 
 
