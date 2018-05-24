@@ -8,7 +8,7 @@ export default class SynchronizeResultModal extends Component {
 
     state = {
         startingDate: '',
-        className:null,
+        className: null,
         conflictData: [],
         notification: '',
         selected: false
@@ -107,7 +107,7 @@ export default class SynchronizeResultModal extends Component {
             console.log(err)
         }
         this.handelClose()
-        store.loadUsers()
+        window.location.reload()
     }
 
     handelSelectUser(e, data, userId) {
@@ -144,9 +144,19 @@ export default class SynchronizeResultModal extends Component {
         this.props.handelClose && this.props.handelClose(e)
     }
     render() {
-
+        
         if (!this.props.synchronized) {
             return null
+        }
+        if (this.state.conflictData.length === 0) {
+            return (
+                <div className={style.backDrop}>
+                    <div className={style.upToDate}>
+                        <p>   Your users list is up to date !!  </p>
+                        <button className={style.button_cancel} onClick={(e) => { this.handelClose(e) }}>Close</button>
+                    </div>
+                </div>
+            )
         }
         return (
             <div className={style.backDrop}>

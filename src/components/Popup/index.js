@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import styles from './index.css'
 import { uiStore } from '../../store'
 import ModalDialog from '../../Helpers/Modal/Modal'
+import { warning, errorMessage, success } from '../../notify'
+
 const defaultState = {
     isEmail: false,
     isLoggedIn: true,
@@ -9,7 +11,7 @@ const defaultState = {
     email_input: '',
     confirm_email_input: ''
 }
-//Jawhar is working to handle errors.
+
 class Popup extends Component {
     state = {
         ...defaultState
@@ -37,10 +39,9 @@ class Popup extends Component {
     }
 
     handleSubmit = () => {
-        /* UiStore.getState(): to continue*/
         const { email_input, confirm_email_input } = this.state
         if (email_input !== confirm_email_input) {
-            return console.error("the emails didn't match ")
+            return warning("the emails didn't match ")
         }
         const { id } = uiStore.getState()
         const data = {
@@ -57,15 +58,15 @@ class Popup extends Component {
                 'Content-Type': 'application/json'
             }
         }).then(res => {
+            if (!res.ok) throw res
             this.setState({ submited: true })
             return res.json()
-        })
-            .then(console.log)
-            .catch(error => console.error('Error:', error))
+        }).then(param => success('Your e-mail has been inserted succefully'))
+            .catch(errorMessage)
     }
     PopUpContent = (visible) => {
         return (
-            <ModalDialog visible={visible} closeModal={this.state.submited} close={true/*if close true the Closing X button will not be showed*/}>
+            <ModalDialog visible={visible} closeModal={this.state.submited} close={true}>
                     <input className={styles.Popup_input}
                         onChange={this.handleChange}
                         value={this.state.email_input}
@@ -78,7 +79,7 @@ class Popup extends Component {
                         type='email'
                         placeholder='Confirm Your Email'
                     />
-                    <button className={styles.Popup_button} onClick={this.handleSubmit /* UiStore.getState(): to continue*/}>
+                    <button className={styles.Popup_button} onClick={this.handleSubmit}>
                         Submit
                     </button>
             </ModalDialog>

@@ -1,5 +1,5 @@
-
 import React, { Component } from 'react';
+
 
 
 export default class CommitsInfo extends Component {
@@ -9,19 +9,20 @@ export default class CommitsInfo extends Component {
         if (this.props.commits) {
             console.log('if')
             content = this.props.commits.map(commit => (
-                <li key={commit.key}>
-                    <div>{commit.name}</div>
-                    <div>{commit.email}</div>
-                    <div>{commit.repoName}</div>
-                    <div>{commit.date}</div>
-                </li>
+                <tr key={commit.key}>
+                    <td>{commit.name}</td>
+                    <td>{commit.email}</td>
+
+                    <td>{commit.date}</td>
+                </tr>
             ))
         } else {
             console.log('else')
             content = null
         }
         return (
-            <ul>{content}</ul>
+            <table >{content}</table>
         )
     }
 }
+

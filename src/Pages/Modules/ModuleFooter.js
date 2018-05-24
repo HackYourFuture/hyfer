@@ -4,7 +4,7 @@ import ModuleButton from './ModuleButton'
 import ModuleObservable from './ModuleObservable'
 import ModuleServiceBack from './ModuleServiceBack'
 import ModuleForm from './ModuleForm'
-import Notifications, { notify } from 'react-notify-toast'
+import { success, warning, errorMessage } from '../../notify';
 
 
 export default class ModuleFooter extends Component {
@@ -22,14 +22,21 @@ export default class ModuleFooter extends Component {
 
     UndoChanges = () => {
         ModuleObservable.resetModules()
-        notify.show('Your changes have been cancelled !', 'warning')
+        warning('Your changes have been cancelled !', 'warning')
     }
 
     SaveChanges = () => {
-        ModuleServiceBack.saveModules(ModuleObservable.getModules(), () => {
-            ModuleServiceBack.loadModules((result) => ModuleObservable.initModules(result))
-            notify.show('Your changes are successfully Saved !', 'success')
-        })
+        try {
+            ModuleServiceBack.saveModules(ModuleObservable.getModules(), () => {
+                ModuleServiceBack.loadModules((result) => ModuleObservable.initModules(result))
+                success('Your changes are successfully Saved !')
+            })
+        } catch (e) {
+            // try catch because a small code and multy unexpected errors
+            // if nothing passed into errorMessage the default is:
+            if (!e) errorMessage(/* Oops something went wrong */)
+            else errorMessage(e) // if the user has a specific error
+        }
     }
 
     AddModule = (module) => {
@@ -58,7 +65,6 @@ export default class ModuleFooter extends Component {
     render() {
         return (
             <div className={style.moduleFooter}>
-                <Notifications />
                 <ModuleButton action="undo"
                     title="Undo Changes"
                     disabled={!this.state.isChanged}
