@@ -25,6 +25,7 @@ import {
     ISSTUDENT_STATE_CHANGED,
     uiStore
 } from './store'
+import { errorMessage } from './notify';
 
 
 const defaultState = {
@@ -216,6 +217,10 @@ class App extends Component {
                 }}</Consumer>
             </Provider>
         )
+    }
+
+    componentDidCatch(error, info) {
+        errorMessage(error)
     }
 }
 
