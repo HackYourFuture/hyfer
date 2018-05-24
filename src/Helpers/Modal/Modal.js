@@ -16,7 +16,11 @@ export default class ModalDialog extends Component {
             if (this.props.close) {
                 return ''
             } else {
-                return 'x'
+                return (
+                    <a className={classes.popup_close} onClick={this.props.closeModal}>
+                        x
+                    </a>
+                )
             }
         }
     return (
@@ -36,10 +40,8 @@ export default class ModalDialog extends Component {
                             alt="HackYourFuture logo"
                             className={styles.hyfIcon}
                         />
-                    </a>    
-            <a className={classes.popup_close} onClick={this.props.closeModal}>
-                        {x()}
-            </a>
+                    </a>
+                    {x()}
             <span>{this.props.title}</span>
           </div>
           <div className={classes.popup_content}>{this.props.children}</div>
