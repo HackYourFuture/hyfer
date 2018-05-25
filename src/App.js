@@ -53,7 +53,6 @@ class App extends Component {
             { exact: true, path: '/modules', component: Modules },
             { exact: true, path: '/users', component: Users },
             { exact: true, path: '/profile', component: Profile },
-            { exact: true, path: '/userAccount', component: userAccount },
             { exact: true, path: '/homework', component: Homework },
             { exact: true, path: '/homework/:classNumber', component: Homework },
             { exact: true, path: '/TrainTicket', component: TrainTicket },
@@ -63,6 +62,7 @@ class App extends Component {
             { exact: true, path: '/homework/:classNumber', component: Homework },
         ],
         guest: [ // and all of the users can share some stuff
+            { exact: true, path: '/userAccount', component: userAccount },
             { exact: true, path: '/currentUserProfile', component: currentUserProfile },
         ],
         public: [
