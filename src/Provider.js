@@ -45,7 +45,7 @@ export const Provider = (props) => (
 
 // any Context API needs a consumer that it will release the value
 // - of the Provider By a function! ~> when ever you use a consumer
-// -- it excepts a function as a childe that will give the appility
+// -- it excepts a callback function as a child that will give the appility
 // -- to use what ever the value of the Provider
 export const Consumer = (props) => (
     <Context.Consumer>
