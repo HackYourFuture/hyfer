@@ -117,16 +117,17 @@ export default class TimeLine extends Component {
     itemClickHandler = (clickEvent, item) => {
         moduleInfoStore.getHistory(clickEvent, this.state.isATeacher).catch(errorMessage)
         const selectedItemInStore = timelineStore.getState().selectedModule
-        if (
-            !item ||
-            (selectedItemInStore &&
-                item.running_module_id === selectedItemInStore.running_module_id)
-        ) {
-            // if the clicked module is the same on unselect it
+
+        const isItem = selectedItemInStore && item.running_module_id === selectedItemInStore.running_module_id
+
+        if (!item || isItem) {
             item = null
-        } else {
+        } else if (this.state.isATeacher) {
+            // should be a teacher otherwise it will return 403 Fobiden
+            // if the clicked module is the same on unselect it
             timelineStore.getSelectedModuleInfo(item)
         }
+
         timelineStore.setState({
             type: SELECTED_MODULE_ID_CHANGED,
             payload: {
