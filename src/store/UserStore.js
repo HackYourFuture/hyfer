@@ -116,13 +116,13 @@ class store {
             body: JSON.stringify(updatedUser),
         })
         if (loadData === 'loadUser') {
-            this.loadUser() // this error handeling is prograted
+            return this.loadUser() // this error handeling is prograted
         } else if (loadData === 'loadUsers') {
-            this.loadUsers() // this error handeling is prograted
+            return this.loadUsers() // this error handeling is prograted
         }
         // throwing it in the end of the file because of the loading if it does happen an error the loading will be blocked
         if (!res.ok) throw res
-        else success('Success saving profile changes')
+        // else success('Success saving profile changes')
     }
 
     resetProfile = () => {
