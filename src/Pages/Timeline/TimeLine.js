@@ -9,8 +9,6 @@ import {
     REPO_NAME_CHANGED,
     HISTORY_CHANGED,
     moduleInfoStore,
-    LOGIN_STATE_CHANGED,
-    ISTEACHER_STATE_CHANGED,
     uiStore,
     timelineStore,
     TIMELINE_ITEMS_CHANGED,
@@ -23,7 +21,9 @@ import {
     ALL_TEACHERS_CHAGNED,
     INFO_SELECTED_MDOULE_CHANGED
 } from "../../store/index"
-import { errorMessage } from '../../notify';
+
+import { errorMessage } from '../../notify'
+import { Consumer } from '../../Provider'
 
 export default class TimeLine extends Component {
     state = {
@@ -109,14 +109,6 @@ export default class TimeLine extends Component {
 
         moduleInfoStore.defaultReadme("curriculum").catch(errorMessage)
 
-        uiStore.subscribe(mergedData => {
-            if (mergedData.type === LOGIN_STATE_CHANGED) {
-                this.setState({ isLoggedIn: mergedData.payload.isLoggedIn })
-            } else if (mergedData.type === ISTEACHER_STATE_CHANGED) {
-                this.setState({ isATeacher: mergedData.payload.isATeacher })
-            }
-        })
-
         if (localStorage.token) {
             uiStore.getUserInfo().catch(errorMessage)
         }
@@ -152,8 +144,6 @@ export default class TimeLine extends Component {
             history,
             repoName,
             readme,
-            isATeacher,
-            isLoggedIn,
             timelineItems,
             groups,
             allWeeks,
@@ -178,67 +168,45 @@ export default class TimeLine extends Component {
             )
         }
 
-        if (isLoggedIn && isATeacher) {
-            return (
-                <main>
-                    <div style={{ marginBottom: "3rem" }}>
-                        <TimelineComp
-                            itemWidth={170}
-                            rowHeight={70}
-                            isTeacher={isATeacher}
-                            timelineItems={timelineItems}
-                            groups={groups}
-                            allWeeks={allWeeks}
-                            totalWeeks={totalWeeks}
-                            selectedModule={selectedModule}
-                            itemClickHandler={this.itemClickHandler}
-                            allModules={modules}
-                            groupsWithIds={groupsWithIds}
-                            teachers={teachers}
-                            infoSelectedModule={infoSelectedModule}
-                        />
-                    </div>
-                    <div className={styles.tabs}>
-                        <button
-                            className={styles.ReadmeTab}
-                            onClick={() => this.setState({ tab: "readme" })}
-                        >
-                            Readme
-            </button>
-                        <button
-                            className={styles.AttendanceTab}
-                            onClick={() => this.setState({ tab: "attendance" })}
-                        >
-                            Attendance
-            </button>
-                    </div>
-                    {content}
-                </main>
-            )
-        } else {
-            return (
-                <main>
-                    <div style={{ marginBottom: "3rem" }}>
-                        <TimelineComp
-                            itemWidth={170}
-                            rowHeight={70}
-                            isTeacher={isATeacher}
-                            timelineItems={timelineItems}
-                            groups={groups}
-                            allWeeks={allWeeks}
-                            totalWeeks={totalWeeks}
-                            selectedModule={selectedModule}
-                            itemClickHandler={this.itemClickHandler}
-                            allModules={modules}
-                            groupsWithIds={groupsWithIds}
-                            //teachers={teachers}
-                            teachers={null}
-                            infoSelectedModule={infoSelectedModule}
-                        />
-                    </div>
-                    <ModuleReadme readme={readme} repoName={repoName} />
-                </main>
-            )
-        }
+        return (
+            <Consumer>{appStore => {
+                // collecting the main state from appStore
+                const { auth } = appStore.state.main
+                // setting up the teacher role on the whole page
+                if (auth.isATeacher && this.state.isATeacher !== auth.isATeacher) this.setState({ isATeacher: auth.isATeacher })
+                // setting up the props for the <TimelineComp /> from the whole page
+                const initialProps = {
+                    itemWidth: 170,
+                    rowHeight: 70,
+                    isTeacher: auth.isATeacher,
+                    timelineItems, groups, allWeeks, totalWeeks,
+                    selectedModule, groupsWithIds, infoSelectedModule,
+                    itemClickHandler: this.itemClickHandler,
+                    allModules: modules,
+                    teachers: auth.isATeacher && teachers,
+                }
+                return (
+                    <main>
+                        <div style={{ marginBottom: "3rem" }}>
+                            <TimelineComp {...initialProps} />
+                        </div>
+                        {
+                            auth.isATeacher &&
+                            <div className={styles.tabs}>
+                                <button
+                                    className={styles.ReadmeTab}
+                                    onClick={() => this.setState({ tab: "readme" })}
+                                >Readme</button>
+                                <button
+                                    className={styles.AttendanceTab}
+                                    onClick={() => this.setState({ tab: "attendance" })}
+                                >Attendance</button>
+                            </div>
+                        }
+                        {content}
+                    </main>
+                )
+            }}</Consumer>
+        )
     }
 }
