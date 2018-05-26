@@ -20,12 +20,11 @@ export default class Assignment extends Component {
     state = defaultState
 
     componentWillMount() {
-        const { id, deadline } = this.props
+        const { deadline } = this.props
         
         // check whether assignment deadline has passed
         if (moment().isAfter(deadline)) {
             this.setState({ deadlineHasPassed: true })
-            //this.props.HomeworkStore.getAssignmentSubmitters(id)
         }
     }
 
@@ -112,6 +111,8 @@ export default class Assignment extends Component {
                             ? <AssignReviewer
                                 submitter={submission.submitter_name}
                                 assignmentTitle={this.props.title}
+                                submissionId={submission.id}
+                                reviewer={submission.reviewer}
                             />
                         : null }   
                     </div>    

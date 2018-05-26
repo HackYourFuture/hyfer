@@ -172,6 +172,7 @@ CREATE TABLE `homework_submissions` (
   `submitter_id` int(8) NOT NULL,
   `github_link` varchar(255) NOT NULL DEFAULT '',
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `reviewer` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

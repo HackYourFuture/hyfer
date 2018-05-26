@@ -9,8 +9,7 @@ export default class AssignReviewer extends Component {
 
     state = {
         selectingReviewer: false,
-        assignedReviewer: "",
-        doneAssigning: false
+        assignedReviewer: ""
     }
 
     toggleAssignReviewer = () => {
@@ -20,14 +19,14 @@ export default class AssignReviewer extends Component {
     }
 
     requestReview = () => {
-        const { submitter, assignmentTitle } = this.props
+        const { submitter, assignmentTitle, submissionId } = this.props
         const { assignedReviewer } = this.state
 
         if (assignedReviewer) {
+            this.props.HomeworkStore.addReviewer(assignedReviewer, submissionId)
             this.props.HomeworkStore.requestReview(submitter, assignmentTitle, assignedReviewer)
             this.props.HomeworkStore.updateSubmitters(submitter)
             this.props.HomeworkStore.updateReviewers(assignedReviewer)
-            this.setState({ doneAssigning: true })
             this.toggleAssignReviewer()
         }
 
@@ -42,12 +41,13 @@ export default class AssignReviewer extends Component {
 
     render() {
         const { unassignedReviewers } = this.props.HomeworkStore
-        const { selectingReviewer, assignedReviewer, doneAssigning } = this.state
+        const { reviewer } = this.props
+        const { selectingReviewer, assignedReviewer } = this.state
 
         return (
             <div className={styles.assignReviewer}>
-                {doneAssigning 
-                    ? <h4>Reviewer: {assignedReviewer}</h4>
+                {reviewer 
+                    ? <h4>Reviewer: {reviewer}</h4>
                     : <div>
                         {selectingReviewer
                             ? <div>

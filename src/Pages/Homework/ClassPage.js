@@ -54,9 +54,9 @@ export default class ClassPage extends Component {
         return (
             <div className={styles.classPage}>
                 <h1>Class {studentClass.substr(5)}</h1>
-                <section className={styles.addAssignmentForm}>
+                <section>
                     {addingAssignment
-                        ? <div>
+                        ? <div className={styles.addAssignmentForm}>
                             <select value={selectedModule} onChange={e => this.handleInputChange(e.target.value, "selectedModule")}>
                                 <option value="" disabled hidden>Select module</option>    
                                 {modules.map(module => (
@@ -65,12 +65,12 @@ export default class ClassPage extends Component {
                             </select>
                             <input type="text"
                                 value={title}
-                                placeholder="homework title . . ."
+                                placeholder="Homework title . . ."
                                 onChange={e => this.handleInputChange(e.target.value, "title")}
                             />
                             <input type="text"
                                 value={githubLink}
-                                placeholder="paste homework link . . ."
+                                placeholder="Github link . . ."
                                 onChange={e => this.handleInputChange(e.target.value, "githubLink")}
                             />
                             <DatePicker

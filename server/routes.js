@@ -76,6 +76,7 @@ module.exports = function (app) {
     app.post('/api/assignments', auth.hasRole('teacher|student'), homework.addAssignment)
     app.post('/api/submissions', auth.hasRole('teacher|student'), homework.addSubmission)
     app.post('/api/reviews', auth.hasRole('teacher|student'), homework.addReview)
+    app.patch('/api/addReviewer', auth.hasRole('teacher'), homework.addReviewer)
 
 
 

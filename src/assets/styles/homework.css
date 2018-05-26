@@ -32,6 +32,17 @@ h2 {
     color: rebeccapurple;
 }
 
+.addAssignmentForm {
+    display: flex;
+}
+
+.addAssignmentForm input {
+    margin: 0vh 1vw;
+    padding: 0.5vh 0.5vw;
+    border-radius: 5%;
+}
+
+
 .addAssignmentForm button {
     padding: 1vh 1vw;
     cursor: pointer;
