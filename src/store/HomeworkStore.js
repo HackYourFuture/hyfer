@@ -64,6 +64,10 @@ class HomeworkStore {
 
     @observable
     unassignedReviewers = []
+
+    @observable
+    assigningReviewersId = null    
+    
     
     @action
     getCurrentUser = async() => {        
@@ -84,7 +88,6 @@ class HomeworkStore {
     fetchAllData = async (groupName) => {
         this.currentGroup = this.activeGroups.filter(group => group.name === groupName)[0]
         await this.getHomework("assignments")
-        await this.getActiveGroups()
         await this.getCurrentUser()
         await this.getStudents()
         await this.getHomework("submissions")
@@ -209,6 +212,11 @@ class HomeworkStore {
         ${assignedReviewer}, your review has been requested on ${submitter}'s "${assignmentTitle}" homework
         `)
     }  
+
+    @action
+    setAssigningReviewersId = (assignmentId) => {
+        this.assigningReviewersId = assignmentId
+    }
 
 }
 

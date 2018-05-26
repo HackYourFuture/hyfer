@@ -25,7 +25,7 @@ export default class Assignment extends Component {
         // check whether assignment deadline has passed
         if (moment().isAfter(deadline)) {
             this.setState({ deadlineHasPassed: true })
-            this.props.HomeworkStore.getAssignmentSubmitters(id)
+            //this.props.HomeworkStore.getAssignmentSubmitters(id)
         }
     }
 
@@ -53,9 +53,15 @@ export default class Assignment extends Component {
         }
     }
 
+    fetchAssignmentSubmitters = () => {
+        const { id } = this.props
+        this.props.HomeworkStore.setAssigningReviewersId(id)
+        this.props.HomeworkStore.getAssignmentSubmitters(id)
+    }
+
 
     render() {
-        const { submissions } = this.props.HomeworkStore
+        const { submissions, assigningReviewersId } = this.props.HomeworkStore
         const { id, module, title, instructions, deadline } = this.props
         const { submittingHomework, githubLink, deadlineHasPassed } = this.state
 
@@ -69,7 +75,7 @@ export default class Assignment extends Component {
                 <h3>{title}</h3> 
                 <h4>Deadline: {moment(deadline).format("ddd MMMM Do, YYYY")}</h4>
                 <a href={instructions}>Instructions</a>
-
+    
                 <div className={styles.submitForm}>
                 {submittingHomework
                     ? <div>
@@ -86,7 +92,12 @@ export default class Assignment extends Component {
                         Submit Homework
                     </button>
                     }
-                </div>   
+                </div>  
+                
+                {deadlineHasPassed
+                    ? <button onClick={this.fetchAssignmentSubmitters} className={styles.assignBtn}>Assign Reviewers</button>
+                    : null
+                }
                 
                 {assignmentSubmissions.map(submission => (
                     <div key={submission.id} className={styles.submission}>
@@ -97,7 +108,7 @@ export default class Assignment extends Component {
                             githubLink={submission.github_link}
                         />
 
-                        {deadlineHasPassed
+                        {assigningReviewersId === id
                             ? <AssignReviewer
                                 submitter={submission.submitter_name}
                                 assignmentTitle={this.props.title}
