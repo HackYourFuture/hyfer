@@ -5,6 +5,7 @@ import Guest from '../../components/Users/Guest'
 import Teachers from '../../components/Users/Teachers'
 import Students from '../../components/Users/Students'
 import SynchronizeGithubData from '../../components/Users/SynchronizeGithubData'
+import { errorMessage } from '../../notify';
 
 export default class Users extends React.Component {
 
@@ -23,7 +24,7 @@ export default class Users extends React.Component {
     }
 
     componentDidMount = () => {
-        store.loadUsers()
+        store.loadUsers().catch(errorMessage)
         window.scrollTo(0, 0)
     }
 

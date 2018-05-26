@@ -8,6 +8,9 @@ import Reset from './reset'
 import Styles from '../../assets/styles/TrainTicket.css'
 import Icon from '@material-ui/core/Icon'
 import Badge from './Badge'
+import { errorMessage } from '../../notify';
+
+
 const token = localStorage.getItem("token")
 
 class TrainTicket extends Component {
@@ -45,7 +48,7 @@ class TrainTicket extends Component {
       openModal: !this.state.openModal
     })
   }
-  componentDidMount() {
+  componentWillMount() {
     fetch('http://localhost:3000/api/users', {
       method: 'GET',
       headers: {
@@ -62,9 +65,9 @@ class TrainTicket extends Component {
           };
         })
         this.setState({
-          members: newData
+          members:newData
         })
-      })
+        }).catch(errorMessage)
   }
   handleFieldChange = (event, field) => {
     this.setState({ [field]: event.target.value });
@@ -84,8 +87,6 @@ class TrainTicket extends Component {
   }
 
   handleSubmit = () => {
-    // sendAnEmail(recipient, sender, subject, text)
-    // "talalalamdar@gmail.com"
     let text;
     const senderName=this.state.senderName
     const sender = this.state.senderEmail
@@ -136,8 +137,6 @@ class TrainTicket extends Component {
         .map(line => line.replace(/Couponcode:\s+/g, ''))
         .map((couponCode) => {
           return couponCode
-
-
         })
     })
   }
@@ -200,6 +199,10 @@ class TrainTicket extends Component {
     }
   }
 
+
+  handelSelected = (member) => { 
+    member.selected=!member.selected
+  }
   render() {
     const { stepIndex,
       redirect,
@@ -213,6 +216,7 @@ class TrainTicket extends Component {
     if (redirect) {
       return <Redirect from="/TrainTicket" to='/' />;
     }
+    
     return (
       <div>
         < div className={Styles.StepContainer} >

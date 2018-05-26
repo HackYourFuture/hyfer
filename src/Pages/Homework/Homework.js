@@ -24,7 +24,6 @@ export default class Homework extends Component {
 
         return (
             <Provider {...{ HomeworkStore }}>
-                <BrowserRouter>    
                     <div className={styles.homeworkPage}>
                         <section className={styles.navBar}>
                             {activeGroups.map(group => (
@@ -41,7 +40,6 @@ export default class Homework extends Component {
                             />
                         ))} 
                     </div>
-                </BrowserRouter>    
             </Provider>    
         )
     }
