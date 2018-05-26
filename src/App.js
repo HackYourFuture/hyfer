@@ -169,6 +169,7 @@ class App extends Component {
         if (!this.findRoutes(pathname, prevState.scope)) return this.setState({ done: true, update: false })
     }
 
+    
     render() {
         // - calling findRoutes() method Here for Initial check for the route
         // -- and assigning it in the ( securedRouteProps ) Array that

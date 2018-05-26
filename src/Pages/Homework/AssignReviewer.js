@@ -52,14 +52,15 @@ export default class AssignReviewer extends Component {
                         {selectingReviewer
                             ? <div>
                                 <select value={assignedReviewer}
+                                    className={styles.assignReview}    
                                     onChange={e => this.handleReviewerChange(e.target.value)}>
                                     <option value="" disabled hidden>Select reviewer</option>
                                     {unassignedReviewers.map(reviewer => (
                                         <option key={reviewer.id} value={reviewer.username}>{reviewer.username}</option>
                                     ))}
                                 </select>
-                                <button onClick={this.requestReview}>Save</button>
-                                <button onClick={this.toggleAssignReviewer}>Cancel</button>
+                                <button className={styles.saveButtonReviewer} onClick={this.requestReview}>Save</button>
+                                <button className={styles.cancelButtonReviewer} onClick={this.toggleAssignReviewer}>Cancel</button>
                             </div>
                             : <button onClick={this.toggleAssignReviewer} className={styles.assignBtn}>Assign Reviewer</button>
                         }
