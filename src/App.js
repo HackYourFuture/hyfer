@@ -14,8 +14,9 @@ import Profile from './Pages/Users/Profile'
 import TrainTicket from './Pages/TrainTicket/TrainTicket'
 import Homework from "./Pages/Homework/Homework"
 import cookie from 'react-cookies'
+import Popup from './components/Popup'
 
-    
+
 class App extends Component {
   
   componentWillMount() {
@@ -36,6 +37,7 @@ class App extends Component {
       <BrowserRouter>
         <React.Fragment>
           <Header />
+          <Popup />      
           <Switch>
             <Route path="/timeline" exact component={TimeLine} />
             <Route path="/modules" exact component={Modules} />
