@@ -16,8 +16,12 @@ function sendAnEmail(req, res) {
     sgMail
         .send(msg)
         .then(() => {
-            console.log("mail sent successfully")
-            res.end()
+            if (res.statusCode === 200) {
+                console.log("mail sent successfully")
+                res.end()
+            } else { 
+                console.log(res.statusCode)                
+            }
         })
         .catch(err => console.error(err.toString()))
 }
