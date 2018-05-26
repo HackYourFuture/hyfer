@@ -209,7 +209,11 @@ class HomeworkStore {
                 reviewerEmail,
                 "hyfer@gmx.com" ,  // a new email account has been created for hyfer
                 "requesting a review for homework",
-                "Hey, would you please give a feedback for "+submitter+"'s homework ("+assignmentTitle+")"
+                `Dear student,
+
+                 Would you please give a feedback for ${submitter}'s homework (${assignmentTitle}).
+                 
+                 Hyfer`
             )
            console.log("Email sent successfully")
         }
