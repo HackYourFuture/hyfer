@@ -17,7 +17,7 @@ export default class Review extends Component {
 
         return (
             <div className={styles.review}>
-                <h6 className={styles.timestamp}>{moment(date).format("MMMM Do YYYY, h:mm")}</h6>
+                <h6 className={styles.timestamp}>{moment(date).format("LLL")}</h6>
                 <h3>{reviewer.username}</h3>
                 <img src={reviewer.avatarUrl} alt={reviewer.username} />
                 <p>{comments}</p>        
