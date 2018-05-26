@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-
+import style from '../../assets/styles/attendance.css';
 
 
 export default class CommitsInfo extends Component {
     render() {
+        
         console.log('here')
         let content = null
         if (this.props.commits) {
