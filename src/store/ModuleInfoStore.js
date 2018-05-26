@@ -39,74 +39,67 @@ export default function () {
     // Normal method's will be changing the state
 
     const getHistory = async (clickEvent, isATeacher) => {
-
+        // the error is propagated
+        // used once in src\Pages\Timeline\TimeLine.js
         if (!isATeacher) {
             _getRepoNameAndSundays(clickEvent)
-            getReadme()
-        } else {
-            _getRepoNameAndSundays(clickEvent)
-            getReadme()
-            const {
-                group_id,
-                running_module_id,
-                group,
-                duration,
-                repoName,
-                start,
-                end
-            } = _data
-            let moduleSundays = _getSundays(start, end)
-            let sundays = {
-                sundays: moduleSundays
-            }
-            const token = localStorage.getItem("token")
-            let BASE_URL = 'http://localhost:3005/api/history'
-            try {
-                const res = await fetch(`${BASE_URL}/${running_module_id}/${group_id}`, {
-                    method: 'PATCH',
-                    body: JSON.stringify(sundays),
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + token,
-                    }
-                })
-                const response = await res.json()
-                const students = Object.keys(response)
-                setState({
-                    type: HISTORY_CHANGED,
-                    payload: {
-                        history: response,
-                        students: students,
-                        duration: duration,
-                        repoName: repoName,
-                        group_name: group
-                    }
-                })
-            } catch (error) {
-                console.log(error)
-            }
+            return getReadme()
         }
+        _getRepoNameAndSundays(clickEvent)
+        getReadme()
+        const {
+            group_id,
+            running_module_id,
+            group,
+            duration,
+            repoName,
+            start,
+            end
+        } = await _data
+        let moduleSundays = _getSundays(start, end)
+        let sundays = {
+            sundays: moduleSundays
+        }
+        const token = localStorage.getItem("token")
+        let BASE_URL = 'http://localhost:3005/api/history'
+        const res = await fetch(`${BASE_URL}/${running_module_id}/${group_id}`, {
+            method: 'PATCH',
+            body: JSON.stringify(sundays),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token,
+            }
+        })
+        if (!res.ok) throw res
+        const response = await res.json()
+        const students = Object.keys(response)
+        setState({
+            type: HISTORY_CHANGED,
+            payload: {
+                history: response,
+                students: students,
+                duration: duration,
+                repoName: repoName,
+                group_name: group
+            }
+        })
     }
     const getReadme = async () => {
         // check if there is a valid repoName
         if (!_data.repoName || _data.repoName === noRepoAlternative) return
         // make the request
-        try {
-            const response = await fetch(`${BASE_URL}/${_data.repoName}/readme`)
-            const readmeEncoded = await response.json()
-            const readmeDecoded = atob(readmeEncoded.content)
-            const readmeHtml = marked(readmeDecoded)
+        const res = await fetch(`${BASE_URL}/${_data.repoName}/readme`)
+        if (!res.ok) throw res // the error is propagated
+        const readmeEncoded = await res.json()
+        const readmeDecoded = atob(readmeEncoded.content)
+        const readmeHtml = marked(readmeDecoded)
 
-            setState({
-                type: READ_ME_CHANGED,
-                payload: {
-                    readme: readmeHtml
-                }
-            })
-
-        } catch (error) {
-            console.log(error)
-        }
+        setState({
+            type: READ_ME_CHANGED,
+            payload: {
+                readme: readmeHtml
+            }
+        })
     }
 
     // Helper methods used to help the state changing methods above
@@ -162,23 +155,19 @@ export default function () {
     }
 
     const defaultReadme = async defaultRepo => {
-        try {
-            const res = await fetch(`${BASE_URL}/${defaultRepo}/readme`)
-            const readmeEncoded = await res.json()
-            const readmeDecoded = atob(readmeEncoded.content)
-            const readmeHtml = marked(readmeDecoded)
+        const res = await fetch(`${BASE_URL}/${defaultRepo}/readme`)
+        if (!res.ok) throw res
+        const readmeEncoded = await res.json()
+        const readmeDecoded = atob(readmeEncoded.content)
+        const readmeHtml = marked(readmeDecoded)
 
-            setState({
-                type: READ_ME_CHANGED,
-                payload: {
-                    readme: readmeHtml,
-                    repoName: defaultRepo
-                }
-            })
-
-        } catch (error) {
-            console.log(error)
-        }
+        setState({
+            type: READ_ME_CHANGED,
+            payload: {
+                readme: readmeHtml,
+                repoName: defaultRepo
+            }
+        })
     }
 
     return {
