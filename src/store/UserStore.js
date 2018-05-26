@@ -154,7 +154,6 @@ class store {
 		})
 	}
 
-	// filter by user full_name(I think it's more specific)
 	searchUser = (event) => {
 		let updatedList = this.state.users;
 		updatedList = updatedList.filter((item) => {
