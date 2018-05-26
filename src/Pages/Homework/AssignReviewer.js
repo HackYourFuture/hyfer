@@ -47,7 +47,7 @@ export default class AssignReviewer extends Component {
         return (
             <div className={styles.assignReviewer}>
                 {reviewer 
-                    ? <h4>Reviewer: {reviewer}</h4>
+                    ? <h4>Reviewer: <span>{reviewer}</span></h4>
                     : <div>
                         {selectingReviewer
                             ? <div>
@@ -62,7 +62,7 @@ export default class AssignReviewer extends Component {
                                 <button className={styles.saveButtonReviewer} onClick={this.requestReview}>Save</button>
                                 <button className={styles.cancelButtonReviewer} onClick={this.toggleAssignReviewer}>Cancel</button>
                             </div>
-                            : <button onClick={this.toggleAssignReviewer} className={styles.assignBtn}>Assign Reviewer</button>
+                            : <button onClick={this.toggleAssignReviewer} className={styles.assignBtn}>Assign</button>
                         }
                     </div>
                 } 

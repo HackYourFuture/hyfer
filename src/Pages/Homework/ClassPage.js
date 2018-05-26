@@ -54,7 +54,7 @@ export default class ClassPage extends Component {
         return (
             <div className={styles.classPage}>
                 <h1>Class {studentClass.substr(5)}</h1>
-                <section>
+                <section className={styles.addAssignmentForm}>
                     {addingAssignment
                         ? <div>
                             <select className={styles.selectModule} value={selectedModule} onChange={e => this.handleInputChange(e.target.value, "selectedModule")}>

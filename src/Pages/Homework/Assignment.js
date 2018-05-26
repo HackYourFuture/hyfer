@@ -72,7 +72,7 @@ export default class Assignment extends Component {
             <section className={styles.assignmentDiv}>
                 <h2>{module}</h2>    
                 <h3>{title}</h3> 
-                <h4>Deadline: {moment(deadline).format("ddd MMMM Do, YYYY")}</h4>
+                <h4>Deadline: <span>{moment(deadline).format("ddd MMMM Do, YYYY")}</span></h4>
                 <a href={instructions}>Instructions</a>
     
                 <div className={styles.submitForm}>
@@ -80,7 +80,7 @@ export default class Assignment extends Component {
                     ? <div>
                         <input type="text"
                             value={githubLink}
-                            placeholder="paste github link . . ."
+                            placeholder="Github link . . ."
                             onChange={e => this.handleInputChange(e.target.value, "githubLink")}
                         />
                         <button onClick={this.addSubmission}>Submit</button>

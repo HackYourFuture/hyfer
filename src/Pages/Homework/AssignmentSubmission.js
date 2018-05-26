@@ -58,8 +58,8 @@ export default class AssignmentSubmission extends Component {
                 <div className={styles.commentsDiv}>
                     {commentsOpen
                         ? <div>
-                            <button onClick={this.toggleComments} className={styles.hideBtn}>Hide Comments</button>
-                            <textarea value={comments} placeholder="enter review . . ."
+                            <button onClick={this.toggleComments} className={styles.hideBtn}>Close</button>
+                            <textarea value={comments} placeholder="Give feedback . . ."
                                 onChange={e => this.handleInputChange(e.target.value, "comments")}
                             />
                             <button onClick={this.addReview} className={styles.submitCommentBtn}>Submit</button>
@@ -75,7 +75,7 @@ export default class AssignmentSubmission extends Component {
                                 ))}       
                             </div> 
                         </div>
-                        : <button onClick={this.toggleComments} className={styles.expandBtn}>Comments</button>
+                        : <button onClick={this.toggleComments} className={styles.expandBtn}>Expand</button>
                     }
                 </div>
             </div>
