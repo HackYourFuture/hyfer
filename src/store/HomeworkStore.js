@@ -1,4 +1,5 @@
 import { observable, action, configure, runInAction } from "mobx"
+import { sendAnEmail } from "../util";
 
 configure({ enforceActions: true })
 
@@ -211,15 +212,30 @@ class HomeworkStore {
 
     @action
     requestReview = (submitter, assignmentTitle, assignedReviewer) => {
+
+        console.log(this.students.filter(student => student.username === assignedReviewer))
         
         const reviewerEmail = this.students.filter(student => student.username === assignedReviewer)
             .map(student => student.email)[0]
+            
+            // send email to reviewerEmail using SendGrid
+        if (reviewerEmail) {
+            sendAnEmail(
+                reviewerEmail,
+                "hyfer@gmx.com" ,  // a new email account has been created for hyfer
+                "requesting a review for homework",
+                `Dear student,
 
-        // send email to reviewerEmail using SendGrid
-        console.log(`
-        Email sent to ${reviewerEmail} -- 
-        ${assignedReviewer}, your review has been requested on ${submitter}'s "${assignmentTitle}" homework
-        `)
+                 Would you please give a feedback for ${submitter}'s homework (${assignmentTitle}).
+                 
+                 Hyfer`
+            )
+           console.log("Email sent successfully")
+        }
+        else {
+            console.log("reviewer email is undefined")
+        }
+      
     }  
 
     @action
