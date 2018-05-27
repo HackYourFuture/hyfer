@@ -9,8 +9,6 @@ import Styles from '../../assets/styles/TrainTicket.css'
 import Icon from '@material-ui/core/Icon'
 import Badge from './Badge'
 import { errorMessage } from '../../notify';
-
-
 const token = localStorage.getItem("token")
 
 class TrainTicket extends Component {
@@ -122,7 +120,6 @@ class TrainTicket extends Component {
     })
   }
   handleReset = () => {
-    // const redirect = this.state.redirect
     this.setState({
       redirect: true,
     })
@@ -137,6 +134,8 @@ class TrainTicket extends Component {
         .map(line => line.replace(/Couponcode:\s+/g, ''))
         .map((couponCode) => {
           return couponCode
+
+
         })
     })
   }
@@ -199,10 +198,6 @@ class TrainTicket extends Component {
     }
   }
 
-
-  handelSelected = (member) => { 
-    member.selected=!member.selected
-  }
   render() {
     const { stepIndex,
       redirect,
@@ -216,7 +211,6 @@ class TrainTicket extends Component {
     if (redirect) {
       return <Redirect from="/TrainTicket" to='/' />;
     }
-    
     return (
       <div>
         < div className={Styles.StepContainer} >
