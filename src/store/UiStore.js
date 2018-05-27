@@ -3,7 +3,7 @@ import {
     ISTEACHER_STATE_CHANGED,
     ISSTUDENT_STATE_CHANGED,
     LOGIN_STATE_CHANGED,
-    USER_ID,
+    USERNAME,
     IS_EMAIL_EXISTED
 } from './';
 
@@ -61,7 +61,7 @@ export default function () {
         const isStudent = jsonRes.role === 'student' ? true : false;
         const isEmail = jsonRes.email ? true : false;
         _getProfileImg(jsonRes.username);
-        _getProfileId(jsonRes.id);
+        _getProfileName(jsonRes.username);
         // notify login
         setState({
             type: LOGIN_STATE_CHANGED,
@@ -103,13 +103,13 @@ export default function () {
         });
     };
 
-    const _getProfileId = id => {
+    const _getProfileName = username => {
 
         //notify set userId
         setState({
-            type: USER_ID,
+            type: USERNAME,
             payload: {
-                id
+                username
             }
         });
     };
