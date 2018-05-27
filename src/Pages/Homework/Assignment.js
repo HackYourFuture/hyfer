@@ -50,6 +50,8 @@ export default class Assignment extends Component {
             this.setState(defaultState)
             this.toggleSubmitHomework()
         }
+
+        window.location.reload()
     }
 
     fetchAssignmentSubmitters = () => {
