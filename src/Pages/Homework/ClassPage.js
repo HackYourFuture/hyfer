@@ -57,28 +57,31 @@ export default class ClassPage extends Component {
                 <section className={styles.addAssignmentForm}>
                     {addingAssignment
                         ? <div>
-                            <select value={selectedModule} onChange={e => this.handleInputChange(e.target.value, "selectedModule")}>
+                            <select className={styles.selectModule} value={selectedModule} onChange={e => this.handleInputChange(e.target.value, "selectedModule")}>
                                 <option value="" disabled hidden>Select module</option>    
                                 {modules.map(module => (
                                     <option key={module.id} value={module.name}>{module.name}</option>
                                 ))}
                             </select>
                             <input type="text"
+                                className={styles.title}    
                                 value={title}
-                                placeholder="homework title . . ."
+                                placeholder="Homework title . . ."
                                 onChange={e => this.handleInputChange(e.target.value, "title")}
                             />
                             <input type="text"
+                                className={styles.githubLink}    
                                 value={githubLink}
-                                placeholder="paste homework link . . ."
+                                placeholder="Github link . . ."
                                 onChange={e => this.handleInputChange(e.target.value, "githubLink")}
                             />
                             <DatePicker
+                                className={styles.deadline}     
                                 value={deadline}
                                 onChange={date => this.handleInputChange(moment(date).format("YYYY-MM-DD"), "deadline")}
                             />
-                            <button onClick={this.addAssignment}>Save</button>
-                            <button onClick={this.toggleAddAssignment}>Cancel</button>
+                            <button className={styles.saveButton} onClick={this.addAssignment}>Save</button>
+                            <button className={styles.cancelButton} onClick={this.toggleAddAssignment}>Cancel</button>
                         </div>
                         : <button onClick={this.toggleAddAssignment}>New Assignment</button>
                     }

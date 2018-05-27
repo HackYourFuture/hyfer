@@ -9,7 +9,7 @@ const API_Root = "http://localhost:3005/api"
 
 export async function getData(route) {
     const res = await fetch(`${API_Root}/${route}`, {
-        credentials: "same-origin",
+        // credentials: "same-origin",
         headers: {
             "Authorization": "Bearer " + token,
         }
@@ -17,9 +17,9 @@ export async function getData(route) {
     return await res.json()
 }
 
-async function postData(route, data) {
+async function sendData(method, route, data) {
     await fetch(`${API_Root}/${route}`, {
-        method: 'POST',
+        method,
         headers: {
             "Content-Type": "Application/json",
             "Authorization": "Bearer " + token,
@@ -65,6 +65,10 @@ class HomeworkStore {
 
     @observable
     unassignedReviewers = []
+
+    @observable
+    assigningReviewersId = null    
+    
     
     @action
     getCurrentUser = async() => {        
@@ -85,7 +89,6 @@ class HomeworkStore {
     fetchAllData = async (groupName) => {
         this.currentGroup = this.activeGroups.filter(group => group.name === groupName)[0]
         await this.getHomework("assignments")
-        await this.getActiveGroups()
         await this.getCurrentUser()
         await this.getStudents()
         await this.getHomework("submissions")
@@ -166,7 +169,7 @@ class HomeworkStore {
             assignment_link,
             deadline
         }
-        await postData("assignments", newHomework)
+        await sendData("POST", "assignments", newHomework)
         this.getHomework("assignments")
     }
 
@@ -179,7 +182,7 @@ class HomeworkStore {
             github_link,
             date
         }
-        await postData("submissions", newSubmission)
+        await sendData("POST", "submissions", newSubmission)
         this.getHomework("submissions")
 
     }
@@ -193,13 +196,25 @@ class HomeworkStore {
             comments,
             date
         }
-        await postData("reviews", newReview)
+        await sendData("POST", "reviews", newReview)
         this.getHomework("reviews")
     }
 
     @action
+    addReviewer = async (assignedReviewer, submission_id) => {
+        const body = {
+            submission_id,
+            reviewer: assignedReviewer
+        }
+        await sendData("PATCH", "addReviewer", body)
+        this.getHomework("submissions")
+    }
+
+    @action
     requestReview = (submitter, assignmentTitle, assignedReviewer) => {
+
         console.log(this.students.filter(student => student.username === assignedReviewer))
+        
         const reviewerEmail = this.students.filter(student => student.username === assignedReviewer)
             .map(student => student.email)[0]
             
@@ -222,6 +237,11 @@ class HomeworkStore {
         }
       
     }  
+
+    @action
+    setAssigningReviewersId = (assignmentId) => {
+        this.assigningReviewersId = assignmentId
+    }
 
 }
 

@@ -6,36 +6,68 @@
 
 .navBar {
     margin-bottom: 5vh;
-    margin-top: -3vh;
+    margin-top: 1vh;
 }
 
 .navLink {
-    padding: 1vh 1vw;
+    padding: 1.5vh 1.5vw;
     border: 2px solid;
-    color: green;
+    color: #fff;
     margin-right: 0.5vw;
     font-size: 110%;
+    background-color:#3399cc;
 }
 
 
 .navLink:hover {
-    padding: 1vh 1.5vw;
-    font-weight: bold;
-    background-color: beige;
+    padding: 1.5vh 2vw;
+    background-color: #22bb74;
 }
 
 .navLinkActive {
-    background-color: beige;
+    background-color:rgb(170, 34, 141);
 }
 
 h2 {
     font-family: Verdana;
-    color: rebeccapurple;
+    color: purple;
+    font-size: 200%;
+}
+
+.classPage {
+    text-align: center;
+}
+
+.addAssignmentForm {
+    margin: auto;
+}
+
+.addAssignmentForm input {
+    margin: 0vh 1vw;
+    padding: 0.5vh 0.5vw;
+    border-radius: 5%;
 }
 
 .addAssignmentForm button {
-    padding: 1vh 1vw;
+    margin-top: 2vh;
+    padding: 2vh 1vw;
+}
+
+button {
+    padding: 3vh 1vw;
     cursor: pointer;
+    border-radius: 3px;
+    color: white;
+    font-weight: bold;
+    font-size: 90%;
+    font-family: Verdana;
+    background-color: #3399cc;
+}
+
+span {
+    color: green;
+    font-weight: bold;
+    font-size: 110%;
 }
 
 .assignmentsContainer {
@@ -44,40 +76,96 @@ h2 {
     margin-top: 7vh;
 }
 
-.assignmentDiv {
-    margin: 5vh 0vw;
-    width: 45%;
+.selectModule{
+    width: 200px;
+    height: 40px;
+    margin-right: 2%;
+}
+
+.title{
+    width: 140px;
+    height: 40px;
+    margin-right: 2%;
+    padding: 0.5vh 0.5vw;
+}
+
+.githubLink{
+    width: 180px;
+    height: 40px;
+    margin-right: 2%;
+    padding: 0.5vh 0.5vw;
+}
+
+.deadline{
+    width: 130px;
+    height: 40px;
+    margin-right: 2%;
+    margin-top: 4%;
+    margin-bottom: 4%;
+}
+
+.saveButton{
+    width: 70px;
+    height: 30px;
+    margin-right: 0.5%;
+}
+
+.cancelButton{
+    width: 70px;
+    height: 30px;
 }
 
 .assignmentDiv h3 {
    display: block;
 }
 
+
+.assignmentDiv {
+    margin: 1vh 0vw;
+    width: 45%;
+    position: relative;
+}
+
+
 .assignmentDiv img {
     display: block;
     width: 20%;
     margin: -2vh 0vw 2vh 0vw;
     padding: 0.5vh;
-    border: 2px solid rebeccapurple;
+    border: 2px;
     border-radius: 50%;
 }
 
 .assignmentDiv textarea {
     width: 100%;
-    padding: 2vh 1vw;
+    margin-top: 4vh;
+    padding: 3vh 2vw;
     font-size: 110%;
 }
 
+.assignmentDiv a{
+    font-size: 120%;
+}
+
 .submission {
-    border: 2px dashed rgb(66, 143, 66);
-    padding: 2vh 3vw 4vh 3vw;;
-    margin-bottom: 3vh;
+    border-radius: 2%;
+    background: white;
+   -webkit-box-shadow: 0px -3px 10px 3px rgba(28, 78, 47, 0.65);
+   -moz-box-shadow: 0px -3px 10px 3px rgba(28, 78, 47, 0.65);
+    box-shadow: 0px -3px 10px 3px rgba(28, 78, 47, 0.65);
+    padding: 2vh 3vw 4vh 3vw;
+    margin: 5vh 0vw;
     position: relative;
+}
+
+.submission h3 {
+    text-align: start;
+    color: rgb(34, 155, 211);
 }
 
 .timestamp {
     position: absolute;
-    top: 0vh;
+    top: 1vh;
     right: 1.5vw;
     font-size: 80%;
     color: gray;
@@ -86,11 +174,7 @@ h2 {
 .assignReviewer {
     position: absolute;
     top: 7vh;
-    right: 1vw;
-}
-
-.assignReviewer h4 {
-    color: green;
+    right: 3vw;
 }
 
 .assignReviewer button,
@@ -110,25 +194,27 @@ h2 {
 
 .expandBtn {
     position: absolute;
-    bottom: 2vh;
-    right: 2vw;
+    bottom: 5vh;
+    right: 3vw;
 }
+
 .hideBtn {
     position: absolute;
-    top: 17vh;
-    right: 2vw; 
+    top: 23vh;
+    right: 3vw; 
 }
 
 .submitCommentBtn {
-    margin-left: 14vw;
     margin-top: 1vh;
 }
 
 .review {
     padding: 0.5vh 1.5vw;
     width: 100%;
-    border: 2px dotted purple;
-    margin-top: 3vh;
+   -webkit-box-shadow: 0px -1px 5px 0px rgba(31, 26, 26, 0.65);
+   -moz-box-shadow: 0px -1px 5px 0px rgba(49, 40, 40, 0.65);
+    box-shadow: 0px -1px 5px 0px purple;
+    margin-top: 5vh;
     position: relative;
 }
 
@@ -142,8 +228,28 @@ h2 {
     font-size: 110%;
 }
 
-.submitForm button {
+.submitForm button,
+.assignBtn {
     padding: 1vh 1vw;
     margin: 1vh 1vw;
     cursor: pointer;
+}
+
+
+.assignReview{
+    margin-left: 50%;
+    margin-right: 1%;
+    margin-bottom: 1%;
+    width: 150px;
+    height: 30px; 
+}
+
+.saveButtonReviewer{
+    display: inline;
+    margin-left: 50%;
+}
+
+.cancelButtonReviewer{
+    display: inline;
+    margin-left: 1%;
 }

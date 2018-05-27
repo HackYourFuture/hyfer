@@ -217,3 +217,17 @@ h3{display: inline-block;}
 .checkbox input[type="checkbox"].homework:after { content: 'H'; }
 .checkbox input[type="checkbox"].attendance:after { content: 'A'; }
 
+
+.commiters{
+    width:80%;
+    margin:auto;
+}
+.commiters tr{
+    border-top:1px solid #999;
+}
+.commiters td{
+    padding:10px 10px;
+}
+.commiters tr:hover{
+    background-color: #a28efb;
+}

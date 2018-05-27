@@ -9,8 +9,7 @@ export default class AssignReviewer extends Component {
 
     state = {
         selectingReviewer: false,
-        assignedReviewer: "",
-        doneAssigning: false
+        assignedReviewer: ""
     }
 
     toggleAssignReviewer = () => {
@@ -20,14 +19,14 @@ export default class AssignReviewer extends Component {
     }
 
     requestReview = () => {
-        const { submitter, assignmentTitle } = this.props
+        const { submitter, assignmentTitle, submissionId } = this.props
         const { assignedReviewer } = this.state
 
         if (assignedReviewer) {
+            this.props.HomeworkStore.addReviewer(assignedReviewer, submissionId)
             this.props.HomeworkStore.requestReview(submitter, assignmentTitle, assignedReviewer)
             this.props.HomeworkStore.updateSubmitters(submitter)
             this.props.HomeworkStore.updateReviewers(assignedReviewer)
-            this.setState({ doneAssigning: true })
             this.toggleAssignReviewer()
         }
 
@@ -42,26 +41,28 @@ export default class AssignReviewer extends Component {
 
     render() {
         const { unassignedReviewers } = this.props.HomeworkStore
-        const { selectingReviewer, assignedReviewer, doneAssigning } = this.state
+        const { reviewer } = this.props
+        const { selectingReviewer, assignedReviewer } = this.state
 
         return (
             <div className={styles.assignReviewer}>
-                {doneAssigning 
-                    ? <h4>Reviewer: {assignedReviewer}</h4>
+                {reviewer 
+                    ? <h4>Reviewer: <span>{reviewer}</span></h4>
                     : <div>
                         {selectingReviewer
                             ? <div>
                                 <select value={assignedReviewer}
+                                    className={styles.assignReview}    
                                     onChange={e => this.handleReviewerChange(e.target.value)}>
                                     <option value="" disabled hidden>Select reviewer</option>
                                     {unassignedReviewers.map(reviewer => (
                                         <option key={reviewer.id} value={reviewer.username}>{reviewer.username}</option>
                                     ))}
                                 </select>
-                                <button onClick={this.requestReview}>Save</button>
-                                <button onClick={this.toggleAssignReviewer}>Cancel</button>
+                                <button className={styles.saveButtonReviewer} onClick={this.requestReview}>Save</button>
+                                <button className={styles.cancelButtonReviewer} onClick={this.toggleAssignReviewer}>Cancel</button>
                             </div>
-                            : <button onClick={this.toggleAssignReviewer} className={styles.assignBtn}>Assign Reviewer</button>
+                            : <button onClick={this.toggleAssignReviewer} className={styles.assignBtn}>Assign</button>
                         }
                     </div>
                 } 
