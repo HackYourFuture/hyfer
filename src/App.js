@@ -172,6 +172,7 @@ class App extends Component {
         if (!this.findRoutes(pathname, prevState.scope)) return this.setState({ done: true, update: false })
     }
 
+    
     render() {
         const { isLoggedIn, isATeacher, isStudent, done, update } = this.state
         const { securedRouteProps } = this
