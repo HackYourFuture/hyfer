@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import classes from './classRowComp.css'
-import { errorMessage } from '../../../../notify'
+import { errorMessage, success } from '../../../../notify'
 import popUpStyle from './archivingPopUp.css'
+import { Consumer } from '../../../../Provider'
 
 const token = localStorage.getItem("token")
 
@@ -9,6 +10,7 @@ export default class ClassRowComp extends Component {
 
     state = {
         popUp: false,
+        isATeacher: false
     }
 
     confirmArchiving = () => {
@@ -24,16 +26,14 @@ export default class ClassRowComp extends Component {
             popUp: false
         })
     }
-
+    group = this.props.groupsWithIds.filter(group => group.group_name.replace(/ /g, '').slice(-2) === this.props.classId)
     popUpDiv = () => {
-        const { classId } = this.props
-        const group = this.props.groupsWithIds.filter(group => group.group_name.replace(/ /g, '').slice(-2) === classId)
 
         return (
             <div>
                 <div className={popUpStyle.backDrop}>
                     <div className={popUpStyle.popUp_window}>
-                        <p className={popUpStyle.confirm_q}>{`Are you sure you want to delete ${group[0].group_name} ??`}</p>
+                        <p className={popUpStyle.confirm_q}>{`Are you sure you want to delete ${this.group[0].group_name} ??`}</p>
                         <button className={popUpStyle.button_cancel} onClick={() => this.cancelArchiving()}>No</button>
                         <button className={popUpStyle.button_yes} onClick={() => this.confirmArchiving()}>Yes</button>
                     </div>
@@ -57,7 +57,7 @@ export default class ClassRowComp extends Component {
         const group = this.props.groupsWithIds.filter(group => group.group_name.replace(/ /g, '').substr(5) === id)
 
         try {
-            await fetch(`http://localhost:3005/api/groups/${group[0].id}`, {
+            const res = await fetch(`http://localhost:3005/api/groups/${group[0].id}`, {
                 method: 'PATCH',
                 credentials: 'same-origin',
                 headers: {
@@ -68,25 +68,36 @@ export default class ClassRowComp extends Component {
                     'archived': 1
                 })
             })
+            if (!res.ok) throw res
+            success(`${this.group[0].group_name} has been deleted successfully. 
+            Please refresh the page to get the latest classes`)
         } catch (err) {
-            window.location.reload()
             errorMessage(err)
         }
     }
 
     archivingPopUp = () => {
-        this.setState({
-            popUp: true
-        })
+        if (this.state.isATeacher) {
+            this.setState({
+                popUp: true
+            })
+        }
     }
 
     render() {
-        if (this.state.popUp) {
-            return (
-                this.popUpDiv()
-            )
-        }
-        return this.rowButton()
-
+        return (
+            <Consumer>{appStore => {
+                // collecting the main state from appStore
+                const { auth } = appStore.state.main
+                // setting up the teacher role on the whole page
+                if (auth.isATeacher && this.state.isATeacher !== auth.isATeacher) this.setState({ isATeacher: auth.isATeacher })
+                if (this.state.popUp) {
+                    return (
+                        this.popUpDiv()
+                    )
+                }
+                return this.rowButton()
+            }}</Consumer>
+        )
     }
 }
