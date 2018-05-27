@@ -1,8 +1,13 @@
 import React, { Component } from 'react'
+import styles from "../../assets/styles/notFound.css"
 
 class NotFound extends Component {
     render() { // TODO
-        return (<div>404 Not Found</div>)
+        return (
+            <div className={styles.notFound}>
+                404 Not Found
+                </div>
+        )
     }
 }
 

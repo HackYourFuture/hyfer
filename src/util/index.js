@@ -28,8 +28,6 @@ export async function sendAnEmail(recipient, sender, subject, text) {
     })
     if (!res.ok) throw new Error(res)
     else success("Email was sent successfully")
-    const jsonRes = await res.json()
-    return jsonRes
 }
 
 export function setEndingDateForModules(allItems, groups) {

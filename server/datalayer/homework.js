@@ -8,7 +8,7 @@ const GET_GROUP_STUDENTS_QUERY =
     `SELECT users.id, username, full_name, email FROM group_students JOIN users ON group_students.user_id = users.id`
 
 const GET_GROUP_SUBMISSIONS_QUERY =
-    `SELECT hs.id, assignment_id, username AS submitter_name, github_link, date FROM homework_submissions hs 
+    `SELECT hs.id, assignment_id, username AS submitter_name, github_link, date, reviewer FROM homework_submissions hs 
         INNER JOIN users u ON hs.submitter_id = u.id
         INNER JOIN homework_assignments ha ON hs.assignment_id = ha.id`
 
@@ -25,6 +25,8 @@ const ADD_ASSIGNMENT_QUERY = `INSERT INTO homework_assignments (group_id, module
 const ADD_SUBMISSION_QUERY = `INSERT INTO homework_submissions (assignment_id, submitter_id, github_link, date)`
 
 const ADD_REVIEW_QUERY = `INSERT INTO homework_reviews (submission_id, reviewer_id, comments, date)`
+
+const Add_REVIEWER_QUERY = `UPDATE homework_submissions SET reviewer=? WHERE id=?`
 
 function getGroupAssignments(con, group_id) {
     const id = Number(group_id)
@@ -71,6 +73,11 @@ function addReview(con, review) {
     return db.execQuery(con, sql, [review.submission_id, review.reviewer_id, review.comments, review.date])
 }
 
+function addReviewer(con, reviewer, submissionId) {
+    const sql = Add_REVIEWER_QUERY
+    return db.execQuery(con, sql, [reviewer, submissionId])
+}
+
 
 module.exports = {
     getGroupAssignments,
@@ -80,5 +87,6 @@ module.exports = {
     getAssignmentSubmitters,
     addAssignment,
     addSubmission,
-    addReview
+    addReview,
+    addReviewer
 }

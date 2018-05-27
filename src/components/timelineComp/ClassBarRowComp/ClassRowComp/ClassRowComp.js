@@ -68,9 +68,7 @@ export default class ClassRowComp extends Component {
                     'archived': 1
                 })
             })
-            if (!res.ok) throw res
-            success(`${this.group[0].group_name} has been deleted successfully. 
-            Please refresh the page to get the latest classes`)
+            window.location.reload()
         } catch (err) {
             errorMessage(err)
         }
