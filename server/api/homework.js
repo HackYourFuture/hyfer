@@ -58,6 +58,13 @@ function addReview(req, res) {
         .catch(err => res.status(500).json(err))
 }
 
+function addReviewer(req, res) {
+    getConnection(req, res)
+        .then(con => db.addReviewer(con, req.body.reviewer, req.body.submission_id))
+        .then(() => res.sendStatus(200))
+        .catch(err => res.status(500).json(err))
+}
+
 module.exports = {
     getGroupAssignments,
     getGroupSubmissions,
@@ -66,5 +73,6 @@ module.exports = {
     getAssignmentSubmitters,
     addAssignment,
     addSubmission,
-    addReview
+    addReview,
+    addReviewer
 }

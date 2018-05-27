@@ -66,13 +66,13 @@ export default class ClassPage extends Component {
                             <input type="text"
                                 className={styles.title}    
                                 value={title}
-                                placeholder="homework title . . ."
+                                placeholder="Homework title . . ."
                                 onChange={e => this.handleInputChange(e.target.value, "title")}
                             />
                             <input type="text"
                                 className={styles.githubLink}    
                                 value={githubLink}
-                                placeholder="paste homework link . . ."
+                                placeholder="Github link . . ."
                                 onChange={e => this.handleInputChange(e.target.value, "githubLink")}
                             />
                             <DatePicker
