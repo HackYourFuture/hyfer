@@ -1,5 +1,4 @@
 import { observable, action, configure, runInAction } from "mobx"
-import { errorMessage } from "../notify";
 import { sendAnEmail } from "../util";
 
 configure({ enforceActions: true })
