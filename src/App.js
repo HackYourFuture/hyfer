@@ -58,6 +58,7 @@ class App extends Component {
             { exact: true, path: '/TrainTicket', component: TrainTicket },
         ],
         student: [
+            { exact: true, path: '/users', component: Users },            
             { exact: true, path: '/homework', component: Homework },
             { exact: true, path: '/homework/:classNumber', component: Homework },
         ],

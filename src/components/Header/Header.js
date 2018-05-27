@@ -237,7 +237,17 @@ export default class Header extends Component {
                 >
                     Homework
                 </NavLink>
-            </li>          
+                            </li>          
+                            <li>
+                                <NavLink
+                                    exact
+                                    to="/users"
+                                    className={styles.item}
+                                    activeClassName={styles.activeNav}
+                                >
+                                    Users
+                </NavLink>
+                            </li>                
             </ul>
           </nav>
           {student}
