@@ -3,6 +3,7 @@ import React from "react"
 import { sendAnEmail } from "../util"
 import { success, errorMessage } from "../notify"
 
+
 configure({ enforceActions: true })
 
 const token = localStorage.getItem("token")
@@ -214,6 +215,8 @@ class HomeworkStore {
 
     @action
     requestReview = (submitter, assignmentTitle, assignedReviewer) => {
+
+        console.log(this.students.filter(student => student.username === assignedReviewer))
         
         const reviewerEmail = this.students.filter(student => student.username === assignedReviewer)
             .map(student => student.email)[0]
@@ -238,6 +241,7 @@ class HomeworkStore {
         else {
             errorMessage("Email not sent")
         }
+
     }  
 
     @action

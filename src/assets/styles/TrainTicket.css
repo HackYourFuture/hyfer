@@ -1,3 +1,9 @@
+.badgeContainer{
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+    padding: 2%;
+}
 .loginInput {
   cursor: text;
   transform: translateY(-25px);
@@ -216,16 +222,21 @@
 }
 
 .disabledBtn {
-  float: left;
-  border: 1px solid #dddddd;
-  display: block;
-  border-radius: 9px;
-  font-family: Arial;
-  color: #ffffff;
-  font-size: 0.9rem;
-  padding: 10px 20px 10px 20px;
+    border: 1px solid #dddddd;
+    display: block;
+    border-radius: 9px;
+    font-family: Arial;
+    color: #ffffff;
+    font-size: 0.9rem;
+    padding: 10px 20px 10px 20px;
+    background: gainsboro;
 }
-
+.disabledBtn:hover{
+  background: gainsboro;
+}
+.displayNone{
+  display: none;
+}
 .container,
 .footer {
   content: '';
