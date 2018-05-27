@@ -220,9 +220,11 @@ class TrainTicket extends Component {
             <li className={stepIndex === 2 ? Styles.active : ''}>confirm</li>
           </ul>
         </div>
+        <div className={Styles.badgeContainer}>
         <Badge couponCodes={this.state.couponCodes}
           reservedTickets={this.state.reservedTickets}
         />
+        </div>
         <div className={Styles.content}>
           {this.getStepContent(stepIndex)}
         </div>
