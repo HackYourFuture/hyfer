@@ -1,4 +1,7 @@
 import { observable, action, configure, runInAction } from "mobx"
+import React from "react"
+import { sendAnEmail } from "../util"
+import { success, errorMessage } from "../notify"
 
 configure({ enforceActions: true })
 
@@ -214,12 +217,27 @@ class HomeworkStore {
         
         const reviewerEmail = this.students.filter(student => student.username === assignedReviewer)
             .map(student => student.email)[0]
+        
+        const gif = <img src="https://media.giphy.com/media/l41lXkx9x8OTM1rwY/giphy.gif" />
 
         // send email to reviewerEmail using SendGrid
-        console.log(`
-        Email sent to ${reviewerEmail} -- 
-        ${assignedReviewer}, your review has been requested on ${submitter}'s "${assignmentTitle}" homework
-        `)
+        if (reviewerEmail) {
+            sendAnEmail(
+                reviewerEmail,
+                "hyfer@gmx.com",  // a new email account has been created for hyfer
+                "Hyfer Homework Review",
+                `${assignedReviewer},<br/>
+                <br/>
+                 Your review has been requested on ${submitter}'s "${assignmentTitle}" homework <br/>
+                 ${gif}<br/>
+                 <br/>
+                   -- Hyfer`
+            )
+           success("Email sent successfully")
+        }
+        else {
+            errorMessage("Email not sent")
+        }
     }  
 
     @action
