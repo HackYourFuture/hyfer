@@ -46,7 +46,7 @@ class StudentList extends Component {
           </button>
         </div>
         <div className={Styles.studentContainer}>
-          <Modal title='Select Student'
+          <Modal
             closeModal={closeModal}
             visible={visible}
           >
