@@ -49,25 +49,27 @@ class App extends Component {
     // NOTE: if there is any new scope we wanna add here tell me
     // -- or Figure it your self 😐
     routes = {
+        // labels for sub pages or with a functionality
+        // -- for more info see Header.js
         teacher: [
-            { exact: true, path: '/modules', component: Modules },
-            { exact: true, path: '/users', component: Users },
-            { exact: true, path: '/profile', component: Profile },
-            { exact: true, path: '/homework', component: Homework },
+            { exact: true, path: '/modules', component: Modules, name: 'Modules' },
+            { exact: true, path: '/users', component: Users, name: 'Users' },
+            { exact: true, path: '/profile', component: Profile, name: 'Profile' },
+            { exact: true, path: '/homework', component: Homework, name: 'Homework' },
             { exact: true, path: '/homework/:classNumber', component: Homework },
-            { exact: true, path: '/TrainTicket', component: TrainTicket },
+            { exact: true, path: '/TrainTicket', component: TrainTicket, name: 'Train Ticket' },
         ],
         student: [
-            { exact: true, path: '/users', component: Users },            
-            { exact: true, path: '/homework', component: Homework },
-            { exact: true, path: '/homework/:classNumber', component: Homework },
+            { exact: true, path: '/users', component: Users, name: 'Users'},
+            { exact: true, path: '/homework', component: Homework, name: 'Homework'},
+            { exact: true, path: '/homework/:classNumber', component: Homework},
         ],
         guest: [ // and all of the users can share some stuff
-            { exact: true, path: '/userAccount', component: userAccount },
-            { exact: true, path: '/currentUserProfile', component: currentUserProfile },
+            { exact: true, path: '/userAccount', component: userAccount, label: 'User Account'},
+            { exact: true, path: '/currentUserProfile', component: currentUserProfile, label: 'My Profile' },
         ],
         public: [
-            { exact: true, path: '/timeline', component: TimeLine },
+            { exact: true, path: '/timeline', component: TimeLine, name: 'Timeline'},
         ],
         NotFound: { component: NotFound },
     }
