@@ -83,7 +83,7 @@ export default class ClassPage extends Component {
                             <button className={styles.saveButton} onClick={this.addAssignment}>Save</button>
                             <button className={styles.cancelButton} onClick={this.toggleAddAssignment}>Cancel</button>
                         </div>
-                        : <button onClick={this.toggleAddAssignment}>New Assignment</button>
+                        : <button onClick={this.toggleAddAssignment} className={styles.newAssignment}>New Assignment</button>
                     }
                 </section>    
 
