@@ -4,21 +4,19 @@ import style from '../../assets/styles/attendance.css';
 
 export default class CommitsInfo extends Component {
     render() {
-        
-        console.log('here')
         let content = null
         if (this.props.commits) {
-            console.log('if')
             content = this.props.commits.map(commit => (
+                <div className={style.commiters}>
                 <tr key={commit.key}>
                     <td>{commit.name}</td>
                     <td>{commit.email}</td>
 
                     <td>{commit.date}</td>
-                </tr>
+                    </tr>
+                    </div>
             ))
         } else {
-            console.log('else')
             content = null
         }
         return (

@@ -220,7 +220,7 @@ h3{display: inline-block;}
 
 .commiters{
     width:80%;
-    margin:auto;
+    margin:20px;
 }
 .commiters tr{
     border-top:1px solid #999;
