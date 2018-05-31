@@ -211,7 +211,7 @@ class HomeworkStore {
     }
 
     @action
-    addReviewer = async (submission_id, reviewer) => {
+    addReviewer = async (reviewer, submission_id) => {
         const reviewerData = {
             submission_id,
             reviewer
