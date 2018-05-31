@@ -1,8 +1,6 @@
 import { observable, action, configure, runInAction } from "mobx"
-import React from "react"
 import { sendAnEmail } from "../util"
 import { success, errorMessage } from "../notify"
-
 
 configure({ enforceActions: true })
 
@@ -11,24 +9,35 @@ const API_Root = "http://localhost:3005/api"
 
 
 export async function getData(route) {
-    const res = await fetch(`${API_Root}/${route}`, {
-        // credentials: "same-origin",
-        headers: {
-            "Authorization": "Bearer " + token,
-        }
-    })
-    return await res.json()
+    try {
+        const res = await fetch(`${API_Root}/${route}`, {
+            headers: {
+                "Authorization": "Bearer " + token,
+            }
+        })
+        return await res.json()
+    }
+    catch (err) {
+        errorMessage()
+    }
+    
 }
 
 async function sendData(method, route, data) {
-    await fetch(`${API_Root}/${route}`, {
-        method,
-        headers: {
-            "Content-Type": "Application/json",
-            "Authorization": "Bearer " + token,
-        },
-        body: JSON.stringify(data)
-    })
+    try {
+        await fetch(`${API_Root}/${route}`, {
+            method,
+            headers: {
+                "Content-Type": "Application/json",
+                "Authorization": "Bearer " + token,
+            },
+            body: JSON.stringify(data)
+        })
+    }
+    catch (err) {
+        errorMessage()
+    }
+    
 }
 
 function getAvatarUrl(username) {
@@ -72,21 +81,6 @@ class HomeworkStore {
     @observable
     assigningReviewersId = null    
     
-    
-    @action
-    getCurrentUser = async() => {        
-        const userData = await getData("user") 
-        runInAction(() => {
-            this.currentUser = {
-                id: userData.id,
-                username: userData.username,
-                full_name: userData.full_name,
-                email: userData.email,
-                avatarUrl: `https://avatars.githubusercontent.com/${userData.username}`,
-                group: null
-            }
-        }) 
-    }
 
     @action
     fetchAllData = async (groupName) => {
@@ -98,6 +92,21 @@ class HomeworkStore {
         await this.getHomework("reviews")
         await this.getHomeworkModules()
     }  
+
+    @action
+    getCurrentUser = async () => {
+        const userData = await getData("user")
+        runInAction(() => {
+            this.currentUser = {
+                id: userData.id,
+                username: userData.username,
+                full_name: userData.full_name,
+                email: userData.email,
+                avatarUrl: getAvatarUrl(userData.username),
+                group: null
+            }
+        })
+    }
     
     @action
     getActiveGroups = async () => {
@@ -123,7 +132,6 @@ class HomeworkStore {
         })   
     }
     
-
     @action 
     getHomework = async (dataType) => {
         const homeworkData = await getData(`${dataType}/${this.currentGroup.id}`)
@@ -165,14 +173,14 @@ class HomeworkStore {
     addAssignment = async (moduleName, title, assignment_link, deadline) => {
         const module_id = this.modules.filter(module => module.name === moduleName)[0].id
         
-        const newHomework = {
+        const newAssignment = {
             group_id: this.currentGroup.id,
             module_id,
             title,
             assignment_link,
             deadline
         }
-        await sendData("POST", "assignments", newHomework)
+        await sendData("POST", "assignments", newAssignment)
         this.getHomework("assignments")
     }
 
@@ -187,7 +195,6 @@ class HomeworkStore {
         }
         await sendData("POST", "submissions", newSubmission)
         this.getHomework("submissions")
-
     }
 
     @action
@@ -204,46 +211,42 @@ class HomeworkStore {
     }
 
     @action
-    addReviewer = async (assignedReviewer, submission_id) => {
-        const body = {
+    addReviewer = async (reviewer, submission_id) => {
+        const reviewerData = {
             submission_id,
-            reviewer: assignedReviewer
+            reviewer
         }
-        await sendData("PATCH", "addReviewer", body)
+        await sendData("PATCH", "submissions", reviewerData)
         this.getHomework("submissions")
     }
 
     @action
     requestReview = (submitter, assignmentTitle, assignedReviewer) => {
-
-        console.log(this.students.filter(student => student.username === assignedReviewer))
         
         const reviewerEmail = this.students.filter(student => student.username === assignedReviewer)
             .map(student => student.email)[0]
         
-        const gif = <img src="https://media.giphy.com/media/l41lXkx9x8OTM1rwY/giphy.gif" />
-
         // send email to reviewerEmail using SendGrid
         if (reviewerEmail) {
             sendAnEmail(
                 reviewerEmail,
-                "hyfer@gmx.com",  // a new email account has been created for hyfer
-                "Hyfer Homework Review",
-                `${assignedReviewer},<br/>
+                "hyfer@gmx.com",  // just for testing -- update to official hyfer email
+                "Hyfer homework feedback",
+                `Hi @${assignedReviewer},<br/>
                 <br/>
-                 Your review has been requested on ${submitter}'s "${assignmentTitle}" homework <br/>
-                 ${gif}<br/>
-                 <br/>
-                   -- Hyfer`
+                Your feedback has been requested on ${submitter}'s "${assignmentTitle}" homework<br/>
+                <br/>
+                Hyfer`
             )
            success("Email sent successfully")
         }
         else {
             errorMessage("Email not sent")
         }
-
     }  
 
+    // set assigning id so can only assign reviewers on one assignment at a time
+    // makes sure only submitters for that assignment are fetched
     @action
     setAssigningReviewersId = (assignmentId) => {
         this.assigningReviewersId = assignmentId
