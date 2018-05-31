@@ -75,8 +75,8 @@ module.exports = function (app) {
     app.get('/api/reviews/:groupId', auth.hasRole('teacher|student'), homework.getGroupReviews)
     app.post('/api/assignments', auth.hasRole('teacher|student'), homework.addAssignment)
     app.post('/api/submissions', auth.hasRole('teacher|student'), homework.addSubmission)
+    app.patch('/api/submissions', auth.hasRole('teacher'), homework.addReviewer)
     app.post('/api/reviews', auth.hasRole('teacher|student'), homework.addReview)
-    app.patch('/api/addReviewer', auth.hasRole('teacher'), homework.addReviewer)
 
 
 
