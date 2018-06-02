@@ -51,7 +51,7 @@ class TrainTicket extends Component {
   };
 
   componentDidMount() {
-    fetch('http://localhost:3000/api/user/all', {
+    fetch('http://localhost:3005/api/user/all', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
