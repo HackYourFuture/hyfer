@@ -33,7 +33,7 @@ function getAvatarUrl(username) {
   return `https://avatars.githubusercontent.com/${username}`;
 }
 
-class HomeworkStore {
+export default class HomeworkStore {
   @observable currentUser = {};
 
   @observable currentGroup = {};
@@ -242,5 +242,3 @@ class HomeworkStore {
     this.assigningReviewersId = assignmentId;
   };
 }
-
-export default new HomeworkStore();

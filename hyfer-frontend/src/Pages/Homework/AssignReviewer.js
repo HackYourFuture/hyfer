@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 import styles from '../../assets/styles/homework.css';
 
-@inject('HomeworkStore')
+@inject('homeworkStore')
 @observer
 export default class AssignReviewer extends Component {
   state = {
@@ -21,14 +21,14 @@ export default class AssignReviewer extends Component {
     const { assignedReviewer } = this.state;
 
     if (assignedReviewer) {
-      this.props.HomeworkStore.addReviewer(assignedReviewer, submissionId);
-      this.props.HomeworkStore.requestReview(
+      this.props.homeworkStore.addReviewer(assignedReviewer, submissionId);
+      this.props.homeworkStore.requestReview(
         submitter,
         assignmentTitle,
         assignedReviewer
       );
-      this.props.HomeworkStore.updateSubmitters(submitter);
-      this.props.HomeworkStore.updateReviewers(assignedReviewer);
+      this.props.homeworkStore.updateSubmitters(submitter);
+      this.props.homeworkStore.updateReviewers(assignedReviewer);
       this.toggleAssignReviewer();
     }
   };
@@ -40,7 +40,7 @@ export default class AssignReviewer extends Component {
   };
 
   render() {
-    const { unassignedReviewers } = this.props.HomeworkStore;
+    const { unassignedReviewers } = this.props.homeworkStore;
     const { reviewer } = this.props;
     const { selectingReviewer, assignedReviewer } = this.state;
 
@@ -51,46 +51,46 @@ export default class AssignReviewer extends Component {
             Reviewer: <span>{reviewer}</span>
           </h4>
         ) : (
-          <div>
-            {selectingReviewer ? (
-              <div>
-                <select
-                  value={assignedReviewer}
-                  className={styles.assignReview}
-                  onChange={e => this.handleReviewerChange(e.target.value)}
-                >
-                  <option value="" disabled hidden>
-                    Select reviewer
+            <div>
+              {selectingReviewer ? (
+                <div>
+                  <select
+                    value={assignedReviewer}
+                    className={styles.assignReview}
+                    onChange={e => this.handleReviewerChange(e.target.value)}
+                  >
+                    <option value="" disabled hidden>
+                      Select reviewer
                   </option>
-                  {unassignedReviewers.map(reviewer => (
-                    <option key={reviewer.id} value={reviewer.username}>
-                      {reviewer.username}
-                    </option>
-                  ))}
-                </select>
-                <button
-                  className={styles.saveButtonReviewer}
-                  onClick={this.requestReview}
-                >
-                  Save
+                    {unassignedReviewers.map(reviewer => (
+                      <option key={reviewer.id} value={reviewer.username}>
+                        {reviewer.username}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    className={styles.saveButtonReviewer}
+                    onClick={this.requestReview}
+                  >
+                    Save
                 </button>
-                <button
-                  className={styles.cancelButtonReviewer}
-                  onClick={this.toggleAssignReviewer}
-                >
-                  Cancel
+                  <button
+                    className={styles.cancelButtonReviewer}
+                    onClick={this.toggleAssignReviewer}
+                  >
+                    Cancel
                 </button>
-              </div>
-            ) : (
-              <button
-                onClick={this.toggleAssignReviewer}
-                className={styles.assignBtn}
-              >
-                Assign
+                </div>
+              ) : (
+                  <button
+                    onClick={this.toggleAssignReviewer}
+                    className={styles.assignBtn}
+                  >
+                    Assign
               </button>
-            )}
-          </div>
-        )}
+                )}
+            </div>
+          )}
       </div>
     );
   }

@@ -225,7 +225,7 @@ export default class SynchronizeResultModal extends Component {
                           onClick={() => {
                             this.handelNewStartingDate(
                               team.teamName,
-                              this.state.startingDate
+                              this.state.startingDate,
                             );
                           }}
                         >

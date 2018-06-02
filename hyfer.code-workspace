@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "hyfer-frontend"
+		},
+		{
+			"path": "hyfer-backend"
+		}
+	],
+  "settings": {
+    "javascript.implicitProjectConfig.experimentalDecorators": true
+  }
+}

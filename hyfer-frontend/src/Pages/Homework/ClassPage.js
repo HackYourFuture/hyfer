@@ -6,7 +6,7 @@ import moment from 'moment';
 import styles from '../../assets/styles/homework.css';
 import 'react-datepicker/dist/react-datepicker-cssmodules.css';
 
-@inject('HomeworkStore')
+@inject('homeworkStore')
 @observer
 export default class ClassPage extends Component {
   state = {
@@ -18,7 +18,7 @@ export default class ClassPage extends Component {
   };
 
   async componentDidMount() {
-    const { getActiveGroups, fetchAllData } = this.props.HomeworkStore;
+    const { getActiveGroups, fetchAllData } = this.props.homeworkStore;
     await getActiveGroups();
     fetchAllData(this.props.studentClass);
   }
@@ -38,7 +38,7 @@ export default class ClassPage extends Component {
   addAssignment = () => {
     const { selectedModule, title, githubLink, deadline } = this.state;
     if (selectedModule && title && githubLink && deadline) {
-      this.props.HomeworkStore.addAssignment(
+      this.props.homeworkStore.addAssignment(
         selectedModule,
         title,
         githubLink,
@@ -50,7 +50,7 @@ export default class ClassPage extends Component {
 
   render() {
     const { studentClass } = this.props;
-    const { modules, assignments } = this.props.HomeworkStore;
+    const { modules, assignments } = this.props.homeworkStore;
     const latestAssignments = assignments.slice(0, 2);
     const {
       addingAssignment,

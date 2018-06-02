@@ -25,15 +25,15 @@ export default class Attendance extends React.Component {
     }
     fetch(
       'https://api.github.com/repos/HackYourFuture/' +
-        rep +
-        '/pulls?state=open&client_id=e79299c4db2de39fabd5&client_secret=f4b826f211b1558e77e0214afc20d61b8def3e78'
+      rep +
+      '/pulls?state=open&client_id=e79299c4db2de39fabd5&client_secret=f4b826f211b1558e77e0214afc20d61b8def3e78',
     )
       .then(res => res.json())
       .then(resJson => {
         return resJson.map(item => item.commits_url).forEach(url => {
           fetch(
             url +
-              '?client_id=e79299c4db2de39fabd5&client_secret=f4b826f211b1558e77e0214afc20d61b8def3e78'
+            '?client_id=e79299c4db2de39fabd5&client_secret=f4b826f211b1558e77e0214afc20d61b8def3e78',
           )
             .then(data => data.json())
             .then(data => {

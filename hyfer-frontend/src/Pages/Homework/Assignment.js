@@ -11,7 +11,7 @@ const defaultState = {
   deadlineHasPassed: false,
 };
 
-@inject('HomeworkStore')
+@inject('homeworkStore')
 @observer
 export default class Assignment extends Component {
   state = defaultState;
@@ -43,7 +43,7 @@ export default class Assignment extends Component {
     const timestamp = moment().format('YYYY-MM-DD hh:mm:ss');
 
     if (githubLink) {
-      this.props.HomeworkStore.addSubmission(homeworkId, githubLink, timestamp);
+      this.props.homeworkStore.addSubmission(homeworkId, githubLink, timestamp);
       this.setState(defaultState);
       this.toggleSubmitHomework();
     }
@@ -53,12 +53,12 @@ export default class Assignment extends Component {
 
   fetchAssignmentSubmitters = () => {
     const { id } = this.props;
-    this.props.HomeworkStore.setAssigningReviewersId(id);
-    this.props.HomeworkStore.getAssignmentSubmitters(id);
+    this.props.homeworkStore.setAssigningReviewersId(id);
+    this.props.homeworkStore.getAssignmentSubmitters(id);
   };
 
   render() {
-    const { submissions, assigningReviewersId } = this.props.HomeworkStore;
+    const { submissions, assigningReviewersId } = this.props.homeworkStore;
     const { id, module, title, instructions, deadline } = this.props;
     const { submittingHomework, githubLink, deadlineHasPassed } = this.state;
 

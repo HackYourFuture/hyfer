@@ -1,4 +1,6 @@
+/* eslint react/prop-types: error */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import { timelineStore, TODAY_MARKER_REFERENCE } from '../../../store';
 
@@ -9,6 +11,7 @@ import loader from '../../../assets/images/Eclipse.gif';
 import Buttons from '../Buttons/Buttons';
 import classes from './timeline.css';
 import { errorMessage } from '../../../notify';
+// import TimeLineStore from '../../../store/TimeLineStore';
 
 export default class Timeline extends Component {
   state = {
@@ -162,3 +165,18 @@ export default class Timeline extends Component {
     );
   }
 }
+
+Timeline.propTypes = {
+  allModules: PropTypes.array,
+  allWeeks: PropTypes.array,
+  groups: PropTypes.array,
+  groupsWithIds: PropTypes.array,
+  infoSelectedModule: PropTypes.object,
+  isTeacher: PropTypes.bool,
+  itemClickHandler: PropTypes.func,
+  itemWidth: PropTypes.number,
+  rowHeight: PropTypes.number,
+  selectedModule: PropTypes.object,
+  teachers: PropTypes.array,
+  timelineItems: PropTypes.object,
+};

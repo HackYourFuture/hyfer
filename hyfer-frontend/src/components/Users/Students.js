@@ -27,12 +27,12 @@ export default class Students extends Component {
                           className={styles.userAvatar}
                           src={`https://avatars.githubusercontent.com/${
                             user.username
-                          }`}
+                            }`}
                           alt={`Profile - ${user.username}`}
                           onError={e => {
                             e.target.src = `https://api.adorable.io/avatars/100/${
                               user.full_name
-                            }`;
+                              }`;
                           }}
                         />
                       </div>
@@ -77,7 +77,7 @@ export default class Students extends Component {
                             ' ' +
                             styles.linkContainer
                           }
-                          onClick={() => {}}
+                          onClick={() => { }}
                         >
                           <FaSlack />
                           <div

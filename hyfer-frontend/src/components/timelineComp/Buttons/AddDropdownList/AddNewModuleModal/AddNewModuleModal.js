@@ -152,7 +152,7 @@ export default class AddNewModuleModal extends Component {
     const { items } = this.props;
     // this step is weird but it's just to pass the modules of a class instead of all of them, or if all classes is selected pass em all
     let className = Object.keys(items).filter(
-      group => group === this.state.selectedGroup
+      group => group === this.state.selectedGroup,
     );
     className = className.length === 0 ? 'All classes' : className[0];
 
@@ -168,7 +168,7 @@ export default class AddNewModuleModal extends Component {
     // if the classname is all classes don't get the object group with id on it, cause there isn't one for all classes
     if (className !== 'All classes') {
       groupWithId = this.props.groupsWithIds.filter(
-        group => group.group_name === selectedGroup // if something matched it is instead of 'All classes'
+        group => group.group_name === selectedGroup, // if something matched it is instead of 'All classes'
       )[0];
     }
 
@@ -178,8 +178,8 @@ export default class AddNewModuleModal extends Component {
         groupWithId,
         duration,
         selectedDate,
-        modulesOfGroup
-      )
+        modulesOfGroup,
+    )
       .then(() => {
         this.props.closeModal();
       })

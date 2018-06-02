@@ -18,7 +18,7 @@ import TrainTicket from './Pages/TrainTicket/TrainTicket';
 import Homework from './Pages/Homework/Homework';
 
 const PUBLIC_ROUTES = [
-  { exact: true, path: '/timeline', component: TimeLine }
+  { exact: true, path: '/timeline', component: TimeLine },
 ];
 
 const ROUTES = {
@@ -36,14 +36,14 @@ const ROUTES = {
     { exact: true, path: '/homework/:classNumber', component: Homework },
   ],
   guest: [
-    { exact: true, path: '/currentUserProfile', component: currentUserProfile, },
+    { exact: true, path: '/currentUserProfile', component: currentUserProfile },
   ],
 };
 
 const defaultProfile = {
   username: 'guest',
   full_name: 'Guest',
-  role: 'guest'
+  role: 'guest',
 };
 
 class App extends Component {

@@ -3,11 +3,11 @@ import { inject, observer } from 'mobx-react';
 import moment from 'moment';
 import styles from '../../assets/styles/homework.css';
 
-@inject('HomeworkStore')
+@inject('homeworkStore')
 @observer
 export default class Review extends Component {
   render() {
-    const { currentUser, students } = this.props.HomeworkStore;
+    const { currentUser, students } = this.props.homeworkStore;
     const { reviewerId, comments, date } = this.props;
 
     //currentUser is separate entry in db

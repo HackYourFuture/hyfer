@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { Provider } from 'mobx-react';
 import { NavLink, BrowserRouter, Route } from 'react-router-dom';
 import ClassPage from './ClassPage';
-import HomeworkStore, { getData } from '../../store/HomeworkStore';
+import { getData } from '../../mobx/HomeworkStore';
 import styles from '../../assets/styles/homework.css';
 
 export default class Homework extends Component {
@@ -22,33 +21,31 @@ export default class Homework extends Component {
     const { activeGroups } = this.state;
 
     return (
-      <Provider {...{ HomeworkStore }}>
-        <BrowserRouter>
-          <div className={styles.homeworkPage}>
-            <section className={styles.navBar}>
-              {activeGroups.sort().map(group => (
-                <NavLink
-                  key={group}
-                  to={'/homework/' + group}
-                  className={styles.navLink}
-                  activeClassName={styles.navLinkActive}
-                >
-                  Class {group.substr(5)}
-                </NavLink>
-              ))}
-            </section>
-
-            {activeGroups.map(group => (
-              <Route
+      <BrowserRouter>
+        <div className={styles.homeworkPage}>
+          <section className={styles.navBar}>
+            {activeGroups.sort().map(group => (
+              <NavLink
                 key={group}
-                path={'/homework/' + group}
-                exact
-                render={props => <ClassPage {...props} studentClass={group} />}
-              />
+                to={'/homework/' + group}
+                className={styles.navLink}
+                activeClassName={styles.navLinkActive}
+              >
+                Class {group.substr(5)}
+              </NavLink>
             ))}
-          </div>
-        </BrowserRouter>
-      </Provider>
+          </section>
+
+          {activeGroups.map(group => (
+            <Route
+              key={group}
+              path={'/homework/' + group}
+              exact
+              render={props => <ClassPage {...props} studentClass={group} />}
+            />
+          ))}
+        </div>
+      </BrowserRouter>
     );
   }
 }

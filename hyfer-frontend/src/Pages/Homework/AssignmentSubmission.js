@@ -4,7 +4,7 @@ import Review from './Review';
 import moment from 'moment';
 import styles from '../../assets/styles/homework.css';
 
-@inject('HomeworkStore')
+@inject('homeworkStore')
 @observer
 export default class AssignmentSubmission extends Component {
   state = {
@@ -18,7 +18,7 @@ export default class AssignmentSubmission extends Component {
     const timestamp = moment().format('YYYY-MM-DD hh:mm:ss');
 
     if (comments) {
-      this.props.HomeworkStore.addReview(submissionId, comments, timestamp);
+      this.props.homeworkStore.addReview(submissionId, comments, timestamp);
       this.setState({ comments: '' });
     }
   };
@@ -37,7 +37,7 @@ export default class AssignmentSubmission extends Component {
 
   render() {
     const { id, submitterName, githubLink, date } = this.props;
-    const { currentUser, students, reviews } = this.props.HomeworkStore;
+    const { currentUser, students, reviews } = this.props.homeworkStore;
     const { comments, commentsOpen } = this.state;
 
     const submitter =
@@ -86,10 +86,10 @@ export default class AssignmentSubmission extends Component {
               </div>
             </div>
           ) : (
-            <button onClick={this.toggleComments} className={styles.expandBtn}>
-              Expand
+              <button onClick={this.toggleComments} className={styles.expandBtn}>
+                Expand
             </button>
-          )}
+            )}
         </div>
       </div>
     );

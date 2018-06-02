@@ -27,7 +27,7 @@ export default class ClassRowComp extends Component {
   popUpDiv = () => {
     const { classId } = this.props;
     const group = this.props.groupsWithIds.filter(
-      group => group.group_name.replace(/ /g, '').slice(-2) === classId
+      group => group.group_name.replace(/ /g, '').slice(-2) === classId,
     );
 
     return (
@@ -73,7 +73,7 @@ export default class ClassRowComp extends Component {
 
   handleClassArchive = async id => {
     const group = this.props.groupsWithIds.filter(
-      group => group.group_name.replace(/ /g, '').substr(5) === id
+      group => group.group_name.replace(/ /g, '').substr(5) === id,
     );
 
     try {
