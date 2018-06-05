@@ -92,7 +92,7 @@ export default class Header extends Component {
                             <li>
                                 {   // if there is a label the page will shows up here
                                     routes.filter(item => item.label).map(route => (
-                                        <NavLink key={route.name} exact to={route.path}>
+                                        <NavLink key={route.label} exact to={route.path}>{/*Bug Fix*/}
                                             <span className={styles.subNavItem}>{route.label}</span>
                                         </NavLink>
                                     ))
