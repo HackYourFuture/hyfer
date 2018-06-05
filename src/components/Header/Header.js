@@ -17,6 +17,7 @@ export default class Header extends Component {
         isLoggedIn: false,
         isATeacher: false,
         isStudent: false,
+        done: false,
         avatarUrl: null
     }
 
@@ -45,7 +46,7 @@ export default class Header extends Component {
         return (
             <Consumer>{appStore => {
                 // collecting the main state from appStore
-                const { auth, routes } = appStore.state.main
+                const { auth, routes, lifeCycle: { done } } = appStore.state.main
 
                 // setting up the role on the whole page
                 if (auth.isATeacher && this.state.isATeacher !== auth.isATeacher)
@@ -58,6 +59,10 @@ export default class Header extends Component {
                 // setting up the role on the whole page
                 if (auth.isLoggedIn && this.state.isLoggedIn !== auth.isLoggedIn)
                     this.setState({ isLoggedIn: auth.isLoggedIn })
+
+                // setting up the done lifeCycle on the whole page
+                if (done && this.state.done !== done)
+                    this.setState({ done })
 
                 const visitor = (
                     <div className={styles.signInWrapper}>
@@ -129,8 +134,8 @@ export default class Header extends Component {
                                 </ul>
                             </nav>
                             {/* if there is no label or a name the page will ba ignored */}
-                            {!this.state.isLoggedIn && visitor}
-                            {this.state.isLoggedIn && user}
+                            {done && !this.state.isLoggedIn && visitor}
+                            {done && this.state.isLoggedIn && user}
                         </header>
                     </React.Fragment>
                 )
