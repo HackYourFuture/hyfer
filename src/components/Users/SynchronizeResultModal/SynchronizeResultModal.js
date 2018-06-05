@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import style from '../SynchronizeResultModal/SynchronizeResultModal.css'
-import store from '../../../store/UserStore'
 
 const token = localStorage.getItem("token")
 

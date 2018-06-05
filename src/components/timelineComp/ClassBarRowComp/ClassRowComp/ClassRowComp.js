@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import classes from './classRowComp.css'
-import { errorMessage, success } from '../../../../notify'
+import { errorMessage } from '../../../../notify'
 import popUpStyle from './archivingPopUp.css'
 import { Consumer } from '../../../../Provider'
 
@@ -57,7 +57,7 @@ export default class ClassRowComp extends Component {
         const group = this.props.groupsWithIds.filter(group => group.group_name.replace(/ /g, '').substr(5) === id)
 
         try {
-            const res = await fetch(`http://localhost:3005/api/groups/${group[0].id}`, {
+            await fetch(`http://localhost:3005/api/groups/${group[0].id}`, {
                 method: 'PATCH',
                 credentials: 'same-origin',
                 headers: {
