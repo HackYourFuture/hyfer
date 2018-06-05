@@ -43,9 +43,9 @@ class Popup extends Component {
         if (email_input !== confirm_email_input) {
             return warning("the emails didn't match ")
         }
-        const { id } = uiStore.getState()
+        const { username } = uiStore.getState()
         const data = {
-            id,
+            username,
             email: email_input
         }
         const token = localStorage.getItem('token')

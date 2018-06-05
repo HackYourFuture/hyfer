@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import classes from './classRowComp.css'
 import { errorMessage } from '../../../../notify'
 import popUpStyle from './archivingPopUp.css'
+import { Consumer } from '../../../../Provider'
 
 const token = localStorage.getItem("token")
 
@@ -9,6 +10,7 @@ export default class ClassRowComp extends Component {
 
     state = {
         popUp: false,
+        isATeacher: false
     }
 
     confirmArchiving = () => {
@@ -24,16 +26,14 @@ export default class ClassRowComp extends Component {
             popUp: false
         })
     }
-
+    group = this.props.groupsWithIds.filter(group => group.group_name.replace(/ /g, '').slice(-2) === this.props.classId)
     popUpDiv = () => {
-        const { classId } = this.props
-        const group = this.props.groupsWithIds.filter(group => group.group_name.replace(/ /g, '').slice(-2) === classId)
 
         return (
             <div>
                 <div className={popUpStyle.backDrop}>
                     <div className={popUpStyle.popUp_window}>
-                        <p className={popUpStyle.confirm_q}>{`Are you sure you want to delete ${group[0].group_name} ??`}</p>
+                        <p className={popUpStyle.confirm_q}>{`Are you sure you want to delete ${this.group[0].group_name} ??`}</p>
                         <button className={popUpStyle.button_cancel} onClick={() => this.cancelArchiving()}>No</button>
                         <button className={popUpStyle.button_yes} onClick={() => this.confirmArchiving()}>Yes</button>
                     </div>
@@ -75,18 +75,27 @@ export default class ClassRowComp extends Component {
     }
 
     archivingPopUp = () => {
-        this.setState({
-            popUp: true
-        })
+        if (this.state.isATeacher) {
+            this.setState({
+                popUp: true
+            })
+        }
     }
 
     render() {
-        if (this.state.popUp) {
-            return (
-                this.popUpDiv()
-            )
-        }
-        return this.rowButton()
-
+        return (
+            <Consumer>{appStore => {
+                // collecting the main state from appStore
+                const { auth } = appStore.state.main
+                // setting up the teacher role on the whole page
+                if (auth.isATeacher && this.state.isATeacher !== auth.isATeacher) this.setState({ isATeacher: auth.isATeacher })
+                if (this.state.popUp) {
+                    return (
+                        this.popUpDiv()
+                    )
+                }
+                return this.rowButton()
+            }}</Consumer>
+        )
     }
 }

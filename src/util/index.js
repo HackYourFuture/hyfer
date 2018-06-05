@@ -76,6 +76,10 @@ export function getAllTotalWeeksAndSundays(allItems) {
 }
 
 export async function getTeachers() { // used for a once in src/store/TimeLineStore.js
+    // Jim's solving :)
+    // returning an empty array if the user is not logged in
+    if (!token) return []
+    // Otherwise let him make the request:
     const res = await fetch(`${BASE_URL}/api/users`, {
         headers: {
             'Authorization': 'Bearer ' + token,
@@ -297,6 +301,7 @@ export async function addNewClass(className, starting_date) {
 
 export async function getALlPossibleModules() {
     const token = localStorage.getItem('token')
+    if (!token) return []
     const res = await fetch(`${BASE_URL}/api/modules`, {
         credentials: 'same-origin',
         headers: {

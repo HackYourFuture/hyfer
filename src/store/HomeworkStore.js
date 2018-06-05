@@ -1,4 +1,5 @@
 import { observable, action, configure, runInAction } from "mobx"
+
 import React from "react"
 import { sendAnEmail } from "../util"
 import { success, errorMessage } from "../notify"
@@ -17,7 +18,7 @@ export async function getData(route) {
             "Authorization": "Bearer " + token,
         }
     })
-    return await res.json()
+    return await res.json().catch(errorMessage)
 }
 
 async function sendData(method, route, data) {
@@ -28,7 +29,7 @@ async function sendData(method, route, data) {
             "Authorization": "Bearer " + token,
         },
         body: JSON.stringify(data)
-    })
+    }).catch(errorMessage)
 }
 
 function getAvatarUrl(username) {
@@ -91,12 +92,15 @@ class HomeworkStore {
     @action
     fetchAllData = async (groupName) => {
         this.currentGroup = this.activeGroups.filter(group => group.name === groupName)[0]
-        await this.getHomework("assignments")
-        await this.getCurrentUser()
-        await this.getStudents()
-        await this.getHomework("submissions")
-        await this.getHomework("reviews")
-        await this.getHomeworkModules()
+        try {
+            await this.getHomework("assignments")
+            await this.getActiveGroups()
+            await this.getCurrentUser()
+            await this.getStudents()
+            await this.getHomework("submissions")
+            await this.getHomework("reviews")
+            await this.getHomeworkModules()
+        } catch (e) { errorMessage(e) }
     }  
     
     @action

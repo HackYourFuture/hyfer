@@ -3,7 +3,7 @@ import StudentWithWeeks from './StudentWithWeeks'
 import WeekIndicator from './WeekIndicator'
 import styles from '../../assets/styles/attendance.css'
 import { notify } from 'react-notify-toast'
-import * as attendanceStore from '../../store/attendanceStore'
+
 import {
     moduleInfoStore,
     HISTORY_CHANGED
