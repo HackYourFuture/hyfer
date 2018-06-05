@@ -40,7 +40,7 @@ const defaultState = {
     },
     done: false,
     update: true, // it's just for the shouldcomponentupdate() available
-    scope: {
+    scopes: {
         ok: false,
         items: ['public']
     },
@@ -85,9 +85,16 @@ class App extends Component {
         NotFound: { component: NotFound },
     }
     // this will contain the Route props from the user scopes
-    securedRouteProps = []
+    // setting locals as a properties is faster than the async state
+    // -- then we will move it to the state making sure it will
+    // -- be added as a one time not on batches to the state
+    locals = {
+        securedRouteProps: [],
+        scopes: ['public']
+    }
+
     setUserRouteProps = item => {
-        const { securedRouteProps } = this
+        const { securedRouteProps } = this.locals
         // Only the Objects that has the same path property
         const value = securedRouteProps.find(obj => {
             return obj.path === item.path
@@ -105,7 +112,7 @@ class App extends Component {
         // -- result if there is a one
         // the default scope is ['public']
         if (!localState) localState = this.state
-        const scopes = localState.scope.items
+        const scopes = localState.scopes.items
         scopes.forEach(scope => {
             this.routes[scope].forEach(item => {
                 // - calling setUserRouteProps() method that will assign 
@@ -113,10 +120,10 @@ class App extends Component {
                 this.setUserRouteProps(item)
             })
         })
-        this.setState({ // after the securedRouteProps Did Fill in we will pass them into the state
+        this.setState({ // after the locals.securedRouteProps Did Fill in we will pass them into the state
             routes: {
-                ok: this.routesCounter(scopes) === this.securedRouteProps.length,
-                items: this.securedRouteProps
+                ok: this.routesCounter(scopes) === this.locals.securedRouteProps.length,
+                items: this.locals.securedRouteProps
             },
             update: true
         })
@@ -131,13 +138,9 @@ class App extends Component {
         return count
     }
 
-    // setting it as a property is faster than the async state
-    // -- then we will move it to the state making sure it will
-    // -- be added as a one time not on batches
-    local_scopes = ['public']
     setScopes = ({ isATeacher, isStudent, isLoggedIn }) => {
         const rolled_to_be = someBody => {
-            this.local_scopes = this.local_scopes.filter(item => item !== someBody).concat(someBody)
+            this.locals.scopes = this.locals.scopes.filter(item => item !== someBody).concat(someBody)
         }
         // what the users role?
         if (isATeacher) rolled_to_be('teacher')
@@ -156,8 +159,8 @@ class App extends Component {
                 ...this.state.auth, ok: true
             },
             done: true,
-            scope: {
-                ...this.state.scope,
+            scopes: {
+                ...this.state.scopes,
                 ok: true
             },
             update: false
@@ -219,14 +222,14 @@ class App extends Component {
         // -- in this way (nextState) we are setting the roles from the first few renders
         // -- Before even it get into state it self
 
-        if (!nextState.scope.ok) {
-            // making sure that the scope won't changed on every render
+        if (!nextState.scopes.ok) {
+            // making sure that the scopes won't changed on every render
             // otherwise it will be an infinte loop!!
             this.setState({
                 // set the scopes on the state after they have excuted
-                scope: {
+                scopes: {
                     ok: true,
-                    items: this.local_scopes
+                    items: this.locals.scopes
                 },
                 update: true,
             })
@@ -234,16 +237,16 @@ class App extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const { auth, scope, routes, done } = prevState
+        const { auth, scopes, routes, done } = prevState
         // After all of the checking for login and Stuff
         // He need his page!!
         // - NOTE: this function here Only for assigning 
-        // -- the user routes to the ( securedRouteProps ) Array
+        // -- the user routes to the ( locals.securedRouteProps ) Array
         // - AND NOTE: without this function the user may never
         // -- arrive to his distenation path
 
         // making sure that everything is Okay
-        const isOkay = auth.ok && scope.ok && routes.ok
+        const isOkay = auth.ok && scopes.ok && routes.ok
 
         if (!isOkay && !done) return this.setState({ done: false, update: true })
         else if (isOkay && !done) return this.setState({ done: true, update: true })
@@ -252,7 +255,7 @@ class App extends Component {
 
     render() {
         const { auth: { isLoggedIn, isATeacher, isStudent }, done, update } = this.state
-        const { securedRouteProps } = this
+        const { securedRouteProps } = this.locals
         const main = {
             // main App Object should contain any thing for using on the whole app level
             main: {
@@ -266,8 +269,8 @@ class App extends Component {
             }
         }
         // - calling findRoutes() method Here for Initial check for the route
-        // -- and assigning it in the ( securedRouteProps ) Array that
-        // -- will contain all of the same user scope paths & props
+        // -- and assigning it in the ( locals.securedRouteProps ) Array that
+        // -- will contain all of the same user scopes paths & props
         this.findRoutes()
         return (
             <Provider>{/* we setted up the Provider value as appStore in src/Provider.js */}
@@ -286,7 +289,7 @@ class App extends Component {
                                         </div>
                                         :
                                         <Switch>
-                                            { // every Route the user has an access scope to it will be rendered here
+                                            { // every Route the user has an access scopes to it will be rendered here
                                                 securedRouteProps.map(item => <Route key={item.path} {...item} />)
                                             }
                                             <Redirect exact strict from='/' to='/timeline' />
