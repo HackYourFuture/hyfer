@@ -279,7 +279,6 @@ class App extends Component {
                                 <Header />
                                 <Popup />
                                 <Notifications />
-                                {/* <pre>{JSON.stringify(this.state, null, 2)}</pre> */}
                                 {
                                     (!done) ?
                                         <div className={classes.divLoading}>
