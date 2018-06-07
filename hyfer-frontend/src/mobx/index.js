@@ -1,8 +1,8 @@
-import { configure } from 'mobx';
+// import { configure } from 'mobx';
 import UserStore from './UserStore';
 import HomeworkStore from './HomeworkStore';
 
-configure({ enforceActions: true });
+// configure({ enforceActions: true });
 
 export default {
   userStore: new UserStore(),

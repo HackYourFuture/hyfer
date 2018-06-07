@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import store from '../../store/UserStore';
+// import store from '../../store/UserStore';
 import styles from '../../assets/styles/profile.css';
 import { Link } from 'react-router-dom';
 import { errorMessage } from '../../notify';
@@ -12,13 +12,14 @@ class userAccount extends Component {
   };
 
   componentWillUnmount() {
-    this.subscription.remove();
+    // this.subscription.remove();
+  
   }
 
   componentDidMount() {
-    this.subscription = store.subscribe(state => {
-      this.setState(state);
-    });
+    // this.subscription = store.subscribe(state => {
+    //   this.setState(state);
+    // });
     window.scrollTo(0, 0);
   }
 
@@ -36,7 +37,7 @@ class userAccount extends Component {
         <div className={styles.profileContainer}>
           <div
             className={
-              styles.matDiv + ' ' + this.checkHasValue(store.state.full_name)
+              styles.matDiv + ' ' + this.checkHasValue(this.props.userStore.full_name)
             }
           >
             <label htmlFor="first-name" className={styles.matLabel}>
@@ -45,10 +46,11 @@ class userAccount extends Component {
             <input
               className={styles.matInput}
               type="text"
-              value={store.state.full_name}
+              value={this.props.userStore.full_name}
               id="first-name"
               onChange={e => {
-                store.setState({ full_name: e.target.value });
+                this.props.userStore.changeFullName(e);
+                // store.setState({ full_name: e.target.value });
               }}
               onFocus={e => {
                 this.setInputActive(e);
@@ -67,7 +69,7 @@ class userAccount extends Component {
             <input
               type="text"
               className={styles.matInput}
-              value={store.state.role}
+              value={this.props.userStore.role}
               disabled="true"
             />
           </div>
@@ -83,13 +85,13 @@ class userAccount extends Component {
             <input
               type="text"
               className={styles.matInput}
-              value={store.state.group_name}
+              value={this.props.userStore.group_name}
               disabled="true"
             />
           </div>
           <div
             className={
-              styles.matDiv + ' ' + this.checkHasValue(store.state.email)
+              styles.matDiv + ' ' + this.checkHasValue(this.props.userStore.email)
             }
           >
             <label htmlFor="e-mail" className={styles.matLabel}>
@@ -98,10 +100,11 @@ class userAccount extends Component {
             <input
               type="email"
               className={styles.matInput}
-              value={store.state.email || ''}
+              value={this.props.userStore.email || ''}
               id="e-mail"
               onChange={e => {
-                store.setState({ email: e.target.value });
+                this.props.userStore.changeEmail(e);
+                // store.setState({ email: e.target.value });
               }}
               onFocus={e => {
                 this.setInputActive(e);
@@ -112,7 +115,7 @@ class userAccount extends Component {
             className={
               styles.matDiv +
               ' ' +
-              this.checkHasValue(store.state.slack_username)
+              this.checkHasValue(this.props.userStore.slack_username)
             }
           >
             <label htmlFor="slack-username" className={styles.matLabel}>
@@ -120,11 +123,13 @@ class userAccount extends Component {
             </label>
             <input
               type="text"
-              value={store.state.slack_username || ''}
+              value={this.props.userStore.slack_username || ''}
               className={styles.matInput}
               id="slack-username"
               onChange={e => {
-                store.setState({ slack_username: e.target.value });
+                // store.setState({ slack_username: e.target.value });
+                this.props.userStore.changeSlackUserName(e);
+                
               }}
               onFocus={e => {
                 this.setInputActive(e);
@@ -135,7 +140,7 @@ class userAccount extends Component {
             className={
               styles.matDiv +
               ' ' +
-              this.checkHasValue(store.state.freecodecamp_username)
+              this.checkHasValue(this.props.userStore.freecodecamp_username)
             }
           >
             <label htmlFor="freecodecamp-username" className={styles.matLabel}>
@@ -143,11 +148,12 @@ class userAccount extends Component {
             </label>
             <input
               type="text"
-              value={store.state.freecodecamp_username || ''}
+              value={this.props.userStore.freecodecamp_username || ''}
               className={styles.matInput}
               id="freecodecamp-username"
               onChange={e => {
-                store.setState({ freecodecamp_username: e.target.value });
+                // store.setState({ freecodecamp_username: e.target.value });
+                this.props.userStore.changeCodeCampUserName(e);                
               }}
               onFocus={e => {
                 this.setInputActive(e);
@@ -156,7 +162,7 @@ class userAccount extends Component {
           </div>
           <div
             className={
-              styles.matDiv + ' ' + this.checkHasValue(store.state.mobile)
+              styles.matDiv + ' ' + this.checkHasValue(this.props.userStore.mobile)
             }
           >
             <label htmlFor="mobile" className={styles.matLabel}>
@@ -164,11 +170,12 @@ class userAccount extends Component {
             </label>
             <input
               type="tel"
-              value={store.state.mobile || ''}
+              value={this.props.userStore.mobile || ''}
               className={styles.matInput}
               id="mobile"
               onChange={e => {
-                store.setState({ mobile: e.target.value });
+                // store.setState({ mobile: e.target.value });
+                this.props.userStore.changeMobile(e);                
               }}
               onFocus={e => {
                 this.setInputActive(e);
@@ -180,14 +187,14 @@ class userAccount extends Component {
               className={styles.saveProfile}
               type="submit"
               value="Save"
-              onClick={() => store.saveProfile('loadUser').catch(errorMessage)}
+              onClick={() => this.props.userStore.saveProfile('loadUser').catch(errorMessage)}
             />
           </Link>
           <input
             className={styles.resetProfile}
             type="reset"
             value="Reset"
-            onClick={store.resetProfile}
+            onClick={this.props.userStore.resetProfile}
           />
         </div>
       </div>

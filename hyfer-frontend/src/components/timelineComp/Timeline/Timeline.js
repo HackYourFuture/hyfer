@@ -132,6 +132,8 @@ export default class Timeline extends Component {
       ? itemWidth * allWeeks.length + 21 * allWeeks.length + 'px'
       : '100vw';
     return (
+
+      
       <div className="rootContainer">
         <ClassBarRowComp
           groups={this.props.groups}

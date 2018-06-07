@@ -1,9 +1,13 @@
 import React from 'react';
-import store from '../../store/UserStore';
+// import store from '../../store/UserStore';
 import styles from '../../assets/styles/profile.css';
 import { Link } from 'react-router-dom';
 import { getAllGroupsWithIds } from '../../util';
 import { errorMessage } from '../../notify';
+import { observer, inject } from 'mobx-react';
+
+@inject('userStore')
+@observer
 
 export default class Profile extends React.Component {
   state = {
@@ -11,9 +15,9 @@ export default class Profile extends React.Component {
   };
 
   componentDidMount() {
-    this.subscription = store.subscribe(state => {
-      this.setState(state);
-    });
+    // this.subscription = store.subscribe(state => {
+    //   this.setState(state);
+    // });
 
     const getData = async () => {
       const groupData = await getAllGroupsWithIds().catch(errorMessage); // catching the error in the end of the line
@@ -39,7 +43,7 @@ export default class Profile extends React.Component {
   };
 
   componentWillUnmount() {
-    this.subscription.remove();
+    // this.subscription.remove();
   }
 
   checkHasValue(val) {
@@ -56,7 +60,7 @@ export default class Profile extends React.Component {
         <div className={styles.profileContainer}>
           <div
             className={
-              styles.matDiv + ' ' + this.checkHasValue(store.state.full_name)
+              styles.matDiv + ' ' + this.checkHasValue(this.props.userStore.full_name)
             }
           >
             <label htmlFor="first-name" className={styles.matLabel}>
@@ -65,10 +69,10 @@ export default class Profile extends React.Component {
             <input
               className={styles.matInput}
               type="text"
-              value={store.state.full_name}
+              value={this.props.userStore.full_name}
               id="first-name"
               onChange={e => {
-                store.setState({ full_name: e.target.value });
+                this.props.userStore.changeFullName(e);
               }}
               onFocus={e => {
                 this.setInputActive(e);
@@ -85,11 +89,11 @@ export default class Profile extends React.Component {
               Role
             </label>
             <select
-              value={store.state.role}
+              value={this.props.userStore.role}
               id="role"
               className={styles.matInput}
               onChange={e => {
-                store.setState({ role: e.target.value });
+                this.props.userStore.changeRole(e);
               }}
             >
               <option value="guest" disabled hidden>
@@ -112,16 +116,14 @@ export default class Profile extends React.Component {
               className={styles.matInput}
               value={
                 '{"name":"' +
-                store.state.group_name +
+                this.props.userStore.group_name +
                 '","id":"' +
-                store.state.group_id +
+                this.props.userStore.group_id +
                 '"}'
               }
               onChange={e => {
-                store.setState({
-                  group_name: JSON.parse(e.target.value).name,
-                  group_id: +JSON.parse(e.target.value).id,
-                });
+                this.props.userStore.ChangeGroup(
+                  JSON.parse(e.target.value).name, +JSON.parse(e.target.value).id);
               }}
             >
               {this.state.classOptions.map(group => {
@@ -138,7 +140,7 @@ export default class Profile extends React.Component {
           </div>
           <div
             className={
-              styles.matDiv + ' ' + this.checkHasValue(store.state.email)
+              styles.matDiv + ' ' + this.checkHasValue(this.props.userStore.email)
             }
           >
             <label htmlFor="e-mail" className={styles.matLabel}>
@@ -147,11 +149,10 @@ export default class Profile extends React.Component {
             <input
               type="email"
               className={styles.matInput}
-              //The default props 'value' of an input should be an empty string
-              value={store.state.email || ''}
+              value={this.props.userStore.email || ''}
               id="e-mail"
               onChange={e => {
-                store.setState({ email: e.target.value });
+                this.props.userStore.changeEmail(e);
               }}
               onFocus={e => {
                 this.setInputActive(e);
@@ -162,7 +163,7 @@ export default class Profile extends React.Component {
             className={
               styles.matDiv +
               ' ' +
-              this.checkHasValue(store.state.slack_username)
+              this.checkHasValue(this.props.userStore.slack_username)
             }
           >
             <label htmlFor="slack-username" className={styles.matLabel}>
@@ -170,11 +171,11 @@ export default class Profile extends React.Component {
             </label>
             <input
               type="text"
-              value={store.state.slack_username || ''}
+              value={this.props.userStore.slack_username || ''}
               className={styles.matInput}
               id="slack-username"
               onChange={e => {
-                store.setState({ slack_username: e.target.value });
+                this.props.userStore.changeSlackUserName(e);
               }}
               onFocus={e => {
                 this.setInputActive(e);
@@ -185,7 +186,7 @@ export default class Profile extends React.Component {
             className={
               styles.matDiv +
               ' ' +
-              this.checkHasValue(store.state.freecodecamp_username)
+              this.checkHasValue(this.props.userStore.freecodecamp_username)
             }
           >
             <label htmlFor="freecodecamp-username" className={styles.matLabel}>
@@ -193,11 +194,12 @@ export default class Profile extends React.Component {
             </label>
             <input
               type="text"
-              value={store.state.freecodecamp_username || ''}
+              value={this.props.userStore.freecodecamp_username || ''}
               className={styles.matInput}
               id="freecodecamp-username"
               onChange={e => {
-                store.setState({ freecodecamp_username: e.target.value });
+                // store.setState({ freecodecamp_username: e.target.value });
+                this.props.userStore.changeCodeCampUserName(e);
               }}
               onFocus={e => {
                 this.setInputActive(e);
@@ -206,7 +208,7 @@ export default class Profile extends React.Component {
           </div>
           <div
             className={
-              styles.matDiv + ' ' + this.checkHasValue(store.state.mobile)
+              styles.matDiv + ' ' + this.checkHasValue(this.props.userStore.mobile)
             }
           >
             <label htmlFor="mobile" className={styles.matLabel}>
@@ -214,11 +216,11 @@ export default class Profile extends React.Component {
             </label>
             <input
               type="tel"
-              value={store.state.mobile || ''}
+              value={this.props.userStore.mobile || ''}
               className={styles.matInput}
               id="mobile"
               onChange={e => {
-                store.setState({ mobile: e.target.value });
+                this.props.userStore.changeMobile(e);
               }}
               onFocus={e => {
                 this.setInputActive(e);
@@ -230,14 +232,14 @@ export default class Profile extends React.Component {
               className={styles.saveProfile}
               type="submit"
               value="Save"
-              onClick={() => store.saveProfile('loadUsers').catch(errorMessage)}
+              onClick={() => this.props.userStore.saveProfile('loadUsers').catch(errorMessage)}
             />
           </Link>
           <input
             className={styles.resetProfile}
             type="reset"
             value="Reset"
-            onClick={store.resetProfile}
+            onClick={this.props.userStore.resetProfile}
           />
         </div>
       </div>

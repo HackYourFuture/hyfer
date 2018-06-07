@@ -79,6 +79,8 @@ export default class SynchronizeGithubData extends Component {
   };
 
   render() {
+    console.log(token);
+
     return (
       <div>
         <button
