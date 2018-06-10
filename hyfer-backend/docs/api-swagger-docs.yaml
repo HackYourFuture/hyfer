@@ -1,0 +1,45 @@
+swagger: "2.0"
+info:
+  description: "Hyfer api backend"
+  version: "0.1.0"
+  title: "Hyfer API"
+  contact:
+    email: "valerio.barrila@gmail.com"
+host: "127.0.0.1:3005"
+basePath: "/api"
+tags:
+- name: "groups"
+  description: "Allows to manage groups in Hyfer"
+schemes:
+- "http"
+paths:
+  /groups:
+    get:
+      tags:
+      - "groups"
+      summary: "retrieve all the groups"
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Group"
+definitions:
+  Group:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      group_name:
+        type: "string"
+      starting_date:
+        type: "string"
+        format: "date-time"
+      archived:
+        type: "integer"
+        format: "boolean"
