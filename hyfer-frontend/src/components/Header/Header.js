@@ -3,57 +3,75 @@ import { NavLink } from 'react-router-dom';
 
 import hyfIcon from '../../assets/images/icon.png';
 import styles from '../../assets/styles/header.css';
-import {
-  uiStore,
-  AVATAR_URL_CHANGED,
-  ISTEACHER_STATE_CHANGED,
-  ISSTUDENT_STATE_CHANGED,
-  LOGIN_STATE_CHANGED,
-} from '../../store';
+// import {
+//   uiStore,
+//   AVATAR_URL_CHANGED,
+//   ISTEACHER_STATE_CHANGED,
+//   ISSTUDENT_STATE_CHANGED,
+//   LOGIN_STATE_CHANGED,
+// } from '../../store';
 import cookie from 'react-cookies';
 import { errorMessage } from '../../notify';
-
+import { observer , inject  } from "mobx-react";
+@inject('UiStore')
+@observer
 export default class Header extends Component {
-  state = {
-    isLoggedIn: false,
-    isATeacher: false,
-    isStudent: false,
-    avatarUrl: null,
-  };
+  // state = {
+  //   isLoggedIn: false,
+  //   isATeacher: false,
+  //   isStudent: false,
+  //   avatarUrl: null,
+  // };
 
   componentDidMount = () => {
-    uiStore.subscribe(mergedData => {
-      switch (mergedData.type) {
-        case AVATAR_URL_CHANGED:
-          this.setState({ avatarUrl: mergedData.payload.avatarUrl });
-          break;
-        case LOGIN_STATE_CHANGED:
-          this.setState({ isLoggedIn: mergedData.payload.isLoggedIn });
-          break;
-        case ISTEACHER_STATE_CHANGED:
-          this.setState({ isATeacher: mergedData.payload.isATeacher });
-          break;
-        case ISSTUDENT_STATE_CHANGED:
-          this.setState({ isStudent: mergedData.payload.isStudent });
-          break;
-        default:
-          break;
-      }
-    });
+    // uiStore.subscribe(mergedData => {
+    //   switch (mergedData.type) {
+    //     case AVATAR_URL_CHANGED:
+    //       this.setState({ avatarUrl: mergedData.payload.avatarUrl });
+    //       console.log(' this is avatarurl '  +  mergedData.payload.avatarUrl );
+    //       break;
+    //     case LOGIN_STATE_CHANGED:
+    //       this.setState({ isLoggedIn: mergedData.payload.isLoggedIn });
+    //       console.log(' this is loginChanged '  +  mergedData.payload.isLoggedIn );
+          
+    //       break;
+    //     case ISTEACHER_STATE_CHANGED:
+    //       this.setState({ isATeacher: mergedData.payload.isATeacher });
+    //       console.log(' this is teacher '  +  mergedData.payload.isATeacher );
+          
+    //       break;
+    //     case ISSTUDENT_STATE_CHANGED:
+    //       this.setState({ isStudent: mergedData.payload.isStudent });
+    //       console.log(' this is student '  +  mergedData.payload.isStudent );
+          
+    //       break;
+    //     default:
+    //     console.log(mergedData.payload);
+        
+    //       break;
+    //   }
+    // });
+    // this.setState({
+    //   isLoggedIn : this.props.UiStore.isLoggedIn,
+    //   isATeacher : this.props.UiStore.isATeacher,
+    //   isStudent : this.props.UiStore.isStudent,
+    //   avatarUrl : this.props.UiStore.avatarUrl
+
+    // });
 
     const token = localStorage.getItem('token');
     let login = false;
     if (token && token !== '') login = true;
 
-    uiStore.setState({
-      type: LOGIN_STATE_CHANGED,
-      payload: {
-        isLoggedIn: login,
-      },
-    });
-
+    // uiStore.setState({
+    //   type: LOGIN_STATE_CHANGED,
+    //   payload: {
+    //     isLoggedIn: login,
+    //   },
+    // });
+this.props.UiStore.changeLogin(login);
     if (login) {
-      uiStore.getUserInfo().catch(errorMessage);
+     this.props.UiStore.getUserInfo().catch(errorMessage);
     }
   };
 
@@ -68,7 +86,7 @@ export default class Header extends Component {
       <ul className={styles.signed_in}>
         <li>
           <img
-            src={this.state.avatarUrl}
+            src={this.props.UiStore.avatarUrl}
             alt="user icon"
             className={styles.userIcon}
           />
@@ -87,9 +105,8 @@ export default class Header extends Component {
         </ul>
       </ul>
     );
-
     let user = null;
-    if (!this.state.isLoggedIn) {
+    if (!this.props.UiStore.isLoggedIn) {
       user = (
         <div className={styles.signInWrapper}>
           <div className={styles.visitorWrapper}>
@@ -110,7 +127,7 @@ export default class Header extends Component {
         <ul className={styles.signed_in}>
           <li>
             <img
-              src={this.state.avatarUrl}
+              src={this.props.UiStore.avatarUrl}
               alt="user icon"
               className={styles.userIcon}
             />
@@ -126,7 +143,7 @@ export default class Header extends Component {
       );
     }
 
-    if (this.state.isLoggedIn && this.state.isATeacher) {
+    if (this.props.UiStore.isLoggedIn && this.props.UiStore.isATeacher) {
       return (
         <header className={styles.header}>
           <a href="http://hackyourfuture.net/">
@@ -193,7 +210,7 @@ export default class Header extends Component {
           {user}
         </header>
       );
-    } else if (this.state.isLoggedIn && this.state.isStudent) {
+    } else if (this.props.UiStore.isLoggedIn && this.props.UiStore.isStudent) {
       return (
         <header className={styles.header}>
           <a href="http://hackyourfuture.net/">

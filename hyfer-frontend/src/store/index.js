@@ -1,12 +1,12 @@
 import ModuleInfoStore from './ModuleInfoStore';
 import TimelineStore from './TimeLineStore';
-import UiStore from './UiStore';
+// import UiStore from './UiStore';
 
 // stores
 
 export const moduleInfoStore = (window.moduleInfoStore = ModuleInfoStore());
 export const timelineStore = (window.timelineStore = TimelineStore());
-export const uiStore = (window.uiStore = UiStore());
+// export const uiStore = (window.uiStore = UiStore());
 
 // types of changes
 

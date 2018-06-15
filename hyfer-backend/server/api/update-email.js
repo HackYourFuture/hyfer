@@ -9,6 +9,7 @@ async function setEmail(req, res) {
       req.body.id,
     ]);
     res.send(req.body);
+    console.log(req.body)
   } catch (err) {
     res.status(500).json(err);
   }
