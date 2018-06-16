@@ -1,31 +1,21 @@
+
 import React, { Component } from 'react';
 import styles from './index.css';
-import { uiStore } from '../../store';
 import ModalDialog from '../../Helpers/Modal/Modal';
 import { warning, errorMessage, success } from '../../notify';
-
+import { inject, observer } from "mobx-react";
 const defaultState = {
-  isEmail: false,
-  isLoggedIn: true,
   submitted: false,
   email_input: '',
   confirm_email_input: '',
 };
-
+@inject('UiStore')
+@observer
 class Popup extends Component {
   state = {
     ...defaultState,
   };
-  componentDidMount = () => {
-    uiStore.subscribe(mergedData => {
-      if (mergedData.type) {
-        this.setState({
-          isEmail: mergedData.payload.isEmail,
-          isLoggedIn: mergedData.payload.isLoggedIn,
-        });
-      }
-    });
-  };
+
   handleChange = e => {
     this.setState({
       email_input: e.target.value,
@@ -42,9 +32,8 @@ class Popup extends Component {
     if (email_input !== confirm_email_input) {
       return warning("the emails didn't match ");
     }
-    const { id } = uiStore.getState();
     const data = {
-      id,
+      id : this.props.UiStore.user_id ,
       email: email_input,
     };
     const token = localStorage.getItem('token');
@@ -60,6 +49,7 @@ class Popup extends Component {
       .then(res => {
         if (!res.ok) throw res;
         this.setState({ submitted: true });
+        this.props.UiStore.setEmail(true);
         return res.json();
       })
       .then(() => success('Your e-mail has been inserted successfully'))
@@ -93,10 +83,11 @@ class Popup extends Component {
     );
   };
   render() {
-    const notUndefined = typeof this.state.isEmail !== 'undefined';
-    const { isEmail, isLoggedIn, submitted } = this.state;
+    console.log(this.props.UiStore.user_id);
+    const notUndefined = typeof this.props.UiStore.isEmail !== 'undefined';
+    const { submitted } = this.state.submitted;
     const { PopUpContent } = this;
-    if (notUndefined && !isEmail && !isLoggedIn && !submitted) {
+    if (notUndefined && !this.props.UiStore.isEmail && this.props.UiStore.isLoggedIn && !submitted) {
       return PopUpContent(true);
     } else {
       return '';

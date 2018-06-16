@@ -28,12 +28,12 @@ import {
   getAllGroupsWithIds,
 } from '../util';
 
-import userStore from './UserStore';
+import userStore from '../mobx/UserStore';
 
 import { errorMessage } from '../notify';
 
 const BASE_URL = 'http://localhost:3005';
-
+const Store = new userStore();
 export default function () {
   let _observers = [];
   const _data = {};
@@ -100,7 +100,7 @@ export default function () {
       },
     });
 
-    if (userStore.state.currentUser.role === 'teacher') {
+    if (Store.currentUser.role === 'teacher') {
 
       // get all possible modules for addition
       const allPossibleModules = await getALlPossibleModules().catch(e => {

@@ -7,7 +7,7 @@ export default class ModalDialog extends Component {
   handleClickBackdrop = e => {
     e.stopPropagation();
     if (e.target.classList.contains(classes.overlay)) {
-      this.props.closeModal();
+      this.props.closeModal;
     }
   };
 

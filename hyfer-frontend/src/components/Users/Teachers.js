@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styles from '../../assets/styles/users.css';
-import store from '../../store/UserStore';
+// import store from '../../store/UserStore';
 import { Link } from 'react-router-dom';
 import Moment from 'moment';
 
@@ -9,14 +9,17 @@ import FaSlack from 'react-icons/lib/fa/slack';
 import FaFire from 'react-icons/lib/fa/fire';
 import FaGithub from 'react-icons/lib/fa/github';
 import FaMobile from 'react-icons/lib/fa/mobile';
+import {observer , inject} from 'mobx-react';
 
+@inject('userStore')
+@observer 
 export default class Teachers extends Component {
   render() {
     return (
       <li className={styles.userList}>
         Teachers List:
         <ul className={styles.userContainer}>
-          {store.state.filteredUsers.map(user => {
+          {this.props.userStore.filteredUsers.map(user => {
             if (user.role === 'teacher') {
               return (
                 <React.Fragment key={user.id}>
@@ -97,9 +100,7 @@ export default class Teachers extends Component {
                             styles.linkContainer
                           }
                           onClick={() =>
-                            store.setState({
-                              mobileActive: !store.state.mobileActive,
-                            })
+                            this.props.userStore.ChangeMobileActive()                                                      
                           }
                         >
                           <FaMobile />
@@ -107,7 +108,7 @@ export default class Teachers extends Component {
                             className={
                               styles.infoOverlay +
                               ' ' +
-                              (store.state.mobileActive ? styles.active : '')
+                              (this.props.userStore.mobileActive ? styles.active : '')
                             }
                           >
                             {user.mobile}
@@ -146,32 +147,8 @@ export default class Teachers extends Component {
                     <form
                       className={styles.editUserButton}
                       onClick={() => {
-                        store.setState({
-                          id: user.id,
-                          username: user.username,
-                          full_name: user.full_name,
-                          group_name: user.group_name,
-                          role: user.role,
-                          register_date: user.register_date,
-                          email: user.email,
-                          slack_username: user.slack_username,
-                          freecodecamp_username: user.freecodecamp_username,
-                          mobile: user.mobile,
-                          group_id: user.group_id,
-
-                          reset_id: user.id,
-                          reset_username: user.username,
-                          reset_full_name: user.full_name,
-                          reset_group_name: user.group_name,
-                          reset_role: user.role,
-                          reset_register_date: user.register_date,
-                          reset_email: user.email,
-                          reset_slack_username: user.slack_username,
-                          reset_freecodecamp_username:
-                            user.freecodecamp_username,
-                          reset_mobile: user.mobile,
-                          reset_group_id: user.group_id,
-                        });
+                        this.props.userStore.setState(user);                        
+                       
                       }}
                     >
                       <Link to="/profile">

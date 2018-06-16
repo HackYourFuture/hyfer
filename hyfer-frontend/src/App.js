@@ -7,7 +7,7 @@ import Footer from './components/Footer/Footer';
 import cookie from 'react-cookies';
 import Notifications from 'react-notify-toast';
 import Popup from './components/Popup';
-import userStore from './store/UserStore';
+// import userStore from './store/UserStore';
 import TimeLine from './Pages/Timeline/TimeLine';
 import Modules from './Pages/Modules/Modules';
 import Users from './Pages/Users/Users';
@@ -16,6 +16,7 @@ import userAccount from './Pages/Users/userAccount';
 import Profile from './Pages/Users/Profile';
 import TrainTicket from './Pages/TrainTicket/TrainTicket';
 import Homework from './Pages/Homework/Homework';
+import {observer , inject} from 'mobx-react';
 
 const PUBLIC_ROUTES = [
   { exact: true, path: '/timeline', component: TimeLine },
@@ -45,7 +46,8 @@ const defaultProfile = {
   full_name: 'Guest',
   role: 'guest',
 };
-
+@inject('userStore')
+@observer 
 class App extends Component {
 
   state = {};
@@ -55,8 +57,8 @@ class App extends Component {
     if (token) {
       token = JSON.parse(token);
       window.localStorage.setItem('token', token);
-      await userStore.loadUser();
-      this.setState({ profile: userStore.state.currentUser });
+      await this.props.userStore.loadUser();
+      this.setState({ profile: this.props.userStore.currentUser });
     } else {
       window.localStorage.removeItem('token');
       this.setState({ profile: defaultProfile });
@@ -65,6 +67,9 @@ class App extends Component {
 
   render() {
     const { profile } = this.state;
+  // this.props.userStore.loadUser();
+  // console.log(this.props.userStore.currentUser);
+    console.log(profile);
     if (profile == null) {
       return null;
     }

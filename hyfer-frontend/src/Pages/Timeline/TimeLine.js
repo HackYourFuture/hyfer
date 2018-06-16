@@ -3,15 +3,15 @@ import styles from '../../assets/styles/timeline.css';
 import ModuleReadme from '../../components/ModuleReadme/ModuleReadme';
 import Attendance from '../../components/Attendance/Attendance';
 import TimelineComp from '../../components/timelineComp/Timeline/Timeline';
-
+import { observer  , inject   } from "mobx-react";
 import {
   READ_ME_CHANGED,
   REPO_NAME_CHANGED,
   HISTORY_CHANGED,
   moduleInfoStore,
-  LOGIN_STATE_CHANGED,
-  ISTEACHER_STATE_CHANGED,
-  uiStore,
+  // LOGIN_STATE_CHANGED,
+  // ISTEACHER_STATE_CHANGED,
+  // uiStore,
   timelineStore,
   TIMELINE_ITEMS_CHANGED,
   TIMELINE_GROUPS_CHANGED,
@@ -24,7 +24,8 @@ import {
   INFO_SELECTED_MODULE_CHANGED,
 } from '../../store/index';
 import { errorMessage } from '../../notify';
-
+@inject("UiStore")
+@observer
 export default class TimeLine extends Component {
   state = {
     isLoggedIn: false,
@@ -110,16 +111,20 @@ export default class TimeLine extends Component {
 
     moduleInfoStore.defaultReadme('curriculum').catch(errorMessage);
 
-    uiStore.subscribe(mergedData => {
-      if (mergedData.type === LOGIN_STATE_CHANGED) {
-        this.setState({ isLoggedIn: mergedData.payload.isLoggedIn });
-      } else if (mergedData.type === ISTEACHER_STATE_CHANGED) {
-        this.setState({ isATeacher: mergedData.payload.isATeacher });
-      }
-    });
+    // uiStore.subscribe(mergedData => {
+    //   if (mergedData.type === LOGIN_STATE_CHANGED) {
+    //     this.setState({ isLoggedIn: mergedData.payload.isLoggedIn });
+    //   } else if (mergedData.type === ISTEACHER_STATE_CHANGED) {
+    //     this.setState({ isATeacher: mergedData.payload.isATeacher });
+    //   }
+    // });
+    // this.setState({
+    //   isLoggedIn : this.props.UiStore.isLoggedIn ,
+    //   isATeacher : this.props.UiStore.isATeacher 
+    // });
 
     if (localStorage.token) {
-      uiStore.getUserInfo().catch(errorMessage);
+      this.props.UiStore.getUserInfo().catch(errorMessage);
     }
   }
 
@@ -155,8 +160,8 @@ export default class TimeLine extends Component {
       history,
       repoName,
       readme,
-      isATeacher,
-      isLoggedIn,
+      // isATeacher,
+      // isLoggedIn,
       timelineItems,
       groups,
       allWeeks,
@@ -181,14 +186,14 @@ export default class TimeLine extends Component {
       );
     }
 
-    if (isLoggedIn && isATeacher) {
+    if (this.props.UiStore.isLoggedIn && this.props.UiStore.isATeacher ) {
       return (
         <main>
           <div style={{ marginBottom: '3rem' }}>
             <TimelineComp
               itemWidth={170}
               rowHeight={70}
-              isTeacher={isATeacher}
+              isTeacher={this.props.UiStore.isATeacher}
               timelineItems={timelineItems}
               groups={groups}
               allWeeks={allWeeks}
@@ -225,7 +230,7 @@ export default class TimeLine extends Component {
             <TimelineComp
               itemWidth={170}
               rowHeight={70}
-              isTeacher={isATeacher}
+              isTeacher={this.props.UiStore.isATeacher}
               timelineItems={timelineItems}
               groups={groups}
               allWeeks={allWeeks}

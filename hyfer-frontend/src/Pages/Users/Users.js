@@ -1,26 +1,30 @@
 import React from 'react';
-import store from '../../store/UserStore';
+// import store from '../../store/UserStore';
 import styles from '../../assets/styles/users.css';
 import Guest from '../../components/Users/Guest';
 import Teachers from '../../components/Users/Teachers';
 import Students from '../../components/Users/Students';
 import SynchronizeGithubData from '../../components/Users/SynchronizeGithubData';
 import { errorMessage } from '../../notify';
+import {observer , inject} from 'mobx-react';
 
+@inject('userStore')
+@observer 
 export default class Users extends React.Component {
   state = {
     selectedList: '',
   };
 
   componentWillUnmount() {
-    this.subscription.remove();
+     // this.subscription.remove();
   }
 
   componentDidMount = () => {
-    this.subscription = store.subscribe(state => {
-      this.setState(state);
-    });
-    store.loadUsers().catch(errorMessage);
+    // this.subscription = store.subscribe(state => {
+    //   this.setState(state);
+    // });
+    // store.loadUsers().catch(errorMessage);
+    this.props.userStore.loadUsers().catch(errorMessage);
     window.scrollTo(0, 0);
   };
 
@@ -68,7 +72,7 @@ export default class Users extends React.Component {
             className={styles.userSearchBox}
             type="text"
             placeholder="lookup someone"
-            onChange={store.searchUser}
+            onChange={this.props.userStore.searchUser}
           />
           <select
             className={styles.listSelector}
