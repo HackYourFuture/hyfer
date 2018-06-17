@@ -31,7 +31,7 @@ export default class TimeLine extends Component {
     isATeacher: false,
     tab: 'readme',
     readme: null,
-    repoName: null,
+    repoName: 'hyfer',
     group_name: null,
     history: null,
     duration: null,

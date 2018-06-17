@@ -56,9 +56,9 @@ App
     StudentList
     Student
   Users
-    currentUserProfile
+    CurrentUserProfile
     Profile
-    userAccount
+    UserAccount
   Footer
   ```
 ## Students
