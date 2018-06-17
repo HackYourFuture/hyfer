@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
-import store from '../../store/UserStore';
-import styles from '../../assets/styles/users.css';
-import { Link } from 'react-router-dom';
 import Moment from 'moment';
-
-import MdEmail from 'react-icons/lib/md/email';
-import FaSlack from 'react-icons/lib/fa/slack';
+import React, { Component } from 'react';
 import FaFire from 'react-icons/lib/fa/fire';
 import FaGithub from 'react-icons/lib/fa/github';
 import FaMobile from 'react-icons/lib/fa/mobile';
+import FaSlack from 'react-icons/lib/fa/slack';
+import MdEmail from 'react-icons/lib/md/email';
+import { Link } from 'react-router-dom';
+import styles from '../../assets/styles/users.css';
 import { errorMessage } from '../../notify';
+import store from '../../store/UserStore';
 
-class currentUserProfile extends Component {
+
+class CurrentUserProfile extends Component {
 
   componentWillUnmount() {
     this.subscription.remove();
@@ -184,4 +184,4 @@ class currentUserProfile extends Component {
   }
 }
 
-export default currentUserProfile;
+export default CurrentUserProfile;

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import store from '../../store/UserStore';
-import styles from '../../assets/styles/profile.css';
 import { Link } from 'react-router-dom';
+import styles from '../../assets/styles/profile.css';
 import { errorMessage } from '../../notify';
+import store from '../../store/UserStore';
 
-class userAccount extends Component {
+class UserAccount extends Component {
 
   setInputActive = e => {
     e.target.parentElement.className += ' ' + styles.isActive;
@@ -195,4 +195,4 @@ class userAccount extends Component {
   }
 }
 
-export default userAccount;
+export default UserAccount;
