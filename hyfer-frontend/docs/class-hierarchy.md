@@ -56,9 +56,9 @@ App
     StudentList
     Student
   Users
-    currentUserProfile
+    CurrentUserProfile
     Profile
-    userAccount
+    UserAccount
   Footer
   ```
 ## Students
@@ -92,9 +92,9 @@ App
     Reviews
   Popup
   Users
-    currentUserProfile
+    CurrentUserProfile
     Profile
-    userAccount
+    UserAccount
   NotFound
   Footer
   ```
