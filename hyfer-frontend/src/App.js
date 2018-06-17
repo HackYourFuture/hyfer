@@ -1,21 +1,20 @@
+import { inject, observer } from 'mobx-react';
 import React, { Component } from 'react';
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
-
-import './assets/styles/app.css';
-import Header from './components/Header/Header';
-import Footer from './components/Footer/Footer';
 import cookie from 'react-cookies';
 import Notifications from 'react-notify-toast';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import './assets/styles/app.css';
+import Footer from './components/Footer/Footer';
+import Header from './components/Header/Header';
 import Popup from './components/Popup';
-import userStore from './store/UserStore';
-import TimeLine from './Pages/Timeline/TimeLine';
-import Modules from './Pages/Modules/Modules';
-import Users from './Pages/Users/Users';
-import currentUserProfile from './Pages/Users/currentUserProfile';
-import userAccount from './Pages/Users/userAccount';
-import Profile from './Pages/Users/Profile';
-import TrainTicket from './Pages/TrainTicket/TrainTicket';
 import Homework from './Pages/Homework/Homework';
+import Modules from './Pages/Modules/Modules';
+import TimeLine from './Pages/Timeline/TimeLine';
+import TrainTicket from './Pages/TrainTicket/TrainTicket';
+import CurrentUserProfile from './Pages/Users/CurrentUserProfile';
+import Profile from './Pages/Users/Profile';
+import UserAccount from './Pages/Users/UserAccount';
+import Users from './Pages/Users/Users';
 
 const PUBLIC_ROUTES = [
   { exact: true, path: '/timeline', component: TimeLine },
@@ -26,7 +25,7 @@ const ROUTES = {
     { exact: true, path: '/modules', component: Modules },
     { exact: true, path: '/users', component: Users },
     { exact: true, path: '/profile', component: Profile },
-    { exact: true, path: '/userAccount', component: userAccount },
+    { exact: true, path: '/userAccount', component: UserAccount },
     { exact: true, path: '/homework', component: Homework },
     { exact: true, path: '/homework/:classNumber', component: Homework },
     { exact: true, path: '/TrainTicket', component: TrainTicket },
@@ -36,7 +35,7 @@ const ROUTES = {
     { exact: true, path: '/homework/:classNumber', component: Homework },
   ],
   guest: [
-    { exact: true, path: '/currentUserProfile', component: currentUserProfile },
+    { exact: true, path: '/currentUserProfile', component: CurrentUserProfile },
   ],
 };
 
@@ -46,17 +45,16 @@ const defaultProfile = {
   role: 'guest',
 };
 
+@inject('global')
+@observer
 class App extends Component {
-
-  state = {};
 
   async componentDidMount() {
     let token = cookie.load('token');
     if (token) {
       token = JSON.parse(token);
       window.localStorage.setItem('token', token);
-      await userStore.loadUser();
-      this.setState({ profile: userStore.state.currentUser });
+      await this.props.global.fetchCurrentUser();
     } else {
       window.localStorage.removeItem('token');
       this.setState({ profile: defaultProfile });
@@ -64,12 +62,13 @@ class App extends Component {
   }
 
   render() {
-    const { profile } = this.state;
-    if (profile == null) {
+    const { currentUser } = this.props.global;
+
+    if (currentUser == null) {
       return null;
     }
 
-    const routes = [...PUBLIC_ROUTES, ...ROUTES[profile.role]];
+    const routes = [...PUBLIC_ROUTES, ...ROUTES[currentUser.role]];
 
     return (
       <BrowserRouter>
@@ -83,7 +82,7 @@ class App extends Component {
           </Switch>
           <Footer />
         </React.Fragment>
-      </BrowserRouter>
+      </BrowserRouter >
     );
   }
 }

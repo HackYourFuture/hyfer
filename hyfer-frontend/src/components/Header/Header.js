@@ -1,22 +1,18 @@
+import { inject, observer } from 'mobx-react';
 import React, { Component } from 'react';
+import cookie from 'react-cookies';
 import { NavLink } from 'react-router-dom';
-
 import hyfIcon from '../../assets/images/icon.png';
 import styles from '../../assets/styles/header.css';
-import {
-  uiStore,
-  AVATAR_URL_CHANGED,
-  ISTEACHER_STATE_CHANGED,
-  ISSTUDENT_STATE_CHANGED,
-  LOGIN_STATE_CHANGED,
-} from '../../store';
-import cookie from 'react-cookies';
 import { errorMessage } from '../../notify';
+import { AVATAR_URL_CHANGED, ISSTUDENT_STATE_CHANGED, LOGIN_STATE_CHANGED, uiStore } from '../../store';
 
+
+@inject('global')
+@observer
 export default class Header extends Component {
   state = {
     isLoggedIn: false,
-    isATeacher: false,
     isStudent: false,
     avatarUrl: null,
   };
@@ -29,9 +25,6 @@ export default class Header extends Component {
           break;
         case LOGIN_STATE_CHANGED:
           this.setState({ isLoggedIn: mergedData.payload.isLoggedIn });
-          break;
-        case ISTEACHER_STATE_CHANGED:
-          this.setState({ isATeacher: mergedData.payload.isATeacher });
           break;
         case ISSTUDENT_STATE_CHANGED:
           this.setState({ isStudent: mergedData.payload.isStudent });
@@ -126,7 +119,7 @@ export default class Header extends Component {
       );
     }
 
-    if (this.state.isLoggedIn && this.state.isATeacher) {
+    if (this.props.global.isLoggedIn && this.props.global.isTeacher) {
       return (
         <header className={styles.header}>
           <a href="http://hackyourfuture.net/">

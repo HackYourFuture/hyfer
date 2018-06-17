@@ -14,7 +14,7 @@ function getGroups(req, res) {
 function addGroup(req, res) {
   getConnection(req, res)
     .then(con => db.addGroup(con, req.body))
-    .then(() => res.sendStatus(204))
+    .then(() => res.sendStatus(201))
     .catch(err => handleError(err, res));
 }
 

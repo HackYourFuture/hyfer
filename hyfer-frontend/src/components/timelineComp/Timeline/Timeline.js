@@ -1,16 +1,14 @@
 /* eslint react/prop-types: error */
-import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
+import React, { Component } from 'react';
+import loader from '../../../assets/images/Eclipse.gif';
+import { errorMessage } from '../../../notify';
 import { timelineStore, TODAY_MARKER_REFERENCE } from '../../../store';
-
-import WeekComp from '../WeekComp/WeekComp';
+import Button from '../Button/Button';
 import ClassBarRowComp from '../ClassBarRowComp/ClassBarRowComp';
 import ClassTaskRowComp from '../ClassTaskRowComp/ClassTaskRowComp';
-import loader from '../../../assets/images/Eclipse.gif';
-import Buttons from '../Buttons/Buttons';
+import WeekComp from '../WeekComp/WeekComp';
 import classes from './timeline.css';
-import { errorMessage } from '../../../notify';
 // import TimeLineStore from '../../../store/TimeLineStore';
 
 export default class Timeline extends Component {
@@ -152,13 +150,12 @@ export default class Timeline extends Component {
           </div>
         </div>
         <div ref={this.buttonsContainer} className={classes.buttonsContainer}>
-          <Buttons
+          <Button
             groups={this.props.groups}
             groupsWithIds={this.props.groupsWithIds}
             items={this.props.timelineItems}
             modules={this.props.allModules}
             clickHandler={this.handleClickTodayMarker}
-            isTeacher={this.props.isTeacher}
           />
         </div>
       </div>

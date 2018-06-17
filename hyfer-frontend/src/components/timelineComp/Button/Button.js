@@ -1,9 +1,12 @@
+import { inject, observer } from 'mobx-react';
 import React, { Component, Fragment } from 'react';
-
 import RoundButton from '../../../Helpers/RoundButton/RoundButton';
-import classes from './buttons.css';
 import AddDropdownList from './AddDropdownList/AddDropdownList';
+import classes from './button.css';
 
+
+@inject('global')
+@observer
 export default class Button extends Component {
   state = {
     isToggled: false,
@@ -15,7 +18,7 @@ export default class Button extends Component {
 
   render() {
     let addGroupBtn = null;
-    const { isTeacher } = this.props;
+    const { isTeacher } = this.props.global;
     if (isTeacher) {
       addGroupBtn = (
         <Fragment>

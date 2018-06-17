@@ -62,6 +62,7 @@ class UserStore {
     };
   };
 
+  // action
   async loadUser() {
     const data = await fetchJSON('/api/user');
     this.setState({
