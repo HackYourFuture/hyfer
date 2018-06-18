@@ -1,6 +1,7 @@
 import { action, computed, observable, runInAction } from 'mobx';
 import { fetchJSON } from './util';
 
+
 export default class GlobalStore {
 
   @observable
@@ -16,12 +17,17 @@ export default class GlobalStore {
 
   @computed
   get isStudent() {
-    return this.currentUser != null && this.currentUser.role === 'student';
+    return this.isLoggedIn && this.currentUser.role === 'student';
   }
 
   @computed
   get isTeacher() {
-    return this.currentUser != null && this.currentUser.role === 'teacher';
+    return this.isLoggedIn && this.currentUser.role === 'teacher';
+  }
+
+  @computed
+  get avatarUrl() {
+    return this.isLoggedIn ? `https://avatars.githubusercontent.com/${this.currentUser.username}` : null;
   }
 
   @action
@@ -30,12 +36,13 @@ export default class GlobalStore {
   }
 
   @action
-  clearError() {
+  clearLastError() {
     this.lastError = null;
   }
 
   @action
   fetchCurrentUser() {
+    this.clearLastError();
     fetchJSON('/api/user')
       .then((res) => {
         runInAction(() => this.currentUser = res);
