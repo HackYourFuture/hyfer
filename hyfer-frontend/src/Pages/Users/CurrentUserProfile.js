@@ -1,3 +1,4 @@
+import { inject, observer } from 'mobx-react';
 import Moment from 'moment';
 import React, { Component } from 'react';
 import FaFire from 'react-icons/lib/fa/fire';
@@ -7,26 +8,18 @@ import FaSlack from 'react-icons/lib/fa/slack';
 import MdEmail from 'react-icons/lib/md/email';
 import { Link } from 'react-router-dom';
 import styles from '../../assets/styles/users.css';
-import { errorMessage } from '../../notify';
 import store from '../../store/UserStore';
 
-
+@inject('global')
+@observer
 class CurrentUserProfile extends Component {
 
-  componentWillUnmount() {
-    this.subscription.remove();
+  componentDidMount() {
+    window.scrollTo(0, 0);
   }
 
-  componentDidMount = () => {
-    this.subscription = store.subscribe(state => {
-      this.setState(state);
-    });
-    store.loadUser().catch(errorMessage);
-    window.scrollTo(0, 0);
-  };
-
   render() {
-    const user = store.state.currentUser;
+    const { currentUser: user } = this.props.global;
     return (
       <div>
         <ul className={styles.userContainer}>

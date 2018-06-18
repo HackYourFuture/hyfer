@@ -7,6 +7,7 @@ import './assets/styles/app.css';
 import Footer from './components/Footer/Footer';
 import Header from './components/Header/Header';
 import Popup from './components/Popup';
+import userStore from './store/UserStore';
 import Homework from './Pages/Homework/Homework';
 import Modules from './Pages/Modules/Modules';
 import TimeLine from './Pages/Timeline/TimeLine';
@@ -54,7 +55,13 @@ class App extends Component {
     if (token) {
       token = JSON.parse(token);
       window.localStorage.setItem('token', token);
+    }
+    token = window.localStorage.getItem('token');
+    if (token) {
       await this.props.global.fetchCurrentUser();
+      // TODO: remove this once we are sure we have removed the last residues of
+      // references to currentUser from the old store
+      await userStore.loadUser();
     } else {
       window.localStorage.removeItem('token');
       this.setState({ profile: defaultProfile });
@@ -62,13 +69,9 @@ class App extends Component {
   }
 
   render() {
-    const { currentUser } = this.props.global;
+    const { currentUser, isLoggedIn } = this.props.global;
 
-    if (currentUser == null) {
-      return null;
-    }
-
-    const routes = [...PUBLIC_ROUTES, ...ROUTES[currentUser.role]];
+    const routes = isLoggedIn ? [...PUBLIC_ROUTES, ...ROUTES[currentUser.role]] : [...PUBLIC_ROUTES];
 
     return (
       <BrowserRouter>

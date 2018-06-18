@@ -4,51 +4,10 @@ import cookie from 'react-cookies';
 import { NavLink } from 'react-router-dom';
 import hyfIcon from '../../assets/images/icon.png';
 import styles from '../../assets/styles/header.css';
-import { errorMessage } from '../../notify';
-import { AVATAR_URL_CHANGED, ISSTUDENT_STATE_CHANGED, LOGIN_STATE_CHANGED, uiStore } from '../../store';
-
 
 @inject('global')
 @observer
 export default class Header extends Component {
-  state = {
-    isLoggedIn: false,
-    isStudent: false,
-    avatarUrl: null,
-  };
-
-  componentDidMount = () => {
-    uiStore.subscribe(mergedData => {
-      switch (mergedData.type) {
-        case AVATAR_URL_CHANGED:
-          this.setState({ avatarUrl: mergedData.payload.avatarUrl });
-          break;
-        case LOGIN_STATE_CHANGED:
-          this.setState({ isLoggedIn: mergedData.payload.isLoggedIn });
-          break;
-        case ISSTUDENT_STATE_CHANGED:
-          this.setState({ isStudent: mergedData.payload.isStudent });
-          break;
-        default:
-          break;
-      }
-    });
-
-    const token = localStorage.getItem('token');
-    let login = false;
-    if (token && token !== '') login = true;
-
-    uiStore.setState({
-      type: LOGIN_STATE_CHANGED,
-      payload: {
-        isLoggedIn: login,
-      },
-    });
-
-    if (login) {
-      uiStore.getUserInfo().catch(errorMessage);
-    }
-  };
 
   SignOut = () => {
     localStorage.removeItem('token');
@@ -57,11 +16,13 @@ export default class Header extends Component {
   };
 
   render() {
+    const { isLoggedIn, isTeacher, isStudent, avatarUrl } = this.props.global;
+
     const student = (
       <ul className={styles.signed_in}>
         <li>
           <img
-            src={this.state.avatarUrl}
+            src={avatarUrl}
             alt="user icon"
             className={styles.userIcon}
           />
@@ -82,7 +43,7 @@ export default class Header extends Component {
     );
 
     let user = null;
-    if (!this.state.isLoggedIn) {
+    if (!isLoggedIn) {
       user = (
         <div className={styles.signInWrapper}>
           <div className={styles.visitorWrapper}>
@@ -103,7 +64,7 @@ export default class Header extends Component {
         <ul className={styles.signed_in}>
           <li>
             <img
-              src={this.state.avatarUrl}
+              src={avatarUrl}
               alt="user icon"
               className={styles.userIcon}
             />
@@ -119,7 +80,7 @@ export default class Header extends Component {
       );
     }
 
-    if (this.props.global.isLoggedIn && this.props.global.isTeacher) {
+    if (isLoggedIn && isTeacher) {
       return (
         <header className={styles.header}>
           <a href="http://hackyourfuture.net/">
@@ -186,7 +147,7 @@ export default class Header extends Component {
           {user}
         </header>
       );
-    } else if (this.state.isLoggedIn && this.state.isStudent) {
+    } else if (isLoggedIn && isStudent) {
       return (
         <header className={styles.header}>
           <a href="http://hackyourfuture.net/">
