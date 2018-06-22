@@ -6,7 +6,7 @@ const {
   rollback,
 } = require('./database');
 
-const GET_MODULE_QUERY = `SELECT id, module_name, display_name, added_on, default_duration, git_url, git_owner, git_repo, color, optional,
+const GET_MODULE_QUERY = `SELECT *,
   (SELECT COUNT(*) 
   FROM running_modules WHERE running_modules.module_id = modules.id) AS ref_count
   FROM modules`;
@@ -67,7 +67,7 @@ async function updateModules(con, batchUpdate) {
       .concat(batchUpdate.additions.map(module => this.addModule(con, module)))
       .concat(batchUpdate.deletions.map(module => this.deleteModule(con, module.id)));
     await Promise.all(promises);
-    await commit;
+    await commit(con);
   } catch (err) {
     await rollback(con);
     throw err;
