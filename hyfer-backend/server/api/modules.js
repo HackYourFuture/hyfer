@@ -44,24 +44,25 @@ function compareModules(mod1, mod2) {
   return (
     mod1.id === mod2.id &&
     mod1.module_name === mod2.module_name &&
-    mod1.description === mod2.description &&
     mod1.default_duration === mod2.default_duration &&
     mod1.sort_order === mod2.sort_order &&
     mod1.git_url === mod2.git_url &&
     mod1.git_owner === mod2.git_owner &&
-    mod1.git_repo === mod2.git_repo
+    mod1.git_repo === mod2.git_repo &&
+    mod1.color === mod2.color &&
+    mod1.optional === mod2.optional &&
+    mod1.has_homework === mod2.has_homework
   );
 }
 
 function createBatchUpdate(currentModules, receivedModules) {
   const receivedMods = receivedModules
-    .filter(module => module.optional === 0)
     .map((module, index) => {
       const sortOrder = module.optional ? 1000 : index;
       return Object.assign({}, module, { sort_order: sortOrder });
     });
 
-  const currentMods = currentModules.forEach(module =>
+  const currentMods = currentModules.map(module =>
     Object.assign({}, module, { visited: false }));
 
   const updates = [];
@@ -79,7 +80,7 @@ function createBatchUpdate(currentModules, receivedModules) {
     }
   });
 
-  const deletions = currentModules.filter(currentModule => !currentModule.visited);
+  const deletions = currentMods.filter(currentMod => !currentMod.visited);
 
   return { updates, additions, deletions };
 }
