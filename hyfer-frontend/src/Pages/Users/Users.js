@@ -1,9 +1,10 @@
 import React from 'react';
 import store from '../../store/UserStore';
 import styles from '../../assets/styles/users.css';
-import Guest from '../../components/Users/Guest';
-import Teachers from '../../components/Users/Teachers';
-import Students from '../../components/Users/Students';
+import {Guest, Students, Teachers} from '../../components/Users/Role';
+// import Guest from '../../components/Users/Guest';
+// import Teachers from '../../components/Users/Teachers';
+// import Students from '../../components/Users/Students';
 import SynchronizeGithubData from '../../components/Users/SynchronizeGithubData';
 import { errorMessage } from '../../notify';
 
@@ -24,37 +25,39 @@ export default class Users extends React.Component {
     window.scrollTo(0, 0);
   };
 
-  handlFilterList = e => {
+  handleFilterList = e => {
     this.setState({
       selectedList: e.target.value,
     });
   };
 
   renderSelectedList() {
+
     if (this.state.selectedList === 'Guest') {
       return (
         <ul className={styles.mainUl}>
           <Guest />
+          
         </ul>
       );
     } else if (this.state.selectedList === 'Students') {
       return (
         <ul className={styles.mainUl}>
-          <Students />
+          <Students/>
         </ul>
       );
     } else if (this.state.selectedList === 'Teachers') {
       return (
         <ul className={styles.mainUl}>
-          <Teachers />
+          <Teachers/>
         </ul>
       );
     } else {
       return (
         <ul className={styles.mainUl}>
           <Guest />
-          <Teachers />
           <Students />
+          <Teachers />          
         </ul>
       );
     }
@@ -74,7 +77,7 @@ export default class Users extends React.Component {
             className={styles.listSelector}
             value={this.state.selectedList}
             onChange={e => {
-              this.handlFilterList(e);
+              this.handleFilterList(e);
             }}
           >
             <option value="">All list</option>
