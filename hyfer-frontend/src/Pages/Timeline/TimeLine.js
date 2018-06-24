@@ -91,36 +91,45 @@ export default class TimeLine extends Component {
     }
   };
 
+  moduleInfoSubscriber = mergedData => {
+    if (mergedData.type === REPO_NAME_CHANGED) {
+      this.setState({ repoName: mergedData.payload.repoName });
+    } else if (mergedData.type === READ_ME_CHANGED) {
+      this.setState({ readme: mergedData.payload.readme });
+    } else if (mergedData.type === HISTORY_CHANGED) {
+      this.setState({
+        history: mergedData.payload.history,
+        students: mergedData.payload.students,
+        duration: mergedData.payload.duration,
+        group_name: mergedData.payload.group_name,
+      });
+    }
+  };
+
+  uiStoreSubscriber = mergedData => {
+    if (mergedData.type === LOGIN_STATE_CHANGED) {
+      this.setState({ isLoggedIn: mergedData.payload.isLoggedIn });
+    } else if (mergedData.type === ISTEACHER_STATE_CHANGED) {
+      this.setState({ isATeacher: mergedData.payload.isATeacher });
+    }
+  };
+
   componentDidMount() {
     timelineStore.subscribe(this.timelineObserver);
-    moduleInfoStore.subscribe(mergedData => {
-      if (mergedData.type === REPO_NAME_CHANGED) {
-        this.setState({ repoName: mergedData.payload.repoName });
-      } else if (mergedData.type === READ_ME_CHANGED) {
-        this.setState({ readme: mergedData.payload.readme });
-      } else if (mergedData.type === HISTORY_CHANGED) {
-        this.setState({
-          history: mergedData.payload.history,
-          students: mergedData.payload.students,
-          duration: mergedData.payload.duration,
-          group_name: mergedData.payload.group_name,
-        });
-      }
-    });
+    moduleInfoStore.subscribe(this.moduleInfoSubscriber);
+    uiStore.subscribe(this.uiStoreSubscriber);
 
     moduleInfoStore.defaultReadme('curriculum').catch(errorMessage);
-
-    uiStore.subscribe(mergedData => {
-      if (mergedData.type === LOGIN_STATE_CHANGED) {
-        this.setState({ isLoggedIn: mergedData.payload.isLoggedIn });
-      } else if (mergedData.type === ISTEACHER_STATE_CHANGED) {
-        this.setState({ isATeacher: mergedData.payload.isATeacher });
-      }
-    });
 
     if (localStorage.token) {
       uiStore.getUserInfo().catch(errorMessage);
     }
+  }
+
+  componentWillUnmount() {
+    timelineStore.unsubscribe(this.timelineObserver);
+    moduleInfoStore.unsubscribe(this.moduleInfoSubscriber);
+    uiStore.unsubscribe(this.uiStoreSubscriber);
   }
 
   itemClickHandler = (clickEvent, item) => {
