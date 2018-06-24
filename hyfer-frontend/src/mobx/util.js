@@ -1,4 +1,4 @@
-const API_ROOT = 'http://localhost:3005';
+export const API_BASE_URL = 'http://localhost:3005/api';
 
 export async function fetchJSON(path) {
   const headers = { 'Content-Type': 'application/json' };
@@ -6,9 +6,6 @@ export async function fetchJSON(path) {
   if (token) {
     headers['Authorization'] = 'Bearer ' + token;
   }
-  const res = await fetch(API_ROOT + path, { method: 'GET', headers });
-  if (!res.ok) {
-    throw new Error(`${res.status} - ${res.statusText}`);
-  }
+  const res = await fetch(API_BASE_URL + path, { method: 'GET', headers });
   return res.json();
 }
