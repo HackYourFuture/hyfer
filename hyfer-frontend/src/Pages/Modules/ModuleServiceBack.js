@@ -15,6 +15,7 @@ class moduleServiceBack {
   }
 
   async saveModules(modules, callBack) {
+    console.log(modules);
     const token = localStorage.getItem('token');
     const res = await fetch(`${api_url}/modules`, {
       method: 'PATCH',
