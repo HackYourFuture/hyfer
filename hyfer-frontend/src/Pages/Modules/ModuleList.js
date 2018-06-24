@@ -10,7 +10,7 @@ import { inject, observer } from 'mobx-react';
 @observer
 export default class ModuleList extends Component {
 
-  weekWidth = 0;
+  weekWidth = 1;
 
   componentDidMount() {
     this.props.modulesStore.initModules();
