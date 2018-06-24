@@ -1,7 +1,6 @@
 import { action, computed, observable, runInAction } from 'mobx';
 import { fetchJSON } from './util';
 
-
 export default class GlobalStore {
 
   @observable
@@ -9,6 +8,12 @@ export default class GlobalStore {
 
   @observable
   lastError = null;
+
+  @observable
+  successMessage = null;
+
+  @observable
+  warningMessage = null;
 
   @computed
   get isLoggedIn() {
@@ -30,20 +35,39 @@ export default class GlobalStore {
     return this.isLoggedIn ? `https://avatars.githubusercontent.com/${this.currentUser.username}` : null;
   }
 
-  @action
+  @action.bound
   setLastError(error) {
     this.lastError = error;
   }
 
-  @action
+  @action.bound
   clearLastError() {
     this.lastError = null;
   }
 
-  @action
+  @action.bound
+  setSuccessMessage(message) {
+    this.successMessage = message;
+  }
+
+  @action.bound
+  clearSuccessMessage() {
+    this.successMessage = null;
+  }
+
+  @action.bound
+  setWarningMessage(warning) {
+    this.warningMessage = warning;
+  }
+
+  @action.bound
+  clearWarningMessage() {
+    this.warningMessage = null;
+  }
+
+  @action.bound
   fetchCurrentUser() {
-    this.clearLastError();
-    fetchJSON('/api/user')
+    fetchJSON('/user')
       .then((res) => {
         runInAction(() => this.currentUser = res);
       })
