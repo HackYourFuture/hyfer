@@ -1,56 +1,31 @@
 import React, { Component } from 'react';
 import ModuleItem from './ModuleItem';
-import ModuleObservable from './ModuleObservable';
+// import ModuleObservable from './ModuleObservable';
 import style from '../../assets/styles/modules.css';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { inject, observer } from 'mobx-react';
 
+
+@inject('modulesStore')
+@observer
 export default class ModuleList extends Component {
-  state = {
-    weekWidth: 1,
-  };
 
-  componentDidMount = () => {
-    window.addEventListener('resize', this.computeWeekWidth);
-    this.computeWeekWidth();
-  };
+  componentDidMount () {
+    window.addEventListener('resize', this.props.modulesStore.computeWeekWidth);
+    this.props.modulesStore.computeWeekWidth();
+  }
 
   componentWillUnmount = () => {
-    window.removeEventListener('resize', this.computeWeekWidth);
-  };
-
-  computeWeekWidth = () => {
-    const week_element = document.querySelector('.week_element');
-    if (week_element != null) {
-      this.setState({ weekWidth: week_element.clientWidth });
-    }
-  };
-
-  reorder = (list, startIndex, endIndex) => {
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
-    return result;
-  };
-
-  onDragEnd = result => {
-    if (!result.destination) {
-      return;
-    }
-    const items = this.reorder(
-      ModuleObservable.getModules(),
-      result.source.index,
-      result.destination.index
-    );
-    ModuleObservable.setModules(items);
+    window.removeEventListener('resize', this.props.modulesStore.computeWeekWidth);
   };
 
   render() {
     return (
-      <DragDropContext onDragEnd={this.onDragEnd}>
+      <DragDropContext onDragEnd={this.props.modulesStore.onDragEnd}>
         <Droppable droppableId="droppable">
           {provided => (
             <div ref={provided.innerRef}>
-              {ModuleObservable.getModules().map((item, ind) => (
+              {this.props.modules.map((item, ind) => (
                 <Draggable key={item.id} draggableId={item.id} index={ind}>
                   {provided => (
                     <div
@@ -69,7 +44,7 @@ export default class ModuleList extends Component {
                         <ModuleItem
                           module={item}
                           key={item.id}
-                          weekWidth={this.state.weekWidth}
+                          weekWidth={this.props.modulesStore.weekWidth}
                         />
                       </div>
                       {provided.placeholder}
