@@ -1,4 +1,6 @@
+/* eslint react/prop-types: error */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import style from '../../assets/styles/modules.css';
 
 export default class ModuleButton extends Component {
@@ -16,3 +18,10 @@ export default class ModuleButton extends Component {
     );
   }
 }
+
+ModuleButton.propTypes = {
+  action: PropTypes.string.isRequired,
+  clickHandler: PropTypes.func.isRequired,
+  disabled: PropTypes.bool.isRequired,
+  title: PropTypes.string.isRequired,
+};
