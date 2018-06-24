@@ -4,7 +4,7 @@ class moduleServiceBack {
   async loadModules(callBack) {
     const token = localStorage.getItem('token');
     const res = await fetch(`${api_url}/modules`, {
-      credentials: 'same-origin',
+      // credentials: 'same-origin',
       headers: {
         Authorization: 'Bearer ' + token,
       },

@@ -1,9 +1,12 @@
+
 import React, { Component } from 'react';
 import Resizable from 're-resizable';
 import style from '../../assets/styles/modules.css';
-import ModuleObservable from './ModuleObservable';
 import ModuleForm from './ModuleForm';
+import { inject, observer } from 'mobx-react';
 
+@inject('modulesStore')
+@observer
 export default class ModuleItem extends Component {
   state = {
     isMenuShow: false,
@@ -34,14 +37,14 @@ export default class ModuleItem extends Component {
   };
 
   DeleteModule = () => {
-    const curModulesArr = ModuleObservable.getModules();
+    const curModulesArr = this.props.modules;
     let newModulesArr = curModulesArr.map(a => ({ ...a }));
     newModulesArr = newModulesArr.filter(m => m.id !== this.props.module.id);
-    ModuleObservable.setModules(newModulesArr);
+    this.props.modulesStore.setModules(newModulesArr);
   };
 
   UpdateModule = module => {
-    const curModulesArr = ModuleObservable.getModules();
+    const curModulesArr = this.props.modulesStore.modules;
     const newModulesArr = curModulesArr.map(a => {
       if (a.id === module.id) {
         return module;
@@ -49,7 +52,7 @@ export default class ModuleItem extends Component {
         return { ...a };
       }
     });
-    ModuleObservable.setModules(newModulesArr);
+    this.props.modulesStore.setModules(newModulesArr);
   };
 
   render() {
@@ -88,14 +91,14 @@ export default class ModuleItem extends Component {
           maxWidth={this.props.weekWidth * 6}
           onResizeStop={(e, direction, ref, d) => {
             const newDuration = Math.round(d.width / this.props.weekWidth);
-            const modules = ModuleObservable.getModules();
+            const modules = this.props.modulesStore.modules;
             const newModules = modules.map(a => ({ ...a }));
             for (const m of newModules) {
               if (m.id === module.id) {
                 m.default_duration += newDuration;
               }
             }
-            ModuleObservable.setModules(newModules);
+            this.props.modulesStore.setModules(newModules);
           }}
           onResizeStart={e => e.stopPropagation()}
         >

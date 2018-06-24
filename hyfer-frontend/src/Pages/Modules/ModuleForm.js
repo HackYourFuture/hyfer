@@ -1,7 +1,10 @@
 import React from 'react';
 import style from '../../assets/styles/modules.css';
 import ModalDialog from '../../components/ModalDialog';
+import { inject, observer } from 'mobx-react';
 
+@inject('modulesStore')
+@observer
 export default class ModuleForm extends React.Component {
   state = {
     ModuleId: '',
@@ -16,7 +19,7 @@ export default class ModuleForm extends React.Component {
   };
 
   componentDidMount = () => {
-    const module = this.props.module;
+    const module= this.props.module;
     if (module) {
       this.setState({
         ModuleId: module.id,
@@ -29,7 +32,7 @@ export default class ModuleForm extends React.Component {
         focusId: '',
         errorIds: [],
       });
-    } else {
+      } else {
       this.resetForm();
     }
   };
