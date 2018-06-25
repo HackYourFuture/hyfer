@@ -6,6 +6,8 @@ import ModulesStore from './ModulesStore';
 
 configure({ enforceActions: true });
 
+export const API_BASE_URL = 'http://localhost:3005/api';
+
 export default {
   userStore: new UserStore(),
   homeworkStore: new HomeworkStore(),

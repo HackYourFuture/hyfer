@@ -1,5 +1,5 @@
 import { observable, action, runInAction } from 'mobx';
-import { fetchJSON, API_BASE_URL } from './util';
+import { fetchJSON, patchJSON } from './util';
 import stores from '.';
 
 export default class ModulesStore {
@@ -12,30 +12,20 @@ export default class ModulesStore {
 
   serverModules = [];
 
-  resetModules() {
-    this.modules = [...this.serverModules];
-    this.isChanged = false;
-  }
-
   @action.bound
   async initModules() {
     try {
       this.serverModules = await fetchJSON('/modules');
-      runInAction(() => this.resetModules());
+      runInAction(() => this.setModules(this.serverModules, false));
     } catch (error) {
       stores.global.setLastError(error);
     }
   }
 
   @action.bound
-  setModules(new_modules) {
-    this.isChanged = true;
-    this.modules = new_modules;
-  }
-
-  @action.bound
-  undoChanges() {
-    this.resetModules();
+  setModules(modules, isChanged = true) {
+    this.modules = [...modules];
+    this.isChanged = isChanged;
   }
 
   @action.bound
@@ -58,23 +48,15 @@ export default class ModulesStore {
   @action.bound
   async saveChanges() {
     try {
-      await this.saveModules();
+      await patchJSON('/modules', this.modules);
       this.initModules();
     } catch (error) {
       stores.global.setLastError(error);
     }
   }
 
-  async saveModules() {
-    const token = localStorage.getItem('token');
-    return fetch(`${API_BASE_URL}/modules`, {
-      method: 'PATCH',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + token,
-      },
-      body: JSON.stringify(this.modules),
-    });
+  @action.bound
+  undoChanges() {
+    this.setModules(this.serverModules, false);
   }
 }
