@@ -1,32 +1,54 @@
+/* eslint react/prop-types: error */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import ModuleItem from './ModuleItem';
-// import ModuleObservable from './ModuleObservable';
 import style from '../../assets/styles/modules.css';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { inject, observer } from 'mobx-react';
-
 
 @inject('modulesStore')
 @observer
 export default class ModuleList extends Component {
 
-  componentDidMount () {
-    window.addEventListener('resize', this.props.modulesStore.computeWeekWidth);
-    this.props.modulesStore.computeWeekWidth();
+  weekWidth = 1;
+
+  componentDidMount() {
+    this.props.modulesStore.initModules();
+    window.addEventListener('resize', this.computeWeekWidth);
+    this.computeWeekWidth();
   }
 
-  componentWillUnmount = () => {
-    window.removeEventListener('resize', this.props.modulesStore.computeWeekWidth);
-  };
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.computeWeekWidth);
+  }
+
+  computeWeekWidth = () => {
+    const week_element = document.querySelector('.week_element');
+    if (week_element != null) {
+      this.weekWidth = week_element.clientWidth;
+    }
+  }
+
+  onDragEnd = (result) => {
+    if (!result.destination) {
+      return;
+    }
+    const { modules, setModules } = this.props.modulesStore;
+    const newModules = [...modules];
+    const [removed] = newModules.splice(result.source.index, 1);
+    newModules.splice(result.destination.index, 0, removed);
+    setModules(newModules);
+  }
 
   render() {
+    const { modules } = this.props.modulesStore;
     return (
-      <DragDropContext onDragEnd={this.props.modulesStore.onDragEnd}>
+      <DragDropContext onDragEnd={this.onDragEnd}>
         <Droppable droppableId="droppable">
           {provided => (
             <div ref={provided.innerRef}>
-              {this.props.modules.map((item, ind) => (
-                <Draggable key={item.id} draggableId={item.id} index={ind}>
+              {modules.map((module, index) => (
+                <Draggable key={module.id} draggableId={module.id} index={index}>
                   {provided => (
                     <div
                       style={{
@@ -42,14 +64,14 @@ export default class ModuleList extends Component {
                         {...provided.dragHandleProps}
                       >
                         <ModuleItem
-                          module={item}
-                          key={item.id}
-                          weekWidth={this.props.modulesStore.weekWidth}
+                          module={module}
+                          weekWidth={this.weekWidth}
                         />
                       </div>
                       {provided.placeholder}
                     </div>
-                  )}
+                  )
+                  }
                 </Draggable>
               ))}
               {provided.placeholder}
@@ -60,3 +82,7 @@ export default class ModuleList extends Component {
     );
   }
 }
+
+ModuleList.wrappedComponent.propTypes = {
+  modulesStore: PropTypes.object.isRequired,
+};
