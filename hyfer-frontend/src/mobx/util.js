@@ -1,11 +1,30 @@
-export const API_BASE_URL = 'http://localhost:3005/api';
+import { API_BASE_URL } from '.';
 
-export async function fetchJSON(path) {
+function createHeaders() {
   const headers = { 'Content-Type': 'application/json' };
   const token = localStorage.getItem('token');
   if (token) {
     headers['Authorization'] = 'Bearer ' + token;
   }
-  const res = await fetch(API_BASE_URL + path, { method: 'GET', headers });
+  return headers;
+}
+
+export async function fetchJSON(path) {
+  const headers = createHeaders();
+  const res = await fetch(API_BASE_URL + path, {
+    method: 'GET',
+    headers,
+  });
   return res.json();
 }
+
+export async function patchJSON(path, data) {
+  const headers = createHeaders();
+  const res = await fetch(API_BASE_URL + path, {
+    method: 'PATCH',
+    headers,
+    body: JSON.stringify(data),
+  });
+  return res.json();
+}
+
