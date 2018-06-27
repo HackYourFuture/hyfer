@@ -2,9 +2,6 @@ import React from 'react';
 import store from '../../store/UserStore';
 import styles from '../../assets/styles/users.css';
 import {Guest, Students, Teachers} from '../../components/Users/Role';
-// import Guest from '../../components/Users/Guest';
-// import Teachers from '../../components/Users/Teachers';
-// import Students from '../../components/Users/Students';
 import SynchronizeGithubData from '../../components/Users/SynchronizeGithubData';
 import { errorMessage } from '../../notify';
 
