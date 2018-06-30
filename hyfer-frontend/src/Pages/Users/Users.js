@@ -1,7 +1,7 @@
 import React from 'react';
 import store from '../../store/UserStore';
 import styles from '../../assets/styles/users.css';
-import {Guest, Students, Teachers} from '../../components/Users/Role';
+import {UserList} from '../../components/Users/UserList';
 import SynchronizeGithubData from '../../components/Users/SynchronizeGithubData';
 import { errorMessage } from '../../notify';
 
@@ -29,35 +29,16 @@ export default class Users extends React.Component {
   };
 
   renderSelectedList() {
+    const { selectedList } = this.state;
+    const roles = !selectedList ? ['guest', 'student', 'teacher'] : [selectedList];
 
-    if (this.state.selectedList === 'Guest') {
+    return roles.map(role => {
       return (
-        <ul className={styles.mainUl}>
-          <Guest />
-          
+        <ul key={role} className={styles.mainUl}>
+          <UserList role={role} />
         </ul>
       );
-    } else if (this.state.selectedList === 'Students') {
-      return (
-        <ul className={styles.mainUl}>
-          <Students/>
-        </ul>
-      );
-    } else if (this.state.selectedList === 'Teachers') {
-      return (
-        <ul className={styles.mainUl}>
-          <Teachers/>
-        </ul>
-      );
-    } else {
-      return (
-        <ul className={styles.mainUl}>
-          <Guest />
-          <Students />
-          <Teachers />          
-        </ul>
-      );
-    }
+    });
   }
 
   render() {
@@ -78,9 +59,9 @@ export default class Users extends React.Component {
             }}
           >
             <option value="">All list</option>
-            <option value="Guest">Guest</option>
-            <option value="Teachers">Teachers</option>
-            <option value="Students">Students</option>
+            <option value="guest">Guest</option>
+            <option value="teacher">Teachers</option>
+            <option value="student">Students</option>
           </select>
           <SynchronizeGithubData />
         </div>
