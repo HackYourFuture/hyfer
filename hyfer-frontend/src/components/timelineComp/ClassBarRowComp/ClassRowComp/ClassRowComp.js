@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
+import { observer, inject } from 'mobx-react';
 import classes from './classRowComp.css';
 import { errorMessage } from '../../../../notify';
 import popUpStyle from './archivingPopUp.css';
 
 const token = localStorage.getItem('token');
 
+@inject('timeLineStore')
+@observer
 export default class ClassRowComp extends Component {
   state = {
     popUp: false,
@@ -26,7 +29,7 @@ export default class ClassRowComp extends Component {
 
   popUpDiv = () => {
     const { classId } = this.props;
-    const group = this.props.groupsWithIds.filter(
+    const group = this.props.timeLineStore.groupsWithIds.filter(
       group => group.group_name.replace(/ /g, '').slice(-2) === classId,
     );
 
@@ -72,7 +75,7 @@ export default class ClassRowComp extends Component {
   };
 
   handleClassArchive = async id => {
-    const group = this.props.groupsWithIds.filter(
+    const group = this.props.timeLineStore.groupsWithIds.filter(
       group => group.group_name.replace(/ /g, '').substr(5) === id,
     );
 

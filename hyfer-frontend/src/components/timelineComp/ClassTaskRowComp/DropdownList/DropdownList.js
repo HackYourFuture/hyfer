@@ -10,8 +10,12 @@ import leftArrow1 from './icons/leftArrow1.svg';
 import leftArrow2 from './icons/leftArrow2.svg';
 import graduateCap from './icons/graduateCap.svg';
 
-import { timelineStore } from '../../../../store';
+// import { timelineStore } from '../../../../store';
 
+import { inject, observer } from 'mobx-react';
+
+@inject('timeLineStore')
+@observer
 export default class DropdownList extends Component {
   state = {
     isToggled: false,
@@ -35,32 +39,129 @@ export default class DropdownList extends Component {
     }, 0);
   };
 
-  weekLonger = e => {
+  updateModule (module, action) {
+    const {groups} = this.props.timeLineStore;
+    let result = null;
+    switch (action) {
+      case 'weekLonger':
+        result = this.weekLonger(module);
+        break;
+      case 'removeModule':
+        result = this.props.timeLineStore.removeModule(module);
+        break;
+      case 'weekShorter':
+        result = this.weekShorter(module, groups);
+        break;
+      case 'moveLeft':
+        result = this.moveLeft(module, groups);
+        break;
+      case 'moveRight':
+        result = this.moveRight(module, groups);
+        break;
+      default:
+        break;
+    }
+    result
+      .then(() => {
+        return this.props.timeLineStore.fetchItems();
+      }) // catching it here so we don't need to catch it any more especially it's switch cases
+      .catch((error) => {throw new Error(error);});
+
+  }
+
+  handleWeekLonger = e => {
     e.stopPropagation();
     const { selectedModule } = this.props;
-    timelineStore.updateModule(selectedModule, 'weekLonger');
+    this.updateModule(selectedModule, 'weekLonger');
   };
 
-  weekShorter = e => {
+  handleWeekShorter = e => {
     e.stopPropagation();
     const { selectedModule } = this.props;
-    timelineStore.updateModule(selectedModule, 'weekShorter');
+    this.updateModule(selectedModule, 'weekShorter');
   };
 
-  moveLeft = e => {
-    e.stopPropagation();
-
-    const { selectedModule } = this.props;
-    timelineStore.updateModule(selectedModule, 'moveLeft');
-  };
-
-  moveRight = e => {
+  handleMoveLeft = e => {
     e.stopPropagation();
 
     const { selectedModule } = this.props;
-    timelineStore.updateModule(selectedModule, 'moveRight');
+    this.updateModule(selectedModule, 'moveLeft');
   };
 
+  handleMoveRight = e => {
+    e.stopPropagation();
+
+    const { selectedModule } = this.props;
+    this.updateModule(selectedModule, 'moveRight');
+  };
+
+  handleRemoveModule = e => {
+    e.stopPropagation();
+
+    const { selectedModule } = this.props;
+    this.updateModule(selectedModule, 'removeModule');
+  };
+
+  weekLonger(chosenModule) {
+    const { duration } = chosenModule;
+    const newDuration = duration + 1;
+    const groupId = chosenModule.id;
+    return this.props.timeLineStore.patchGroupsModules(
+      chosenModule,
+      null,
+      newDuration,
+      null,
+      null,
+      groupId
+    );
+  }
+  
+  weekShorter(chosenModule) {
+    const { duration } = chosenModule;
+    const newDuration = duration - 1;
+    const groupId = chosenModule.id;
+  
+    return this.props.timeLineStore.patchGroupsModules(
+      chosenModule,
+      null,
+      newDuration,
+      null,
+      null,
+      groupId
+    );
+  }
+  
+  moveRight(chosenModule) {
+    const { position, duration } = chosenModule;
+    const newPosition = position + 1;
+    const groupId = chosenModule.id;
+    console.log(groupId,newPosition);
+  
+    return this.props.timeLineStore.patchGroupsModules(
+      chosenModule,
+      newPosition,
+      duration,
+      null,
+      null,
+      groupId
+    );
+  }
+  
+  moveLeft(chosenModule) {
+    const { position, duration } = chosenModule;
+    const newPosition = position - 1;
+    const groupId = chosenModule.id;
+  
+    return this.props.timeLineStore.patchGroupsModules(
+      chosenModule,
+      newPosition,
+      duration,
+      null,
+      null,
+      groupId
+    );
+  }
+  
   checkModuleIsLast = () => {
     const { position, group_name } = this.props.selectedModule;
     const classModules = this.props.allModules.filter(
@@ -70,16 +171,9 @@ export default class DropdownList extends Component {
     return itemsAfter.length === 0;
   };
 
-  removeModule = e => {
-    e.stopPropagation();
-
-    const { selectedModule } = this.props;
-    timelineStore.updateModule(selectedModule, 'removeModule');
-  };
-
   render() {
-    let moveLeft = this.moveLeft;
-    let moveRight = this.moveRight;
+    let moveLeft = this.handleMoveLeft;
+    let moveRight = this.handleMoveRight;
     let rightDisableClass = null;
     let leftDisableClass = null;
     if (this.props.selectedModule.position === 0) {
@@ -122,7 +216,7 @@ export default class DropdownList extends Component {
                 <span>Move left</span>
               </span>
             </li>
-            <li onClick={this.weekLonger}>
+            <li onClick={this.handleWeekLonger}>
               <span className={classes.listItem}>
                 <span className={classes.symbol}>
                   <img src={rightArrow2} alt="rightArrow2 icon" />
@@ -130,7 +224,7 @@ export default class DropdownList extends Component {
                 <span>Week longer</span>
               </span>
             </li>
-            <li onClick={this.weekShorter}>
+            <li onClick={this.handleWeekShorter}>
               <span className={classes.listItem}>
                 <span className={classes.symbol}>
                   <img src={leftArrow2} alt="leftArrow2 icon" />
@@ -146,7 +240,7 @@ export default class DropdownList extends Component {
                 <span>(Re)assign teachers</span>
               </span>
             </li>
-            <li onClick={this.removeModule}>
+            <li onClick={this.handleRemoveModule}>
               <span className={classes.listItem}>
                 <span className={classes.symbol}>
                   <img src={deleteCross} alt="delete icon" />

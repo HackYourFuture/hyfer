@@ -10,7 +10,6 @@ export default class ClassBarRowComp extends Component {
       <ClassRowComp
         key={group}
         classId={group.replace(/ /g, '').substr(5)}
-        groupsWithIds={this.props.groupsWithIds}
         height={this.props.rowHeight}
       />
     ));

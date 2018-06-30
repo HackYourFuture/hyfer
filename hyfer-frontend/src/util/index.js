@@ -72,7 +72,7 @@ export function getAllTotalWeeksAndSundays(allItems) {
   const firstDate = moment.min(onlyModules.map(module => module.starting_date));
   const lastDate = moment.max(onlyModules.map(module => module.ending_date));
 
-  return _getAllWeeks(firstDate, lastDate);
+  return getAllWeeks(firstDate, lastDate);
 }
 
 export async function getTeachers() {
@@ -123,7 +123,7 @@ export function weekLonger(chosenModule) {
   const { duration } = chosenModule;
   const newDuration = duration + 1;
   const groupId = chosenModule.id;
-  return _patchGroupsModules(
+  return patchGroupsModules(
     chosenModule,
     null,
     newDuration,
@@ -138,7 +138,7 @@ export function weekShorter(chosenModule) {
   const newDuration = duration - 1;
   const groupId = chosenModule.id;
 
-  return _patchGroupsModules(
+  return patchGroupsModules(
     chosenModule,
     null,
     newDuration,
@@ -153,7 +153,7 @@ export function moveRight(chosenModule) {
   const newPosition = position + 1;
   const groupId = chosenModule.id;
 
-  return _patchGroupsModules(
+  return patchGroupsModules(
     chosenModule,
     newPosition,
     duration,
@@ -168,7 +168,7 @@ export function moveLeft(chosenModule) {
   const newPosition = position - 1;
   const groupId = chosenModule.id;
 
-  return _patchGroupsModules(
+  return patchGroupsModules(
     chosenModule,
     newPosition,
     duration,
@@ -206,7 +206,7 @@ export async function getModulesOfGroup(groupId) {
 
 ////////////////////////////////////////////////////////////////// helper functions
 
-async function _patchGroupsModules(
+async function patchGroupsModules(
   item,
   newPosition,
   newDuration,
@@ -242,7 +242,7 @@ async function _patchGroupsModules(
   }
 }
 
-function _getAllWeeks(startingDate, endingDate) {
+function getAllWeeks(startingDate, endingDate) {
   const allSundays = [];
   let tempDate = startingDate.clone();
   while (tempDate.day(0).isBefore(endingDate)) {
@@ -263,7 +263,7 @@ function _getAllWeeks(startingDate, endingDate) {
 
 // this is not used yet cause there's nothing shown to user to invoke it
 export function assignTeachers(item, groupsId, teacher1_id, teacher2_id) {
-  return _patchGroupsModules(
+  return patchGroupsModules(
     item,
     null,
     item.duration,
@@ -397,7 +397,7 @@ function _patchNewModuleForOneGroup(
         item
       );
       // send to backend the new duration to the backend
-      return _patchGroupsModules(
+      return patchGroupsModules(
         item,
         item.position,
         newDuration,
@@ -408,10 +408,10 @@ function _patchNewModuleForOneGroup(
         //step 2 add the new module after that one
         const position = +item.position + 1;
         // 1- add it
-        return _addModule(selectedModuleId, selectedGroupId, position)
+        return addModule(selectedModuleId, selectedGroupId, position)
           .then(() =>
             // 2- change the duration
-            _patchGroupsModules(
+            patchGroupsModules(
               { position },
               null,
               duration,
@@ -428,10 +428,10 @@ function _patchNewModuleForOneGroup(
               one => one.module_name === item.module_name
             )[0].id;
             return (
-              _addModule(splittedModuleId, selectedGroupId, otherHalfPosition)
+              addModule(splittedModuleId, selectedGroupId, otherHalfPosition)
                 // now adjust the duration so that it's just the rest of the module not a new one
                 .then(() => {
-                  return _patchGroupsModules(
+                  return patchGroupsModules(
                     { position: otherHalfPosition }, //instead of whole item just the part with position
                     null,
                     remainingDuration,
@@ -447,9 +447,9 @@ function _patchNewModuleForOneGroup(
     if (selectedDateMoment.diff(item.ending_date, 'weeks') === 0) {
       // case 2 the new module is at the end of an existing one (GREAT!)//////////////////////////////////////////////////
       const position = +item.position + 1;
-      return _addModule(selectedModuleId, selectedGroupId, position)
+      return addModule(selectedModuleId, selectedGroupId, position)
         .then(() =>
-          _patchGroupsModules(
+          patchGroupsModules(
             { position },
             null,
             duration,
@@ -462,7 +462,7 @@ function _patchNewModuleForOneGroup(
   }
 }
 
-async function _addModule(moduleId, groupId, position) {
+async function addModule(moduleId, groupId, position) {
   const token = localStorage.getItem('token');
   try {
     const res = await fetch(

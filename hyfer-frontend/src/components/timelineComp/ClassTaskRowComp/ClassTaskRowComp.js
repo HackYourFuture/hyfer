@@ -1,12 +1,16 @@
 import React, { Component, Fragment } from 'react';
+import { observer, inject } from 'mobx-react';
 
 import { getWeeksBeforeAndAfter } from '../../../util';
 import TaskComp from './TaskComp/TaskComp';
 import EmptyTaskCell from './EmptyTaskCell/EmptyTaskCell';
 
+@inject('timeLineStore')
+@observer
 export default class ClassTaskRowComp extends Component {
   renderAllTaskComps = () => {
-    const { width, height, allWeeks, items, selectedModule } = this.props;
+    const { allWeeks } = this.props.timeLineStore;
+    const { width, height, items, selectedModule } = this.props;
     const { weeksBefore, weeksAfter } = getWeeksBeforeAndAfter(allWeeks, items);
     let rowCells = [];
     if (weeksBefore.length !== 0) {

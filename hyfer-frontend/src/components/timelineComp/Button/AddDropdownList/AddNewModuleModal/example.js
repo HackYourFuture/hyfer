@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Modal from '../../../../../Helpers/Modal/Modal';
 import classes from './addNewModuleModal.css';
+// import { timelineStore } from '../../../../../store';
 import moment from 'moment';
 import { errorMessage } from '../../../../../notify';
 import { observer, inject } from 'mobx-react';
@@ -19,6 +20,10 @@ export default class AddNewModuleModal extends Component {
     minDate: '',
     maxDate: '',
   };
+
+  // getSharedDatesBetweenGroups = () => {
+  //   return timelineStore.getSharedDates(this.props.items);
+  // };
 
   getSharedDatesBetweenGroups = () => {
     const items = this.props.timeLineStore.items;
