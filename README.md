@@ -16,8 +16,7 @@ This application requires a MySQL database.
 
 - Next, repeat this command to load the sample data SQL file from the `sql` folder into the database.
 
-- create a `config.js` file in the `server/config` folder, paste the contents of the `config.sample.js` file into it, and modify to reflect your specific database configuration.
-you need to Register a new OAuth application in your GitHub developer settings. set the Homepage URL to `http://localhost:3005` and callback URL to `http://localhost:3005/auth/github/callback`.
+- create a `.env` file in the `hyfer-backend` folder, paste the contents of the `.env.sample` file into it, and modify to reflect your specific database configuration.
 
 ## Installing dependencies
 
