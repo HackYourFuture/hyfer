@@ -3,6 +3,7 @@ import styles from '../../assets/styles/timeline.css';
 import ModuleReadme from '../../components/ModuleReadme/ModuleReadme';
 import Attendance from '../../components/Attendance/Attendance';
 import TimelineComp from '../../components/timelineComp/Timeline/Timeline';
+import { inject, observer } from 'mobx-react';
 
 import {
   READ_ME_CHANGED,
@@ -12,19 +13,11 @@ import {
   LOGIN_STATE_CHANGED,
   ISTEACHER_STATE_CHANGED,
   uiStore,
-  timelineStore,
-  TIMELINE_ITEMS_CHANGED,
-  TIMELINE_GROUPS_CHANGED,
-  ALL_WEEKS_CHANGED,
-  TODAY_MARKER_REFERENCE,
-  SELECTED_MODULE_ID_CHANGED,
-  ALL_POSSIBLE_MODULES_CHANGED,
-  GROUPS_WITH_IDS_CHANGED,
-  ALL_TEACHERS_CHANGED,
-  INFO_SELECTED_MODULE_CHANGED,
 } from '../../store/index';
 import { errorMessage } from '../../notify';
 
+@inject('timeLineStore')
+@observer
 export default class TimeLine extends Component {
   state = {
     isLoggedIn: false,
@@ -42,53 +35,8 @@ export default class TimeLine extends Component {
     todayMarkerRef: null,
     selectedModule: null,
     modules: null,
-    groupsWithIds: null,
     teachers: null,
     infoSelectedModule: null,
-  };
-
-  timelineObserver = mergedData => {
-    switch (mergedData.type) {
-      case TIMELINE_ITEMS_CHANGED:
-        this.setState({ timelineItems: mergedData.payload.items });
-        break;
-      case ALL_TEACHERS_CHANGED:
-        this.setState({ teachers: mergedData.payload.teachers });
-        break;
-      case GROUPS_WITH_IDS_CHANGED:
-        this.setState({ groupsWithIds: mergedData.payload.groupsWithIds });
-        break;
-      case TODAY_MARKER_REFERENCE:
-        this.setState({ todayMarkerRef: mergedData.payload.todayMarkerRef });
-        break;
-      case TIMELINE_GROUPS_CHANGED:
-        this.setState({ groups: mergedData.payload.groups });
-        break;
-      case SELECTED_MODULE_ID_CHANGED:
-        this.setState({
-          selectedModule: mergedData.payload.selectedModule,
-        });
-        break;
-      case ALL_WEEKS_CHANGED:
-        {
-          const { allWeeks } = mergedData.payload;
-          this.setState({ allWeeks: allWeeks });
-        }
-        break;
-      case ALL_POSSIBLE_MODULES_CHANGED:
-        {
-          const { modules } = mergedData.payload;
-          this.setState({ modules });
-        }
-        break;
-      case INFO_SELECTED_MODULE_CHANGED:
-        this.setState({
-          infoSelectedModule: mergedData.payload.allModulesOfGroup,
-        });
-        break;
-      default:
-        break;
-    }
   };
 
   moduleInfoSubscriber = mergedData => {
@@ -115,7 +63,7 @@ export default class TimeLine extends Component {
   };
 
   componentDidMount() {
-    timelineStore.subscribe(this.timelineObserver);
+    this.props.timeLineStore.fetchItems(true);
     moduleInfoStore.subscribe(this.moduleInfoSubscriber);
     uiStore.subscribe(this.uiStoreSubscriber);
 
@@ -127,16 +75,25 @@ export default class TimeLine extends Component {
   }
 
   componentWillUnmount() {
-    timelineStore.unsubscribe(this.timelineObserver);
     moduleInfoStore.unsubscribe(this.moduleInfoSubscriber);
     uiStore.unsubscribe(this.uiStoreSubscriber);
   }
+
+  getSelectedModuleInfo = item => {
+    this.props.timeLineStore.getModulesOfGroup(item.id)
+      .then(res => {
+        this.setState({
+            infoSelectedModule: res[item.position],
+        });
+      })
+      .catch(errorMessage);
+  };
 
   itemClickHandler = (clickEvent, item) => {
     moduleInfoStore
       .getHistory(clickEvent, this.state.isATeacher)
       .catch(errorMessage);
-    const selectedItemInStore = timelineStore.getState().selectedModule;
+    const selectedItemInStore = this.props.timeLineStore.items;
     if (
       !item ||
       (selectedItemInStore &&
@@ -145,14 +102,11 @@ export default class TimeLine extends Component {
       // if the clicked module is the same on unselect it
       item = null;
     } else {
-      timelineStore.getSelectedModuleInfo(item);
-    }
-    timelineStore.setState({
-      type: SELECTED_MODULE_ID_CHANGED,
-      payload: {
+      this.getSelectedModuleInfo(item);
+      this.setState({
         selectedModule: item,
-      },
-    });
+      });
+    }
   };
 
   render() {
@@ -167,12 +121,8 @@ export default class TimeLine extends Component {
       isATeacher,
       isLoggedIn,
       timelineItems,
-      groups,
-      allWeeks,
       totalWeeks,
       selectedModule,
-      modules,
-      groupsWithIds,
       teachers,
       infoSelectedModule,
       tab,
@@ -199,13 +149,9 @@ export default class TimeLine extends Component {
               rowHeight={70}
               isTeacher={isATeacher}
               timelineItems={timelineItems}
-              groups={groups}
-              allWeeks={allWeeks}
               totalWeeks={totalWeeks}
               selectedModule={selectedModule}
               itemClickHandler={this.itemClickHandler}
-              allModules={modules}
-              groupsWithIds={groupsWithIds}
               teachers={teachers}
               infoSelectedModule={infoSelectedModule}
             />
@@ -236,14 +182,9 @@ export default class TimeLine extends Component {
               rowHeight={70}
               isTeacher={isATeacher}
               timelineItems={timelineItems}
-              groups={groups}
-              allWeeks={allWeeks}
               totalWeeks={totalWeeks}
               selectedModule={selectedModule}
               itemClickHandler={this.itemClickHandler}
-              allModules={modules}
-              groupsWithIds={groupsWithIds}
-              //teachers={teachers}
               teachers={null}
               infoSelectedModule={infoSelectedModule}
             />

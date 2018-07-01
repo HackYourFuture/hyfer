@@ -4,8 +4,6 @@ import classes from './addDropdownList.css';
 import AddClassModal from './AddClassModal/AddClassModal';
 import AddNewModuleModal from './AddNewModuleModal/AddNewModuleModal';
 
-// TODO: check if this component is used somewhere
-
 export default class AddDropdownList extends Component {
   state = {
     classModalIsToggled: false,
@@ -54,10 +52,6 @@ export default class AddDropdownList extends Component {
           closeModal={this.closeClassModal}
         />
         <AddNewModuleModal
-          groupsWithIds={this.props.groupsWithIds}
-          items={this.props.items}
-          modules={this.props.modules}
-          groups={this.props.groups}
           isToggled={this.state.newModuleModalIsToggled}
           closeModal={this.closeNewModuleModal}
         />

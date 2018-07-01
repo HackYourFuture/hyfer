@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import Modal from '../../../../../Helpers/Modal/Modal';
-import { timelineStore } from '../../../../../store/';
+// import { timelineStore } from '../../../../../store/';
 import classes from './assignTeacherModal.css';
 import { errorMessage } from '../../../../../notify';
 
@@ -17,10 +17,22 @@ export default class AssignTeacherModal extends Component {
   handleAssignTeachers = () => {
     const { teacher1, teacher2 } = this.state;
     const { selectedModule } = this.props;
-    timelineStore
-      .handleAssignTeachers(selectedModule, teacher1, teacher2)
-      .then(() => this.props.closeModal())
-      .catch(errorMessage);
+    const groupsId = selectedModule.id;
+    const item = selectedModule;
+    try{
+      this.props.timeLineStore.patchGroupsModules(
+      item,
+      null,
+      item.duration,
+      teacher1,
+      teacher2,
+      groupsId
+    );
+    this.props.closeModal();
+    }
+    catch(error){
+      errorMessage(error);
+    }
   };
 
   handleChangeTeacher = (e, num) => {

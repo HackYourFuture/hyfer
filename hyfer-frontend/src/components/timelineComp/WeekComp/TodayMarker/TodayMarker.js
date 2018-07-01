@@ -6,6 +6,7 @@ export default class TodayMarker extends Component {
   todayMarker = React.createRef();
 
   componentDidMount = () => {
+    console.log(this.props);
     this.props.setTodayMarkerRef(this.todayMarker);
     let leftPos = this.todayMarker.current.parentNode.getBoundingClientRect().x;
     leftPos -= window.innerWidth / 2;

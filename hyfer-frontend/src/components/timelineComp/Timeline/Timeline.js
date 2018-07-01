@@ -3,14 +3,16 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import loader from '../../../assets/images/Eclipse.gif';
 import { errorMessage } from '../../../notify';
-import { timelineStore, TODAY_MARKER_REFERENCE } from '../../../store';
+import { TODAY_MARKER_REFERENCE } from '../../../store';
 import Button from '../Button/Button';
 import ClassBarRowComp from '../ClassBarRowComp/ClassBarRowComp';
 import ClassTaskRowComp from '../ClassTaskRowComp/ClassTaskRowComp';
 import WeekComp from '../WeekComp/WeekComp';
 import classes from './timeline.css';
-// import TimeLineStore from '../../../store/TimeLineStore';
+import { observer, inject } from 'mobx-react';
 
+@inject('timeLineStore')
+@observer
 export default class Timeline extends Component {
   state = {
     todayMarkerRef: null,
@@ -26,11 +28,11 @@ export default class Timeline extends Component {
   };
 
   renderWeekComp = () => {
-    if (!this.props.allWeeks) return null;
+    if (!this.props.timeLineStore.allWeeks) return null;
     const { rowHeight, itemWidth } = this.props;
     return (
       <div className={classes.rowContainer}>
-        {this.props.allWeeks.map(week => (
+        {this.props.timeLineStore.allWeeks.map(week => (
           <WeekComp
             setTodayMarkerRef={this.setTodayMarkerRef}
             scrollingParentRef={this.timelineWrapper}
@@ -46,9 +48,9 @@ export default class Timeline extends Component {
 
   renderTaskRowComp = () => {
     if (
-      !this.props.groups ||
-      !this.props.timelineItems ||
-      !this.props.allWeeks
+      !this.props.timeLineStore.groups ||
+      !this.props.timeLineStore.items ||
+      !this.props.timeLineStore.allWeeks
     ) {
       // implement the loader giv
       return (
@@ -57,19 +59,17 @@ export default class Timeline extends Component {
         </div>
       );
     }
-    return this.props.groups.map(group => {
-      const items = this.props.timelineItems[group];
+    return this.props.timeLineStore.groups.map(group => {
+      const items = this.props.timeLineStore.items[group];
       const { itemWidth, rowHeight } = this.props;
       return (
         <div key={items[0].group_name} className={classes.rowContainer}>
           <ClassTaskRowComp
             isTeacher={this.props.isTeacher}
-            teachers={this.props.teachers}
             selectedModule={this.props.selectedModule}
             items={items}
             width={itemWidth}
             height={rowHeight}
-            allWeeks={this.props.allWeeks}
             itemClickHandler={this.props.itemClickHandler}
             infoSelectedModule={this.props.infoSelectedModule}
           />
@@ -98,32 +98,24 @@ export default class Timeline extends Component {
   };
 
   componentDidMount = () => {
-    timelineStore.subscribe(this.observer);
     if (!this.props.teachers) {
-      timelineStore
-        .fetchItems(false)
+      this.props.timeLineStore.fetchItems(false)
         .then(() => {
           this.setState({ loaded: true });
         })
         .catch(errorMessage);
     } else {
-      timelineStore
-        .fetchItems(true)
+      this.props.timeLineStore.fetchItems(true)
         .then(() => {
           this.setState({ loaded: true });
         })
         .catch(errorMessage);
     }
-    // kick in the process by getting the items and changing the state properties
-    // in didMount cause it causes side-effects
-  };
-
-  componentWillUnmount = () => {
-    timelineStore.unsubscribe(this.observer);
   };
 
   render() {
-    const { itemWidth, rowHeight, allWeeks } = this.props;
+    const { allWeeks } = this.props.timeLineStore;
+    const { itemWidth, rowHeight } = this.props;
     // if there items are fetched  width is the 200 times total weeks otherwise it's 100vh
     // FIXME: no idea why this is not working with just 16 instead of 21
     const width = allWeeks
@@ -132,8 +124,7 @@ export default class Timeline extends Component {
     return (
       <div className="rootContainer">
         <ClassBarRowComp
-          groups={this.props.groups}
-          groupsWithIds={this.props.groupsWithIds}
+          groups={this.props.timeLineStore.groups}
           rowHeight={rowHeight}
           myRef={this.classesContainer}
         />
@@ -151,10 +142,6 @@ export default class Timeline extends Component {
         </div>
         <div ref={this.buttonsContainer} className={classes.buttonsContainer}>
           <Button
-            groups={this.props.groups}
-            groupsWithIds={this.props.groupsWithIds}
-            items={this.props.timelineItems}
-            modules={this.props.allModules}
             clickHandler={this.handleClickTodayMarker}
           />
         </div>
@@ -163,11 +150,8 @@ export default class Timeline extends Component {
   }
 }
 
-Timeline.propTypes = {
+Timeline.wrappedComponent.propTypes = {
   allModules: PropTypes.array,
-  allWeeks: PropTypes.array,
-  groups: PropTypes.array,
-  groupsWithIds: PropTypes.array,
   infoSelectedModule: PropTypes.object,
   isTeacher: PropTypes.bool,
   itemClickHandler: PropTypes.func,
@@ -176,4 +160,5 @@ Timeline.propTypes = {
   selectedModule: PropTypes.object,
   teachers: PropTypes.array,
   timelineItems: PropTypes.object,
+  timeLineStore: PropTypes.object,
 };

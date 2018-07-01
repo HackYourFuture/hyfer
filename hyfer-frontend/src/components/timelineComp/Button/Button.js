@@ -4,7 +4,6 @@ import RoundButton from '../../../Helpers/RoundButton/RoundButton';
 import AddDropdownList from './AddDropdownList/AddDropdownList';
 import classes from './button.css';
 
-
 @inject('global')
 @observer
 export default class Button extends Component {
@@ -28,9 +27,7 @@ export default class Button extends Component {
             title="Add a class"
           />
           <AddDropdownList
-            groupsWithIds={this.props.groupsWithIds}
             items={this.props.items}
-            modules={this.props.modules}
             groups={this.props.groups}
             isToggled={this.state.isToggled}
           />
