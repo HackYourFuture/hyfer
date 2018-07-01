@@ -1,9 +1,7 @@
 import React from 'react';
 import store from '../../store/UserStore';
 import styles from '../../assets/styles/users.css';
-import Guest from '../../components/Users/Guest';
-import Teachers from '../../components/Users/Teachers';
-import Students from '../../components/Users/Students';
+import {UserList} from '../../components/Users/UserList';
 import SynchronizeGithubData from '../../components/Users/SynchronizeGithubData';
 import { errorMessage } from '../../notify';
 
@@ -24,40 +22,23 @@ export default class Users extends React.Component {
     window.scrollTo(0, 0);
   };
 
-  handlFilterList = e => {
+  handleFilterList = e => {
     this.setState({
       selectedList: e.target.value,
     });
   };
 
   renderSelectedList() {
-    if (this.state.selectedList === 'Guest') {
+    const { selectedList } = this.state;
+    const roles = !selectedList ? ['guest', 'student', 'teacher'] : [selectedList];
+
+    return roles.map(role => {
       return (
-        <ul className={styles.mainUl}>
-          <Guest />
+        <ul key={role} className={styles.mainUl}>
+          <UserList role={role} />
         </ul>
       );
-    } else if (this.state.selectedList === 'Students') {
-      return (
-        <ul className={styles.mainUl}>
-          <Students />
-        </ul>
-      );
-    } else if (this.state.selectedList === 'Teachers') {
-      return (
-        <ul className={styles.mainUl}>
-          <Teachers />
-        </ul>
-      );
-    } else {
-      return (
-        <ul className={styles.mainUl}>
-          <Guest />
-          <Teachers />
-          <Students />
-        </ul>
-      );
-    }
+    });
   }
 
   render() {
@@ -74,13 +55,13 @@ export default class Users extends React.Component {
             className={styles.listSelector}
             value={this.state.selectedList}
             onChange={e => {
-              this.handlFilterList(e);
+              this.handleFilterList(e);
             }}
           >
             <option value="">All list</option>
-            <option value="Guest">Guest</option>
-            <option value="Teachers">Teachers</option>
-            <option value="Students">Students</option>
+            <option value="guest">Guest</option>
+            <option value="teacher">Teachers</option>
+            <option value="student">Students</option>
           </select>
           <SynchronizeGithubData />
         </div>
