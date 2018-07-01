@@ -1,9 +1,11 @@
+/* eslint react/prop-types: error */
 import React from 'react';
 import styles from '../../assets/styles/users.css';
-import { UserList } from '../../components/Users/UserList';
+import {UserList} from '../../components/Users/UserList';
 import SynchronizeGithubData from '../../components/Users/SynchronizeGithubData';
-import { inject, observer } from 'mobx-react';
-
+import { errorMessage } from '../../notify';
+import { inject , observer } from 'mobx-react';
+import PropTypes from 'prop-types';
 @inject('userStore')
 @observer
 export default class Users extends React.Component {
@@ -16,7 +18,7 @@ export default class Users extends React.Component {
   }
 
   componentDidMount = () => {
-    this.props.userStore.loadUsers();
+    this.props.userStore.loadUsers().catch(errorMessage);
     window.scrollTo(0, 0);
   };
 
@@ -68,3 +70,7 @@ export default class Users extends React.Component {
     );
   }
 }
+Users.wrappedComponent.propTypes = {
+  userStore: PropTypes.object.isRequired,
+
+};
