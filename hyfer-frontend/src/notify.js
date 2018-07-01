@@ -1,4 +1,30 @@
+import { autorun } from 'mobx';
+import stores from './mobx';
 import { notify } from 'react-notify-toast';
+
+autorun(() => {
+  const { lastError, clearLastError } = stores.global;
+  if (lastError != null) {
+    errorMessage(lastError);
+    clearLastError();
+  }
+});
+
+autorun(() => {
+  const { successMessage, clearSuccessMessage } = stores.global;
+  if (successMessage != null) {
+    success(successMessage);
+    clearSuccessMessage();
+  }
+});
+
+autorun(() => {
+  const { warningMessage, clearWarningMessage } = stores.global;
+  if (warningMessage != null) {
+    warning(warningMessage);
+    clearWarningMessage();
+  }
+});
 
 export function errorMessage(e) {
   // no stack creepy Errors

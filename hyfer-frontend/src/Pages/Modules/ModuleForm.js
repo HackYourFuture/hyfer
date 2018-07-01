@@ -1,4 +1,6 @@
+/* eslint react/prop-types: error */
 import React from 'react';
+import PropTypes from 'prop-types';
 import style from '../../assets/styles/modules.css';
 import ModalDialog from '../../components/ModalDialog';
 import { inject, observer } from 'mobx-react';
@@ -19,7 +21,7 @@ export default class ModuleForm extends React.Component {
   };
 
   componentDidMount = () => {
-    const module= this.props.module;
+    const module = this.props.module;
     if (module) {
       this.setState({
         ModuleId: module.id,
@@ -32,7 +34,7 @@ export default class ModuleForm extends React.Component {
         focusId: '',
         errorIds: [],
       });
-      } else {
+    } else {
       this.resetForm();
     }
   };
@@ -113,7 +115,7 @@ export default class ModuleForm extends React.Component {
 
   UnRegError(id) {
     this.setState({
-      errorIds: this.state.errorIds.filter(function(item) {
+      errorIds: this.state.errorIds.filter(function (item) {
         return item !== id;
       }),
     });
@@ -173,18 +175,18 @@ export default class ModuleForm extends React.Component {
               htmlFor="ModuleName"
               className={`
                             ${
-                              this.state.focusId === 'ModuleName'
-                                ? style.focus
-                                : ''
-                            } 
+                this.state.focusId === 'ModuleName'
+                  ? style.focus
+                  : ''
+                } 
                             ${
-                              this.state.ModuleName !== '' ? style.notEmpty : ''
-                            } 
+                this.state.ModuleName !== '' ? style.notEmpty : ''
+                } 
                             ${
-                              this.state.errorIds.includes('ModuleName')
-                                ? style.error
-                                : ''
-                            }`}
+                this.state.errorIds.includes('ModuleName')
+                  ? style.error
+                  : ''
+                }`}
             >
               Module Name
             </label>
@@ -194,15 +196,15 @@ export default class ModuleForm extends React.Component {
               type="text"
               className={`
                             ${
-                              this.state.focusId === 'ModuleName'
-                                ? style.focus
-                                : ''
-                            } 
+                this.state.focusId === 'ModuleName'
+                  ? style.focus
+                  : ''
+                } 
                             ${
-                              this.state.errorIds.includes('ModuleName')
-                                ? style.error
-                                : ''
-                            }`}
+                this.state.errorIds.includes('ModuleName')
+                  ? style.error
+                  : ''
+                }`}
               onChange={this.inputChanged}
               onBlur={this.onBlur}
               onFocus={this.onFocus}
@@ -215,16 +217,16 @@ export default class ModuleForm extends React.Component {
               htmlFor="RepoName"
               className={`
                             ${
-                              this.state.focusId === 'RepoName'
-                                ? style.focus
-                                : ''
-                            } 
+                this.state.focusId === 'RepoName'
+                  ? style.focus
+                  : ''
+                } 
                             ${this.state.RepoName !== '' ? style.notEmpty : ''} 
                             ${
-                              this.state.errorIds.includes('RepoName')
-                                ? style.error
-                                : ''
-                            }`}
+                this.state.errorIds.includes('RepoName')
+                  ? style.error
+                  : ''
+                }`}
             >
               Repo Name
             </label>
@@ -234,15 +236,15 @@ export default class ModuleForm extends React.Component {
               type="text"
               className={`
                             ${
-                              this.state.focusId === 'RepoName'
-                                ? style.focus
-                                : ''
-                            } 
+                this.state.focusId === 'RepoName'
+                  ? style.focus
+                  : ''
+                } 
                             ${
-                              this.state.errorIds.includes('RepoName')
-                                ? style.error
-                                : ''
-                            }`}
+                this.state.errorIds.includes('RepoName')
+                  ? style.error
+                  : ''
+                }`}
               onChange={this.inputChanged}
               onBlur={this.onBlur}
               onFocus={this.onFocus}
@@ -255,16 +257,16 @@ export default class ModuleForm extends React.Component {
               htmlFor="RepoUrl"
               className={`
                             ${
-                              this.state.focusId === 'RepoUrl'
-                                ? style.focus
-                                : ''
-                            } 
+                this.state.focusId === 'RepoUrl'
+                  ? style.focus
+                  : ''
+                } 
                             ${this.state.RepoUrl !== '' ? style.notEmpty : ''} 
                             ${
-                              this.state.errorIds.includes('RepoUrl')
-                                ? style.error
-                                : ''
-                            }`}
+                this.state.errorIds.includes('RepoUrl')
+                  ? style.error
+                  : ''
+                }`}
             >
               Repo Url
             </label>
@@ -274,15 +276,15 @@ export default class ModuleForm extends React.Component {
               type="text"
               className={`
                             ${
-                              this.state.focusId === 'RepoUrl'
-                                ? style.focus
-                                : ''
-                            } 
+                this.state.focusId === 'RepoUrl'
+                  ? style.focus
+                  : ''
+                } 
                             ${
-                              this.state.errorIds.includes('RepoUrl')
-                                ? style.error
-                                : ''
-                            }`}
+                this.state.errorIds.includes('RepoUrl')
+                  ? style.error
+                  : ''
+                }`}
               onChange={this.inputChanged}
               onBlur={this.onBlur}
               onFocus={this.onFocus}
@@ -295,16 +297,16 @@ export default class ModuleForm extends React.Component {
               htmlFor="Duration"
               className={`
                             ${
-                              this.state.focusId === 'Duration'
-                                ? style.focus
-                                : ''
-                            } 
+                this.state.focusId === 'Duration'
+                  ? style.focus
+                  : ''
+                } 
                             ${this.state.Duration !== '' ? style.notEmpty : ''} 
                             ${
-                              this.state.errorIds.includes('Duration')
-                                ? style.error
-                                : ''
-                            }`}
+                this.state.errorIds.includes('Duration')
+                  ? style.error
+                  : ''
+                }`}
             >
               Duration
             </label>
@@ -314,15 +316,15 @@ export default class ModuleForm extends React.Component {
               type="text"
               className={`
                             ${
-                              this.state.focusId === 'Duration'
-                                ? style.focus
-                                : ''
-                            } 
+                this.state.focusId === 'Duration'
+                  ? style.focus
+                  : ''
+                } 
                             ${
-                              this.state.errorIds.includes('Duration')
-                                ? style.error
-                                : ''
-                            }`}
+                this.state.errorIds.includes('Duration')
+                  ? style.error
+                  : ''
+                }`}
               onChange={this.inputChanged}
               onBlur={this.onBlur}
               onFocus={this.onFocus}
@@ -335,14 +337,14 @@ export default class ModuleForm extends React.Component {
               htmlFor="Color"
               className={`
                             ${
-                              this.state.focusId === 'Color' ? style.focus : ''
-                            } 
+                this.state.focusId === 'Color' ? style.focus : ''
+                } 
                             ${this.state.Color !== '' ? style.notEmpty : ''} 
                             ${
-                              this.state.errorIds.includes('Color')
-                                ? style.error
-                                : ''
-                            }`}
+                this.state.errorIds.includes('Color')
+                  ? style.error
+                  : ''
+                }`}
             >
               Color
             </label>
@@ -352,13 +354,13 @@ export default class ModuleForm extends React.Component {
               type="text"
               className={`
                             ${
-                              this.state.focusId === 'Color' ? style.focus : ''
-                            } 
+                this.state.focusId === 'Color' ? style.focus : ''
+                } 
                             ${
-                              this.state.errorIds.includes('Color')
-                                ? style.error
-                                : ''
-                            }`}
+                this.state.errorIds.includes('Color')
+                  ? style.error
+                  : ''
+                }`}
               onChange={this.inputChanged}
               onBlur={this.onBlur}
               onFocus={this.onFocus}
@@ -379,7 +381,7 @@ export default class ModuleForm extends React.Component {
               <div
                 className={`${style.checkBox} ${
                   this.state.Optional ? style.checked : ''
-                }`}
+                  }`}
               />
               <div className={style.checkBoxLabel}>Optional</div>
             </div>
@@ -405,3 +407,12 @@ export default class ModuleForm extends React.Component {
     );
   }
 }
+
+ModuleForm.wrappedComponent.propTypes = {
+  actionName: PropTypes.string.isRequired,
+  module: PropTypes.object,
+  onAdd: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
+  visible: PropTypes.bool.isRequired,
+};

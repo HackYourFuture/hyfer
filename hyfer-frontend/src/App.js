@@ -7,7 +7,6 @@ import './assets/styles/app.css';
 import Footer from './components/Footer/Footer';
 import Header from './components/Header/Header';
 import Popup from './components/Popup';
-import userStore from './store/UserStore';
 import Homework from './Pages/Homework/Homework';
 import Modules from './Pages/Modules/Modules';
 import TimeLine from './Pages/Timeline/TimeLine';
@@ -19,6 +18,8 @@ import Users from './Pages/Users/Users';
 
 const PUBLIC_ROUTES = [
   { exact: true, path: '/timeline', component: TimeLine },
+  { exact: true, path: '/currentUserProfile', component: CurrentUserProfile },
+
 ];
 
 const ROUTES = {
@@ -36,7 +37,6 @@ const ROUTES = {
     { exact: true, path: '/homework/:classNumber', component: Homework },
   ],
   guest: [
-    { exact: true, path: '/currentUserProfile', component: CurrentUserProfile },
   ],
 };
 
@@ -61,7 +61,7 @@ class App extends Component {
       await this.props.global.fetchCurrentUser();
       // TODO: remove this once we are sure we have removed the last residues of
       // references to currentUser from the old store
-      await userStore.loadUser();
+      // await userStore.loadUser();
     } else {
       window.localStorage.removeItem('token');
       this.setState({ profile: defaultProfile });
@@ -70,7 +70,6 @@ class App extends Component {
 
   render() {
     const { currentUser, isLoggedIn } = this.props.global;
-
     const routes = isLoggedIn ? [...PUBLIC_ROUTES, ...ROUTES[currentUser.role]] : [...PUBLIC_ROUTES];
 
     return (

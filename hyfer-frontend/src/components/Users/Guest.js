@@ -1,22 +1,29 @@
+/* eslint react/prop-types: error */
 import React, { Component } from 'react';
 import styles from '../../assets/styles/users.css';
-import store from '../../store/UserStore';
 import { Link } from 'react-router-dom';
 import Moment from 'moment';
-
 import MdEmail from 'react-icons/lib/md/email';
 import FaSlack from 'react-icons/lib/fa/slack';
 import FaFire from 'react-icons/lib/fa/fire';
 import FaGithub from 'react-icons/lib/fa/github';
 import FaMobile from 'react-icons/lib/fa/mobile';
-
+import PropTypes from 'prop-types';
+import { inject, observer } from 'mobx-react';
+@inject('userStore')
+@observer
 export default class Guest extends Component {
+  state = {
+    mobileActive: false,
+    slackActive: false,
+  }
   render() {
+    const { filteredUsers, getUserProfileInfo } = this.props.userStore;
     return (
       <li className={styles.userList}>
         Guest List:
         <ul className={styles.userContainer}>
-          {store.state.filteredUsers.map(user => {
+          {filteredUsers.map(user => {
             if (user.role === 'guest') {
               return (
                 <React.Fragment key={user.id}>
@@ -77,14 +84,16 @@ export default class Guest extends Component {
                             ' ' +
                             styles.linkContainer
                           }
-                          onClick={() => { }}
+                          onClick={() => {
+                            this.setState({ slackActive: !this.state.slackActive });
+                          }}
                         >
                           <FaSlack />
                           <div
                             className={
                               styles.infoOverlay +
                               ' ' +
-                              (user.slackActive ? styles.active : '')
+                              (this.state.slackActive ? styles.active : '')
                             }
                           >
                             {user.slack_username}
@@ -97,9 +106,7 @@ export default class Guest extends Component {
                             styles.linkContainer
                           }
                           onClick={() =>
-                            store.setState({
-                              mobileActive: !store.state.mobileActive,
-                            })
+                            this.setState({ mobileActive: !this.state.mobileActive })
                           }
                         >
                           <FaMobile />
@@ -107,7 +114,7 @@ export default class Guest extends Component {
                             className={
                               styles.infoOverlay +
                               ' ' +
-                              (store.state.mobileActive ? styles.active : '')
+                              (this.state.mobileActive ? styles.active : '')
                             }
                           >
                             {user.mobile}
@@ -146,32 +153,7 @@ export default class Guest extends Component {
                     <form
                       className={styles.editUserButton}
                       onClick={() => {
-                        store.setState({
-                          id: user.id,
-                          username: user.username,
-                          full_name: user.full_name,
-                          group_name: user.group_name,
-                          role: user.role,
-                          register_date: user.register_date,
-                          email: user.email,
-                          slack_username: user.slack_username,
-                          freecodecamp_username: user.freecodecamp_username,
-                          mobile: user.mobile,
-                          group_id: user.group_id,
-
-                          reset_id: user.id,
-                          reset_username: user.username,
-                          reset_full_name: user.full_name,
-                          reset_group_name: user.group_name,
-                          reset_role: user.role,
-                          reset_register_date: user.register_date,
-                          reset_email: user.email,
-                          reset_slack_username: user.slack_username,
-                          reset_freecodecamp_username:
-                            user.freecodecamp_username,
-                          reset_mobile: user.mobile,
-                          reset_group_id: user.group_id,
-                        });
+                        getUserProfileInfo(user);
                       }}
                     >
                       <Link to="/profile">
@@ -189,3 +171,6 @@ export default class Guest extends Component {
     );
   }
 }
+Guest.wrappedComponent.propTypes = {
+  userStore: PropTypes.object.isRequired,
+};

@@ -1,5 +1,6 @@
-
+/* eslint react/prop-types: error */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Resizable from 're-resizable';
 import style from '../../assets/styles/modules.css';
 import ModuleForm from './ModuleForm';
@@ -21,7 +22,7 @@ export default class ModuleItem extends Component {
     this.setState({ isMenuShow: false });
   };
 
-  EditModule = () => {
+  editModule = () => {
     this.setState({
       isMenuShow: false,
       isEditing: true,
@@ -36,14 +37,11 @@ export default class ModuleItem extends Component {
     this.setState({ isEditing: false });
   };
 
-  DeleteModule = () => {
-    const curModulesArr = this.props.modules;
-    let newModulesArr = curModulesArr.map(a => ({ ...a }));
-    newModulesArr = newModulesArr.filter(m => m.id !== this.props.module.id);
-    this.props.modulesStore.setModules(newModulesArr);
+  deleteModule = () => {
+    this.props.modulesStore.deleteModule(this.props.module);
   };
 
-  UpdateModule = module => {
+  updateModule = module => {
     const curModulesArr = this.props.modulesStore.modules;
     const newModulesArr = curModulesArr.map(a => {
       if (a.id === module.id) {
@@ -119,7 +117,7 @@ export default class ModuleItem extends Component {
             }}
           >
             <li>
-              <button style={{ color: '#3e43cc' }} onClick={this.EditModule}>
+              <button style={{ color: '#3e43cc' }} onClick={this.editModule}>
                 <md-icon class="material-icons">edit</md-icon>
                 <span>Edit</span>
               </button>
@@ -129,7 +127,7 @@ export default class ModuleItem extends Component {
               <button
                 style={{ color: module.ref_count > 0 ? '' : '#FF5722' }}
                 disabled={module.ref_count > 0 ? true : false}
-                onClick={this.DeleteModule}
+                onClick={this.deleteModule}
               >
                 <md-icon class="material-icons">delete</md-icon>
                 <span>Delete</span>
@@ -145,7 +143,7 @@ export default class ModuleItem extends Component {
         </Resizable>
         <ModuleForm
           onCancel={this.hideAddModal}
-          onAdd={this.UpdateModule}
+          onAdd={this.updateModule}
           visible={this.state.isEditing}
           title={'Update Module ' + this.props.module.module_name + '..'}
           module={this.props.module}
@@ -155,3 +153,9 @@ export default class ModuleItem extends Component {
     );
   }
 }
+
+ModuleItem.wrappedComponent.propTypes = {
+  module: PropTypes.object.isRequired,
+  modulesStore: PropTypes.object.isRequired,
+  weekWidth: PropTypes.number.isRequired,
+};

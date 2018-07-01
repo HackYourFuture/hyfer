@@ -42,7 +42,7 @@ export default function() {
   };
 
   //Normal methods
-
+// implemented also in the uiStore 
   const getUserInfo = async () => {
     const token = localStorage.getItem('token');
     const res = await fetch(CURRENT_USER_INFO_URL, {
