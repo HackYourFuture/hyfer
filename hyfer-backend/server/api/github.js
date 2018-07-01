@@ -37,7 +37,7 @@ async function getTeamMembers(req, res) {
     const teamsUrl = teams.map(team => httpRequestPromise(team.url));
     const teamsInfo = await Promise.all(teamsUrl);
     const classTeamPromises = teams.map(classTeam =>
-      httpRequestPromise(`https://api.github.com/teams/${classTeam.id}/members`));
+      httpRequestPromise(`https://api.github.com/teams/${classTeam.id}/members?per_page=100`));
     const allClassTeams = await Promise.all(classTeamPromises);
     const studentsPromises = allClassTeams.map((team) => {
       const userPromises = team.map(user => httpRequestPromise(user.url));

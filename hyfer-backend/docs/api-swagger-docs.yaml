@@ -25,7 +25,7 @@ tags:
     description: Users definitions 
   # - name: Runing modules
   #   description: Users definitions 
-parameters:
+parameters: 
   authHeaderParam:
     in: header
     name: Authorization
@@ -178,6 +178,12 @@ paths:
         201:
           description: Created
   /groups/{id}:
+    parameters:
+      - in: path
+        name: id
+        type: integer
+        description: id of the group to update.
+        required: true
     patch:
       summary: Update an existing group. 
       tags:
@@ -185,11 +191,6 @@ paths:
       description: Requires a `teacher` role.
       parameters:
         - $ref: '#/parameters/authHeaderParam'
-        - in: path
-          name: id
-          type: integer
-          description: id of the group to update.
-          required: true
         - in: body
           name: module
           description: The group to create
@@ -207,13 +208,6 @@ paths:
       deprecated: true
       parameters:
         - $ref: '#/parameters/authHeaderParam'
-        - in: path
-          name: id
-          type: integer
-          description: id of the group to Delete.
-          required: true
-          schema:
-              $ref: "#/definitions/groups"
       responses:
         200:
           description: OK
@@ -339,12 +333,12 @@ paths:
         Requires a `user` or `teacher` role.
       operationId: ""
       parameters:
-      - $ref: '#/parameters/authHeaderParam'
-      - in: path
-        name: groupId
-        type: integer
-        description: id of the group to get.
-        required: true
+        - $ref: '#/parameters/authHeaderParam'
+        - in: path
+          name: groupId
+          type: integer
+          description: id of the group to get.
+          required: true
       responses:
         200:
           description: OK
@@ -465,6 +459,13 @@ paths:
             items:
               $ref: "#/definitions/CurrentUser" 
   /user/{id}:
+    parameters:
+      - $ref: '#/parameters/authHeaderParam'
+      - in: path
+        name: id
+        type: integer
+        description: User ID
+        required: true
     get:
       tags:
         - users
@@ -472,17 +473,7 @@ paths:
       description: |
         get user by his/her **ID**.
         Requires a `user` or `teacher` role.
-       
       operationId: getUserById
-      parameters:
-        - $ref: '#/parameters/authHeaderParam'
-        - in: path
-          name: id
-          description: User ID
-          required: true
-          schema:
-            type: integer
-            format: int64
       responses:
         '200':
           description: Successful operation
@@ -499,14 +490,6 @@ paths:
         Requires a `user` or `teacher` role.
       operationId: ""
       parameters:
-        - $ref: '#/parameters/authHeaderParam'
-        - in: path
-          name: id
-          description: User ID
-          required: true
-          schema:
-            type: integer
-            format: int64
         - in: body
           name: review
           description: The user information to update

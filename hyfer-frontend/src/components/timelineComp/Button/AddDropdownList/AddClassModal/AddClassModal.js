@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import Modal from '../../../../../Helpers/Modal/Modal';
 import classes from './addClassModal.css';
-import { timelineStore } from '../../../../../store/';
+// import { timelineStore } from '../../../../../store/';
 import moment from 'moment';
+import { inject, observer } from 'mobx-react';
 
+@inject('timeLineStore')
+@observer
 export default class AddClassModal extends Component {
   state = {
     classNumber: '',
@@ -62,18 +65,17 @@ export default class AddClassModal extends Component {
       });
       return;
     }
-    timelineStore
-      .addTheClass(`Class ${classNumber}`, starting_date)
+    this.props.timeLineStore.addNewClass(`Class ${classNumber}`, starting_date)
       .then(() => {
-        //Awesome got the response close the modal
         this.props.closeModal();
+        this.props.timeLineStore.fetchItems();
       })
-      .catch(() => {
-        const e = new Error('network error!');
-        this.setState({
-          errorMessage: e.message,
-        });
+      .catch((error) => {
+      const e = new Error(error);
+      this.setState({
+        errorMessage: e.message,
       });
+    });
   };
 
   render() {
