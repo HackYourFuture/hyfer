@@ -2,7 +2,7 @@ import { action, observable, runInAction } from 'mobx';
 import moment from 'moment';
 import { fetchJSON } from './util';
 import stores, { API_BASE_URL } from '.';
- 
+
 export default class TimeLineStore {
 
   @observable
@@ -29,8 +29,13 @@ export default class TimeLineStore {
 
   @action.bound
   async fetchItems() {
-    const timelineItems = await fetchJSON('/timeline'); // if any error appears we will catch it by propagation
-    const groupsWithIds = await fetchJSON('/groups'); // the error has been thrown
+    // If data already fetched, no need to fetch it again
+    if (this.groups) {
+      return;
+    }
+
+    const timelineItems = await fetchJSON('/timeline');
+    const groupsWithIds = await fetchJSON('/groups');
 
     // set the state with the array of all current groups [maybe needed for side column group names]
     const groups = Object.keys(timelineItems);
@@ -81,9 +86,9 @@ export default class TimeLineStore {
       body: JSON.stringify(body),
     });
     if (!res.ok) throw res;
-    return res ;
+    return res;
   }
-  
+
   @action.bound
   async patchGroupsModules(
     item,
@@ -175,16 +180,16 @@ export default class TimeLineStore {
     groups.forEach(group => {
       const items = allItems[group];
       items.sort((a, b) => a.position - b.position); // make sure it is sorted
-  
+
       let lastDate = ''; // will be overwritten by each module of a group to set the ending date
-  
+
       items.map(item => {
         if (lastDate === '') lastDate = item.starting_date;
         item.starting_date = moment(lastDate);
         if (item.starting_date.day() !== 0) {
           item.starting_date.weekday(0);
         }
-  
+
         item.ending_date = moment(lastDate).add(item.duration, 'weeks');
         lastDate = moment(item.ending_date);
         return item;
@@ -192,21 +197,21 @@ export default class TimeLineStore {
     });
     return allItems;
   }
-  
+
   @action
   getAllTotalWeeksAndSundays(allItems) {
     const groups = Object.keys(allItems);
-  
+
     const onlyModules = groups.reduce((acc, prev) => {
       return acc.concat(...allItems[prev]);
     }, []);
-  
+
     const firstDate = moment.min(onlyModules.map(module => module.starting_date));
     const lastDate = moment.max(onlyModules.map(module => module.ending_date));
-  
+
     return this.getAllWeeks(firstDate, lastDate);
   }
-  
+
   @action
   getAllWeeks(startingDate, endingDate) {
     const allSundays = [];
@@ -215,7 +220,7 @@ export default class TimeLineStore {
       allSundays.push(moment(tempDate));
       tempDate = tempDate.add(1, 'weeks');
     }
-  
+
     const allWeeks = allSundays.reduce((acc, prevItem, index, arr) => {
       const nextItem = arr[index + 1];
       if (!nextItem) return acc;
@@ -223,7 +228,7 @@ export default class TimeLineStore {
       acc.push(oneWeek);
       return acc;
     }, []);
-  
+
     return { allWeeks, allSundays };
   }
 }

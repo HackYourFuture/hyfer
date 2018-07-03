@@ -2,7 +2,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import loader from '../../../assets/images/Eclipse.gif';
-import { errorMessage } from '../../../notify';
 import { TODAY_MARKER_REFERENCE } from '../../../store';
 import Button from '../Button/Button';
 import ClassBarRowComp from '../ClassBarRowComp/ClassBarRowComp';
@@ -11,11 +10,14 @@ import WeekComp from '../WeekComp/WeekComp';
 import classes from './timeline.css';
 import { observer, inject } from 'mobx-react';
 
-@inject('timeLineStore')
+@inject('timeLineStore', 'global')
 @observer
 export default class Timeline extends Component {
+  hasRendered = false;
+
   state = {
     todayMarkerRef: null,
+    loaded: false,
   };
 
   setTodayMarkerRef = React.createRef();
@@ -97,23 +99,19 @@ export default class Timeline extends Component {
     scrollEl.current.scrollLeft += leftPos;
   };
 
-  componentDidMount = () => {
-    if (!this.props.teachers) {
-      this.props.timeLineStore.fetchItems(false)
-        .then(() => {
-          this.setState({ loaded: true });
-        })
-        .catch(errorMessage);
-    } else {
-      this.props.timeLineStore.fetchItems(true)
-        .then(() => {
-          this.setState({ loaded: true });
-        })
-        .catch(errorMessage);
-    }
-  };
+  componentDidMount() {
+    console.log('TimeLine mounted');
+    this.props.timeLineStore.fetchItems()
+      .then(() => {
+        this.setState({ loaded: true });
+        console.log('TimeLine data loaded');
+        this.handleClickTodayMarker();
+      });
+  }
 
   render() {
+    console.log('TimeLine rendering');
+
     const { allWeeks } = this.props.timeLineStore;
     const { itemWidth, rowHeight } = this.props;
     // if there items are fetched  width is the 200 times total weeks otherwise it's 100vh
@@ -121,6 +119,13 @@ export default class Timeline extends Component {
     const width = allWeeks
       ? itemWidth * allWeeks.length + 21 * allWeeks.length + 'px'
       : '100vw';
+
+    this.hasRendered = true;
+
+    if (!this.state.loaded) {
+      return null;
+    }
+
     return (
       <div className="rootContainer">
         <ClassBarRowComp
