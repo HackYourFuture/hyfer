@@ -27,7 +27,6 @@ export default class ClassTaskRowComp extends Component {
       }
       return (
         <TaskComp
-          isTeacher={this.props.isTeacher}
           teachers={this.props.teachers}
           groups={this.props.groups}
           itemClickHandler={this.props.itemClickHandler}
