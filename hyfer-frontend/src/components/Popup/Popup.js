@@ -1,36 +1,28 @@
 import React, { Component } from 'react';
-import styles from './index.css';
-import { uiStore } from '../../store';
+import { observer, inject } from 'mobx-react';
+import styles from './Popup.css';
 import ModalDialog from '../../Helpers/Modal/Modal';
 import { warning, errorMessage, success } from '../../notify';
 
 const defaultState = {
-  isEmail: false,
-  isLoggedIn: true,
   submitted: false,
   email_input: '',
   confirm_email_input: '',
 };
 
+@inject('global')
+@observer
 class Popup extends Component {
   state = {
     ...defaultState,
   };
-  componentDidMount = () => {
-    uiStore.subscribe(mergedData => {
-      if (mergedData.type) {
-        this.setState({
-          isEmail: mergedData.payload.isEmail,
-          isLoggedIn: mergedData.payload.isLoggedIn,
-        });
-      }
-    });
-  };
+
   handleChange = e => {
     this.setState({
       email_input: e.target.value,
     });
   };
+
   handleConfirmChange = e => {
     this.setState({
       confirm_email_input: e.target.value,
@@ -42,7 +34,7 @@ class Popup extends Component {
     if (email_input !== confirm_email_input) {
       return warning("the emails didn't match ");
     }
-    const { id } = uiStore.getState();
+    const { id } = this.props.global.currentUser;
     const data = {
       id,
       email: email_input,
@@ -65,7 +57,8 @@ class Popup extends Component {
       .then(() => success('Your e-mail has been inserted successfully'))
       .catch(errorMessage);
   };
-  PopUpContent = visible => {
+
+  popUpContent = visible => {
     return (
       <ModalDialog
         visible={visible}
@@ -92,12 +85,11 @@ class Popup extends Component {
       </ModalDialog>
     );
   };
+
   render() {
-    const notUndefined = typeof this.state.isEmail !== 'undefined';
-    const { isEmail, isLoggedIn, submitted } = this.state;
-    const { PopUpContent } = this;
-    if (notUndefined && !isEmail && !isLoggedIn && !submitted) {
-      return PopUpContent(true);
+    const { currentUser, isLoggedIn } = this.props.global;
+    if (currentUser && !currentUser.email && !isLoggedIn && !this.state.submitted) {
+      return this.popUpContent(true);
     } else {
       return '';
     }
