@@ -67,7 +67,6 @@ export default class Timeline extends Component {
       return (
         <div key={items[0].group_name} className={classes.rowContainer}>
           <ClassTaskRowComp
-            isTeacher={this.props.isTeacher}
             selectedModule={this.props.selectedModule}
             items={items}
             width={itemWidth}
@@ -100,18 +99,14 @@ export default class Timeline extends Component {
   };
 
   componentDidMount() {
-    console.log('TimeLine mounted');
     this.props.timeLineStore.fetchItems()
       .then(() => {
         this.setState({ loaded: true });
-        console.log('TimeLine data loaded');
         this.handleClickTodayMarker();
       });
   }
 
   render() {
-    console.log('TimeLine rendering');
-
     const { allWeeks } = this.props.timeLineStore;
     const { itemWidth, rowHeight } = this.props;
     // if there items are fetched  width is the 200 times total weeks otherwise it's 100vh
@@ -158,12 +153,9 @@ export default class Timeline extends Component {
 Timeline.wrappedComponent.propTypes = {
   allModules: PropTypes.array,
   infoSelectedModule: PropTypes.object,
-  isTeacher: PropTypes.bool,
   itemClickHandler: PropTypes.func,
   itemWidth: PropTypes.number,
   rowHeight: PropTypes.number,
   selectedModule: PropTypes.object,
-  teachers: PropTypes.array,
-  timelineItems: PropTypes.object,
   timeLineStore: PropTypes.object,
 };
