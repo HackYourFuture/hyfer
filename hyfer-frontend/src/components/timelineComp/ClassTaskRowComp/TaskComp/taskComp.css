@@ -51,13 +51,14 @@
   font-size: 14px;
 }
 
-.flexWrapper:hover {
+/* .flexWrapper:hover {
   transform: scale(1.03);
-}
+} */
 
 .flexWrapper.active {
   z-index: 2;
-  transform: scale(1.1);
+  border: 2px solid red;
+  /* transform: scale(1.1); */
 }
 
 .dropdownListContainer {
