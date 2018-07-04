@@ -14,7 +14,7 @@ import graduateCap from './icons/graduateCap.svg';
 
 import { inject, observer } from 'mobx-react';
 
-@inject('timeLineStore')
+@inject('timeLineStore', 'global')
 @observer
 export default class DropdownList extends Component {
   state = {
@@ -39,8 +39,8 @@ export default class DropdownList extends Component {
     }, 0);
   };
 
-  updateModule (module, action) {
-    const {groups} = this.props.timeLineStore;
+  updateModule(module, action) {
+    const { groups } = this.props.timeLineStore;
     let result = null;
     switch (action) {
       case 'weekLonger':
@@ -65,7 +65,7 @@ export default class DropdownList extends Component {
       .then(() => {
         return this.props.timeLineStore.fetchItems();
       }) // catching it here so we don't need to catch it any more especially it's switch cases
-      .catch((error) => {throw new Error(error);});
+      .catch((error) => { throw new Error(error); });
 
   }
 
@@ -115,12 +115,12 @@ export default class DropdownList extends Component {
       groupId
     );
   }
-  
+
   weekShorter(chosenModule) {
     const { duration } = chosenModule;
     const newDuration = duration - 1;
     const groupId = chosenModule.id;
-  
+
     return this.props.timeLineStore.patchGroupsModules(
       chosenModule,
       null,
@@ -130,13 +130,13 @@ export default class DropdownList extends Component {
       groupId
     );
   }
-  
+
   moveRight(chosenModule) {
     const { position, duration } = chosenModule;
     const newPosition = position + 1;
     const groupId = chosenModule.id;
-    console.log(groupId,newPosition);
-  
+    console.log(groupId, newPosition);
+
     return this.props.timeLineStore.patchGroupsModules(
       chosenModule,
       newPosition,
@@ -146,12 +146,12 @@ export default class DropdownList extends Component {
       groupId
     );
   }
-  
+
   moveLeft(chosenModule) {
     const { position, duration } = chosenModule;
     const newPosition = position - 1;
     const groupId = chosenModule.id;
-  
+
     return this.props.timeLineStore.patchGroupsModules(
       chosenModule,
       newPosition,
@@ -161,7 +161,7 @@ export default class DropdownList extends Component {
       groupId
     );
   }
-  
+
   checkModuleIsLast = () => {
     const { position, group_name } = this.props.selectedModule;
     const classModules = this.props.allModules.filter(
@@ -186,7 +186,7 @@ export default class DropdownList extends Component {
       rightDisableClass = classes.disabled;
     }
 
-    if (!this.props.isTeacher) {
+    if (!this.props.global.isTeacher) {
       return null;
     }
 

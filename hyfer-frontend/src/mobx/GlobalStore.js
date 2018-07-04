@@ -67,6 +67,9 @@ export default class GlobalStore {
 
   @action.bound
   fetchCurrentUser() {
+    if (this.currentUser) {
+      return;
+    }
     fetchJSON('/user')
       .then((res) => {
         runInAction(() => this.currentUser = res);

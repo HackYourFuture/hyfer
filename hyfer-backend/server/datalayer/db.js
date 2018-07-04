@@ -14,6 +14,7 @@ const connectionConfig = {
   user: DB_USER,
   password: DB_PASSWORD,
   database: DATABASE,
+  timezone: 'utc',
 };
 
 module.exports = (app) => {

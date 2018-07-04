@@ -6,12 +6,13 @@ export default class TodayMarker extends Component {
   todayMarker = React.createRef();
 
   componentDidMount = () => {
-    console.log(this.props);
     this.props.setTodayMarkerRef(this.todayMarker);
-    let leftPos = this.todayMarker.current.parentNode.getBoundingClientRect().x;
-    leftPos -= window.innerWidth / 2;
-    const scrollEl = this.props.scrollingParentRef;
-    scrollEl.current.scrollLeft = leftPos;
+    const scrollElem = this.props.scrollingParentRef;
+    if (scrollElem.current) {
+      let leftPos = this.todayMarker.current.parentNode.getBoundingClientRect().x;
+      leftPos -= window.innerWidth / 2;
+      scrollElem.current.scrollLeft = leftPos;
+    }
   };
 
   render() {

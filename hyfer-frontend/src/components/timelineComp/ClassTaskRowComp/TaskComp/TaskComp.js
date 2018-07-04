@@ -49,12 +49,11 @@ export default class TaskComp extends Component {
     if (
       this.props.selectedModule &&
       this.props.selectedModule.running_module_id ===
-        this.props.item.running_module_id
+      this.props.item.running_module_id
     ) {
       dropdownList = (
         <div className={classes.dropdownListContainer}>
           <DropdownList
-            isTeacher={this.props.isTeacher}
             showModal={this.showAssignTeacherModal}
             selectedModule={this.props.selectedModule}
             allModules={this.props.allModules}

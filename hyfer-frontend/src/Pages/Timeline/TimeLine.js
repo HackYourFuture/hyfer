@@ -10,18 +10,13 @@ import {
   REPO_NAME_CHANGED,
   HISTORY_CHANGED,
   moduleInfoStore,
-  LOGIN_STATE_CHANGED,
-  ISTEACHER_STATE_CHANGED,
-  uiStore,
 } from '../../store/index';
 import { errorMessage } from '../../notify';
 
-@inject('timeLineStore')
+@inject('timeLineStore', 'global')
 @observer
 export default class TimeLine extends Component {
   state = {
-    isLoggedIn: false,
-    isATeacher: false,
     tab: 'readme',
     readme: null,
     repoName: 'curriculum',
@@ -29,13 +24,8 @@ export default class TimeLine extends Component {
     history: null,
     duration: null,
     students: null,
-    timelineItems: null,
     groups: null,
-    allWeeks: null,
-    todayMarkerRef: null,
     selectedModule: null,
-    modules: null,
-    teachers: null,
     infoSelectedModule: null,
   };
 
@@ -54,36 +44,21 @@ export default class TimeLine extends Component {
     }
   };
 
-  uiStoreSubscriber = mergedData => {
-    if (mergedData.type === LOGIN_STATE_CHANGED) {
-      this.setState({ isLoggedIn: mergedData.payload.isLoggedIn });
-    } else if (mergedData.type === ISTEACHER_STATE_CHANGED) {
-      this.setState({ isATeacher: mergedData.payload.isATeacher });
-    }
-  };
-
   componentDidMount() {
     this.props.timeLineStore.fetchItems(true);
     moduleInfoStore.subscribe(this.moduleInfoSubscriber);
-    uiStore.subscribe(this.uiStoreSubscriber);
-
     moduleInfoStore.defaultReadme('curriculum').catch(errorMessage);
-
-    if (localStorage.token) {
-      uiStore.getUserInfo().catch(errorMessage);
-    }
   }
 
   componentWillUnmount() {
     moduleInfoStore.unsubscribe(this.moduleInfoSubscriber);
-    uiStore.unsubscribe(this.uiStoreSubscriber);
   }
 
   getSelectedModuleInfo = item => {
     this.props.timeLineStore.getModulesOfGroup(item.id)
       .then(res => {
         this.setState({
-            infoSelectedModule: res[item.position],
+          infoSelectedModule: res[item.position],
         });
       })
       .catch(errorMessage);
@@ -91,7 +66,7 @@ export default class TimeLine extends Component {
 
   itemClickHandler = (clickEvent, item) => {
     moduleInfoStore
-      .getHistory(clickEvent, this.state.isATeacher)
+      .getHistory(clickEvent, this.props.global.isTeacher)
       .catch(errorMessage);
     const selectedItemInStore = this.props.timeLineStore.items;
     if (
@@ -118,16 +93,17 @@ export default class TimeLine extends Component {
       history,
       repoName,
       readme,
-      isATeacher,
-      isLoggedIn,
-      timelineItems,
-      totalWeeks,
       selectedModule,
-      teachers,
       infoSelectedModule,
       tab,
     } = this.state;
-    let content = <ModuleReadme readme={readme} repoName={repoName} />;
+
+    const readMeContent = this.props.timeLineStore.items
+      ? <ModuleReadme readme={readme} repoName={repoName} />
+      : null;
+
+    let content = readMeContent;
+
     if (tab === 'attendance') {
       content = (
         <Attendance
@@ -140,19 +116,15 @@ export default class TimeLine extends Component {
       );
     }
 
-    if (isLoggedIn && isATeacher) {
+    if (this.props.global.isTeacher) {
       return (
         <main>
           <div style={{ marginBottom: '3rem' }}>
             <TimelineComp
               itemWidth={170}
               rowHeight={70}
-              isTeacher={isATeacher}
-              timelineItems={timelineItems}
-              totalWeeks={totalWeeks}
               selectedModule={selectedModule}
               itemClickHandler={this.itemClickHandler}
-              teachers={teachers}
               infoSelectedModule={infoSelectedModule}
             />
           </div>
@@ -180,16 +152,12 @@ export default class TimeLine extends Component {
             <TimelineComp
               itemWidth={170}
               rowHeight={70}
-              isTeacher={isATeacher}
-              timelineItems={timelineItems}
-              totalWeeks={totalWeeks}
               selectedModule={selectedModule}
               itemClickHandler={this.itemClickHandler}
-              teachers={null}
               infoSelectedModule={infoSelectedModule}
             />
           </div>
-          <ModuleReadme readme={readme} repoName={repoName} />
+          {readMeContent}
         </main>
       );
     }
