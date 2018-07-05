@@ -80,7 +80,7 @@ export default class ClassRowComp extends Component {
     );
 
     try {
-      await fetch(`http://localhost:3005/api/groups/${group[0].id}`, {
+      await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/groups/${group[0].id}`, {
         method: 'PATCH',
         credentials: 'same-origin',
         headers: {

@@ -1,6 +1,6 @@
 export async function saveHistory(body) {
   const token = localStorage.getItem('token');
-  const BASE_URL = 'http://localhost:3005/api/history';
+  const BASE_URL = `${process.env.REACT_APP_API_BASE_URL}/api/history`;
 
   const response = await fetch(BASE_URL, {
     method: 'POST',
