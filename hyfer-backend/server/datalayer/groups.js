@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 const {
   execQuery,
   beginTransaction,
