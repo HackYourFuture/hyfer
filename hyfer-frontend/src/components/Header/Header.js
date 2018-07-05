@@ -17,6 +17,7 @@ export default class Header extends Component {
   };
 
   render() {
+    console.log(`${process.env.REACT_APP_API_BASE_URL}/auth/github`);
     const { isLoggedIn, isTeacher, isStudent, avatarUrl } = this.props.global;
 
     const student = (
@@ -30,7 +31,7 @@ export default class Header extends Component {
         </li>
         <ul className={styles.subNav}>
           <li>
-            <a href="http://localhost:3000/" onClick={this.SignOut}>
+            <a href="/" onClick={this.SignOut}>
               <span className={styles.subNavItem}>Sign Out</span>
             </a>
           </li>
@@ -52,7 +53,7 @@ export default class Header extends Component {
           </div>
           <div className={styles.signButtonWrapper}>
             <a
-              href="http://localhost:3005/auth/github"
+              href={`${process.env.REACT_APP_API_BASE_URL}/auth/github`}
               className={styles.signInButton}
             >
               Sign in
@@ -72,7 +73,7 @@ export default class Header extends Component {
           </li>
           <ul className={styles.subNav}>
             <li>
-              <a href="http://localhost:3000/" onClick={this.SignOut}>
+              <a href="/" onClick={this.SignOut}>
                 <span className={styles.subNavItem}>Sign Out</span>
               </a>
             </li>

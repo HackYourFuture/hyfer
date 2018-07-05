@@ -6,7 +6,7 @@ import { success, errorMessage } from '../notify';
 configure({ enforceActions: true });
 
 const token = localStorage.getItem('token');
-const API_Root = 'http://localhost:3005/api';
+const API_Root = `${process.env.REACT_APP_API_BASE_URL}/api`;
 
 export async function getData(route) {
   const res = await fetch(`${API_Root}/${route}`, {

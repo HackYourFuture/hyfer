@@ -205,9 +205,8 @@ export default class Attendance extends React.Component {
   onSave = () => {
     const token = localStorage.getItem('token');
     const body = this.state.history;
-    const BASE_URL = 'http://localhost:3005/api/history';
 
-    fetch(BASE_URL, {
+    fetch(`${process.env.REACT_APP_API_BASE_URL}/api/history`, {
       method: 'POST',
       body: JSON.stringify(body),
       headers: {
