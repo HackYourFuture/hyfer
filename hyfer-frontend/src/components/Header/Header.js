@@ -53,7 +53,7 @@ export default class Header extends Component {
           </div>
           <div className={styles.signButtonWrapper}>
             <a
-              href={`${process.env.REACT_APP_API_BASE_URL}/auth/github`}
+              href={process.env.NODE_ENV === 'development' ? `${process.env.REACT_APP_API_BASE_URL}/auth/github` : 'auth/github'}
               className={styles.signInButton}
             >
               Sign in
