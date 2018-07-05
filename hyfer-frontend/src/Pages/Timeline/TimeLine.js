@@ -69,14 +69,10 @@ export default class TimeLine extends Component {
       .getHistory(clickEvent, this.props.global.isTeacher)
       .catch(errorMessage);
     const selectedItemInStore = this.props.timeLineStore.items;
-    if (
-      !item ||
-      (selectedItemInStore &&
-        item.running_module_id === selectedItemInStore.running_module_id)
-    ) {
+    if (!item || (selectedItemInStore && item.running_module_id === selectedItemInStore.running_module_id)) {
       // if the clicked module is the same on unselect it
       item = null;
-    } else {
+    } else if (this.props.global.isLoggedIn) {
       this.getSelectedModuleInfo(item);
       this.setState({
         selectedModule: item,
