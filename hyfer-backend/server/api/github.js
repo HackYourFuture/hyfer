@@ -37,7 +37,7 @@ async function getTeamMembers(req, res) {
     const teamsUrl = teams.map(team => httpRequestPromise(team.url));
     const teamsInfo = await Promise.all(teamsUrl);
     const classTeamPromises = teams.map(classTeam =>
-      httpRequestPromise(`https://api.github.com/teams/${classTeam.id}/members?per_page=100`));
+      httpRequestPromise(`https://api.github.com/teams/${classTeam.id}/members`));
     const allClassTeams = await Promise.all(classTeamPromises);
     const studentsPromises = allClassTeams.map((team) => {
       const userPromises = team.map(user => httpRequestPromise(user.url));
@@ -49,12 +49,11 @@ async function getTeamMembers(req, res) {
       created_at: teamsInfo[i].created_at,
       members: item,
     }));
-    res.send(modifiedTeamsStudents);
+    return modifiedTeamsStudents;
   } catch (error) {
-    console.log(res.statusCode);
+    console.log(error);
   }
 }
-
 function getUserEmails(req, res) {
   httpRequestPromise(`${API_END_POINT}/user/emails`)
     .then(result => res.send(result))
