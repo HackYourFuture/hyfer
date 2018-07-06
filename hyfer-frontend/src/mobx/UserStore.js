@@ -36,7 +36,7 @@ export default class UserStore {
       },
       body: JSON.stringify(Data),
     });
-  
+
     if (loadData === 'loadUsers') {
       this.loadUsers(); // this error handling is propagated
     } else if (loadData === 'loadUser') {

@@ -1,6 +1,6 @@
 import { action, computed, observable, runInAction } from 'mobx';
 import { fetchJSON } from './util';
-
+import stores from './';
 export default class GlobalStore {
 
   @observable
@@ -69,8 +69,17 @@ export default class GlobalStore {
   fetchCurrentUser() {
     fetchJSON('/user')
       .then((res) => {
-        runInAction(() => this.currentUser = res);
+        runInAction(() => {
+          this.currentUser = res;
+          if (this.currentUser.group_id !== null) {
+            stores.currentModules.fetchCurrentModuleUser(this.currentUser.group_id);
+            stores.currentModules.getGroupsByGroupName(this.currentUser.group_name);
+          }
+        });
       })
       .catch((error) => this.setLastError(error));
   }
+
+
 }
+// spelling another store 

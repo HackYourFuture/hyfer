@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import styles from '../../assets/styles/timeline.css';
+// import styles from '../../assets/styles/timeline.css';
 import ModuleReadme from '../../components/ModuleReadme/ModuleReadme';
-import Attendance from '../../components/Attendance/Attendance';
+// import Attendance from '../../components/Attendance/Attendance';
+import StudentInterface from '../../components/timelineComp/Tab/StudentInterface';
 import TimelineComp from '../../components/timelineComp/Timeline/Timeline';
 import { inject, observer } from 'mobx-react';
 
@@ -10,13 +11,11 @@ import {
   REPO_NAME_CHANGED,
   HISTORY_CHANGED,
   moduleInfoStore,
-  LOGIN_STATE_CHANGED,
-  ISTEACHER_STATE_CHANGED,
   uiStore,
 } from '../../store/index';
 import { errorMessage } from '../../notify';
 
-@inject('timeLineStore')
+@inject('timeLineStore', 'currentModules', 'global')
 @observer
 export default class TimeLine extends Component {
   state = {
@@ -54,18 +53,19 @@ export default class TimeLine extends Component {
     }
   };
 
-  uiStoreSubscriber = mergedData => {
-    if (mergedData.type === LOGIN_STATE_CHANGED) {
-      this.setState({ isLoggedIn: mergedData.payload.isLoggedIn });
-    } else if (mergedData.type === ISTEACHER_STATE_CHANGED) {
-      this.setState({ isATeacher: mergedData.payload.isATeacher });
-    }
-  };
+  // uiStoreSubscriber = mergedData => {
+  //   if (mergedData.type === LOGIN_STATE_CHANGED) {
+  //     this.setState({ isLoggedIn: mergedData.payload.isLoggedIn });
+  //   } else if (mergedData.type === ISTEACHER_STATE_CHANGED) {
+  //     this.setState({ isATeacher: mergedData.payload.isATeacher });
+  //   }
+  // };
+
 
   componentDidMount() {
     this.props.timeLineStore.fetchItems(true);
     moduleInfoStore.subscribe(this.moduleInfoSubscriber);
-    uiStore.subscribe(this.uiStoreSubscriber);
+    // uiStore.subscribe(this.uiStoreSubscriber);
 
     moduleInfoStore.defaultReadme('curriculum').catch(errorMessage);
 
@@ -80,10 +80,15 @@ export default class TimeLine extends Component {
   }
 
   getSelectedModuleInfo = item => {
+    this.props.currentModules.fetchCurrentModuleUser(item.id);
+    this.props.currentModules.getGroupsByGroupName(item.group_name);
+    this.props.currentModules.fetchModuleTeachers(item.running_module_id
+    );
+
     this.props.timeLineStore.getModulesOfGroup(item.id)
       .then(res => {
         this.setState({
-            infoSelectedModule: res[item.position],
+          infoSelectedModule: res[item.position],
         });
       })
       .catch(errorMessage);
@@ -112,14 +117,12 @@ export default class TimeLine extends Component {
   render() {
     // last item being set in store
     const {
-      students,
-      group_name,
-      duration,
-      history,
+      // students,
+      // group_name,
+      // duration,
+      // history,
       repoName,
       readme,
-      isATeacher,
-      isLoggedIn,
       timelineItems,
       totalWeeks,
       selectedModule,
@@ -127,27 +130,30 @@ export default class TimeLine extends Component {
       infoSelectedModule,
       tab,
     } = this.state;
-    let content = <ModuleReadme readme={readme} repoName={repoName} />;
+    // console.log(this.props.timeLineStore.items);
+    console.log(selectedModule);
+    console.log(this.props.currentModules.currentModule);
+    // let content = <ModuleReadme readme={readme} repoName={repoName} />;
     if (tab === 'attendance') {
-      content = (
-        <Attendance
-          repoName={repoName}
-          history={history}
-          duration={duration}
-          group_name={group_name}
-          students={students}
-        />
-      );
+      // content = (
+      //   <Attendance
+      //     repoName={repoName}
+      //     history={history}
+      //     duration={duration}
+      //     group_name={group_name}
+      //     students={students}
+      //   />
+      // );
     }
 
-    if (isLoggedIn && isATeacher) {
+    if (this.props.global.isLoggedIn && this.props.global.isTeacher) {
       return (
         <main>
           <div style={{ marginBottom: '3rem' }}>
             <TimelineComp
               itemWidth={170}
               rowHeight={70}
-              isTeacher={isATeacher}
+              isTeacher={this.props.global.isTeacher}
               timelineItems={timelineItems}
               totalWeeks={totalWeeks}
               selectedModule={selectedModule}
@@ -156,7 +162,7 @@ export default class TimeLine extends Component {
               infoSelectedModule={infoSelectedModule}
             />
           </div>
-          <div className={styles.tabs}>
+          {/* <div className={styles.tabs}>
             <button
               className={styles.ReadmeTab}
               onClick={() => this.setState({ tab: 'readme' })}
@@ -169,8 +175,9 @@ export default class TimeLine extends Component {
             >
               Attendance
             </button>
-          </div>
-          {content}
+          </div> */}
+          {/* {content} */}
+          <StudentInterface />
         </main>
       );
     } else {
@@ -180,7 +187,7 @@ export default class TimeLine extends Component {
             <TimelineComp
               itemWidth={170}
               rowHeight={70}
-              isTeacher={isATeacher}
+              isTeacher={this.props.global.isTeacher}
               timelineItems={timelineItems}
               totalWeeks={totalWeeks}
               selectedModule={selectedModule}

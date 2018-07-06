@@ -39,14 +39,13 @@ const ROUTES = {
   guest: [
   ],
 };
-
 const defaultProfile = {
   username: 'guest',
   full_name: 'Guest',
   role: 'guest',
 };
 
-@inject('global')
+@inject('global', 'currentModules')
 @observer
 class App extends Component {
 
@@ -71,6 +70,8 @@ class App extends Component {
   render() {
     const { currentUser, isLoggedIn } = this.props.global;
     const routes = isLoggedIn ? [...PUBLIC_ROUTES, ...ROUTES[currentUser.role]] : [...PUBLIC_ROUTES];
+    console.log(this.props.currentModules.moduleWeeks);
+    console.log(this.props.currentModules.weeksAntaal.length);
 
     return (
       <BrowserRouter>
