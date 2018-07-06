@@ -19,11 +19,6 @@ export default class TaskComp extends Component {
     this.setState({ assignTeacherModalIsToggled: false });
   };
 
-  handleClickItem = e => {
-    const { item } = this.props;
-    this.props.itemClickHandler(e, item);
-  };
-
   render() {
     const {
       module_name,
@@ -81,15 +76,16 @@ export default class TaskComp extends Component {
             className={className}
             style={{ backgroundColor: color }}
             title={module_name}
-            data-repo={git_repo}
-            data-group={group_name}
-            data-module_name={module_name}
-            data-start={starting_date.toString()}
-            data-end={ending_date.toString()}
-            data-duration={duration}
-            data-group_id={id}
-            data-running_module_id={running_module_id}
-            onClick={this.handleClickItem}
+            onClick={() => this.props.itemClickHandler({
+              repo: git_repo,
+              group: group_name,
+              module_name,
+              start: starting_date.toString(),
+              end: ending_date.toString(),
+              duration,
+              group_id: id,
+              running_module_id,
+            }, this.props.item)}
           >
             <div className="taskComp__inner">
               <p className="taskComp__info">{module_name}</p>
@@ -101,7 +97,7 @@ export default class TaskComp extends Component {
             {dropdownList}
           </div>
         </div>
-      </div>
+      </div >
     );
   }
 }
