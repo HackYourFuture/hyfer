@@ -19,7 +19,7 @@ export default class UserStore {
 
   @action
   async loadUsers() {
-    const users = await fetchJSON('/user/all');
+    const users = await fetchJSON('/api/user/all');
     runInAction(() => {
       this.filteredUsers = users;
       this.users = users;

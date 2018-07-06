@@ -10,7 +10,7 @@ export async function fetchJSON(path, method = 'GET', data = null) {
     options.body = JSON.stringify(data);
   }
 
-  const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api${path}`, options);
+  const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}${path}`, options);
   return res.json();
 }
 
