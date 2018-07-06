@@ -17,7 +17,6 @@ export default class Header extends Component {
   };
 
   render() {
-    console.log(`${process.env.REACT_APP_API_BASE_URL}/auth/github`);
     const { isLoggedIn, isTeacher, isStudent, avatarUrl } = this.props.global;
 
     const student = (
