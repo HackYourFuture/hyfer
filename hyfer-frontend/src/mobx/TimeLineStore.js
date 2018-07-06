@@ -1,7 +1,7 @@
 import { action, observable, computed, runInAction } from 'mobx';
 import moment from 'moment';
 import { fetchJSON } from './util';
-import stores, { API_BASE_URL } from '.';
+import stores from '.';
 
 function adjustDates(timelineItems) {
   return Object.keys(timelineItems)
@@ -143,7 +143,7 @@ export default class TimeLineStore {
   @action.bound
   async getModulesOfGroup(groupId) {
     const token = localStorage.getItem('token');
-    const res = await fetch(`${API_BASE_URL}/running/${groupId}`, {
+    const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/running/${groupId}`, {
       headers: {
         Authorization: 'Bearer ' + token,
       },
