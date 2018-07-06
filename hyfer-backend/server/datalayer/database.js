@@ -54,6 +54,7 @@ function rollback(con) {
   });
 }
 
+
 module.exports = {
   execQuery,
   beginTransaction,
