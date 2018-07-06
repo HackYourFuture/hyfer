@@ -143,7 +143,7 @@ export default class TimeLineStore {
   @action.bound
   async getModulesOfGroup(groupId) {
     const token = localStorage.getItem('token');
-    const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/running/${groupId}`, {
+    const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/running/${groupId}`, {
       headers: {
         Authorization: 'Bearer ' + token,
       },
