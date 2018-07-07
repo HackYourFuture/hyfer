@@ -20,7 +20,6 @@ function updateUser(con, user) {
 }
 
 function assignToClass(con, userAndGroupIds) {
-  console.log(userAndGroupIds);
   return execQuery(con, ASSIGN_USER_TO_CLASS, [[userAndGroupIds]]);
 }
 
