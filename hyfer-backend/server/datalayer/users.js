@@ -16,6 +16,10 @@ const UPDATE_USER_QUERY = `
   UPDATE users SET full_name=?, role=?, slack_username=?, freecodecamp_username=?, email=?, mobile=?
   WHERE id=?`;
 
+function getTeacher(con) {
+  return execQuery(con , "SELECT full_name FROM users WHERE role='teacher'");
+} 
+ 
 function getUsers(con) {
   return execQuery(con, `${GET_USERS_QUERY} ORDER BY full_name`);
 }
@@ -70,6 +74,7 @@ async function updateUser(con, id, user) {
 
 module.exports = {
   getUsers,
+  getTeacher,
   getUserProfile,
   getUserByUsername,
   getUserById,

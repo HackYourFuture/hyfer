@@ -25,6 +25,16 @@ async function getUsers(req, res) {
   }
 }
 
+async function getTeacher(req, res) {
+  try {
+    const con = await getConnection(req, res);
+    const result = await db.getTeacher(con);
+    res.json(result);
+  } catch (err) {
+    handleError(err, res);
+  }
+}
+
 function getUserById(req, res) {
   getConnection(req, res)
     .then(con => db.getUserById(con, +req.params.id))
@@ -43,6 +53,7 @@ const router = express.Router();
 router
   .get('/', isAuthenticated(), getCurrentUser)
   .get('/all', hasRole('teacher'), getUsers)
+  .get('/teacher', hasRole('teacher') , getTeacher)
   .get('/:id', hasRole('teacher|student'), getUserById)
   .patch('/:id', hasRole('teacher|student'), updateUser);
 

@@ -5,17 +5,52 @@ import Modal from '../../../../../Helpers/Modal/Modal';
 import classes from './assignTeacherModal.css';
 import { errorMessage } from '../../../../../notify';
 
-export default class AssignTeacherModal extends Component {
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
+import Checkbox from '@material-ui/core/Checkbox';
+import IconButton from '@material-ui/core/IconButton';
+import CommentIcon from '@material-ui/icons/Comment';
+
+const styles = theme => ({
+  root: {
+    width: '100%',
+    maxWidth: 360,
+    backgroundColor: theme.palette.background.paper,
+  },
+});
+
+class AssignTeacherModal extends Component {
   state = {
     teacher1: '',
     teacher2: '',
     selectedTeacher1: '',
     selectedTeacher2: '',
     warningMessage: '',
+    checked: [0],
+  };
+
+  handleToggle = value => () => {
+    const { checked } = this.state;
+    const currentIndex = checked.indexOf(value);
+    const newChecked = [...checked];
+
+    if (currentIndex === -1) {
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+
+    this.setState({
+      checked: newChecked,
+    });
   };
 
   handleAssignTeachers = () => {
-    const { teacher1, teacher2 } = this.state;
+    const { teacher1} = this.state;
     const { selectedModule } = this.props;
     const groupsId = selectedModule.id;
     const item = selectedModule;
@@ -25,7 +60,6 @@ export default class AssignTeacherModal extends Component {
       null,
       item.duration,
       teacher1,
-      teacher2,
       groupsId
     );
     this.props.closeModal();
@@ -111,6 +145,8 @@ export default class AssignTeacherModal extends Component {
   };
 
   render() {
+    const { classes } = this.props;
+    
     const { selectedModule, teachers, infoSelectedModule } = this.props;
     let title;
     if (selectedModule) {
@@ -142,16 +178,45 @@ export default class AssignTeacherModal extends Component {
         title={title}
       >
         <div className={classes.formWrapper}>
-          <label className={classes.label} htmlFor="teacher1">
+          {/* <label className={classes.label} htmlFor="teacher1">
             Teacher 1
           </label>
           {selectTeacher1}
           <label className={classes.label} htmlFor="teacher2">
             Teacher 2
           </label>
-          {selectTeacher2}
+          {selectTeacher2} */}
+          {selectTeacher1}
+           {selectTeacher2}
+<List>
+          {[0, 1, 2, 3].map(value => (
+            <ListItem
+              key={value}
+              role={undefined}
+              dense
+              button
+              onClick={this.handleToggle(value)}
+              className={classes.listItem}
+            >
+              <Checkbox
+                //checked={this.state.checked.indexOf(value) !== -1}
+                tabIndex={-1}
+                disableRipple
+              />
+              <ListItemText primary={`Line item ${value + 1}`} />
+              <ListItemSecondaryAction>
+                <IconButton aria-label="Comments">
+                  <CommentIcon />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+          ))}
+        </List>
+
           <div className={classes.btnWrapper}>
             <span>{this.state.warningMessage}</span>
+
+            
             <div>
               <button
                 className={`${classes.btn} ${classes.cancel}`}
@@ -172,3 +237,9 @@ export default class AssignTeacherModal extends Component {
     );
   }
 }
+
+AssignTeacherModal.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(AssignTeacherModal);
