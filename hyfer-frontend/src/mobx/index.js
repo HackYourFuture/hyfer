@@ -4,6 +4,7 @@ import HomeworkStore from './HomeworkStore';
 import UserStore from './UserStore';
 import ModulesStore from './ModulesStore';
 import TimeLineStore from './TimeLineStore';
+import ModulesInfoStore from './ModulesInfoStore';
 
 configure({ enforceActions: true });
 
@@ -15,4 +16,5 @@ export default {
   global: new GlobalStore(),
   modulesStore: new ModulesStore(),
   timeLineStore: new TimeLineStore(),
+  modulesInfoStore: new ModulesInfoStore(),
 };

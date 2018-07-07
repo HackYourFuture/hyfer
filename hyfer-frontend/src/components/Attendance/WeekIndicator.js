@@ -1,13 +1,16 @@
 import React from 'react';
 import styles from '../../assets/styles/attendance.css';
+import { inject, observer } from 'mobx-react';
 
+@inject('modulesInfoStore')
+@observer
 export default class WeekIndicator extends React.Component {
   render() {
     return this.renderWeeks();
   }
 
   renderWeeks() {
-    const { duration, students, history, repoName } = this.props;
+    const { duration, students, history, repoName } = this.props.modulesInfoStore;
     let studentHistory;
     if (duration !== null && students.length !== 0 && repoName !== 'NOREPO') {
       for (let i = 0; i < students.length; i++) {

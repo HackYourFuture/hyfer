@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import ReactHtmlParser from 'react-html-parser';
 import styles from '../../assets/styles/moduleReadme.css';
+import { inject , observer } from 'mobx-react';
 
 const BASE_URL = 'https://github.com/HackYourFuture';
 
+@inject('modulesInfoStore')
+@observer
 export default class ModuleReadMe extends Component {
   render() {
-    const { repoName, readme } = this.props;
+    const { repoName, readme } = this.props.modulesInfoStore;
     let linkToRepo = null;
     let content = readme ? readme : null;
 

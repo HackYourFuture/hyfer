@@ -4,10 +4,12 @@ import WeekIndicator from './WeekIndicator';
 import styles from '../../assets/styles/attendance.css';
 import { notify } from 'react-notify-toast';
 // import * as attendanceStore from '../../store/attendanceStore';
-import { moduleInfoStore, HISTORY_CHANGED } from '../../store';
 import CommitsInfo from './CommitsInfo';
+import { inject , observer } from 'mobx-react';
 const stack = [];
 
+@inject('modulesInfoStore')
+@observer
 export default class Attendance extends React.Component {
   state = {
     edit_Mode: false,
@@ -60,32 +62,25 @@ export default class Attendance extends React.Component {
   //Subscribing to the module info store for getting "history"
   componentDidMount = () => {
     // getting data when component is mounted
-    moduleInfoStore.subscribe(mergedData => {
-      if (mergedData.type === HISTORY_CHANGED) {
-        this.setState({
-          history: mergedData.payload.history,
-          duration: mergedData.payload.duration,
-          group_name: mergedData.payload.group_name,
-          repoName: mergedData.payload.repoName,
-          students: mergedData.payload.students,
-        });
-        this.getCommits(mergedData.payload.repoName);
-      }
-    });
-
-    // getting selected module update from timeline component
-    const { history, students, duration, repoName, group_name } = this.props;
+    const { 
+      history,
+      students, 
+      duration , 
+      group_name,
+      repoName, 
+    } = this.props.modulesInfoStore;
     this.setState({
-      repoName: repoName,
-      group_name: group_name,
       history: history,
-      students: students,
       duration: duration,
+      group_name: group_name,
+      repoName: repoName,
+      students: students,
     });
+    this.getCommits(repoName);
   };
 
   render() {
-    const { history, students, duration, repoName, group_name } = this.state;
+    const { students, duration, repoName, group_name } = this.state;
     let title = null;
     let content = null;
     let buttons = null;
@@ -105,7 +100,6 @@ export default class Attendance extends React.Component {
           </div>
           <div className={styles.checkboxes}>
             <StudentWithWeeks
-              allHistory={history}
               duration={duration}
               onChange={event => {
                 this.handleCheckboxChange(student, event);
@@ -160,12 +154,8 @@ export default class Attendance extends React.Component {
         <div className={styles.wrapper}>
           <div className={styles.group_name}>
             <h3 className={styles.group_name_inner}>{group_name}</h3>
-            <WeekIndicator
-              duration={duration}
-              students={students}
-              history={history}
-              repoName={repoName}
-            />
+            <WeekIndicator/>
+            duration={duration}
           </div>
           <div className={styles.content_wrapper}>{content}</div>
           {buttons}

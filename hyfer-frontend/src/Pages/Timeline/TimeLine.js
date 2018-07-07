@@ -4,17 +4,11 @@ import ModuleReadme from '../../components/ModuleReadme/ModuleReadme';
 import Attendance from '../../components/Attendance/Attendance';
 import TimelineComp from '../../components/timelineComp/Timeline/Timeline';
 import { inject, observer } from 'mobx-react';
-
-import {
-  READ_ME_CHANGED,
-  REPO_NAME_CHANGED,
-  HISTORY_CHANGED,
-  moduleInfoStore,
-} from '../../store/index';
 import { errorMessage } from '../../notify';
 
-@inject('timeLineStore', 'global')
+@inject('timeLineStore', 'global', 'modulesInfoStore')
 @observer
+
 export default class TimeLine extends Component {
   state = {
     tab: 'readme',
@@ -29,29 +23,28 @@ export default class TimeLine extends Component {
     infoSelectedModule: null,
   };
 
-  moduleInfoSubscriber = mergedData => {
-    if (mergedData.type === REPO_NAME_CHANGED) {
-      this.setState({ repoName: mergedData.payload.repoName });
-    } else if (mergedData.type === READ_ME_CHANGED) {
-      this.setState({ readme: mergedData.payload.readme });
-    } else if (mergedData.type === HISTORY_CHANGED) {
-      this.setState({
-        history: mergedData.payload.history,
-        students: mergedData.payload.students,
-        duration: mergedData.payload.duration,
-        group_name: mergedData.payload.group_name,
-      });
-    }
-  };
-
   componentDidMount() {
-    this.props.timeLineStore.fetchItems(true);
-    moduleInfoStore.subscribe(this.moduleInfoSubscriber);
-    moduleInfoStore.defaultReadme('curriculum').catch(errorMessage);
-  }
+    const {
+      readme,
+      repoName,
+      group_name,
+      history,
+      duration,
+      students,
+      groups,
+    } = this.props.modulesInfoStore;
 
-  componentWillUnmount() {
-    moduleInfoStore.unsubscribe(this.moduleInfoSubscriber);
+    this.props.timeLineStore.fetchItems(true);
+    this.props.modulesInfoStore.defaultReadme('curriculum').catch(errorMessage);
+    this.setState({
+      readme : readme,
+      repoName : repoName,
+      group_name : group_name,
+      history : history,
+      duration : duration,
+      students : students,
+      groups : groups,
+    });
   }
 
   getSelectedModuleInfo = item => {
@@ -65,7 +58,7 @@ export default class TimeLine extends Component {
   };
 
   itemClickHandler = (clickEvent, item) => {
-    moduleInfoStore
+    this.props.modulesInfoStore
       .getHistory(clickEvent, this.props.global.isTeacher)
       .catch(errorMessage);
     const selectedItemInStore = this.props.timeLineStore.items;
@@ -87,32 +80,20 @@ export default class TimeLine extends Component {
   render() {
     // last item being set in store
     const {
-      students,
-      group_name,
-      duration,
-      history,
-      repoName,
-      readme,
       selectedModule,
       infoSelectedModule,
       tab,
     } = this.state;
 
     const readMeContent = this.props.timeLineStore.items
-      ? <ModuleReadme readme={readme} repoName={repoName} />
+      ? <ModuleReadme />
       : null;
 
     let content = readMeContent;
 
     if (tab === 'attendance') {
       content = (
-        <Attendance
-          repoName={repoName}
-          history={history}
-          duration={duration}
-          group_name={group_name}
-          students={students}
-        />
+        <Attendance/>
       );
     }
 
