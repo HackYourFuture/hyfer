@@ -7,41 +7,36 @@ const BASE_URL = 'https://api.github.com/repos/HackYourFuture';
 const noRepoAlternative = 'NOREPO'; // alternative name for if a module doesn't have a repo
 
 export default function () {
-  let _observers = [];
-  const _data = {};
+  let observers = [];
+  const state = {};
+
   const subscribe = observer => {
-    _observers.push(observer);
+    observers.push(observer);
   };
 
   const unsubscribe = observer => {
-    _observers = _observers.filter(item => item !== observer);
+    observers = observers.filter(item => item !== observer);
   };
 
   const setState = merge => {
-    const old = {};
-    for (const changedItemKey in merge.payload) {
-      if (_data.hasOwnProperty(changedItemKey)) {
-        old[changedItemKey] = merge.payload[changedItemKey];
-      }
-      _data[changedItemKey] = merge.payload[changedItemKey];
-    }
-    _observers.forEach(observer => observer(merge, old));
+    Object.assign(state, merge.payload);
+    observers.forEach(observer => observer(merge));
   };
 
   const getState = () => {
-    return _data;
+    return state;
   };
 
   // Normal method's will be changing the state
 
-  const getHistory = async (clickEvent, isATeacher) => {
+  const getHistory = async (data, isATeacher) => {
     // the error is propagated
     // used once in src\Pages\Timeline\TimeLine.js
     if (!isATeacher) {
-      _getRepoNameAndSundays(clickEvent);
+      getRepoNameAndSundays(data);
       return getReadme();
     }
-    _getRepoNameAndSundays(clickEvent);
+    getRepoNameAndSundays(data);
     getReadme();
     const {
       group_id,
@@ -51,8 +46,8 @@ export default function () {
       repoName,
       start,
       end,
-    } = await _data;
-    const moduleSundays = _getSundays(start, end);
+    } = state;
+    const moduleSundays = getSundays(start, end);
     const sundays = {
       sundays: moduleSundays,
     };
@@ -80,11 +75,12 @@ export default function () {
       },
     });
   };
+
   const getReadme = async () => {
     // check if there is a valid repoName
-    if (!_data.repoName || _data.repoName === noRepoAlternative) return;
+    if (!state.repoName || state.repoName === noRepoAlternative) return;
     // make the request
-    const res = await fetch(`${BASE_URL}/${_data.repoName}/readme`);
+    const res = await fetch(`${BASE_URL}/${state.repoName}/readme`);
     if (!res.ok) throw res; // the error is propagated
     const readmeEncoded = await res.json();
     const readmeDecoded = atob(readmeEncoded.content);
@@ -100,11 +96,9 @@ export default function () {
 
   // Helper methods used to help the state changing methods above
 
-  const _getRepoNameAndSundays = clickEvent => {
+  const getRepoNameAndSundays = data => {
     // it is a promise because it is being used in the getReadme function and that one won't wait
     let repoName = null;
-    const target = clickEvent.target;
-    const dataset = target.dataset;
     const {
       start,
       end,
@@ -113,12 +107,12 @@ export default function () {
       group,
       running_module_id,
       duration,
-    } = dataset;
+    } = data;
 
     // if the selected element doesn't have a repo
     if (!repo) {
       repoName = noRepoAlternative;
-      setState({});
+      // setState({});
     } else {
       repoName = repo;
     }
@@ -138,7 +132,7 @@ export default function () {
     setState(mergedData);
   };
 
-  const _getSundays = (startString, endString) => {
+  const getSundays = (startString, endString) => {
     // note: not passing just a string because moment is throwing a warning about the format of the string
     const start = moment(new Date(startString));
     const end = moment(new Date(endString));
