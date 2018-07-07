@@ -10,15 +10,10 @@ import FastForward from '@material-ui/icons/FastForward';
 import FastRewind from '@material-ui/icons/FastRewind';
 import ArrowForward from '@material-ui/icons/ArrowForward';
 import ArrowBack from '@material-ui/icons/ArrowBack';
-import School from '@material-ui/icons/School';
+import Split from '@material-ui/icons/SwapHoriz';
 import Remove from '@material-ui/icons/Remove';
 import Add from '@material-ui/icons/Add';
-
-//ref:https://material-ui.com/demos/menus/#max-height-menus
-
 import { inject, observer } from 'mobx-react';
-
-//const ITEM_HEIGHT = 48;
 
 @inject('timeLineStore', 'global')
 @observer
@@ -183,7 +178,6 @@ export default class DropdownList extends Component {
     }
     return (
       <Fragment>
-      {/* <FormDialogModule /> */}
         <IconButton
         aria-owns={anchorEl ? 'long-menu' : null}
         aria-haspopup="true"
@@ -214,7 +208,7 @@ export default class DropdownList extends Component {
               <ListItemText inset primary="Week shorter" onClick={this.handleWeekShorter} />
             </MenuItem>
             <MenuItem >
-              <ListItemIcon ><School /></ListItemIcon>
+              <ListItemIcon ><Split /></ListItemIcon>
               <ListItemText inset primary="Split Module" onClick={()=>{}} />
             </MenuItem>
             <MenuItem >
