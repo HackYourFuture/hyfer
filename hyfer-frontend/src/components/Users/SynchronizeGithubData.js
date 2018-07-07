@@ -21,7 +21,7 @@ export default class SynchronizeGithubData extends Component {
       loading: true,
     });
 
-    const res = await fetch('http://localhost:3005/api/students', {
+    const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/students`, {
       headers: {
         Authorization: 'Bearer ' + token,
       },
@@ -88,8 +88,8 @@ export default class SynchronizeGithubData extends Component {
           {this.state.loading === false ? (
             'Synchronize'
           ) : (
-            <img src={loader} alt="loader" className={style.loadingImg} />
-          )}
+              <img src={loader} alt="loader" className={style.loadingImg} />
+            )}
         </button>
         <SynchronizeResultModal
           githubApi={this.state.githubApi}

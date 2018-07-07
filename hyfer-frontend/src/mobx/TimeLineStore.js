@@ -1,7 +1,7 @@
 import { action, observable, computed, runInAction } from 'mobx';
 import moment from 'moment';
 import { fetchJSON } from './util';
-import stores, { API_BASE_URL } from '.';
+import stores from '.';
 
 function adjustDates(timelineItems) {
   return Object.keys(timelineItems)
@@ -76,8 +76,8 @@ export default class TimeLineStore {
       return;
     }
 
-    const timelineItems = await fetchJSON('/timeline');
-    const groupsWithIds = await fetchJSON('/groups');
+    const timelineItems = await fetchJSON('/api/timeline');
+    const groupsWithIds = await fetchJSON('/api/groups');
 
     runInAction(() => {
       this.groupsWithIds = groupsWithIds;
@@ -96,7 +96,7 @@ export default class TimeLineStore {
       archived: 0,
     };
     try {
-      await fetchJSON('/groups', 'POST', body);
+      await fetchJSON('/api/groups', 'POST', body);
     } catch (err) {
       stores.global.setLastError(err);
     }
@@ -113,7 +113,7 @@ export default class TimeLineStore {
       teacher2_id,
     };
     try {
-      await fetchJSON(`/running/update/${group_id}/${item.position}`, 'PATCH', body);
+      await fetchJSON(`/api/running/update/${group_id}/${item.position}`, 'PATCH', body);
     } catch (err) {
       stores.global.setLastError(err);
     }
@@ -123,7 +123,7 @@ export default class TimeLineStore {
   async addModule(moduleId, groupId, position) {
     this.dataFetched = false;
     try {
-      await fetchJSON(`/running/add/${moduleId}/${groupId}/${position}`, 'PATCH');
+      await fetchJSON(`/api/running/add/${moduleId}/${groupId}/${position}`, 'PATCH');
     } catch (error) {
       stores.global.setLastError(error);
     }
@@ -134,7 +134,7 @@ export default class TimeLineStore {
     this.dataFetched = false;
     const { id, position } = chosenModule;
     try {
-      await fetchJSON(`/running/${id}/${position}`, 'DELETE');
+      await fetchJSON(`/api/running/${id}/${position}`, 'DELETE');
     } catch (error) {
       stores.global.setLastError(error);
     }
@@ -143,7 +143,7 @@ export default class TimeLineStore {
   @action.bound
   async getModulesOfGroup(groupId) {
     const token = localStorage.getItem('token');
-    const res = await fetch(`${API_BASE_URL}/running/${groupId}`, {
+    const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/running/${groupId}`, {
       headers: {
         Authorization: 'Bearer ' + token,
       },
