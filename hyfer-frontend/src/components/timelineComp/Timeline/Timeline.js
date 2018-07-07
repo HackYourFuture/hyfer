@@ -2,7 +2,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import loader from '../../../assets/images/Eclipse.gif';
-import { errorMessage } from '../../../notify';
 import { TODAY_MARKER_REFERENCE } from '../../../store';
 import Button from '../Button/Button';
 import ClassBarRowComp from '../ClassBarRowComp/ClassBarRowComp';
@@ -11,11 +10,14 @@ import WeekComp from '../WeekComp/WeekComp';
 import classes from './timeline.css';
 import { observer, inject } from 'mobx-react';
 
-@inject('timeLineStore')
+@inject('timeLineStore', 'global')
 @observer
 export default class Timeline extends Component {
+  hasRendered = false;
+
   state = {
     todayMarkerRef: null,
+    loaded: false,
   };
 
   setTodayMarkerRef = React.createRef();
@@ -65,7 +67,6 @@ export default class Timeline extends Component {
       return (
         <div key={items[0].group_name} className={classes.rowContainer}>
           <ClassTaskRowComp
-            isTeacher={this.props.isTeacher}
             selectedModule={this.props.selectedModule}
             items={items}
             width={itemWidth}
@@ -97,21 +98,13 @@ export default class Timeline extends Component {
     scrollEl.current.scrollLeft += leftPos;
   };
 
-  componentDidMount = () => {
-    if (!this.props.teachers) {
-      this.props.timeLineStore.fetchItems(false)
-        .then(() => {
-          this.setState({ loaded: true });
-        })
-        .catch(errorMessage);
-    } else {
-      this.props.timeLineStore.fetchItems(true)
-        .then(() => {
-          this.setState({ loaded: true });
-        })
-        .catch(errorMessage);
-    }
-  };
+  componentDidMount() {
+    this.props.timeLineStore.fetchItems()
+      .then(() => {
+        this.setState({ loaded: true });
+        this.handleClickTodayMarker();
+      });
+  }
 
   render() {
     const { allWeeks } = this.props.timeLineStore;
@@ -121,6 +114,13 @@ export default class Timeline extends Component {
     const width = allWeeks
       ? itemWidth * allWeeks.length + 21 * allWeeks.length + 'px'
       : '100vw';
+
+    this.hasRendered = true;
+
+    if (!this.state.loaded) {
+      return null;
+    }
+
     return (
       <div className="rootContainer">
         <ClassBarRowComp
@@ -153,12 +153,9 @@ export default class Timeline extends Component {
 Timeline.wrappedComponent.propTypes = {
   allModules: PropTypes.array,
   infoSelectedModule: PropTypes.object,
-  isTeacher: PropTypes.bool,
   itemClickHandler: PropTypes.func,
   itemWidth: PropTypes.number,
   rowHeight: PropTypes.number,
   selectedModule: PropTypes.object,
-  teachers: PropTypes.array,
-  timelineItems: PropTypes.object,
   timeLineStore: PropTypes.object,
 };

@@ -1,11 +1,9 @@
-import React, { Component } from 'react';
-
-import FullScreenDialog from './FullscreenAddModule';
+import React, { Fragment, Component } from 'react';
+import FormDialogModule from './FormDialogModule';// eslint-disable-line no-unused-vars
 import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import MenuList from '@material-ui/core/MenuList';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import FastForward from '@material-ui/icons/FastForward';
@@ -20,13 +18,14 @@ import Add from '@material-ui/icons/Add';
 
 import { inject, observer } from 'mobx-react';
 
-@inject('timeLineStore')
+//const ITEM_HEIGHT = 48;
+
+@inject('timeLineStore', 'global')
 @observer
 export default class DropdownList extends Component {
   state = {
+    isToggled: false,
     anchorEl: null,
-    newModuleModalIsToggled: false,
-    display : false ,
   };
 
   handleClick = event => {
@@ -37,18 +36,8 @@ export default class DropdownList extends Component {
     this.setState({ anchorEl: null });
   };
 
-  toggleNewModuleModal = () => {
-    this.setState({
-      newModuleModalIsToggled: true,
-    display: !this.state.display});
-  };
-
-  closeNewModuleModal = () => {
-    this.setState({ newModuleModalIsToggled: false });
-  };
-
-  updateModule (module, action) {
-    const {groups} = this.props.timeLineStore;
+  updateModule(module, action) {
+    const { groups } = this.props.timeLineStore;
     let result = null;
     switch (action) {
       case 'weekLonger':
@@ -73,7 +62,7 @@ export default class DropdownList extends Component {
       .then(() => {
         return this.props.timeLineStore.fetchItems();
       }) // catching it here so we don't need to catch it any more especially it's switch cases
-      .catch((error) => {throw new Error(error);});
+      .catch((error) => { throw new Error(error); });
 
   }
 
@@ -123,12 +112,12 @@ export default class DropdownList extends Component {
       groupId
     );
   }
-  
+
   weekShorter(chosenModule) {
     const { duration } = chosenModule;
     const newDuration = duration - 1;
     const groupId = chosenModule.id;
-  
+
     return this.props.timeLineStore.patchGroupsModules(
       chosenModule,
       null,
@@ -138,13 +127,13 @@ export default class DropdownList extends Component {
       groupId
     );
   }
-  
+
   moveRight(chosenModule) {
     const { position, duration } = chosenModule;
     const newPosition = position + 1;
     const groupId = chosenModule.id;
-    console.log(groupId,newPosition);
-  
+    console.log(groupId, newPosition);
+
     return this.props.timeLineStore.patchGroupsModules(
       chosenModule,
       newPosition,
@@ -154,13 +143,12 @@ export default class DropdownList extends Component {
       groupId
     );
   }
-  
+
   moveLeft(chosenModule) {
     const { position, duration } = chosenModule;
     const newPosition = position - 1;
     const groupId = chosenModule.id;
   
- 
     return this.props.timeLineStore.patchGroupsModules(
       chosenModule,
       newPosition,
@@ -170,7 +158,7 @@ export default class DropdownList extends Component {
       groupId
     );
   }
-  
+
   checkModuleIsLast = () => {
     const { position, group_name } = this.props.selectedModule;
     const classModules = this.props.allModules.filter(
@@ -179,7 +167,7 @@ export default class DropdownList extends Component {
     const itemsAfter = classModules.filter(item => item.position > position);
     return itemsAfter.length === 0;
   };
-
+  
   render() {
     const { anchorEl } = this.state;
     let moveLeft = this.handleMoveLeft;
@@ -190,66 +178,55 @@ export default class DropdownList extends Component {
     if (this.checkModuleIsLast()) {
       moveRight = null;
     }
-    if (!this.props.isTeacher) {
+    if (!this.props.global.isTeacher) {
       return null;
     }
-
     return (
-      <div>
-      <div>
-      <IconButton
-        aria-label="More"
+      <Fragment>
+      {/* <FormDialogModule /> */}
+        <IconButton
         aria-owns={anchorEl ? 'long-menu' : null}
         aria-haspopup="true"
         onClick={this.handleClick}
-       >
-        <MoreVertIcon />
-      </IconButton>
-      <Menu
-        id="long-menu"
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={this.handleClose}
+        >
+          <MoreVertIcon />
+        </IconButton>
+        <Menu
+          id="simple-menu"
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={this.handleClose}
           >
-            <MenuList>
-              <MenuItem >
-                <ListItemIcon ><ArrowForward /></ListItemIcon>
-                <ListItemText inset primary="Move right" onClick={moveRight} />
-              </MenuItem>
-              <MenuItem >
-                <ListItemIcon ><ArrowBack /></ListItemIcon>
-                <ListItemText inset primary="Move left" onClick={moveLeft} />
-              </MenuItem>
-              <MenuItem >
-                <ListItemIcon ><FastForward /></ListItemIcon>
-                <ListItemText inset primary="Week longer" onClick={this.handleWeekLonger} />
-              </MenuItem>
-              <MenuItem >
-                <ListItemIcon ><FastRewind /></ListItemIcon>
-                <ListItemText inset primary="Week shorter" onClick={this.handleWeekShorter} />
-              </MenuItem>
-              <MenuItem >
-                <ListItemIcon ><School /></ListItemIcon>
-                <ListItemText inset primary="(Re)assign teachers" onClick={this.props.showModal} />
-              </MenuItem>
-              <MenuItem >
-                <ListItemIcon ><Remove /></ListItemIcon>
-                <ListItemText inset primary="Remove module" onClick={this.handleRemoveModule} />
-              </MenuItem>
-              <MenuItem >
-                <ListItemIcon ><Add /></ListItemIcon>
-                <ListItemText inset primary="Add a new module" onClick={this.toggleNewModuleModal} />
-              </MenuItem>
-            </MenuList>
-          </Menu>  
-        </div>
-        <FullScreenDialog
-          isToggled={this.state.newModuleModalIsToggled}
-          closeModal={this.state.newModuleModalIsToggled}
-          onClose = {this.toggleNewModuleModal}
-          open ={this.state.display}
-         />
-        </div>
+            <MenuItem >
+              <ListItemIcon ><ArrowForward /></ListItemIcon>
+              <ListItemText inset primary="Move right" onClick={moveRight} />
+            </MenuItem>
+            <MenuItem >
+              <ListItemIcon ><ArrowBack /></ListItemIcon>
+              <ListItemText inset primary="Move left" onClick={moveLeft} />
+            </MenuItem>
+            <MenuItem >
+              <ListItemIcon ><FastForward /></ListItemIcon>
+              <ListItemText inset primary="Week longer" onClick={this.handleWeekLonger} />
+            </MenuItem>
+            <MenuItem >
+              <ListItemIcon ><FastRewind /></ListItemIcon>
+              <ListItemText inset primary="Week shorter" onClick={this.handleWeekShorter} />
+            </MenuItem>
+            <MenuItem >
+              <ListItemIcon ><School /></ListItemIcon>
+              <ListItemText inset primary="Split Module" onClick={()=>{}} />
+            </MenuItem>
+            <MenuItem >
+              <ListItemIcon ><Remove /></ListItemIcon>
+              <ListItemText inset primary="Remove module" onClick={this.handleRemoveModule} />
+            </MenuItem>
+            <MenuItem >
+              <ListItemIcon ><Add /></ListItemIcon>
+              <ListItemText inset primary="Add a new module" onClick={this.FormDialogModule} />
+            </MenuItem>
+        </Menu>
+      </Fragment>
     );
   }
 }

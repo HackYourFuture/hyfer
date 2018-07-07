@@ -1,15 +1,20 @@
-import React, { Component } from 'react';
-import Modal from '../../../../../Helpers/Modal/Modal';
-import classes from './addNewModuleModal.css';
-// import { timelineStore } from '../../../../../store';
+import React, { Component} from 'react';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import classes from '../../Button/AddDropdownList/AddNewModuleModal/addNewModuleModal.css';
 import moment from 'moment';
-import { errorMessage } from '../../../../../notify';
+import { errorMessage } from '../../../../notify';
 import { observer, inject } from 'mobx-react';
 
 @inject('timeLineStore')
 @observer
-export default class AddNewModuleModal extends Component {
+export default class FormDialogModule extends Component {
   state = {
+    open: false,
     selectedDate: '',
     selectedGroup: '',
     selectedModuleId: '',
@@ -21,9 +26,13 @@ export default class AddNewModuleModal extends Component {
     maxDate: '',
   };
 
-  // getSharedDatesBetweenGroups = () => {
-  //   return timelineStore.getSharedDates(this.props.items);
-  // };
+  handleClickOpen = () => {
+    this.setState({ open: true });
+  };
+
+  handleClose = () => {
+    this.setState({ open: false });
+  };
 
   getSharedDatesBetweenGroups = () => {
     const items = this.props.timeLineStore.items;
@@ -372,6 +381,7 @@ export default class AddNewModuleModal extends Component {
     }
   };
 
+
   render() {
     const { groups } = this.props.timeLineStore;
     const { modules } = this.props.timeLineStore;
@@ -380,26 +390,30 @@ export default class AddNewModuleModal extends Component {
     const groupsPlus = ['All classes', ...groups];
 
     return (
-      <Modal
+      <div>
+        <Button onClick={this.handleClickOpen}>Open form dialog!!!</Button>
+        <Dialog
+          open={this.state.open}
+          onClose={this.handleClose}
+          aria-labelledby="form-dialog-title"
+        >
+          {/* <Modal
         title="Add a new module"
         visible={this.props.isToggled}
         closeModal={this.props.closeModal}
-      >
-        <div className={classes.formContainer}>
-          <label className={classes.label} htmlFor="groupSelect">
-            Group
-          </label>
+      > */}
+        
+      {/* </Modal> */}
+          <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+          <DialogContent>
+          <div className={classes.formContainer}>
+          <label className={classes.label} htmlFor="groupSelect">Group</label>
           {this.renderSelectGroup(groupsPlus)}
-          <label className={classes.label} htmlFor="moduleSelect">
-            Module
-          </label>
+          <label className={classes.label} htmlFor="moduleSelect">Module</label>
           {this.renderSelectModule(modules)}
-          <label className={classes.label} htmlFor="durationOfModule">
-            Duration (weeks)
-          </label>
+          <label className={classes.label} htmlFor="durationOfModule">Duration (weeks)</label>
           {this.renderDurationOfModule()}
-          <label className={classes.label} htmlFor="sundaySelect">
-            Starting date of module
+          <label className={classes.label} htmlFor="sundaySelect">Starting date of module
             <span className={classes.dateInstr}>
               (If you choose a date that is not a Sunday, the date picker will
               roll back to the last sunday)
@@ -434,7 +448,25 @@ export default class AddNewModuleModal extends Component {
             </span>
           </div>
         </div>
-      </Modal>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Email Address"
+              type="email"
+              fullWidth
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={this.handleClose} color="primary">
+              Subscribe
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
     );
   }
 }

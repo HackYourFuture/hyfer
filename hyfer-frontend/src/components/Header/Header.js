@@ -1,11 +1,12 @@
 import { inject, observer } from 'mobx-react';
 import React, { Component } from 'react';
 import cookie from 'react-cookies';
-import { NavLink } from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
 import hyfIcon from '../../assets/images/icon.png';
 import styles from '../../assets/styles/header.css';
 
 @inject('global')
+@withRouter
 @observer
 export default class Header extends Component {
 

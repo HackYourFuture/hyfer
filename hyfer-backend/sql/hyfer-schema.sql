@@ -6,8 +6,8 @@
 # https://github.com/sequelpro/sequelpro
 #
 # Host: localhost (MySQL 5.7.16)
-# Database: hyfer
-# Generation Time: 2017-05-30 11:28:37 +0000
+# Database: hyfer-sync
+# Generation Time: 2018-07-04 16:46:05 +0000
 # ************************************************************
 
 
@@ -22,7 +22,6 @@
 
 # Dump of table group_students
 # ------------------------------------------------------------
-DROP TABLE IF EXISTS `group_students`;
 
 CREATE TABLE `group_students` (
   `group_id` int(8) NOT NULL,
@@ -38,13 +37,56 @@ CREATE TABLE `group_students` (
 # Dump of table groups
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `groups`;
-
 CREATE TABLE `groups` (
   `id` int(8) NOT NULL AUTO_INCREMENT,
   `group_name` varchar(50) DEFAULT NULL,
   `starting_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `archived` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `group_name` (`group_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table homework_assignments
+# ------------------------------------------------------------
+
+CREATE TABLE `homework_assignments` (
+  `id` int(8) NOT NULL AUTO_INCREMENT,
+  `group_id` int(8) NOT NULL,
+  `module_id` int(8) NOT NULL,
+  `title` varchar(255) NOT NULL DEFAULT '',
+  `assignment_link` varchar(255) NOT NULL DEFAULT '',
+  `deadline` date NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table homework_reviews
+# ------------------------------------------------------------
+
+CREATE TABLE `homework_reviews` (
+  `id` int(8) NOT NULL AUTO_INCREMENT,
+  `submission_id` int(8) NOT NULL,
+  `reviewer_id` int(8) NOT NULL,
+  `comments` text NOT NULL,
+  `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table homework_submissions
+# ------------------------------------------------------------
+
+CREATE TABLE `homework_submissions` (
+  `id` int(8) NOT NULL AUTO_INCREMENT,
+  `assignment_id` int(8) NOT NULL,
+  `submitter_id` int(8) NOT NULL,
+  `github_link` varchar(255) NOT NULL DEFAULT '',
+  `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `reviewer` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -52,8 +94,6 @@ CREATE TABLE `groups` (
 
 # Dump of table modules
 # ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `modules`;
 
 CREATE TABLE `modules` (
   `id` int(8) NOT NULL AUTO_INCREMENT,
@@ -76,8 +116,6 @@ CREATE TABLE `modules` (
 # Dump of table running_modules
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `running_modules`;
-
 CREATE TABLE `running_modules` (
   `id` int(8) NOT NULL AUTO_INCREMENT,
   `module_id` int(8) NOT NULL,
@@ -86,7 +124,7 @@ CREATE TABLE `running_modules` (
   `position` int(8) DEFAULT NULL,
   `teacher1_id` int(8) DEFAULT NULL,
   `teacher2_id` int(8) DEFAULT NULL,
-  `description` VARCHAR(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_module` (`module_id`),
   KEY `fk_group_name` (`group_id`),
@@ -102,8 +140,6 @@ CREATE TABLE `running_modules` (
 
 # Dump of table students_history
 # ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `students_history`;
 
 CREATE TABLE `students_history` (
   `group_id` int(8) NOT NULL,
@@ -125,74 +161,21 @@ CREATE TABLE `students_history` (
 # Dump of table users
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `users`;
-
 CREATE TABLE `users` (
   `id` int(8) NOT NULL AUTO_INCREMENT,
   `username` varchar(32) DEFAULT '',
-  `full_name` varchar(145) NOT NULL DEFAULT '',
+  `full_name` varchar(145) DEFAULT NULL,
   `access_token` varchar(64) DEFAULT NULL,
   `role` varchar(32) DEFAULT NULL,
   `register_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `linkedin_username` varchar(32) DEFAULT NULL,
   `slack_username` varchar(32) DEFAULT NULL,
   `freecodecamp_username` varchar(32) DEFAULT NULL,
   `email` varchar(32) DEFAULT NULL,
   `mobile` varchar(32) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-
-# Dump of table homework_assignments
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `homework_assignments`;
-
-CREATE TABLE `homework_assignments` (
-  `id` int(8) NOT NULL AUTO_INCREMENT,
-  `group_id` int(8) NOT NULL,
-  `module_id` int(8) NOT NULL,
-  `title` varchar(255) NOT NULL DEFAULT '',
-  `assignment_link` varchar(255) NOT NULL DEFAULT '',
-  `deadline` date NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-
-
-# Dump of table homework_submissions
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `homework_submissions`;
-
-CREATE TABLE `homework_submissions` (
-  `id` int(8) NOT NULL AUTO_INCREMENT,
-  `assignment_id` int(8) NOT NULL,
-  `submitter_id` int(8) NOT NULL,
-  `github_link` varchar(255) NOT NULL DEFAULT '',
-  `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `reviewer` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-
-
-# Dump of table homework_reviews
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `homework_reviews`;
-
-CREATE TABLE `homework_reviews` (
-  `id` int(8) NOT NULL AUTO_INCREMENT,
-  `submission_id` int(8) NOT NULL,
-  `reviewer_id` int(8) NOT NULL,
-  `comments` text NOT NULL DEFAULT '',
-  `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 
 

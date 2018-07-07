@@ -1,10 +1,8 @@
 import ModuleInfoStore from './ModuleInfoStore';
-import UiStore from './UiStore';
 
 // stores
 
 export const moduleInfoStore = (window.moduleInfoStore = ModuleInfoStore());
-export const uiStore = (window.uiStore = UiStore());
 
 // types of changes
 
