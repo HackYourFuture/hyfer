@@ -11,6 +11,7 @@ import FastRewind from '@material-ui/icons/FastRewind';
 import ArrowForward from '@material-ui/icons/ArrowForward';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import Split from '@material-ui/icons/SwapHoriz';
+import School from '@material-ui/icons/School';
 import Remove from '@material-ui/icons/Remove';
 import Add from '@material-ui/icons/Add';
 import { inject, observer } from 'mobx-react';
@@ -21,6 +22,8 @@ export default class DropdownList extends Component {
   state = {
     isToggled: false,
     anchorEl: null,
+    newModuleModalIsToggled: false,
+    display : false ,
   };
 
   handleClick = event => {
@@ -29,6 +32,16 @@ export default class DropdownList extends Component {
 
   handleClose = () => {
     this.setState({ anchorEl: null });
+  };
+  
+  toggleNewModuleModal = () => {
+    this.setState({
+      newModuleModalIsToggled: true,
+    display: !this.state.display});
+  };
+
+  closeNewModuleModal = () => {
+    this.setState({ newModuleModalIsToggled: false });
   };
 
   updateModule(module, action) {
@@ -183,6 +196,7 @@ export default class DropdownList extends Component {
         aria-haspopup="true"
         onClick={this.handleClick}
         >
+          <FormDialogModule />
           <MoreVertIcon />
         </IconButton>
         <Menu
@@ -208,6 +222,10 @@ export default class DropdownList extends Component {
               <ListItemText inset primary="Week shorter" onClick={this.handleWeekShorter} />
             </MenuItem>
             <MenuItem >
+              <ListItemIcon ><School /></ListItemIcon>
+              <ListItemText inset primary="(Re) assign teacher" onClick={this.props.showModal} />
+          </MenuItem>
+          <MenuItem >
               <ListItemIcon ><Split /></ListItemIcon>
               <ListItemText inset primary="Split Module" onClick={()=>{}} />
             </MenuItem>
@@ -217,9 +235,15 @@ export default class DropdownList extends Component {
             </MenuItem>
             <MenuItem >
               <ListItemIcon ><Add /></ListItemIcon>
-              <ListItemText inset primary="Add a new module" onClick={this.FormDialogModule} />
+              <ListItemText inset primary="Add a new module" onClick={this.toggleNewModuleModal} />
             </MenuItem>
         </Menu>
+        <FormDialogModule
+          isToggled={this.state.newModuleModalIsToggled}
+          closeModal={this.state.newModuleModalIsToggled}
+          onClose = {this.toggleNewModuleModal}
+          open ={this.state.display}
+         />
       </Fragment>
     );
   }
