@@ -6,7 +6,7 @@ const {
 } = require('./database');
 
 const GET_USERS_QUERY = `
-  SELECT users.id, users.username, users.full_name, users.role, users.register_date,
+  SELECT users.id, users.username, users.full_name, users.role, users.register_date,linkedin_username ,
     users.slack_username, users.freecodecamp_username, users.email, users.mobile,
     group_students.group_id, \`groups\`.group_name, \`groups\`.archived, \`groups\`.starting_date FROM users
   LEFT JOIN group_students ON users.id=group_students.user_id
@@ -16,7 +16,7 @@ const UPDATE_USER_QUERY = `
   UPDATE users SET full_name=?, role=?, slack_username=?, freecodecamp_username=?, email=?, mobile=?
   WHERE id=?`;
 
-const Users_Module_Students = `SELECT users.id , users.full_name  , users.role , users.slack_username,users.freecodecamp_username, users.username ,
+const Users_Module_Students = `SELECT users.id , users.full_name  , users.role , users.slack_username,users.freecodecamp_username ,users.username ,
  groups.starting_date,groups.group_name from users
  LEFT JOIN group_students ON users.id=group_students.user_id 
  LEFT JOIN groups ON groups.id = group_students.group_id  

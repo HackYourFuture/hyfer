@@ -1,37 +1,22 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import { Slider } from '@material-ui/lab/Slider';
-
-const styles = {
-  root: {
-    width: 300,
-  },
-};
-
-class Student extends React.Component {
-  state = {
-    value: 3,
-  };
-
-  handleChange = (event, value) => {
-    this.setState({ value });
-  };
-
+import styles from '../../../assets/styles/users.css';
+import User from './Users';
+import { inject, observer } from 'mobx-react';
+@inject('currentModules')
+@observer
+export default class Student extends React.Component {
   render() {
-    const { classes } = this.props;
-    const { value } = this.state;
-
+    const { moduleUsers } = this.props.currentModules;
     return (
-      <div className={classes.root}>
-        <Slider value={value} min={0} max={6} step={1} onChange={this.handleChange} />
-      </div>
+      <li className={styles.userList}>
+        <ul className={styles.userContainer}>
+          {moduleUsers.map(user => {
+            return (
+              <User key={user.id} user={user} />
+            );
+          })}
+        </ul>
+      </li>
     );
   }
 }
-
-Student.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(Student);

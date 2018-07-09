@@ -6,7 +6,7 @@ import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import './assets/styles/app.css';
 import Footer from './components/Footer/Footer';
 import Header from './components/Header/Header';
-import Popup from './components/Popup';
+import Popup from './components/Popup/Popup';
 import Homework from './Pages/Homework/Homework';
 import Modules from './Pages/Modules/Modules';
 import TimeLine from './Pages/Timeline/TimeLine';
@@ -19,7 +19,6 @@ import Users from './Pages/Users/Users';
 const PUBLIC_ROUTES = [
   { exact: true, path: '/timeline', component: TimeLine },
   { exact: true, path: '/currentUserProfile', component: CurrentUserProfile },
-
 ];
 
 const ROUTES = {
@@ -45,7 +44,7 @@ const defaultProfile = {
   role: 'guest',
 };
 
-@inject('global', 'currentModules')
+@inject('global')
 @observer
 class App extends Component {
 
@@ -70,9 +69,6 @@ class App extends Component {
   render() {
     const { currentUser, isLoggedIn } = this.props.global;
     const routes = isLoggedIn ? [...PUBLIC_ROUTES, ...ROUTES[currentUser.role]] : [...PUBLIC_ROUTES];
-    console.log(this.props.currentModules.moduleWeeks);
-    console.log(this.props.currentModules.weeksAntaal.length);
-
     return (
       <BrowserRouter>
         <React.Fragment>

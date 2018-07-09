@@ -5,9 +5,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import StudentsAttendance from './StudentsAttendance';
+import Student from './Student';
 import Teachers from './Teachers';
-
 
 function TabContainer(props) {
   return (
@@ -41,7 +40,6 @@ class StudentInterface extends React.Component {
   render() {
     const { classes } = this.props;
     const { value } = this.state;
-
     return (
       <div className={classes.root}>
         <AppBar position="static">
@@ -52,7 +50,7 @@ class StudentInterface extends React.Component {
           </Tabs>
         </AppBar>
         {value === 0 && <TabContainer>
-          <StudentsAttendance />
+          <Student />
         </TabContainer>}
         {value === 1 && <TabContainer><Teachers /></TabContainer>}
         {value === 2 && <TabContainer>Item Three</TabContainer>}

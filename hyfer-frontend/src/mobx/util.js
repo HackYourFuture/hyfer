@@ -1,30 +1,18 @@
 import { API_BASE_URL } from '.';
 
-function createHeaders() {
+export async function fetchJSON(path, method = 'GET', data = null) {
   const headers = { 'Content-Type': 'application/json' };
   const token = localStorage.getItem('token');
   if (token) {
     headers['Authorization'] = 'Bearer ' + token;
   }
-  return headers;
-}
+  const options = { method, headers };
 
-export async function fetchJSON(path) {
-  const headers = createHeaders();
-  const res = await fetch(API_BASE_URL + path, {
-    method: 'GET',
-    headers,
-  });
-  return res.json();
-}
+  if (data) {
+    options.body = JSON.stringify(data);
+  }
 
-export async function patchJSON(path, data) {
-  const headers = createHeaders();
-  const res = await fetch(API_BASE_URL + path, {
-    method: 'PATCH',
-    headers,
-    body: JSON.stringify(data),
-  });
+  const res = await fetch(`${API_BASE_URL}${path}`, options);
   return res.json();
 }
 

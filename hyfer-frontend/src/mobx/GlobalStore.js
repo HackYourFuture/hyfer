@@ -67,19 +67,19 @@ export default class GlobalStore {
 
   @action.bound
   fetchCurrentUser() {
+    if (this.currentUser) {
+      return;
+    }
     fetchJSON('/user')
       .then((res) => {
         runInAction(() => {
           this.currentUser = res;
           if (this.currentUser.group_id !== null) {
-            stores.currentModules.fetchCurrentModuleUser(this.currentUser.group_id);
+            stores.currentModules.fetchCurrentModuleUsers(this.currentUser.group_id);
             stores.currentModules.getGroupsByGroupName(this.currentUser.group_name);
           }
         });
       })
       .catch((error) => this.setLastError(error));
   }
-
-
 }
-// spelling another store 

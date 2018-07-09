@@ -1,8 +1,10 @@
 import { observable, action, runInAction } from 'mobx';
-import { fetchJSON, patchJSON } from './util';
+import { fetchJSON } from './util';
 import stores from '.';
 
 export default class ModulesStore {
+
+  dataFetched = false;
 
   @observable
   modules = [];
@@ -15,7 +17,10 @@ export default class ModulesStore {
   @action.bound
   async initModules() {
     try {
-      this.serverModules = await fetchJSON('/modules');
+      if (!this.dataFetched) {
+        this.serverModules = await fetchJSON('/modules');
+        this.dataFetched = true;
+      }
       runInAction(() => this.setModules(this.serverModules, false));
     } catch (error) {
       stores.global.setLastError(error);
@@ -47,8 +52,9 @@ export default class ModulesStore {
 
   @action.bound
   async saveChanges() {
+    this.dataFetched = false;
     try {
-      await patchJSON('/modules', this.modules);
+      await fetchJSON('/modules', 'PATCH', this.modules);
       this.initModules();
     } catch (error) {
       stores.global.setLastError(error);

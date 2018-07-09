@@ -4,6 +4,7 @@ const { getConnection } = require('./connection');
 const { hasRole } = require('../auth/auth-service');
 const handleError = require('./error')('running_modules');
 
+
 function getRunningModules(req, res) {
   const groupId = +req.params.groupId;
   getConnection(req, res)

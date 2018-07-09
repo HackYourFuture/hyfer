@@ -4,7 +4,7 @@ import styles from '../../assets/styles/moduleReadme.css';
 
 const BASE_URL = 'https://github.com/HackYourFuture';
 
-export default class ModuleInfo extends Component {
+export default class ModuleReadMe extends Component {
   render() {
     const { repoName, readme } = this.props;
     let linkToRepo = null;

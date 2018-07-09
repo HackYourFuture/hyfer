@@ -13,18 +13,9 @@ export default class CurrentModules {
   @observable
   teachers = [];
 
-  @observable
-  endingDate = '';
-
-  @observable
-  moduleWeeks = '';
-
-  @observable
-  weeksAntaal = [];
-
 
   @action
-  async fetchCurrentModuleUser(group_id) {
+  async fetchCurrentModuleUsers(group_id) {
     const res = await fetch(`http://localhost:3005/api/user/currentuser/${group_id}`
       , {
         method: 'GET',
@@ -42,8 +33,9 @@ export default class CurrentModules {
       });
     } else {
       const response = await res.json();
+      const moduelUsers = response;
       runInAction(() => {
-        return this.moduleUsers = response;
+        return this.moduleUsers = moduelUsers;
       });
 
     }
@@ -81,13 +73,7 @@ export default class CurrentModules {
       }
       runInAction(() => {
         this.currentModule = response[index];
-        this.fetchModuleTeachers(response[index].id);
-        const start = computedDate.subtract(response[index].duration + 1, 'weeks');
-        const weeks = currentDate.diff(start, 'weeks');
-        this.moduleWeeks = weeks;
-        this.weeksAntaal = Array(weeks);
       });
-
     }
   }
 
@@ -100,7 +86,6 @@ export default class CurrentModules {
           'Content-Type': 'application/json',
           Authorization: 'Bearer ' + token,
         },
-
       });
     if (!res.ok) {
       stores.global.setLastError(res);
@@ -111,7 +96,5 @@ export default class CurrentModules {
         return this.teachers = response;
       });
     }
-
   }
-
 }

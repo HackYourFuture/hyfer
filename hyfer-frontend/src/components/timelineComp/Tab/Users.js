@@ -1,15 +1,9 @@
 import React, { Component } from 'react';
 import style from '../../../assets/styles/users.css';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import green from '@material-ui/core/colors/green';
 import Moment from 'moment';
-
-class User extends Component {
+import linkedin from 'react-icons/lib/fa/linkedin';
+export default class User extends Component {
   render() {
-    const { classes } = this.props;
     const { user } = this.props;
     return (
       <li className={style.userInformation}>
@@ -28,10 +22,9 @@ class User extends Component {
               }}
             />
           </div>
-
           <div className={style.titleContainer}>
             <div
-              className={user.register_date ? '' : styles.hidden}
+              className={user.register_date ? '' : style.hidden}
             >
               {new Moment(user.register_date).format(
                 'DD MMMM YYYY'
@@ -46,42 +39,28 @@ class User extends Component {
               {user.role +
                 (user.group_name ? ' / ' + user.group_name : '')}
             </div>
+            <div
+              className={
+                (user.linkedin_username ? '' : style.hidden) +
+                ' ' +
+                style.linkContainer
+              }
+              onClick={() => { }}
+            >
+              <linkedin />
+              <div
+                className={
+                  style.infoOverlay +
+                  ' ' +
+                  (user.slackActive ? style.active : '')
+                }
+              >
+                {user.slack_username}
+              </div>
+            </div>
           </div>
         </div>
-
-        <FormControlLabel
-          control={
-            <Checkbox
-              // checked={this.state.checkedG}
-              // onChange={this.handleChange('checkedG')}
-              value="checkedG"
-              classes={{
-                root: classes.root,
-                checked: classes.checked,
-
-              }}
-            />
-          }
-          label="present"
-        />
-
       </li>
     );
   }
 }
-const styles = {
-  root: {
-    color: green[600],
-    width: 80,
-    height: 80,
-    size: 40,
-    '&$checked': {
-      color: green[500],
-    },
-  },
-
-};
-User.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-export default withStyles(styles)(User);
