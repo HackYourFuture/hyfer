@@ -15,10 +15,10 @@ export default class CurrentModuleDetails extends Component {
     return (
       <div>
         <h1>CurrentModuleStore Data</h1>
-        <h2>Group:</h2>
-        <pre>{JSON.stringify(group, null, 2)}</pre>
         <h2>Module:</h2>
         <pre>{JSON.stringify(module, null, 2)}</pre>
+        <h2>Group:</h2>
+        <pre>{JSON.stringify(group, null, 2)}</pre>
         <h2>Running Module:</h2>
         <pre>{JSON.stringify(currentModule, null, 2)}</pre>
         <h2>Students:</h2>
