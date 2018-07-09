@@ -32,6 +32,13 @@ function getUserById(req, res) {
     .catch(err => handleError(err, res));
 }
 
+function getRunningUsersByGroup(req, res) {
+  getConnection(req, res)
+    .then(con => db.getRunningUsersByGroup(con, +req.params.groupId))
+    .then(result => res.json(result))
+    .catch(err => handleError(err, res));
+}
+
 function updateUser(req, res) {
   getConnection(req, res)
     .then(con => db.updateUser(con, +req.params.id, req.body))
@@ -43,6 +50,7 @@ const router = express.Router();
 router
   .get('/', isAuthenticated(), getCurrentUser)
   .get('/all', hasRole('teacher'), getUsers)
+  .get('/group/:groupId', hasRole('teacher|student'), getRunningUsersByGroup)
   .get('/:id', hasRole('teacher|student'), getUserById)
   .patch('/:id', hasRole('teacher|student'), updateUser);
 

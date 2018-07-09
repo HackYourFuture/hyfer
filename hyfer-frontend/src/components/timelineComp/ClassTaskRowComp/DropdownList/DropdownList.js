@@ -97,79 +97,29 @@ export default class DropdownList extends Component {
 
   handleRemoveModule = e => {
     e.stopPropagation();
-
     const { selectedModule } = this.props;
     this.updateModule(selectedModule, 'removeModule');
   };
 
-  weekLonger(chosenModule) {
-    const { duration } = chosenModule;
-    const newDuration = duration + 1;
-    const groupId = chosenModule.id;
-    return this.props.timeLineStore.patchGroupsModules(
-      chosenModule,
-      null,
-      newDuration,
-      null,
-      null,
-      groupId
-    );
+  weekLonger(runningModule) {
+    const { duration } = runningModule;
+    return this.props.timeLineStore.patchGroupsModules(runningModule, null, duration + 1);
   }
 
-  weekShorter(chosenModule) {
-    const { duration } = chosenModule;
-    const newDuration = duration - 1;
-    const groupId = chosenModule.id;
-
-    return this.props.timeLineStore.patchGroupsModules(
-      chosenModule,
-      null,
-      newDuration,
-      null,
-      null,
-      groupId
-    );
+  weekShorter(runningModule) {
+    const { duration } = runningModule;
+    return this.props.timeLineStore.patchGroupsModules(runningModule, null, duration - 1);
   }
 
-  moveRight(chosenModule) {
-    const { position, duration } = chosenModule;
-    const newPosition = position + 1;
-    const groupId = chosenModule.id;
-    console.log(groupId, newPosition);
-
-    return this.props.timeLineStore.patchGroupsModules(
-      chosenModule,
-      newPosition,
-      duration,
-      null,
-      null,
-      groupId
-    );
+  moveRight(runningModule) {
+    const { position, duration } = runningModule;
+    return this.props.timeLineStore.patchGroupsModules(runningModule, position + 1, duration);
   }
 
-  moveLeft(chosenModule) {
-    const { position, duration } = chosenModule;
-    const newPosition = position - 1;
-    const groupId = chosenModule.id;
-
-    return this.props.timeLineStore.patchGroupsModules(
-      chosenModule,
-      newPosition,
-      duration,
-      null,
-      null,
-      groupId
-    );
+  moveLeft(runningModules) {
+    const { position, duration } = runningModules;
+    return this.props.timeLineStore.patchGroupsModules(runningModules, position - 1, duration);
   }
-
-  checkModuleIsLast = () => {
-    const { position, group_name } = this.props.selectedModule;
-    const classModules = this.props.allModules.filter(
-      module => module.group_name === group_name
-    );
-    const itemsAfter = classModules.filter(item => item.position > position);
-    return itemsAfter.length === 0;
-  };
 
   render() {
     let moveLeft = this.handleMoveLeft;
@@ -181,7 +131,7 @@ export default class DropdownList extends Component {
       leftDisableClass = classes.disabled;
     }
 
-    if (this.checkModuleIsLast()) {
+    if (this.props.isLast) {
       moveRight = null;
       rightDisableClass = classes.disabled;
     }

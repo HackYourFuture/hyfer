@@ -1,176 +1,100 @@
 import React from 'react';
-import StudentWithWeeks from './StudentWithWeeks';
+// import StudentWithWeeks from './StudentWithWeeks';
 import WeekIndicator from './WeekIndicator';
 import styles from '../../assets/styles/attendance.css';
 import { notify } from 'react-notify-toast';
-// import * as attendanceStore from '../../store/attendanceStore';
-import { moduleInfoStore, HISTORY_CHANGED } from '../../store';
-import CommitsInfo from './CommitsInfo';
+import { inject, observer } from 'mobx-react';
 const stack = [];
 
+@inject('currentModuleStore')
+@observer
 export default class Attendance extends React.Component {
   state = {
     edit_Mode: false,
-    repoName: null,
-    group_name: null,
-    history: null,
-    students: null,
-    duration: null,
-    commits: [],
   };
-  getCommits = rep => {
-    if (rep === 'NOREPO') {
-      this.setState({ commits: [] });
-      return;
+
+  renderHistory(history) {
+    const { attendance, homework, duration } = history;
+    const pairs = [];
+    for (let i = 0; i < duration; i += 1) {
+      pairs.push(`A[${attendance[i]}] H[${homework[i]}]`);
     }
-    fetch(
-      'https://api.github.com/repos/HackYourFuture/' +
-      rep +
-      '/pulls?state=open&client_id=e79299c4db2de39fabd5&client_secret=f4b826f211b1558e77e0214afc20d61b8def3e78',
-    )
-      .then(res => res.json())
-      .then(resJson => {
-        return resJson.map(item => item.commits_url).forEach(url => {
-          fetch(
-            url +
-            '?client_id=e79299c4db2de39fabd5&client_secret=f4b826f211b1558e77e0214afc20d61b8def3e78',
-          )
-            .then(data => data.json())
-            .then(data => {
-              data.forEach(info => {
-                const authorInfo = info.commit.author;
-                authorInfo.repoName = rep;
-                authorInfo.key = info.sha;
-                this.setState({ commits: [...this.state.commits, authorInfo] });
-              });
-            });
-        });
+    return pairs.join(' - ');
+  }
 
-        //this.setState({ commits: resJson })
-      })
-
-      .catch(error => {
-        console.log(error);
-
-        throw new Error('Server error!');
-      });
-  };
-
-  // att file
-  //Subscribing to the module info store for getting "history"
-  componentDidMount = () => {
-    // getting data when component is mounted
-    moduleInfoStore.subscribe(mergedData => {
-      if (mergedData.type === HISTORY_CHANGED) {
-        this.setState({
-          history: mergedData.payload.history,
-          duration: mergedData.payload.duration,
-          group_name: mergedData.payload.group_name,
-          repoName: mergedData.payload.repoName,
-          students: mergedData.payload.students,
-        });
-        this.getCommits(mergedData.payload.repoName);
-      }
+  renderStudents(students) {
+    return students.map(student => {
+      const { full_name, history } = student;
+      return (
+        <div className={styles.Attendant} key={student.id}>
+          <div>
+            <h3>{full_name} {this.renderHistory(history)}</h3>
+          </div>
+        </div>
+      );
     });
-
-    // getting selected module update from timeline component
-    const { history, students, duration, repoName, group_name } = this.props;
-    this.setState({
-      repoName: repoName,
-      group_name: group_name,
-      history: history,
-      students: students,
-      duration: duration,
-    });
-  };
-
+  }
   render() {
-    const { history, students, duration, repoName, group_name } = this.state;
+    const { students, module, group, currentModule } = this.props.currentModuleStore;
     let title = null;
-    let content = null;
     let buttons = null;
-    if (repoName === 'NOREPO') {
-      content = <h2 className={styles.message}>Oops! there is no History.</h2>;
-    } else if (students === null || repoName === undefined) {
-      content = <h2 className={styles.message}>Please choose a module</h2>;
-    } else if (students.length === 0) {
-      content = (
-        <h2 className={styles.message}>There is no student in this class.</h2>
-      );
-    } else {
-      content = students.map(student => (
-        <div className={styles.Attendant} key={student}>
-          <div className={styles.AttendantName}>
-            <h3>{student}</h3>
-          </div>
-          <div className={styles.checkboxes}>
-            <StudentWithWeeks
-              allHistory={history}
-              duration={duration}
-              onChange={event => {
-                this.handleCheckboxChange(student, event);
-              }}
-              student={student}
-              students={students}
-            />
-          </div>
-        </div>
-      ));
-      title = (
-        <div className={styles.Title}>
-          <h3 className={styles.Title_inner}>
-            Attendance - {repoName.charAt(0).toUpperCase() + repoName.slice(1)}
-          </h3>
-        </div>
-      );
 
-      buttons = (
-        <div className={styles.buttons}>
-          <button
-            className={styles.button_save}
-            disabled={!this.state.edit_Mode}
-            name="save"
-            onClick={this.onSave}
-          >
-            Save
-          </button>
-          <button
-            className={styles.button_undo}
-            disabled={!this.state.edit_Mode}
-            name="undo"
-            onClick={this.undo}
-          >
-            Undo
-          </button>
-          <button
-            className={styles.button_cancel}
-            disabled={!this.state.edit_Mode}
-            name="cancel"
-            onClick={this.onCancel}
-          >
-            Cancel
-          </button>
-        </div>
-      );
+    if (students == null) {
+      return null;
     }
+
+    const content = this.renderStudents(students);
+
+    title = (
+      <div className={styles.Title}>
+        <h3 className={styles.Title_inner}>
+          Attendance - {module.module_name}
+        </h3>
+      </div>
+    );
+
+    buttons = (
+      <div className={styles.buttons}>
+        <button
+          className={styles.button_save}
+          disabled={!this.state.edit_Mode}
+          name="save"
+          onClick={this.onSave}
+        >
+          Save
+          </button>
+        <button
+          className={styles.button_undo}
+          disabled={!this.state.edit_Mode}
+          name="undo"
+          onClick={this.undo}
+        >
+          Undo
+          </button>
+        <button
+          className={styles.button_cancel}
+          disabled={!this.state.edit_Mode}
+          name="cancel"
+          onClick={this.onCancel}
+        >
+          Cancel
+          </button>
+      </div>
+    );
 
     return (
       <div>
         {title}
         <div className={styles.wrapper}>
           <div className={styles.group_name}>
-            <h3 className={styles.group_name_inner}>{group_name}</h3>
-            <WeekIndicator
-              duration={duration}
-              students={students}
-              history={history}
-              repoName={repoName}
-            />
+            <h3 className={styles.group_name_inner}>{group.group_name}</h3>
+            <WeekIndicator />
+            duration={currentModule.duration}
           </div>
           <div className={styles.content_wrapper}>{content}</div>
           {buttons}
         </div>
-        <CommitsInfo commits={this.state.commits} />
+        {/* <CommitsInfo commits={this.state.commits} /> */}
       </div>
     );
   }

@@ -6,10 +6,9 @@ const {
 } = require('./database');
 
 const GET_USERS_QUERY = `
-  SELECT users.id, users.username, users.full_name, users.role, users.register_date,
-    users.slack_username, users.freecodecamp_username, users.email, users.mobile,
-    group_students.group_id, \`groups\`.group_name, \`groups\`.archived, \`groups\`.starting_date FROM users
-  LEFT JOIN group_students ON users.id=group_students.user_id
+  SELECT users.*, \`groups\`.group_name 
+  FROM users
+  LEFT JOIN group_students ON users.id=group_students.user_id      
   LEFT JOIN \`groups\` ON \`groups\`.id=group_students.group_id`;
 
 const UPDATE_USER_QUERY = `
@@ -30,6 +29,18 @@ function getUserByUsername(con, username) {
 
 function getUserById(con, id) {
   return execQuery(con, `${GET_USERS_QUERY} WHERE users.id=?`, id);
+}
+
+function getUsersByGroup(con, groupId) {
+  return execQuery(con, `${GET_USERS_QUERY} WHERE \`groups\`.id=?`, groupId);
+}
+
+function getTeachersByRunningModule(con, runningId) {
+  const sql = `SELECT users.*
+    FROM users
+    INNER JOIN running_module_teachers ON running_module_teachers.user_id = users.id
+    WHERE running_module_teachers.running_module_id=?`;
+  return execQuery(con, sql, [runningId]);
 }
 
 async function addUser(con, user) {
@@ -95,6 +106,8 @@ module.exports = {
   getUsers,
   getUserProfile,
   getUserByUsername,
+  getUsersByGroup,
+  getTeachersByRunningModule,
   getUserById,
   addUser,
   updateUser,
