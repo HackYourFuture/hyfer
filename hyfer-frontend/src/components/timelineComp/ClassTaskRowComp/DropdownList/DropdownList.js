@@ -148,7 +148,7 @@ export default class DropdownList extends Component {
           aria-haspopup="true"
           onClick={this.handleClick}
         >
-          <FormDialogModule />
+          <FormDialogModule open={false} />
           <MoreVertIcon />
         </IconButton>
         <Menu

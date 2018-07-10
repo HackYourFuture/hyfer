@@ -43,6 +43,11 @@ export default class CurrentModuleStore {
       this.currentModule = runningModule;
       this.students = students;
       this.teachers = teachers;
+
+      // FIXME: connect Hamza UI code to the CurrentModuleStore instead of his CurrentModules store
+      stores.currentModules.fetchCurrentModuleUsers(group.id);
+      stores.currentModules.getGroupsByGroupName(group.group_name);
+      stores.currentModules.fetchModuleTeachers(runningId);
     });
   }
 

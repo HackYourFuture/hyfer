@@ -10,6 +10,14 @@ function getGroups(req, res) {
     .then(result => res.json(result))
     .catch(err => handleError(err, res));
 }
+function getGroupsByGroupName(req, res) {
+  getConnection(req, res)
+    .then(con => db.getGropsByGroupName(con, req.params.group_name))
+    .then(result => {
+      return res.json(result)
+    })
+    .catch(err => handleError(err, res));
+}
 
 function addGroup(req, res) {
   getConnection(req, res)
@@ -35,6 +43,7 @@ function deleteGroup(req, res) {
 const router = express.Router();
 router
   .get('/', getGroups)
+  .get('/currentgroups/:group_name', hasRole('teacher|student'), getGroupsByGroupName)
   .post('/', hasRole('teacher'), addGroup)
   .patch('/:id', hasRole('teacher'), updateGroup)
   .delete('/:id', hasRole('teacher'), deleteGroup);

@@ -1,12 +1,12 @@
 /* eslint react/prop-types: error */
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import ModuleReadMe from '../../components/ModuleReadme/ModuleReadme';
-import CurrentModuleDetails from '../../components/CurrentModuleDetails';
-import TimelineComp from '../../components/timelineComp/Timeline/Timeline';
+import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';
+import ModuleReadMe from '../../components/ModuleReadme/ModuleReadme';
+import TimelineComp from '../../components/timelineComp/Timeline/Timeline';
+import StudentInterface from '../../components/timelineComp/Tab/StudentInterface';
 
-@inject('global', 'timeLineStore', 'currentModuleStore')
+@inject('timeLineStore', 'global')
 @observer
 export default class TimeLine extends Component {
 
@@ -15,11 +15,10 @@ export default class TimeLine extends Component {
   }
 
   render() {
+
     if (this.props.timeLineStore.items == null) {
       return null;
     }
-
-    const { isStudent, isTeacher } = this.props.global;
 
     return (
       <main>
@@ -29,7 +28,7 @@ export default class TimeLine extends Component {
             rowHeight={70}
           />
         </div>
-        {isStudent || isTeacher ? <CurrentModuleDetails /> : <ModuleReadMe />}
+        {this.props.global.isTeacher || this.props.global.isStudent ? <StudentInterface /> : <ModuleReadMe />}
       </main>
     );
   }
@@ -38,5 +37,4 @@ export default class TimeLine extends Component {
 TimeLine.wrappedComponent.propTypes = {
   global: PropTypes.object.isRequired,
   timeLineStore: PropTypes.object.isRequired,
-  currentModuleStore: PropTypes.object.isRequired,
 };

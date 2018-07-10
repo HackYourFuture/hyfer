@@ -109,7 +109,6 @@ export default class Timeline extends Component {
 }
 
 Timeline.wrappedComponent.propTypes = {
-  allModules: PropTypes.array,
   itemWidth: PropTypes.number,
   rowHeight: PropTypes.number,
   timeLineStore: PropTypes.object,

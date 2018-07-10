@@ -38,7 +38,6 @@ const ROUTES = {
   guest: [
   ],
 };
-
 const defaultProfile = {
   username: 'guest',
   full_name: 'Guest',
@@ -70,7 +69,6 @@ class App extends Component {
   render() {
     const { currentUser, isLoggedIn } = this.props.global;
     const routes = isLoggedIn ? [...PUBLIC_ROUTES, ...ROUTES[currentUser.role]] : [...PUBLIC_ROUTES];
-
     return (
       <BrowserRouter>
         <React.Fragment>
