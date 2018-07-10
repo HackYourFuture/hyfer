@@ -16,7 +16,7 @@ export default class CurrentModules {
   @action
   async fetchCurrentModuleUsers(group_id) {
     const token = localStorage.getItem('token');
-    const res = await fetch(`http://localhost:3005/api/user/currentuser/${group_id}`
+    const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/user/currentuser/${group_id}`
       , {
         method: 'GET',
         headers: {
@@ -45,7 +45,7 @@ export default class CurrentModules {
   async getGroupsByGroupName(group_name) {
     const token = localStorage.getItem('token');
     const groupName = group_name.replace(' ', '');
-    const res = await fetch(`http://localhost:3005/api/groups/currentgroups/${groupName}`
+    const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/groups/currentgroups/${groupName}`
       , {
         method: 'GET',
         headers: {
@@ -81,7 +81,7 @@ export default class CurrentModules {
   @action
   async fetchModuleTeachers(id) {
     const token = localStorage.getItem('token');
-    const res = await fetch(`http://localhost:3005/api/user/teachers/${id}`
+    const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/user/teachers/${id}`
       , {
         method: 'GET',
         headers: {
