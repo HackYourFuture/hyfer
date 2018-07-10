@@ -11,6 +11,7 @@ import FastRewind from '@material-ui/icons/FastRewind';
 import ArrowForward from '@material-ui/icons/ArrowForward';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import Split from '@material-ui/icons/SwapHoriz';
+import School from '@material-ui/icons/School';
 import Remove from '@material-ui/icons/Remove';
 import Add from '@material-ui/icons/Add';
 import { inject, observer } from 'mobx-react';
@@ -210,6 +211,10 @@ export default class DropdownList extends Component {
             <MenuItem >
               <ListItemIcon ><Split /></ListItemIcon>
               <ListItemText inset primary="Split Module" onClick={()=>{}} />
+            </MenuItem>
+            <MenuItem >
+              <ListItemIcon ><School /></ListItemIcon>
+              <ListItemText inset primary="(Re)assign" onClick={this.props.showModal} />
             </MenuItem>
             <MenuItem >
               <ListItemIcon ><Remove /></ListItemIcon>

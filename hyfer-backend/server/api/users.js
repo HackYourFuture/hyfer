@@ -35,6 +35,33 @@ async function getTeacher(req, res) {
   }
 }
 
+// function getRunningModuleTeachers(req, res) {
+//   getConnection(req, res)
+//     .then(con => db.getRunningModuleTeachers(con, +req.params.id))
+//     .then(result => res.json(result[0]))
+//     .catch(err => handleError(err, res));
+// }
+
+// async function getRunningModuleTeachers(req, res) {
+//   try {
+//     const con = await getConnection(req, res);
+//     const result = await db.getRunningModuleTeachers(con, req.params.runningId);
+//     res.json(result);
+//   } catch (err) {
+//     handleError(err, res);
+//   }
+// }
+
+// async function getAssignedTeachers(req, res) {
+//   try {
+//     const con = await getConnection(req, res);
+//     const result = await db.getAssignedTeachers(con);
+//     res.json(result);
+//   } catch (err) {
+//     handleError(err, res);
+//   }
+// }
+
 function getUserById(req, res) {
   getConnection(req, res)
     .then(con => db.getUserById(con, +req.params.id))
@@ -53,7 +80,8 @@ const router = express.Router();
 router
   .get('/', isAuthenticated(), getCurrentUser)
   .get('/all', hasRole('teacher'), getUsers)
-  .get('/teacher', hasRole('teacher') , getTeacher)
+  //.get('/teachers/:runningId', getRunningModuleTeachers)
+  .get('/teachers', hasRole('teacher'), getTeacher)
   .get('/:id', hasRole('teacher|student'), getUserById)
   .patch('/:id', hasRole('teacher|student'), updateUser);
 

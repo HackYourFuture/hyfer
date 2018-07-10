@@ -15,6 +15,9 @@ export default class UserStore {
   @observable
   resetProfile = {};
 
+  @observable
+  teachers = [];
+
   users = [];
 
   @action
@@ -26,6 +29,54 @@ export default class UserStore {
     });
     return;
   }
+
+  @action
+  async getTeacher() {
+    const res = await fetch(`http://localhost:3005/api/user/teachers/`
+      , {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token,
+        },
+
+      });
+    if (!res.ok) {
+      stores.global.setLastError(res);
+
+    } else {
+      const response = await res.json();
+      runInAction(() => {
+        return this.teachers = response;
+      });
+    }
+
+  }
+
+  // @action
+  // async getRunningModuleTeachers(groupsId) {
+  //   const res = await fetch(`http://localhost:3005/api/user/teachers/${groupsId}`
+  //     , {
+  //       method: 'GET',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         Authorization: 'Bearer ' + token,
+  //       },
+
+  //     });
+  //   if (!res.ok) {
+  //     stores.global.setLastError(res);
+
+  //   } else {
+  //     const response = await res.json();
+  //     runInAction(() => {
+  //       return this.teachers = response;
+  //     });
+  //   }
+
+  // }
+
+
   @action
   saveProfile = async (Data, loadData) => {
     const res = await fetch(`http://localhost:3005/api/user/${this.userProfile.id}`, {
