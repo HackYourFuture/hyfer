@@ -103,12 +103,9 @@ router
   .get('/currentuser/:id', hasRole('teacher|student'), getCurrentStudentModules)
   .get('/teachers/:id', hasRole('teacher|student'), getTeachers)
   .get('/all', hasRole('teacher'), getUsers)
-<<<<<<< HEAD
   //.get('/teachers/:runningId', getRunningModuleTeachers)
   .get('/teachers', hasRole('teacher'), getTeacher)
-=======
   .get('/group/:groupId', hasRole('teacher|student'), getRunningUsersByGroup)
->>>>>>> upstream/class13
   .get('/:id', hasRole('teacher|student'), getUserById)
   .patch('/:id', hasRole('teacher|student'), updateUser);
 

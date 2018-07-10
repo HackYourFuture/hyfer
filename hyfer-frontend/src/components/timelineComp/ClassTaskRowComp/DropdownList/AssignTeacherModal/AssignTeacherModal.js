@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-
 import Modal from '../../../../../Helpers/Modal/Modal';
 // import { timelineStore } from '../../../../../store/';
 //import classes from './assignTeacherModal.css';
 //import { errorMessage } from '../../../../../notify';
-
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -141,9 +139,13 @@ class AssignTeacherModal extends Component {
   //     }
   //   }
   // };
-  componentDidMount() {
+  // componentDidMount() {
+  //   this.props.userStore.getTeacher();
+  // }
+  
+  componentWillMount() {
     this.props.userStore.getTeacher();
-}
+  }
 
   render() {
     const { classes } = this.props;

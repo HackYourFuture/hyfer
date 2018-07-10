@@ -29,7 +29,6 @@ const UPDATE_USER_QUERY = `
 //     WHERE running_module_id=?`, running_module_id);
 //   } 
  
-=======
 const USERS_MODULE_STUDENTS = `SELECT users.id , users.full_name, users.role, users.username,
  groups.starting_date,groups.group_name from users
  LEFT JOIN group_students ON users.id=group_students.user_id 
@@ -53,7 +52,6 @@ function getTeachers(con, id) {
   )`);
 }
 
->>>>>>> upstream/class13
 function getUsers(con) {
   return execQuery(con, `${GET_USERS_QUERY} ORDER BY full_name`);
 }
