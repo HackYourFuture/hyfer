@@ -6,8 +6,9 @@ import { inject, observer } from 'mobx-react';
 @observer
 export default class Student extends React.Component {
   render() {
-    const { moduleUsers } = this.props.currentModules;
+    const { moduleUsers  } = this.props.currentModules;
     return (
+
       <li className={styles.userList}>
         <ul className={styles.userContainer}>
           {moduleUsers.map(user => {

@@ -13,6 +13,17 @@ export default class CurrentModules {
   @observable
   teachers = [];
 
+  @observable
+  endingDate = '';
+
+  @observable
+  moduleWeeks = '';
+
+  @observable
+  weeksAntaal = [];
+
+  // @observable
+  // weekNumer = '';
 
   @action
   async fetchCurrentModuleUsers(group_id) {
@@ -29,7 +40,6 @@ export default class CurrentModules {
     if (!res.ok) {
       runInAction(() => {
         stores.global.setLastError(res);
-
       });
     } else {
       const response = await res.json();
@@ -66,16 +76,22 @@ export default class CurrentModules {
         const runningModule = runningModules[index];
         const { duration } = runningModule;
         computedDate = computedDate.add(duration, 'weeks');
-
         if (computedDate > currentDate) {
           break;
         }
       }
       runInAction(() => {
         this.currentModule = response[index];
+        this.fetchModuleTeachers(response[index].id);
+        const start = computedDate.subtract(response[index].duration + 1, 'weeks');
+        const weeks = currentDate.diff(start, 'weeks');
+        this.moduleWeeks = weeks;
+        this.weeksAntaal = Array(weeks);
       });
+
     }
   }
+
 
   @action
   async fetchModuleTeachers(id) {
@@ -97,4 +113,37 @@ export default class CurrentModules {
       });
     }
   }
+  @action
+  async getModuleInfo(module_id) {
+    const res = await fetch(`http://localhost:3005/api/running/runningmodule/${module_id}`
+      , {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token,
+        },
+      });
+    if (!res.ok) {
+      stores.global.setLastError(res);
+
+    } else {
+      const response = await res.json();
+      const currentRunningModule = response;
+      // let computedDate = moment(currentRunningModule.starting_date);// here i am get the starting for the
+      // const currentDate = moment();
+      // if (computedDate > currentDate) {
+      //   stores.global.setLastError('weeks');
+      // } else {
+      // const { duration } = currentRunningModule;
+      // computedDate = computedDate.add(duration, 'weeks');
+      runInAction(() => {
+        this.currentModule = currentRunningModule;
+        // const start = computedDate.subtract(response.duration + 1, 'weeks');
+        // const weeks = currentDate.diff(start, 'weeks');
+        // this.moduleWeeks = duration;
+        this.weeksAntaal = Array(currentRunningModule[0].duration);
+      });
+    }
+  }
+  // }
 }
