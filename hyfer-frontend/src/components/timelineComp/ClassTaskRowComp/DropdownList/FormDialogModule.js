@@ -1,11 +1,10 @@
 import React, { Fragment, Component } from 'react';
 import {
-  Dialog, Select,Toolbar,Divider,
+  Dialog, Select,DialogTitle,
   DialogContent,Button,ListItemText,
-  MenuItem,FormControl,
+  MenuItem,FormControl,DialogActions,
 } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
-import Typography from '@material-ui/core/Typography';
+//import CloseIcon from '@material-ui/icons/Close';
 import { withStyles } from '@material-ui/core/styles';
 import moment from 'moment';
 import { errorMessage } from '../../../../notify';
@@ -52,66 +51,7 @@ const styles = theme => ({
     handleChangeDuration = e => {
     this.setState({ duration: e.target.value });
     };
-    
-    handleChangeDate = e => {
-    // check there's no value selected in the date picker
-    if (!e.target.value) {
-      this.setState({
-        validDate: false,
-        errorMessage: 'Please provide a starting date for the module',
-      });
-      return;
-    }
-    const allSundays = this.props.timeLineStore.allSundays;
-    const date = moment(e.target.value);
-    const wantedDay = 0; // sunday
-    const daysDif = date.day() - wantedDay; // till sunday
-    date.subtract(daysDif, 'days'); // keep going back in the week until it's a sunday
-
-    let settingValidDateWith = false;
-    let thatSunday = null;
-    // loop through all sundays and if it's not betweens them tell the user it cannot be done
-    allSundays.forEach(sunday => {
-      if (sunday.diff(date) === 0) {
-        thatSunday = date.format('YYYY-MM-DD');
-        settingValidDateWith = true;
-      }
-    });
-    this.setState({
-      validDate: settingValidDateWith,
-    });
-    if (settingValidDateWith) {
-      this.setState({ selectedDate: thatSunday, errorMessage: '' });
-    } else {
-      this.setState({
-        errorMessage:
-          'Please provide a date that is not out of the range of current classes',
-      });
-    }
-    };
-    
-    handleChangeGroup = e => {
-    const groupName = e.target.value;
-    this.setState({ selectedGroup: groupName });
-    if (groupName !== 'All classes') {
-      const modules = this.props.timeLineStore.items[groupName];
-      const startingsOfModule = modules.map(module => module.starting_date);
-      const min = moment.min(startingsOfModule);
-      const endingsOfModule = modules.map(module => module.ending_date);
-      const max = moment.max(endingsOfModule);
-      this.setState({
-        minDate: moment(min).format('YYYY-MM-DD'),
-        maxDate: moment(max).format('YYYY-MM-DD'),
-      });
-    } else {
-      const { min, max } = this.getSharedDatesBetweenGroups();
-      this.setState({
-        minDate: moment(min).format('YYYY-MM-DD'),
-        maxDate: moment(max).format('YYYY-MM-DD'),
-      });
-    }
-    };
-    
+           
     handleChangeSelectedModuleId = e => {
       this.setState({ selectedModuleId: e.target.value });
     };
@@ -311,7 +251,6 @@ const styles = theme => ({
 
     render() {
       const { classes } = this.props;
-      const { groups } = this.props.timeLineStore;
       // const { modules } = this.props.timeLineStore;
       // const { allSundays } = this.props.timeLineStore;
       // if (!groups || !modules || !allSundays) return null;
@@ -321,35 +260,9 @@ const styles = theme => ({
         <Dialog open={this.props.open}
           onClose={this.props.onClose}
         >
-          <Toolbar>
-            <Typography variant="title" color="inherit" style={{ flex: 1 }} >
-              Add a new module
-            </Typography>
-            <Button color="inherit" onClick={this.handleAddModule}>
-              Save
-            </Button>
-            <Button variant='fab' mini color="inherit" onClick={this.props.onClose} aria-label="Close">
-              <CloseIcon />
-            </Button>
-          </Toolbar>
+          <DialogTitle id="form-dialog-title">Add a new module</DialogTitle>
           <DialogContent>
             <form>
-              <FormControl className={classes.formControl}>
-                <ListItemText primary="Select Group" />
-                <Select
-                  name="groupSelect"
-                  value={this.state.selectedGroup}
-                  onChange={this.handleChangeGroup}
-                >
-                  {groups.map(group => (
-                    <MenuItem key={group} value={group}>
-                      {group}
-                    </MenuItem>
-                  ))} 
-                </Select>
-                <Divider />
-              </FormControl >
-              <br />
               <FormControl className={classes.formControl}>
                 <ListItemText primary="Select Module" />
                 <Select
@@ -379,23 +292,16 @@ const styles = theme => ({
                   ))}
                 </Select>
               </FormControl>
-              <br />
-              <FormControl className={classes.formControl}>
-                <ListItemText primary="Select Start Date" />
-                  <input
-                  type="date"
-                  name="sundaySelect"
-                  value={this.state.selectedDate}
-                  onChange={this.handleChangeDate}
-                  min={this.state.minDate}
-                  max={this.state.maxDate}
-            />
-              </FormControl>
-              <span >
-                {this.state.errorMessage}
-              </span>
             </form>
           </DialogContent>
+          <DialogActions>
+            <Button color="inherit" onClick={this.props.onClose} aria-label="Close">
+              Cancel
+            </Button>
+            <Button onClick={this.handleAddModule} color="inherit">
+            Save
+            </Button>
+          </DialogActions>
         </Dialog>
       </Fragment>
       );
