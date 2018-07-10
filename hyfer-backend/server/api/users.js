@@ -42,9 +42,7 @@ function getTeachers(req, res) {
 function getCurrentStudentModules(req, res) {
   getConnection(req, res)
     .then(con => db.getUsersModulesInfo(con, +req.params.id))
-    .then(result => {
-      return res.json(result)
-    })
+    .then(result => res.json(result))
     .catch(err => handleError(err, res));
 }
 
