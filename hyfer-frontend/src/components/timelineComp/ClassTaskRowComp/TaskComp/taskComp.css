@@ -7,6 +7,7 @@
   justify-content: center;
   white-space: normal;
   position: relative;
+  box-sizing: content-box;
 }
 
 .flexWrapper {

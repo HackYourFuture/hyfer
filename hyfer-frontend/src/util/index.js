@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { errorMessage, success } from '../notify';
 
-const BASE_URL = 'http://localhost:3005';
+const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 const token = localStorage.getItem('token');
 
 //return a promise with `then` getting the json formatted data
