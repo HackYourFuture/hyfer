@@ -1,4 +1,4 @@
-const API_ROOT = 'http://localhost:3005';
+const API_ROOT = process.env.REACT_APP_API_BASE_URL;
 
 export async function fetchJSON(path) {
   const headers = { 'Content-Type': 'application/json' };

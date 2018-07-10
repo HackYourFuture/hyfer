@@ -16,12 +16,7 @@ const log = require('./util/logger');
 const app = express();
 
 app.set('port', process.env.PORT || 3005);
-
-if (app.get('env') === 'development') {
-  app.set('docRoot', path.resolve(__dirname, '../build'));
-} else {
-  app.set('docRoot', path.resolve(__dirname, '../public'));
-}
+app.set('docRoot', path.resolve(__dirname, '../public'));
 
 app.use(compression());
 app.use(morgan('dev'));

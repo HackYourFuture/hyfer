@@ -13,8 +13,6 @@ async function updateUser(req, res) {
     username,
     full_name,
     role,
-    slack_username,
-    freecodecamp_username,
     email,
     mobile,
   } = req.body;
@@ -23,8 +21,6 @@ async function updateUser(req, res) {
     username,
     full_name,
     role,
-    slack_username,
-    freecodecamp_username,
     email,
     mobile,
   };

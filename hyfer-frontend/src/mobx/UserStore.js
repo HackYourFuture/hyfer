@@ -19,7 +19,7 @@ export default class UserStore {
 
   @action
   async loadUsers() {
-    const users = await fetchJSON('/user/all');
+    const users = await fetchJSON('/api/user/all');
     runInAction(() => {
       this.filteredUsers = users;
       this.users = users;
@@ -28,7 +28,7 @@ export default class UserStore {
   }
   @action
   saveProfile = async (Data, loadData) => {
-    const res = await fetch(`http://localhost:3005/api/user/${this.userProfile.id}`, {
+    const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/user/${this.userProfile.id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ export default class UserStore {
       },
       body: JSON.stringify(Data),
     });
-  
+
     if (loadData === 'loadUsers') {
       this.loadUsers(); // this error handling is propagated
     } else if (loadData === 'loadUser') {

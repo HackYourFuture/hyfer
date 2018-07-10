@@ -1,12 +1,16 @@
+/* eslint react/prop-types: error */
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { observer, inject } from 'mobx-react';
 
 import ClassRowComp from './ClassRowComp/ClassRowComp';
 import classes from './classBarRowComp.css';
 
+@inject('global', 'timeLineStore')
+@observer
 export default class ClassBarRowComp extends Component {
   renderAllRowComp = () => {
-    if (!this.props.groups) return;
-    return this.props.groups.map(group => (
+    return this.props.timeLineStore.groups.map(group => (
       <ClassRowComp
         key={group}
         classId={group.replace(/ /g, '').substr(5)}
@@ -31,3 +35,10 @@ export default class ClassBarRowComp extends Component {
     );
   }
 }
+
+ClassBarRowComp.wrappedComponent.propTypes = {
+  global: PropTypes.object.isRequired,
+  timeLineStore: PropTypes.object.isRequired,
+  rowHeight: PropTypes.number.isRequired,
+  myRef: PropTypes.object.isRequired,
+};

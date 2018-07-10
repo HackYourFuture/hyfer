@@ -32,6 +32,27 @@ function getUserById(req, res) {
     .catch(err => handleError(err, res));
 }
 
+function getTeachers(req, res) {
+  getConnection(req, res)
+    .then(con => db.getTeachersByRunningModule(con, +req.params.id))
+    .then(result => res.json(result))
+    .catch(err => handleError(err, res));
+}
+
+function getCurrentStudentModules(req, res) {
+  getConnection(req, res)
+    .then(con => db.getUsersModulesInfo(con, +req.params.id))
+    .then(result => res.json(result))
+    .catch(err => handleError(err, res));
+}
+
+function getRunningUsersByGroup(req, res) {
+  getConnection(req, res)
+    .then(con => db.getRunningUsersByGroup(con, +req.params.groupId))
+    .then(result => res.json(result))
+    .catch(err => handleError(err, res));
+}
+
 function updateUser(req, res) {
   getConnection(req, res)
     .then(con => db.updateUser(con, +req.params.id, req.body))
@@ -42,7 +63,10 @@ function updateUser(req, res) {
 const router = express.Router();
 router
   .get('/', isAuthenticated(), getCurrentUser)
+  .get('/currentuser/:id', hasRole('teacher|student'), getCurrentStudentModules)
+  .get('/teachers/:id', hasRole('teacher|student'), getTeachers)
   .get('/all', hasRole('teacher'), getUsers)
+  .get('/group/:groupId', hasRole('teacher|student'), getRunningUsersByGroup)
   .get('/:id', hasRole('teacher|student'), getUserById)
   .patch('/:id', hasRole('teacher|student'), updateUser);
 
