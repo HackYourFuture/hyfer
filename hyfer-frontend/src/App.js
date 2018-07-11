@@ -5,7 +5,7 @@ import cookie from 'react-cookies';
 import Notifications from 'react-notify-toast';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import './assets/styles/app.css';
-import Footer from './components/Footer/Footer';
+// import Footer from './components/Footer/Footer';
 import Header from './components/Header/Header';
 import Popup from './components/Popup/Popup';
 import Homework from './Pages/Homework/Homework';
@@ -81,7 +81,7 @@ class App extends Component {
             {routes.map(route => (<Route key={route.path} {...route} />))}
             <Redirect exact strict from="/" to="/timeline" />
           </Switch>
-          <Footer />
+          {/* <Footer /> */}
         </React.Fragment>
       </BrowserRouter >
     );
