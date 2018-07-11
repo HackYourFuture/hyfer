@@ -86,6 +86,18 @@ export default class CurrentModuleStore {
     });
   }
 
+  saveNotes = async (notes) => {
+    try {
+      if (!this.currentModule) {
+        throw new Error('Cannot save notes: no current module set.');
+      }
+      const runningId = this.currentModule.id;
+      await fetchJSON(`/api/running/notes/${runningId}`, 'PATCH', { notes });
+    } catch (err) {
+      stores.global.setLastError(err);
+    }
+  }
+
   getReadme = async (repoName) => {
     if (!repoName) {
       this.readme = null;
