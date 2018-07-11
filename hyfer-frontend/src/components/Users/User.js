@@ -3,7 +3,6 @@ import styles from '../../assets/styles/users.css';
 import { Link } from 'react-router-dom';
 import Moment from 'moment';
 import { inject, observer } from 'mobx-react';
-
 import MdEmail from 'react-icons/lib/md/email';
 import FaSlack from 'react-icons/lib/fa/slack';
 import FaFire from 'react-icons/lib/fa/fire';

@@ -1,7 +1,10 @@
 import React from 'react';
 import Checkbox from '../../Helpers/Checkbox/Checkbox';
 import styles from '../../assets/styles/attendance.css';
+import { inject, observer } from 'mobx-react';
 
+@inject('currentModuleStore')
+@observer
 export default class StudentWithWeeks extends React.Component {
   render() {
     return this.renderWeeks();
@@ -9,10 +12,10 @@ export default class StudentWithWeeks extends React.Component {
 
   //this function will render check boxes for each student base on weeks
   renderWeeks() {
-    const { allHistory, students } = this.props;
+    const { history, students } = this.props.currentModuleStore;
     let studentHistory;
     for (let i = 0; i < students.length; i++) {
-      studentHistory = allHistory[students[i]];
+      studentHistory = history[students[i]];
     }
     const weeks = studentHistory.map((week, duration) => (
       <div className={styles.week_checkboxes} key={duration}>
@@ -34,10 +37,10 @@ export default class StudentWithWeeks extends React.Component {
   }
 
   getIsHomeworkChecked = (id, student) => {
-    return this.props.allHistory[student][id].homework === 1;
+    return this.props.currentModuleStore.history[student][id].homework === 1;
   };
 
   getIsAttendanceChecked = (id, student) => {
-    return this.props.allHistory[student][id].attendance === 1;
+    return this.props.currentModuleStore.history[student][id].attendance === 1;
   };
 }

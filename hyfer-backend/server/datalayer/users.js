@@ -6,15 +6,37 @@ const {
 } = require('./database');
 
 const GET_USERS_QUERY = `
-  SELECT users.id, users.username, users.full_name, users.role, users.register_date,
-    users.slack_username, users.freecodecamp_username, users.email, users.mobile,
-    group_students.group_id, \`groups\`.group_name, \`groups\`.archived, \`groups\`.starting_date FROM users
-  LEFT JOIN group_students ON users.id=group_students.user_id
+  SELECT users.*, \`groups\`.group_name 
+  FROM users
+  LEFT JOIN group_students ON users.id=group_students.user_id      
   LEFT JOIN \`groups\` ON \`groups\`.id=group_students.group_id`;
 
 const UPDATE_USER_QUERY = `
-  UPDATE users SET full_name=?, role=?, slack_username=?, freecodecamp_username=?, email=?, mobile=?
+  UPDATE users SET full_name=?, role=?, email=?, mobile=?
   WHERE id=?`;
+
+const USERS_MODULE_STUDENTS = `SELECT users.id , users.full_name, users.role, users.username,
+ groups.starting_date,groups.group_name from users
+ LEFT JOIN group_students ON users.id=group_students.user_id 
+ LEFT JOIN groups ON groups.id = group_students.group_id  
+`;
+
+function getUsersModulesInfo(con, groupId) {
+  return execQuery(con, `${USERS_MODULE_STUDENTS} WHERE group_students.group_id=?`, groupId);
+}
+
+function getTeachers(con, id) {
+  return execQuery(con, `SELECT *
+  FROM users
+  WHERE users.id IN
+  (
+    SELECT teacher1_id FROM running_modules
+    WHERE running_modules.id= ${id}
+    UNION
+    SELECT teacher2_id FROM running_modules
+    WHERE running_modules.id= ${id}
+  )`);
+}
 
 function getUsers(con) {
   return execQuery(con, `${GET_USERS_QUERY} ORDER BY full_name`);
@@ -30,6 +52,18 @@ function getUserByUsername(con, username) {
 
 function getUserById(con, id) {
   return execQuery(con, `${GET_USERS_QUERY} WHERE users.id=?`, id);
+}
+
+function getUsersByGroup(con, groupId) {
+  return execQuery(con, `${GET_USERS_QUERY} WHERE \`groups\`.id=?`, groupId);
+}
+
+function getTeachersByRunningModule(con, runningId) {
+  const sql = `SELECT users.*
+    FROM users
+    INNER JOIN running_module_teachers ON running_module_teachers.user_id = users.id
+    WHERE running_module_teachers.running_module_id=?`;
+  return execQuery(con, sql, [runningId]);
 }
 
 async function addUser(con, user) {
@@ -70,8 +104,7 @@ async function updateUser(con, id, user) {
     await execQuery(con, UPDATE_USER_QUERY, [
       user.full_name,
       user.role,
-      user.slack_username,
-      user.freecodecamp_username,
+      user.linkedin_username,
       user.email,
       user.mobile,
       id,
@@ -95,10 +128,14 @@ module.exports = {
   getUsers,
   getUserProfile,
   getUserByUsername,
+  getUsersByGroup,
+  getTeachersByRunningModule,
   getUserById,
   addUser,
   updateUser,
   bulkInsertUsers,
   bulkUpdateUsers,
   bulkUpdateMemberships,
+  getUsersModulesInfo,
+  getTeachers,
 };

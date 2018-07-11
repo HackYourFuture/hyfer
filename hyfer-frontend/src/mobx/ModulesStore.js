@@ -18,7 +18,7 @@ export default class ModulesStore {
   async initModules() {
     try {
       if (!this.dataFetched) {
-        this.serverModules = await fetchJSON('/modules');
+        this.serverModules = await fetchJSON('/api/modules');
         this.dataFetched = true;
       }
       runInAction(() => this.setModules(this.serverModules, false));

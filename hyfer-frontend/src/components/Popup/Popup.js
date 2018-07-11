@@ -40,7 +40,7 @@ class Popup extends Component {
       email: email_input,
     };
     const token = localStorage.getItem('token');
-    fetch(`http://localhost:3000/api/set-email`, {
+    fetch(`${process.env.REACT_APP_API_BASE_URL}/api/set-email`, {
       method: 'PATCH',
       body: JSON.stringify(data),
       credentials: 'same-origin',

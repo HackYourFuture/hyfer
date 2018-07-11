@@ -20,7 +20,7 @@ export default class SynchronizeGithubData extends Component {
     try {
       this.setState({ isClicked: true, isLoading: true });
       console.log('state after : ', this.state.isClicked);
-      await fetch('http://localhost:3005/api/githubSync', {
+      await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/githubSync`, {
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
