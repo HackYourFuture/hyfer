@@ -1,0 +1,181 @@
+swagger: "2.0"
+info:
+  version: "0.1.0"
+  title: Hyfer API
+  contact:
+    email: info@hackyourfuture.net
+host: localhost:3005
+basePath: /api
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+tags:
+  - name: modules
+    description: Modules definitions (standard curriculum and optional)
+parameters:
+  authHeaderParam:
+    in: header
+    name: Authorization
+    description: '`Bearer xxxx`'
+    required: true
+    type: string
+paths:
+  /modules:
+    parameters:
+      - $ref: '#/parameters/authHeaderParam'
+    get:
+      summary: Get list of modules
+      tags:
+        - modules
+      description: |
+        Get a list of module definitions.
+        Requires a `user` or `teacher` role.
+      operationId: getModules
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Module"
+    post:
+      summary: 'Create a new module (v2: REMOVE)'
+      tags:
+        - modules
+      description: |
+        Requires a `teacher` role.
+        Is this end point actually used? See PATCH /modules
+      deprecated: true
+      parameters:
+        - in: body
+          name: module
+          description: The module to create
+          schema:
+              $ref: "#/definitions/ModuleInput"
+      responses:
+        200:
+          description: OK
+    patch:
+      summary: Sync (create, update, delete) the list of modules.
+      tags:
+        - modules
+      description: Requires a `teacher` role.
+      parameters:
+        - in: body
+          name: module
+          description: The module to create
+          schema:
+            type: array
+            items:  
+              $ref: "#/definitions/ModuleInput"
+      responses:
+        200:
+          description: OK
+  /modules/{id}:
+    parameters:
+      - $ref: '#/parameters/authHeaderParam'
+    patch:
+      summary: 'Update an existing module. (v2: REMOVE)'
+      tags:
+        - modules
+      description: Requires a `teacher` role.
+      deprecated: true
+      parameters:
+        - name: Authorization
+          description: '`Bearer xxxx`'
+          in: header
+          required: true
+          type: string
+        - in: path
+          name: id
+          type: integer
+          description: id of the module to update.
+          required: true
+        - in: body
+          name: module
+          description: The module to create
+          schema:
+              $ref: "#/definitions/ModuleInput"
+      responses:
+        200:
+          description: OK
+definitions:
+  ModuleInput:
+    type: object
+    properties:
+      module_name:
+        type: string
+        description: The name of the module.
+      default_duration:
+        type: integer
+        format: int32
+      git_url:
+        type: string
+        format: url
+        description: 'v2: combine with git_repo to make this a full URL.'
+      git_repo:
+        type: string
+        description: 'v2: add to `git_url` and remove this field.'
+      color:
+        type: string
+      optional:
+        type: integer
+        format: int8
+        description: 'v2: convert to boolean.'
+    required:
+      - module_name
+  Module:
+    type: object
+    required:
+      - module_name
+    properties:
+      id:
+        type: integer
+        format: int32
+      module_name:
+        type: string
+        description: The name of the module.
+      display_name:
+        type: string
+        description: 'v2: Unused in new frontend: REMOVE.'
+      added_on:
+        type: string
+        format: date-time
+      default_duration:
+        type: integer
+        format: int32
+      git_url:
+        type: string
+        format: url
+        description: 'v2: combine with git_repo to make this a full URL.'
+      git_owner:
+        type: string
+        description: 'v2: this field is unused, remove it.'
+      git_repo:
+        type: string
+        description: 'v2: add to `git_url` and remove this field.'
+      color:
+        type: string
+      optional:
+        type: integer
+        format: int8
+        description: 'v2: convert to boolean.'
+      ref_count:
+        type: integer
+        format: int64
+        description: Number of references to this module (computed field).
+    example:
+      id: 5
+      module_name: JavaScript 3
+      display_name: ''
+      added_on: '2017-02-28T17:26:49.000Z'
+      default_duration: 3
+      git_url: https://github.com/HackYourFuture/
+      git_owner: HackYourFuture
+      git_repo: JavaScript
+      color: "#F8A055"
+      optional: 0
+      ref_count: 15

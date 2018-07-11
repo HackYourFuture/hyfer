@@ -1,0 +1,26 @@
+.syncButton{
+    width: 100px;
+    height: 40px;
+    top:-40px;
+    border-radius: 50px 20px;
+    margin-top: 1%;
+    margin-left: 2%;
+    background: #3399cc;
+    border: 0;
+    font-family: 'Open Sans',
+    sans-serif;
+    font-size: 100%;
+    color: #fff;
+    cursor: pointer;
+    transition: background .3s;
+    -webkit-transition: background .3s;
+}
+
+.syncButton:hover {
+    background: #22bb74;
+}
+
+.loadingImg{
+    width: 50px;
+    height: 40px;
+}
