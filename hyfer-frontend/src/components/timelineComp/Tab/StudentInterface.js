@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
+import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Student from './Student';
 import Teachers from './Teachers';
-import CurrentModuleDetails from '../../CurrentModuleDetails';
+import ModuleNotes from './ModuleNotes-fallback';
 
 function TabContainer(props) {
   return (
@@ -21,11 +21,9 @@ TabContainer.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-const styles = theme => ({
+const styles = () => ({
   root: {
     flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-
   },
 });
 
@@ -43,18 +41,18 @@ class StudentInterface extends React.Component {
     const { value } = this.state;
     return (
       <div className={classes.root}>
-        <AppBar position="static">
-          <Tabs style={{ background: '#fff' }} value={value} onChange={this.handleChange} >
-            <Tab label="Students" style={{ background: '#fff' }} />
-            <Tab label="Teachers" style={{ background: '#fff' }} />
-            <Tab label="Note" style={{ background: '#fff' }} />
+        <Paper>
+          <Tabs value={value} onChange={this.handleChange} >
+            <Tab label="Students" />
+            <Tab label="Teachers" />
+            <Tab label="Notes" />
           </Tabs>
-        </AppBar>
+        </Paper>
         {value === 0 && <TabContainer>
           <Student />
         </TabContainer>}
         {value === 1 && <TabContainer><Teachers /></TabContainer>}
-        {value === 2 && <TabContainer><CurrentModuleDetails /></TabContainer>}
+        {value === 2 && <TabContainer><ModuleNotes /></TabContainer>}
       </div>
     );
   }
