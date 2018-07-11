@@ -120,8 +120,8 @@ function removeTeacherFromClasses(githubTeams) {
 /**
  * Synchronizes all GitHub class teams and the teachers team
  */
-async function githubSync(con) {
-  const githubTeams = await getTeamMembers();
+async function githubSync(con, syncAll) {
+  const githubTeams = await getTeamMembers(con, syncAll);
   const teams = removeTeacherFromClasses(githubTeams);
   const githubUsers = getUniqueUsersFromTeams(teams);
   let hyferUsers = await getUsers(con);
@@ -163,6 +163,7 @@ async function githubSync(con) {
   await createNewClasses(con, teams);
   await rebuildMemberships(con, teams);
 }
+
 
 module.exports = {
   githubSync,

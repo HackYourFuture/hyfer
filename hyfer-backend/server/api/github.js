@@ -2,9 +2,11 @@ const httpRequest = require('request');
 const marked = require('marked');
 const LRU = require('lru-cache');
 const logger = require('../util/logger');
+const { getActiveGroups } = require('../datalayer/groups');
 
 const API_END_POINT = 'https://api.github.com';
 const ONE_DAY_IN_MSECS = 24 * 60 * 60 * 1000;
+
 
 const cache = LRU({
   max: 100,
@@ -32,8 +34,12 @@ function httpRequestPromise(url) {
   });
 }
 
-async function getTeamMembers() {
-  const teams = await httpRequestPromise('https://api.github.com/orgs/hackyourfuture/teams?per_page=100');
+async function getTeamMembers(con, syncAll) {
+  let teams = await httpRequestPromise('https://api.github.com/orgs/hackyourfuture/teams?per_page=100');
+  if (!syncAll) {
+    const activeGroups = await getActiveGroups(con);
+    teams = teams.filter(team => activeGroups.find(elem => elem.group_name === team.name) || team.name === 'teachers');
+  }
   const teamsUrl = teams.map(team => httpRequestPromise(team.url));
   const teamsInfo = await Promise.all(teamsUrl);
   const classTeamPromises = teams.map(classTeam =>
@@ -43,7 +49,7 @@ async function getTeamMembers() {
     const userPromises = team.map(user => httpRequestPromise(user.url));
     return Promise.all(userPromises);
   });
-  const teamsStudents = await Promise.all(studentsPromises);
+  const teamsStudents = await Promise.all(studentsPromises).catch((err) => { logger.error(err); });
   const modifiedTeamsStudents = teamsStudents.map((item, i) => ({
     teamName: teamsInfo[i].name,
     created_at: teamsInfo[i].created_at,
