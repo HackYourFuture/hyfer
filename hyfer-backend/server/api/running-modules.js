@@ -115,6 +115,15 @@ function splitRunningModule(req, res) {
     .catch(err => handleError(err, res));
 }
 
+function updateNotes(req, res) {
+  const runningId = +req.params.id;
+  const { notes } = req.body;
+  getConnection(req, res)
+    .then(con => db.updateNotes(con, runningId, notes))
+    .then(() => res.json({ notes }))
+    .catch(err => handleError(err, res));
+}
+
 const router = express.Router();
 router
   .get('/:groupId', hasRole('teacher'), getRunningModules)
@@ -122,6 +131,7 @@ router
   .patch('/update/:groupId/:position', hasRole('teacher'), updateRunningModule)
   .patch('/split/:groupId/:position', hasRole('teacher'), splitRunningModule)
   .patch('/add/:moduleId/:groupId/:position', hasRole('teacher'), addModuleToRunningModules)
-  .delete('/:groupId/:position', hasRole('teacher'), deleteRunningModule);
+  .delete('/:groupId/:position', hasRole('teacher'), deleteRunningModule)
+  .patch('/notes/:id', updateNotes);
 
 module.exports = router;

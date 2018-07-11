@@ -116,6 +116,11 @@ async function splitRunningModule(con, groupId, position) {
   return replaceRunningModules(con, runningMods, groupId);
 }
 
+async function updateNotes(con, runningId, notes) {
+  const sql = 'UPDATE running_modules SET notes=? WHERE id=?';
+  return execQuery(con, sql, [notes, runningId]);
+}
+
 module.exports = {
   getRunningModuleById,
   getRunningModules,
@@ -123,4 +128,5 @@ module.exports = {
   updateRunningModule,
   deleteRunningModule,
   splitRunningModule,
+  updateNotes,
 };
