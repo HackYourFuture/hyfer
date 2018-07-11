@@ -1,10 +1,10 @@
 .syncButton{
-    width: 200px;
-    height: 80px;
+    width: 100px;
+    height: 40px;
     top:-40px;
-    float: left;
-    margin-top: -50px;
-    margin-left: 42.5%;
+    border-radius: 50px 20px;
+    margin-top: 1%;
+    margin-left: 2%;
     background: #3399cc;
     border: 0;
     font-family: 'Open Sans',
@@ -22,5 +22,5 @@
 
 .loadingImg{
     width: 50px;
-    height: 50px;
+    height: 40px;
 }

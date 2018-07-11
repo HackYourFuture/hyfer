@@ -41,6 +41,13 @@ function getGroups(con) {
   );
 }
 
+function getActiveGroups(con) {
+  return execQuery(
+    con,
+    'SELECT group_name FROM `groups` where archived = 0'
+  );
+}
+
 function updateGroup(con, module, id) {
   return execQuery(con, UPDATE_GROUP_QUERY, [module, id]);
 }
@@ -108,4 +115,5 @@ module.exports = {
   addGroup,
   updateGroup,
   deleteGroup,
+  getActiveGroups,
 };
