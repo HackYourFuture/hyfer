@@ -16,8 +16,7 @@ const styles = theme => ({
   },
 });
 
-@inject('modulesStore')
-@inject('timeLineStore')
+@inject('modulesStore','timeLineStore','currentModuleStore')
 @observer
   export default withStyles(styles)(class FormDialogModule extends Component {
     state = {
@@ -77,14 +76,8 @@ const styles = theme => ({
     };
 
     handleAddModule = () => {
-      if (!this.state.validDate) {
-        this.setState({
-          errorMessage:
-            'Please provide a valid starting date for the module to be added',
-        });
-        return;
-      }
-      const { items } = this.props.timeLineStore;
+      console.log(this.props.currentModuleStore.currentModule);
+     const { items } = this.props.timeLineStore;
       // this step is weird but it's just to pass the modules of a class instead of all of them, or if all classes is selected pass em all
       let className = Object.keys(items).filter(
         group => group === this.state.selectedGroup,
