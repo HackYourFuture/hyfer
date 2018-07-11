@@ -1,12 +1,10 @@
 import React, { Fragment, Component } from 'react';
 import {
-  Dialog, Select,DialogTitle,
-  DialogContent,Button,ListItemText,
-  MenuItem,FormControl,DialogActions,
+  Dialog, Select, DialogTitle,
+  DialogContent, Button, ListItemText,
+  MenuItem, FormControl, DialogActions,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import moment from 'moment';
-//import { errorMessage } from '../../../../notify';
 import { observer, inject } from 'mobx-react';
 
 const styles = theme => ({
@@ -16,14 +14,13 @@ const styles = theme => ({
   },
 });
 
-@inject('modulesStore','timeLineStore','currentModuleStore')
+@inject('modulesStore', 'timeLineStore', 'currentModuleStore')
 @observer
   export default withStyles(styles)(class FormDialogModule extends Component {
     state = {
       open: false,
       selectedModuleId: '',
-      errorMessage: '',
-      modules:[],
+      modules: [],
     };
 
     async getModules() {
@@ -45,67 +42,47 @@ const styles = theme => ({
     componentWillMount = () => {
       this.getModules();
     };
-    
+
     ComponentDidMount() {
       this.setState({
-      open: this.props.open,
-    });
+        open: this.props.open,
+      });
     }
-  
+
     handleClickOpen = () => {
       this.setState({ open: true });
 
     };
-    
+
     handleClose = () => {
-    this.setState({ open: false });
+      this.setState({ open: false });
     };
-    
-       handleChangeSelectedModuleId = e => {
+
+    handleChangeSelectedModuleId = e => {
       this.setState({ selectedModuleId: e.target.value });
     };
 
     handleAddModule = async () => {
-      const { selectedModuleId } = this.state;
-      const { group_id, position } = this.props.currentModuleStore.currentModule;
-      const token = localStorage.getItem('token');
-      await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/running/add/${selectedModuleId}/${group_id}/${position + 1}`,
-        {
-          method: 'PATCH',
-          headers: {
-            Authorization: 'Bearer ' + token,
-          },
-        });
-      this.props.timeLineStore.fetchItems();
-    };
-  
-    setInitialState = props => {
-      const { modules } = props.timeLineStore;
-      const { groups, items } = props;
-      if (!modules || !groups || !items) return;
-      const { min, max } = this.getSharedDatesBetweenGroups();
-      this.setState({
-        selectedGroup: 'All classes',
-        selectedModuleId: modules[0].id,
-        duration: 1,
-        mountedFirstTime: true,
-        minDate: moment(min).format('YYYY-MM-DD'),
-        maxDate: moment(max).format('YYYY-MM-DD'),
-      });
-    };
-
-    // set up the default state
-    UNSAFE_componentWillReceiveProps = props => {
-    if (!this.state.mountedFirstTime) {
-      this.setInitialState(props);
+      try {
+        const { selectedModuleId } = this.state;
+        const { group_id, position } = this.props.currentModuleStore.currentModule;
+        const token = localStorage.getItem('token');
+        await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/running/add/${selectedModuleId}/${group_id}/${position + 1}`,
+          {
+            method: 'PATCH',
+            headers: {
+              Authorization: 'Bearer ' + token,
+            },
+          });
+        this.props.timeLineStore.fetchItems();
+      } catch (error) {
+        console.log(error);
       }
     };
 
     render() {
       const { classes } = this.props;
-      // const { modules } = this.props.modulesStore;
-      // if ( !modules ) return null;
-      
+
       return (<Fragment>
         <Dialog open={this.props.open}
           onClose={this.props.onClose}
@@ -134,12 +111,12 @@ const styles = theme => ({
               Cancel
             </Button>
             <Button onClick={this.handleAddModule} color="inherit">
-            Save
+              Save
             </Button>
           </DialogActions>
         </Dialog>
       </Fragment>
       );
-  }
-});
+    }
+  });
 
