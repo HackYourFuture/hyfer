@@ -3,8 +3,11 @@ import PropTypes from 'prop-types';
 import { autorun } from 'mobx';
 import { observer, inject } from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
+// import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
+import Button from '@material-ui/core/Button';
 import marked from 'marked';
 
 const noNotes = '_There are no notes for this module._';
@@ -73,6 +76,7 @@ const styles = theme => ({
 });
 
 const defaultState = {
+  inEditMode: false,
   isEditing: false,
   isDirty: false,
   hasNotes: false,
@@ -109,17 +113,20 @@ class ModuleNotes extends Component {
       notes = template;
     }
     this.setState({
+      inEditMode: true,
       isEditing: true,
       notes,
     });
   }
 
-  clearEditMode = () => this.setState({ isEditing: false });
+  setIsEditing = () => this.setState({ isEditing: true });
+  clearIsEditing = () => this.setState({ isEditing: false });
 
   saveNotes = () => {
     this.props.currentModuleStore.saveNotes(this.state.notes);
     this.setState({
       isDirty: false,
+      inEditMode: false,
       isEditing: false,
     });
   }
@@ -127,8 +134,9 @@ class ModuleNotes extends Component {
   cancelEdit = () => {
     this.setState({
       notes: this.origNotes,
-      isEditing: false,
       isDirty: false,
+      inEditMode: false,
+      isEditing: false,
     });
   };
 
@@ -161,43 +169,54 @@ class ModuleNotes extends Component {
       return null;
     }
 
-    const { isEditing, isDirty } = this.state;
+    const { inEditMode, isEditing, isDirty } = this.state;
     const { classes } = this.props;
 
     return (
       <div className={classes.container}>
         <Paper className={classes.root} elevation={1}>
           {this.props.global.isTeacher && <div>
-            <Button
-              variant="outlined"
-              className={classes.button}
-              onClick={this.setEditMode}
-              disabled={isEditing}
-            >
-              Edit
-            </Button>
-            <Button
-              variant="outlined"
-              className={classes.button}
-              onClick={this.clearEditMode}
-              disabled={!isEditing}
-            >
-              View
-            </Button>
+            {!inEditMode && <div className={classes.bottomButtonContainer}>
+              <IconButton
+                className={classes.button}
+                aria-label="Edit"
+                onClick={this.setEditMode}
+              >
+                <EditIcon />
+              </IconButton>
+            </div>}
+            {inEditMode && <React.Fragment>
+              <Button
+                variant="outlined"
+                color="primary"
+                className={classes.button}
+                onClick={this.setIsEditing}
+                disabled={isEditing}
+              >
+                Edit
+                </Button>
+              <Button
+                variant="outlined"
+                className={classes.button}
+                onClick={this.clearIsEditing}
+                disabled={!isEditing}
+              >
+                View
+                </Button>
+            </React.Fragment>}
           </div>}
           <div>
             {this.state.isEditing
               ? this.renderTextArea()
               : this.renderArticle()}
           </div>
-          {isEditing && (
+          {inEditMode && (
             <div className={classes.bottomButtonContainer}>
               <Button
                 variant="contained"
                 color="secondary"
                 className={classes.button}
                 onClick={this.cancelEdit}
-                disabled={!isDirty}
               >
                 Cancel
             </Button>
