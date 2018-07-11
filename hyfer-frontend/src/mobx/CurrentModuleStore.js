@@ -1,4 +1,4 @@
-import { observable, runInAction } from 'mobx';
+import { observable, runInAction, action } from 'mobx';
 import { fetchJSON } from './util';
 import marked from 'marked';
 import stores from '.';
@@ -29,10 +29,10 @@ export default class CurrentModuleStore {
   currentModule = null;
 
   @observable
-  students = null;
+  students = [];
 
   @observable
-  teachers = null;
+  teachers = [];
 
   async getRunningModuleDetails(runningId) {
     const details = await fetchJSON(`/api/running/details/${runningId}`);
@@ -43,11 +43,6 @@ export default class CurrentModuleStore {
       this.currentModule = runningModule;
       this.students = students;
       this.teachers = teachers;
-
-      // FIXME: connect Hamza UI code to the CurrentModuleStore instead of his CurrentModules store
-      stores.currentModules.fetchCurrentModuleUsers(group.id);
-      stores.currentModules.getGroupsByGroupName(group.group_name);
-      stores.currentModules.fetchModuleTeachers(runningId);
     });
   }
 
@@ -114,4 +109,31 @@ export default class CurrentModuleStore {
       this.readme = { repoName, html };
     });
   }
+  @action
+  async fetchCurrentModuleUsers(group_name) {
+    const token = localStorage.getItem('token');
+    const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/user/currentuser/${group_name}`
+      , {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token,
+        },
+
+      });
+
+    if (!res.ok) {
+      runInAction(() => {
+        stores.global.setLastError(res);
+      });
+    } else {
+      const response = await res.json();
+      const moduelUsers = response;
+      runInAction(() => {
+        return this.students = moduelUsers;
+      });
+
+    }
+  }
+
 }
