@@ -4,11 +4,9 @@ import {
   DialogContent,Button,ListItemText,
   MenuItem,FormControl,DialogActions,
 } from '@material-ui/core';
-//import CloseIcon from '@material-ui/icons/Close';
 import { withStyles } from '@material-ui/core/styles';
 import moment from 'moment';
 import { errorMessage } from '../../../../notify';
-
 import { observer, inject } from 'mobx-react';
 
 const styles = theme => ({
@@ -18,30 +16,52 @@ const styles = theme => ({
   },
 });
 
+@inject('modulesStore')
 @inject('timeLineStore')
 @observer
   export default withStyles(styles)(class FormDialogModule extends Component {
     state = {
-    open: false,
-    selectedDate: '',
-    selectedGroup: '',
-    selectedModuleId: '',
-    duration: '',
-    validDate: null,
-    errorMessage: '',
-    mountedFirstTime: false,
-    minDate: '',
-    maxDate: '',
+      open: false,
+      selectedDate: '',
+      selectedGroup: '',
+      selectedModuleId: '',
+      duration: '',
+      validDate: null,
+      errorMessage: '',
+      mountedFirstTime: false,
+      minDate: '',
+      maxDate: '',
+      modules:[],
+    };
+
+    async getModules() {
+      try {
+        const data = await fetch('/api/modules', {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImphbXNyYWhpbWkiLCJpYXQiOjE1MzEyNTAyODksImV4cCI6MTUzMzg0MjI4OX0.Niy4NvSDOQ2iRZcWIJhK6j-3ExJUQpQwYIOw-mzElYA",
+  },
+        });
+        const modules = await data.json();
+        this.setState({ modules });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    componentWillMount = () => {
+      this.getModules();
     };
     
     ComponentDidMount() {
-    this.setState({
+      this.setState({
       open: this.props.open,
     });
     }
-    
+  
     handleClickOpen = () => {
-    this.setState({ open: true });
+      this.setState({ open: true });
+
     };
     
     handleClose = () => {
@@ -251,11 +271,9 @@ const styles = theme => ({
 
     render() {
       const { classes } = this.props;
-      // const { modules } = this.props.timeLineStore;
-      // const { allSundays } = this.props.timeLineStore;
-      // if (!groups || !modules || !allSundays) return null;
-      //const groupsPlus = ['All classes', ...groups];//
-    
+      // const { modules } = this.props.modulesStore;
+      // if ( !modules ) return null;
+      
       return (<Fragment>
         <Dialog open={this.props.open}
           onClose={this.props.onClose}
@@ -270,11 +288,11 @@ const styles = theme => ({
                   value={this.state.selectedModuleId}
                   onChange={this.handleChangeSelectedModuleId}
                 >
-                  {/* {modules.map(module => (
+                  {this.state.modules.map(module => (
                     <MenuItem key={module.module_name} value={module.id}>
                       {module.module_name}
                     </MenuItem>
-                  ))} */}
+                  ))}
                 </Select>
               </FormControl>
               <br />

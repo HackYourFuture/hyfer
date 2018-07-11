@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import DropdownList from '../DropdownList/DropdownList';
 import classes from './taskComp.css';
-// import AssignTeacherModal from '../DropdownList/AssignTeacherModal/AssignTeacherModal';
+import AssignTeacherModal from '../DropdownList/AssignTeacherModal/AssignTeacherModal';
 
 @inject('currentModuleStore')
 @observer
@@ -61,6 +61,10 @@ export default class TaskComp extends Component {
 
     return (
       <div>
+         <AssignTeacherModal
+          visible={this.state.assignTeacherModalIsToggled}
+          closeModal={this.hideAssignTeacherModal}
+        />
         <div
           className={classes.container}
           style={{ width: width + 'px', height: this.props.height + 'px' }}
