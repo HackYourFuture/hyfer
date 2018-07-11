@@ -1,5 +1,6 @@
 import { inject, observer } from 'mobx-react';
 import React, { Component } from 'react';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import cookie from 'react-cookies';
 import Notifications from 'react-notify-toast';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
@@ -72,6 +73,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <React.Fragment>
+          <CssBaseline />
           <Header />
           <Popup />
           <Notifications />
