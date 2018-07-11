@@ -11,20 +11,18 @@ const GET_GROUPS_BY_GROUP_NAME = ` SELECT  groups.starting_date,groups.group_nam
 const GET_TIME_LINE_QUERY = `SELECT \`groups\`.id,
   \`groups\`.group_name,
   \`groups\`.starting_date,
-        running_modules.duration,
-        running_modules.id AS running_module_id,
-        running_modules.position,
-        modules.module_name,
-        modules.display_name,
-        modules.color,
-        modules.git_url,
-        modules.git_repo,
-        modules.optional
-    FROM \`groups\`
-    INNER JOIN running_modules ON running_modules.group_id = \`groups\`.id
-    INNER JOIN modules ON running_modules.module_id = modules.id
-    WHERE \`groups\`.archived=0
-    ORDER BY \`groups\`.starting_date, running_modules.position`;
+  running_modules.duration,
+  running_modules.id AS running_module_id,
+  running_modules.position,
+  modules.module_name,
+  modules.color,
+  modules.git_repo,
+  modules.optional
+  FROM \`groups\`
+  INNER JOIN running_modules ON running_modules.group_id = \`groups\`.id
+  INNER JOIN modules ON running_modules.module_id = modules.id
+  WHERE \`groups\`.archived=0
+  ORDER BY \`groups\`.starting_date, running_modules.position`;
 
 const ADD_GROUP_QUERY = 'INSERT INTO `groups` SET ?';
 const UPDATE_GROUP_QUERY = 'UPDATE `groups` SET ? WHERE id = ?';
@@ -39,10 +37,11 @@ function getGropsByGroupName(con, group_name) {
   return execQuery(con, `${GET_GROUPS_BY_GROUP_NAME} WHERE groups.group_name=?`, group_name);
 }
 function getGroups(con) {
-  return execQuery(
-    con,
-    'SELECT id, group_name, starting_date, archived FROM `groups` ORDER BY starting_date'
-  );
+  return execQuery(con, 'SELECT * FROM `groups` ORDER BY starting_date');
+}
+
+function getGroupById(con, groupId) {
+  return execQuery(con, 'SELECT * FROM `groups` WHERE id=?', [groupId]);
 }
 
 function updateGroup(con, module, id) {
@@ -108,6 +107,7 @@ async function addGroup(con, group) {
 
 module.exports = {
   getTimeline,
+  getGroupById,
   getGroups,
   addGroup,
   updateGroup,

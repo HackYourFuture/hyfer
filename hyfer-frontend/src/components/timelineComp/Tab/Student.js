@@ -2,16 +2,15 @@ import React from 'react';
 import styles from '../../../assets/styles/users.css';
 import User from './Users';
 import { inject, observer } from 'mobx-react';
-@inject('currentModules')
+@inject('currentModuleStore')
 @observer
 export default class Student extends React.Component {
   render() {
-    const { moduleUsers  } = this.props.currentModules;
+    const { students } = this.props.currentModuleStore;
     return (
-
       <li className={styles.userList}>
         <ul className={styles.userContainer}>
-          {moduleUsers.map(user => {
+          {students.map(user => {
             return (
               <User key={user.id} user={user} />
             );

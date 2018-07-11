@@ -6,11 +6,17 @@ const {
 } = require('./database');
 const modules = require('./modules');
 
-const GET_RUNNING_MODULES_QUERY = 'SELECT duration, teacher1_id, teacher2_id FROM running_modules';
+const GET_RUNNING_MODULES_QUERY = 'SELECT * FROM running_modules';
 const GET_ALL_FROM_RUNNING_MODULES_QUERY = 'SELECT * FROM running_modules';
 const DELETE_ALL_RUNNING_MODULES_QUERY = 'DELETE FROM running_modules WHERE group_id=?';
 const INSERT_RUNNING_MODULES_QUERY = `INSERT INTO running_modules 
-  (module_id, group_id, duration, position, teacher1_id, teacher2_id) VALUES ?`;
+  (module_id, group_id, duration, position) VALUES ?`;
+const GET_RUNNING_MODULE_BY_ID = 'SELECT * FROM running_modules WHERE id=?';
+
+function getRunningModuleById(con, runningId) {
+  const sql = GET_RUNNING_MODULE_BY_ID;
+  return execQuery(con, sql, [runningId]);
+}
 
 function getRunningModules(con, groupId) {
   const sql = `${GET_RUNNING_MODULES_QUERY} WHERE group_id=? ORDER BY position`;
@@ -41,8 +47,6 @@ function makeValueList(runningModules) {
       mod.group_id,
       mod.duration,
       mod.position,
-      mod.teacher1_id,
-      mod.teacher2_id,
     ]);
     return values;
   }, []);
@@ -113,6 +117,7 @@ async function splitRunningModule(con, groupId, position) {
 }
 
 module.exports = {
+  getRunningModuleById,
   getRunningModules,
   addModuleToRunningModules,
   updateRunningModule,

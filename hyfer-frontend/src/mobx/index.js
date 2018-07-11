@@ -3,11 +3,10 @@ import GlobalStore from './GlobalStore';
 import HomeworkStore from './HomeworkStore';
 import UserStore from './UserStore';
 import ModulesStore from './ModulesStore';
-import CurrentModules from './CurrentModules';
 import TimeLineStore from './TimeLineStore';
-configure({ enforceActions: true });
+import CurrentModuleStore from './CurrentModuleStore';
 
-export const API_BASE_URL = 'http://localhost:3005/api';
+configure({ enforceActions: true });
 
 export default {
   userStore: new UserStore(),
@@ -15,5 +14,5 @@ export default {
   global: new GlobalStore(),
   modulesStore: new ModulesStore(),
   timeLineStore: new TimeLineStore(),
-  currentModules: new CurrentModules(),
+  currentModuleStore: new CurrentModuleStore(),
 };

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import style from '../../../assets/styles/users.css';
 import Moment from 'moment';
 import linkedin from 'react-icons/lib/fa/linkedin';
+
 export default class User extends Component {
   render() {
     const { user } = this.props;

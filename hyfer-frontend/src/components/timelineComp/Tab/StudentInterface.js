@@ -7,6 +7,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Student from './Student';
 import Teachers from './Teachers';
+import CurrentModuleDetails from '../../CurrentModuleDetails';
 
 function TabContainer(props) {
   return (
@@ -53,7 +54,7 @@ class StudentInterface extends React.Component {
           <Student />
         </TabContainer>}
         {value === 1 && <TabContainer><Teachers /></TabContainer>}
-        {value === 2 && <TabContainer>Item Three</TabContainer>}
+        {value === 2 && <TabContainer><CurrentModuleDetails /></TabContainer>}
       </div>
     );
   }

@@ -69,6 +69,7 @@ class App extends Component {
   render() {
     const { currentUser, isLoggedIn } = this.props.global;
     const routes = isLoggedIn ? [...PUBLIC_ROUTES, ...ROUTES[currentUser.role]] : [...PUBLIC_ROUTES];
+    console.log(currentUser);
     return (
       <BrowserRouter>
         <React.Fragment>

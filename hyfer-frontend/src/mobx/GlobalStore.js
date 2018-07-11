@@ -70,13 +70,12 @@ export default class GlobalStore {
     if (this.currentUser) {
       return;
     }
-    fetchJSON('/user')
+    fetchJSON('/api/user')
       .then((res) => {
         runInAction(() => {
           this.currentUser = res;
-          if (this.currentUser.group_id !== null) {
-            stores.currentModules.fetchCurrentModuleUsers(this.currentUser.group_id);
-            stores.currentModules.getGroupsByGroupName(this.currentUser.group_name);
+          if (this.currentUser.group_name !== null) {
+            stores.currentModuleStore.fetchCurrentModuleUsers(this.currentUser.group_name);
           }
         });
       })
