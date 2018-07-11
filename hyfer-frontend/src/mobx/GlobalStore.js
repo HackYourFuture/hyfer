@@ -75,8 +75,7 @@ export default class GlobalStore {
         runInAction(() => {
           this.currentUser = res;
           if (this.currentUser.group_name !== null) {
-            stores.currentModules.fetchCurrentModuleUsers(this.currentUser.group_id);
-            stores.currentModules.getGroupsByGroupName(this.currentUser.group_name);
+            stores.currentModuleStore.fetchCurrentModuleUsers(this.currentUser.group_name);
           }
         });
       })
