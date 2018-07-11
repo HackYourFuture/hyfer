@@ -5,16 +5,34 @@ import { observer, inject } from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import marked from 'marked';
 
 const noNotes = '_There are no notes for this module._';
 
-const defaultState = {
-  isEditing: false,
-  isDirty: false,
-  notes: '',
-};
+const template =
+  `## YouTube Lecture Recordings
+
+(Right-click to open in a new tab.)
+
+<!--
+  Complete the link for the videos below. 
+  Markdown format: [Part x](url)
+--> 
+
+### Week 1
+
+- Part 1 - not (yet) available
+- Part 2 - not (yet) available
+
+### Week 2
+
+- Part 1 - not (yet) available
+- Part 2 - not (yet) available
+
+### Week 3
+
+- Part 1 - not (yet) available
+- Part 2 - not (yet) available`;
 
 const styles = theme => ({
   container: {
@@ -33,16 +51,20 @@ const styles = theme => ({
     },
   },
   textArea: {
-    minHeight: 600,
+    minHeight: 480,
     fontSize: 14,
     border: '1px solid #ccc',
     borderRadius: 4,
     padding: 8,
     width: '100%',
+    resize: 'none',
+    ...theme.typography.body1,
   },
   article: {
     textAlign: 'left',
     width: '100%',
+    ...theme.mixins.gutters(),
+    ...theme.typography.body1,
   },
   bottomButtonContainer: {
     display: 'flex',
@@ -50,17 +72,30 @@ const styles = theme => ({
   },
 });
 
+const defaultState = {
+  isEditing: false,
+  isDirty: false,
+  hasNotes: false,
+  notes: '',
+};
+
 @inject('global', 'currentModuleStore')
 @observer
 class ModuleNotes extends Component {
   state = { ...defaultState };
+  origNotes = '';
 
   componentDidMount() {
-    autorun(() => {
+    this.disposeAutoRun = autorun(() => {
       const { currentModule } = this.props.currentModuleStore;
-      const notes = (currentModule && currentModule.notes) || '';
+      const notes = currentModule && currentModule.notes;
+      this.origNotes = notes;
       this.setState({ ...defaultState, notes });
     });
+  }
+
+  componentWillUnmount() {
+    this.disposeAutoRun();
   }
 
   onChange = (e) => this.setState({
@@ -69,9 +104,13 @@ class ModuleNotes extends Component {
   });
 
   setEditMode = () => {
+    let { notes } = this.state;
+    if (!notes) {
+      notes = template;
+    }
     this.setState({
       isEditing: true,
-      isDirty: false,
+      notes,
     });
   }
 
@@ -79,8 +118,19 @@ class ModuleNotes extends Component {
 
   saveNotes = () => {
     this.props.currentModuleStore.saveNotes(this.state.notes);
-    this.setState({ isDirty: false });
+    this.setState({
+      isDirty: false,
+      isEditing: false,
+    });
   }
+
+  cancelEdit = () => {
+    this.setState({
+      notes: this.origNotes,
+      isEditing: false,
+      isDirty: false,
+    });
+  };
 
   renderTextArea() {
     const { classes } = this.props;
@@ -98,12 +148,10 @@ class ModuleNotes extends Component {
     const notes = this.state.notes || noNotes;
     const __html = marked(notes);
     return (
-      <Typography variant="body1">
-        <article
-          className={classes.article}
-          dangerouslySetInnerHTML={{ __html }}
-        />
-      </Typography>
+      <article
+        className={classes.article}
+        dangerouslySetInnerHTML={{ __html }}
+      />
     );
   }
 
@@ -146,12 +194,21 @@ class ModuleNotes extends Component {
             <div className={classes.bottomButtonContainer}>
               <Button
                 variant="contained"
+                color="secondary"
+                className={classes.button}
+                onClick={this.cancelEdit}
+                disabled={!isDirty}
+              >
+                Cancel
+            </Button>
+              <Button
+                variant="contained"
                 color="primary"
                 className={classes.button}
                 onClick={this.saveNotes}
                 disabled={!isDirty}
               >
-                Save
+                Update Notes
             </Button>
             </div>
           )}
