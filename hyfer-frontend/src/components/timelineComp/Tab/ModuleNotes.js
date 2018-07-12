@@ -7,7 +7,7 @@ import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import Button from '@material-ui/core/Button';
-import marked from 'marked';
+import Showdown from 'showdown';
 
 const localStorageKey = 'hyfer:moduleNotes';
 const noNotes = '_There are no notes for this module._';
@@ -48,18 +48,18 @@ const styles = theme => ({
     width: 980,
     padding: 32,
   },
+  buttonBar: {
+    marginBottom: 8,
+  },
   button: {
     margin: theme.spacing.unit,
-    '&:firstChild': {
-      marginLeft: 0,
-    },
   },
   textArea: {
     minHeight: 480,
-    fontSize: 14,
     border: '1px solid #ccc',
     borderRadius: 4,
     padding: 8,
+    marginBottom: 20,
     width: '100%',
     resize: 'none',
     ...theme.typography.body1,
@@ -92,13 +92,19 @@ const restoreState = {
 @inject('global', 'currentModuleStore')
 @observer
 class ModuleNotes extends Component {
-  state = { ...defaultState };
   origNotes = '';
   runningId = -1;
+  converter = new Showdown.Converter({ tables: true, simplifiedAutoLink: true });
+
+  state = { ...defaultState };
 
   componentDidMount() {
     this.disposeAutoRun = autorun(() => {
       const { currentModule } = this.props.currentModuleStore;
+      if (!currentModule) {
+        return;
+      }
+
       this.runningId = currentModule.id;
       const storageItem = window.sessionStorage.getItem(localStorageKey);
 
@@ -194,10 +200,11 @@ class ModuleNotes extends Component {
   renderArticle() {
     const { classes } = this.props;
     const notes = this.state.notes || noNotes;
-    const __html = marked(notes);
+    const __html = this.converter.makeHtml(notes);
     return (
       <article
         className={classes.article}
+        styles={this.state.notes ? { minHeight: 480 } : 0}
         dangerouslySetInnerHTML={{ __html }}
       />
     );
@@ -225,9 +232,8 @@ class ModuleNotes extends Component {
                 <EditIcon />
               </IconButton>
             </div>}
-            {inEditMode && <React.Fragment>
+            {inEditMode && <Paper className={classes.buttonBar} elevation={1}>
               <Button
-                variant="outlined"
                 color="primary"
                 className={classes.button}
                 onClick={this.setIsEditing}
@@ -236,14 +242,14 @@ class ModuleNotes extends Component {
                 Edit
                 </Button>
               <Button
-                variant="outlined"
+                color="primary"
                 className={classes.button}
                 onClick={this.clearIsEditing}
                 disabled={!isEditing}
               >
                 View
                 </Button>
-            </React.Fragment>}
+            </Paper>}
           </div>}
           <div>
             {this.state.isEditing
