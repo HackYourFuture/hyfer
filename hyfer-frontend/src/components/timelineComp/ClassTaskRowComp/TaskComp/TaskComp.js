@@ -4,9 +4,10 @@ import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import DropdownList from '../DropdownList/DropdownList';
 import classes from './taskComp.css';
-import AssignTeacherModal from '../DropdownList/AssignTeacherModal/AssignTeacherModal';
+//import AssignTeacherModal from '../DropdownList/AssignTeacherModal/AssignTeacherModal';
+import AssignTeacherDialog from '../DropdownList/AssignTeacherModal/AssignTeacherDialog';
 
-@inject('currentModuleStore')
+@inject('currentModuleStore','userStore')
 @observer
 export default class TaskComp extends Component {
   state = {
@@ -16,6 +17,7 @@ export default class TaskComp extends Component {
 
   showAssignTeacherModal = e => {
     e.stopPropagation();
+    this.props.userStore.getTeacher();
     this.setState({ assignTeacherModalIsToggled: true });
   };
 
@@ -61,9 +63,9 @@ export default class TaskComp extends Component {
 
     return (
       <div>
-         <AssignTeacherModal
-          visible={this.state.assignTeacherModalIsToggled}
-          closeModal={this.hideAssignTeacherModal}
+         <AssignTeacherDialog
+          open={this.state.assignTeacherModalIsToggled}
+          onClose={this.hideAssignTeacherModal}
         />
         <div
           className={classes.container}
@@ -92,6 +94,7 @@ export default class TaskComp extends Component {
 
 TaskComp.wrappedComponent.propTypes = {
   currentModuleStore: PropTypes.object.isRequired,
+  userStore: PropTypes.object.isRequired,
   item: PropTypes.object.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,

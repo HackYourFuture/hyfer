@@ -21,13 +21,13 @@ const UPDATE_USER_QUERY = `
     users.role= 'teacher'`);
   }
 
-// function getRunningModuleTeachers(con, running_module_id) {
-//     return execQuery(con , `SELECT users.full_name , users.id
-//     FROM users
-//     INNER JOIN running_module_teachers
-//     ON users.id = running_module_teachers.user_id
-//     WHERE running_module_id=?`, running_module_id);
-//   } 
+function getRunningModuleTeachers(con, running_module_id) {
+    return execQuery(con , `SELECT users.full_name , users.id
+    FROM users
+    INNER JOIN running_module_teachers
+    ON users.id = running_module_teachers.user_id
+    WHERE running_module_id=?`, running_module_id);
+  } 
  
 const USERS_MODULE_STUDENTS = `SELECT users.id , users.full_name, users.role, users.username,
  groups.starting_date,groups.group_name from users
@@ -141,7 +141,7 @@ async function updateUser(con, id, user) {
 module.exports = {
   getUsers,
   getTeacher,
- // getRunningModuleTeachers,
+  getRunningModuleTeachers,
   getUserProfile,
   getUserByUsername,
   getUsersByGroup,

@@ -33,7 +33,12 @@ export default class DropdownList extends Component {
   handleClose = () => {
     this.setState({ anchorEl: null });
   };
-
+  
+  handleAssignTeacher = (event) => {
+    this.handleClose();
+    this.props.showModal(event);
+  };
+  
   toggleNewModuleModal = () => {
     this.setState({
       newModuleModalIsToggled: true,
@@ -176,7 +181,7 @@ export default class DropdownList extends Component {
           </MenuItem>
           <MenuItem >
             <ListItemIcon ><School /></ListItemIcon>
-            <ListItemText inset primary="(Re) assign teacher" onClick={this.props.showModal} />
+            <ListItemText inset primary="(Re) assign teacher" onClick={this.handleAssignTeacher} />
           </MenuItem>
           <MenuItem >
             <ListItemIcon ><Split /></ListItemIcon>

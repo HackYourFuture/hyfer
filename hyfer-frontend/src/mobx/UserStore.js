@@ -18,6 +18,9 @@ export default class UserStore {
   @observable
   teachers = [];
 
+  @observable
+  assignedTeachers=[];
+
   users = [];
 
   @action
@@ -53,28 +56,28 @@ export default class UserStore {
 
   }
 
-  // @action
-  // async getRunningModuleTeachers(groupsId) {
-  //   const res = await fetch(`http://localhost:3005/api/user/teachers/${groupsId}`
-  //     , {
-  //       method: 'GET',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         Authorization: 'Bearer ' + token,
-  //       },
+  @action
+  async getRunningModuleTeachers(groupsId) {
+    const res = await fetch(`http://localhost:3005/api/user/teachers/${groupsId}`
+      , {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token,
+        },
 
-  //     });
-  //   if (!res.ok) {
-  //     stores.global.setLastError(res);
+      });
+    if (!res.ok) {
+      stores.global.setLastError(res);
 
-  //   } else {
-  //     const response = await res.json();
-  //     runInAction(() => {
-  //       return this.teachers = response;
-  //     });
-  //   }
+    } else {
+      const response = await res.json();
+      runInAction(() => {
+        return this.assignedTeachers = response;
+      });
+    }
 
-  // }
+  }
 
 
   @action
