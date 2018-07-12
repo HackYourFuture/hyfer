@@ -4,7 +4,7 @@ import style from '../../assets/styles/SynchronizeGithubData.css';
 import { success, errorMessage } from '../../notify';
 import loader from '../../assets/images/Ellipsis.gif';
 import { inject, observer } from 'mobx-react';
-
+import moment from 'moment';
 const token = localStorage.getItem('token');
 
 @inject('userStore')
@@ -14,6 +14,24 @@ export default class SynchronizeGithubData extends Component {
   state = {
     isClicked: false,
     isLoading: false,
+    syncUser: '',
+    syncDate: '',
+  }
+
+  componentWillMount() {
+    fetch(`http://localhost:3005/api/user/event/sync`, {
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      },
+    }).then(res => res.json())
+      .then((res) => {
+        this.setState({
+          syncUser: res[0].username,
+          syncDate: res[0].date_created});
+      });
+
   }
 
   SynchronizeData = async () => {
@@ -55,6 +73,11 @@ export default class SynchronizeGithubData extends Component {
               <img src={loader} alt="loader" className={style.loadingImg} />
             )}
         </button>
+        <p
+          className={style.syncUser}>
+          *last Sync by :
+        <strong>{this.state.syncUser}</strong>,{moment(this.state.syncDate).format("MMM Do YY")}
+        </p>
       </div>
     );
   }

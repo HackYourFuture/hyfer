@@ -124,6 +124,18 @@ async function updateUser(con, id, user) {
   }
 }
 
+function getLastEvent(con, eventName) {
+  return execQuery(
+    con,
+    `SELECT username, date_created FROM events
+     WHERE  date_created = (
+       SELECT MAX(date_created) 
+       FROM events 
+       WHERE event_name = ?)
+;`, eventName
+  );
+}
+
 module.exports = {
   getUsers,
   getUserProfile,
@@ -138,4 +150,5 @@ module.exports = {
   bulkUpdateMemberships,
   getUsersModulesInfo,
   getTeachers,
+  getLastEvent,
 };
