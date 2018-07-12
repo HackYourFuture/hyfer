@@ -132,6 +132,6 @@ router
   .patch('/split/:groupId/:position', hasRole('teacher'), splitRunningModule)
   .patch('/add/:moduleId/:groupId/:position', hasRole('teacher'), addModuleToRunningModules)
   .delete('/:groupId/:position', hasRole('teacher'), deleteRunningModule)
-  .patch('/notes/:id', updateNotes);
+  .patch('/notes/:id', hasRole('teacher'), updateNotes);
 
 module.exports = router;
