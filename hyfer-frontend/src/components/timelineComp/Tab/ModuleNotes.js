@@ -94,7 +94,17 @@ const restoreState = {
 class ModuleNotes extends Component {
   origNotes = '';
   runningId = -1;
-  converter = new Showdown.Converter({ tables: true, simplifiedAutoLink: true });
+
+  converter = new Showdown.Converter({
+    tables: true,
+    simplifiedAutoLink: true,
+    strikethrough: true,
+    tasklists: true,
+    simpleLineBreaks: true,
+    ghMentions: true,
+    openLinksInNewWindow: true,
+    emoji: true,
+  });
 
   state = { ...defaultState };
 
