@@ -9,8 +9,9 @@
 	],
   "settings": {
 		"javascript.implicitProjectConfig.experimentalDecorators": true,
-		"cSpell.words": [
-			"mobx"
-		]
-	}
+    "cSpell.words": [
+      "mixins",
+      "mobx"
+    ]
+  }
 }

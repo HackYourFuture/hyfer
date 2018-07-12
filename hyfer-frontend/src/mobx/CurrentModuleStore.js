@@ -1,6 +1,6 @@
 import { observable, runInAction, action } from 'mobx';
 import { fetchJSON } from './util';
-import marked from 'marked';
+import Showdown from 'showdown';
 import stores from '.';
 
 const HYF_GITHUB_URL = 'https://api.github.com/repos/HackYourFuture';
@@ -15,6 +15,8 @@ function getSundays(start, end) {
 }
 
 export default class CurrentModuleStore {
+
+  converter = new Showdown.Converter({ tables: true, simplifiedAutoLink: true });
 
   @observable
   readme = null;
@@ -81,6 +83,18 @@ export default class CurrentModuleStore {
     });
   }
 
+  saveNotes = async (notes) => {
+    try {
+      if (!this.currentModule) {
+        throw new Error('Cannot save notes: no current module set.');
+      }
+      const runningId = this.currentModule.id;
+      await fetchJSON(`/api/running/notes/${runningId}`, 'PATCH', { notes });
+    } catch (err) {
+      stores.global.setLastError(err);
+    }
+  }
+
   getReadme = async (repoName) => {
     if (!repoName) {
       this.readme = null;
@@ -91,7 +105,7 @@ export default class CurrentModuleStore {
     if (!res.ok) throw res;
     const readmeEncoded = await res.json();
     const readmeDecoded = atob(readmeEncoded.content);
-    const html = marked(readmeDecoded);
+    const html = this.converter.makeHtml(readmeDecoded);
 
     runInAction(() => {
       this.readme = { repoName, html };

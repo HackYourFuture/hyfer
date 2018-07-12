@@ -72,7 +72,7 @@
     background: linear-gradient(#3399cc, rgb(101, 173, 221)) ;
 }
 
-span {
+.homework span {
     color: green;
     font-weight: bold;
     font-size: 110%;
