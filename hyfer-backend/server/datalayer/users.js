@@ -15,7 +15,7 @@ const UPDATE_USER_QUERY = `
   UPDATE users SET full_name=?, role=?, email=?, mobile=?
   WHERE id=?`;
 
-const USERS_MODULE_STUDENTS = `SELECT users.id , users.full_name, users.role, users.username,
+const USERS_MODULE_STUDENTS = `SELECT  users.* ,
  groups.starting_date,groups.group_name from users
  LEFT JOIN group_students ON users.id=group_students.user_id 
  LEFT JOIN groups ON groups.id = group_students.group_id  

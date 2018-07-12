@@ -50,7 +50,7 @@ class StudentInterface extends React.Component {
             <Tab label="Note" style={{ background: '#fff' }} />
           </Tabs>
         </AppBar>
-        {value === 0 && <TabContainer>
+        {value === 0 && <TabContainer >
           <Student />
         </TabContainer>}
         {value === 1 && <TabContainer><Teachers /></TabContainer>}
