@@ -21,8 +21,15 @@ const USERS_MODULE_STUDENTS = `SELECT  users.* ,
  LEFT JOIN groups ON groups.id = group_students.group_id  
 `;
 
+
 function getUsersModulesInfo(con, group_name) {
   return execQuery(con, `${USERS_MODULE_STUDENTS} WHERE groups.group_name=?`, group_name);
+}
+
+function deleteTeacher(con, module_id, user_id) {
+  return execQuery(con, `DELETE FROM running_module_teachers WHERE running_module_id =${module_id} AND user_id = ${user_id} ;
+`);
+
 }
 
 function getTeachers(con, id) {
@@ -138,4 +145,5 @@ module.exports = {
   bulkUpdateMemberships,
   getUsersModulesInfo,
   getTeachers,
+  deleteTeacher
 };

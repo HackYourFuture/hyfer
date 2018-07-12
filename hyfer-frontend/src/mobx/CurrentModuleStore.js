@@ -45,6 +45,22 @@ export default class CurrentModuleStore {
       this.teachers = teachers;
     });
   }
+  async deleteTeacher(module_id, user_id) {
+    const token = localStorage.getItem('token');
+    const res = await fetch(`/api/user/deleteteacher/${module_id}/${user_id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      },
+    });
+    if (!res.ok) {
+      stores.global.setLastError(res);
+    } else {
+      stores.global.setSuccessMessage(" deleted successfully");
+      this.getRunningModuleDetails(module_id);
+    }
+  }
 
   getHistory = async (runningModule) => {
     this.currentModule = runningModule;
