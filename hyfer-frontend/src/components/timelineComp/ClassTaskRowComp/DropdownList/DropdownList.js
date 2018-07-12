@@ -39,6 +39,7 @@ export default class DropdownList extends Component {
       newModuleModalIsToggled: true,
       display: !this.state.display,
     });
+    this.handleClose();
   };
 
   closeNewModuleModal = () => {

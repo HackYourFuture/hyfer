@@ -51,9 +51,9 @@ export default class TimeLineStore {
   allWeeks = null;
 
   fetchItems = async () => {
-    if (this.dataFetched) {
-      return;
-    }
+    // if (this.dataFetched) {
+    //   return;
+    // }
 
     const timelineItems = await fetchJSON('/api/timeline');
     const groupsWithIds = await fetchJSON('/api/groups');
