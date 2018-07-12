@@ -35,8 +35,8 @@ const USERS_MODULE_STUDENTS = `SELECT users.id , users.full_name, users.role, us
  LEFT JOIN groups ON groups.id = group_students.group_id  
 `;
 
-function getUsersModulesInfo(con, groupId) {
-  return execQuery(con, `${USERS_MODULE_STUDENTS} WHERE group_students.group_id=?`, groupId);
+function getUsersModulesInfo(con, group_name) {
+  return execQuery(con, `${USERS_MODULE_STUDENTS} WHERE groups.group_name=?`, group_name);
 }
 
 function getTeachers(con, id) {

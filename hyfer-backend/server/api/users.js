@@ -78,7 +78,7 @@ function getTeachers(req, res) {
 
 function getCurrentStudentModules(req, res) {
   getConnection(req, res)
-    .then(con => db.getUsersModulesInfo(con, +req.params.id))
+    .then(con => db.getUsersModulesInfo(con, req.params.groupName))
     .then(result => res.json(result))
     .catch(err => handleError(err, res));
 }
@@ -100,7 +100,7 @@ function updateUser(req, res) {
 const router = express.Router();
 router
   .get('/', isAuthenticated(), getCurrentUser)
-  .get('/currentuser/:id', hasRole('teacher|student'), getCurrentStudentModules)
+  .get('/currentuser/:groupName', hasRole('teacher|student'), getCurrentStudentModules)
   .get('/teachers/:id', hasRole('teacher|student'), getTeachers)
   .get('/all', hasRole('teacher'), getUsers)
   //.get('/teachers/:runningId', getRunningModuleTeachers)

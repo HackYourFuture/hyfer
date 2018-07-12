@@ -1,6 +1,6 @@
-import { observable, runInAction } from 'mobx';
+import { observable, runInAction, action } from 'mobx';
 import { fetchJSON } from './util';
-import marked from 'marked';
+import Showdown from 'showdown';
 import stores from '.';
 
 const HYF_GITHUB_URL = 'https://api.github.com/repos/HackYourFuture';
@@ -16,6 +16,8 @@ function getSundays(start, end) {
 
 export default class CurrentModuleStore {
 
+  converter = new Showdown.Converter({ tables: true, simplifiedAutoLink: true });
+
   @observable
   readme = null;
 
@@ -29,10 +31,10 @@ export default class CurrentModuleStore {
   currentModule = null;
 
   @observable
-  students = null;
+  students = [];
 
   @observable
-  teachers = null;
+  teachers = [];
 
   async getRunningModuleDetails(runningId) {
     const details = await fetchJSON(`/api/running/details/${runningId}`);
@@ -43,11 +45,6 @@ export default class CurrentModuleStore {
       this.currentModule = runningModule;
       this.students = students;
       this.teachers = teachers;
-
-      // FIXME: connect Hamza UI code to the CurrentModuleStore instead of his CurrentModules store
-      stores.currentModules.fetchCurrentModuleUsers(group.id);
-      stores.currentModules.getGroupsByGroupName(group.group_name);
-      stores.currentModules.fetchModuleTeachers(runningId);
     });
   }
 
@@ -86,6 +83,18 @@ export default class CurrentModuleStore {
     });
   }
 
+  saveNotes = async (notes) => {
+    try {
+      if (!this.currentModule) {
+        throw new Error('Cannot save notes: no current module set.');
+      }
+      const runningId = this.currentModule.id;
+      await fetchJSON(`/api/running/notes/${runningId}`, 'PATCH', { notes });
+    } catch (err) {
+      stores.global.setLastError(err);
+    }
+  }
+
   getReadme = async (repoName) => {
     if (!repoName) {
       this.readme = null;
@@ -96,10 +105,37 @@ export default class CurrentModuleStore {
     if (!res.ok) throw res;
     const readmeEncoded = await res.json();
     const readmeDecoded = atob(readmeEncoded.content);
-    const html = marked(readmeDecoded);
+    const html = this.converter.makeHtml(readmeDecoded);
 
     runInAction(() => {
       this.readme = { repoName, html };
     });
   }
+  @action
+  async fetchCurrentModuleUsers(group_name) {
+    const token = localStorage.getItem('token');
+    const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/user/currentuser/${group_name}`
+      , {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token,
+        },
+
+      });
+
+    if (!res.ok) {
+      runInAction(() => {
+        stores.global.setLastError(res);
+      });
+    } else {
+      const response = await res.json();
+      const moduelUsers = response;
+      runInAction(() => {
+        return this.students = moduelUsers;
+      });
+
+    }
+  }
+
 }
