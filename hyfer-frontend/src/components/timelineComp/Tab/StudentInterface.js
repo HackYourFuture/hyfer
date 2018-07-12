@@ -43,13 +43,13 @@ class StudentInterface extends React.Component {
       <div className={classes.root}>
         <Paper>
           <Tabs value={value} onChange={this.handleChange} >
-            <Tab label="Teachers" />
             <Tab label="Notes" />
+            <Tab label="Teachers" />
             <Tab label="Students" />
           </Tabs>
         </Paper>
-        {value === 0 && <TabContainer><Teachers /></TabContainer>}
-        {value === 1 && <TabContainer><ModuleNotes /></TabContainer>}
+        {value === 0 && <TabContainer><ModuleNotes /></TabContainer>}
+        {value === 1 && <TabContainer><Teachers /></TabContainer>}
         {value === 2 && <TabContainer><Student /></TabContainer>}
       </div>
     );
