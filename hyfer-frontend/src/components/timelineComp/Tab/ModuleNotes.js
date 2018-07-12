@@ -4,38 +4,40 @@ import { autorun } from 'mobx';
 import { observer, inject } from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-// import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import Button from '@material-ui/core/Button';
 import marked from 'marked';
 
+const localStorageKey = 'hyfer:moduleNotes';
 const noNotes = '_There are no notes for this module._';
 
 const template =
   `## YouTube Lecture Recordings
 
-(Right-click to open in a new tab.)
-
 <!--
-  Complete the link for the videos below. 
-  Markdown format: [Part x](url)
+  To embed a YouTube videos, click the share button
+  below the video and select Embed Video. Paste the
+  <iframe ...> HTML segment under the Week x header
+  in this file. Example:
+
+  ### Week 1
+
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/AO3U2OsteHM" 
+    frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 --> 
 
 ### Week 1
 
-- Part 1 - not (yet) available
-- Part 2 - not (yet) available
+Not yet available.
 
 ### Week 2
 
-- Part 1 - not (yet) available
-- Part 2 - not (yet) available
+Not yet available.
 
 ### Week 3
 
-- Part 1 - not (yet) available
-- Part 2 - not (yet) available`;
+Not yet available.`;
 
 const styles = theme => ({
   container: {
@@ -43,7 +45,7 @@ const styles = theme => ({
     justifyContent: 'center',
   },
   root: {
-    width: 700,
+    width: 980,
     paddingLeft: 16,
     paddingRight: 16,
   },
@@ -79,8 +81,13 @@ const defaultState = {
   inEditMode: false,
   isEditing: false,
   isDirty: false,
-  hasNotes: false,
   notes: '',
+};
+
+const restoreState = {
+  inEditMode: true,
+  isEditing: true,
+  isDirty: true,
 };
 
 @inject('global', 'currentModuleStore')
@@ -88,24 +95,52 @@ const defaultState = {
 class ModuleNotes extends Component {
   state = { ...defaultState };
   origNotes = '';
+  runningId = -1;
 
   componentDidMount() {
     this.disposeAutoRun = autorun(() => {
       const { currentModule } = this.props.currentModuleStore;
-      const notes = currentModule && currentModule.notes;
+      this.runningId = currentModule.id;
+      const storageItem = window.sessionStorage.getItem(localStorageKey);
+
+      let notes = '';
+      if (storageItem != null) {
+        try {
+          const storageObj = JSON.parse(storageItem);
+          if (storageObj.runningId === this.runningId) {
+            notes = storageObj.notes;
+            this.setState({ ...restoreState, notes });
+          }
+          // eslint-disable-next-line no-empty
+        } catch (_) { }
+      }
+
+      if (notes === '') {
+        notes = currentModule && currentModule.notes;
+        this.setState({ ...defaultState, notes });
+      }
+
       this.origNotes = notes;
-      this.setState({ ...defaultState, notes });
     });
   }
 
   componentWillUnmount() {
     this.disposeAutoRun();
+    window.sessionStorage.removeItem(localStorageKey);
   }
 
-  onChange = (e) => this.setState({
-    notes: e.target.value,
-    isDirty: true,
-  });
+  onChange = (e) => {
+    const notes = e.target.value;
+    const storageItem = {
+      runningId: this.runningId,
+      notes,
+    };
+    window.sessionStorage.setItem(localStorageKey, JSON.stringify(storageItem));
+    this.setState({
+      notes,
+      isDirty: true,
+    });
+  };
 
   setEditMode = () => {
     let { notes } = this.state;
@@ -123,12 +158,17 @@ class ModuleNotes extends Component {
   clearIsEditing = () => this.setState({ isEditing: false });
 
   saveNotes = () => {
-    this.props.currentModuleStore.saveNotes(this.state.notes);
+    // Remove any embedded HTML comments
+    const notes = this.state.notes.replace(/<!--(.|\s)*?-->/g, '');
+
+    this.props.currentModuleStore.saveNotes(notes);
     this.setState({
       isDirty: false,
       inEditMode: false,
       isEditing: false,
     });
+
+    window.sessionStorage.removeItem(localStorageKey);
   }
 
   cancelEdit = () => {
@@ -138,6 +178,7 @@ class ModuleNotes extends Component {
       inEditMode: false,
       isEditing: false,
     });
+    window.sessionStorage.removeItem(localStorageKey);
   };
 
   renderTextArea() {

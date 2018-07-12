@@ -7,7 +7,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Student from './Student';
 import Teachers from './Teachers';
-import ModuleNotes from './ModuleNotes-fallback';
+import ModuleNotes from './ModuleNotes';
 
 function TabContainer(props) {
   return (
