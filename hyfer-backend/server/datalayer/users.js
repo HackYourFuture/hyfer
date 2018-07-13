@@ -12,7 +12,7 @@ const GET_USERS_QUERY = `
   LEFT JOIN \`groups\` ON \`groups\`.id=group_students.group_id`;
 
 const UPDATE_USER_QUERY = `
-  UPDATE users SET full_name=?, role=?, email=?, mobile=?
+  UPDATE users SET full_name=?, role=?,linkedin_username=? ,email=?
   WHERE id=?`;
 
 const USERS_MODULE_STUDENTS = `SELECT  users.* ,
@@ -113,7 +113,6 @@ async function updateUser(con, id, user) {
       user.role,
       user.linkedin_username,
       user.email,
-      user.mobile,
       id,
     ]);
     await execQuery(con, 'DELETE FROM group_students WHERE user_id=?', [id]);

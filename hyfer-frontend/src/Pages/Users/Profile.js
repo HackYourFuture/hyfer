@@ -70,21 +70,13 @@ export default class Profile extends React.Component {
     userProfile.email = value;
     this.setState({ userProfile });
   }
-  changeSlackName(value) {
+
+  changeLinkedinUsername(value) {
     const userProfile = { ...this.state.userProfile };
-    userProfile.slack_username = value;
+    userProfile.linkedin_username = value;
     this.setState({ userProfile });
   }
-  changeFreeCodeCamp(value) {
-    const userProfile = { ...this.state.userProfile };
-    userProfile.freecodecamp_username = value;
-    this.setState({ userProfile });
-  }
-  changeMobile(value) {
-    const userProfile = { ...this.state.userProfile };
-    userProfile.mobile = value;
-    this.setState({ userProfile });
-  }
+
   resetProfile = () => {
     let userProfile = { ...this.state.userProfile };
     userProfile = this.props.userStore.resetProfile;
@@ -94,7 +86,7 @@ export default class Profile extends React.Component {
   render() {
     const { full_name
       , group_name, role,
-      email, slack_username, freecodecamp_username, mobile, group_id,
+      email, linkedin_username, group_id,
     } = this.state.userProfile;
     return (
       <div className={styles.profilePage}>
@@ -198,62 +190,23 @@ export default class Profile extends React.Component {
               }}
             />
           </div>
+
           <div
             className={
               styles.matDiv +
               ' ' +
-              this.checkHasValue(slack_username)
+              this.checkHasValue(linkedin_username)
             }
           >
-            <label htmlFor="slack-username" className={styles.matLabel}>
-              Slack Username
+            <label htmlFor="linkedin-username" className={styles.matLabel}>
+              linkedin username
             </label>
             <input
               type="text"
-              value={slack_username || ''}
+              value={linkedin_username || ''}
               className={styles.matInput}
-              id="slack-username"
-              onChange={e => { this.changeSlackName(e.target.value); }}
-              onFocus={e => {
-                this.setInputActive(e);
-              }}
-            />
-          </div>
-          <div
-            className={
-              styles.matDiv +
-              ' ' +
-              this.checkHasValue(freecodecamp_username)
-            }
-          >
-            <label htmlFor="freecodecamp-username" className={styles.matLabel}>
-              FreeCodeCamp Username
-            </label>
-            <input
-              type="text"
-              value={freecodecamp_username || ''}
-              className={styles.matInput}
-              id="freecodecamp-username"
-              onChange={e => { this.changeFreeCodeCamp(e.target.value); }}
-              onFocus={e => {
-                this.setInputActive(e);
-              }}
-            />
-          </div>
-          <div
-            className={
-              styles.matDiv + ' ' + this.checkHasValue(mobile)
-            }
-          >
-            <label htmlFor="mobile" className={styles.matLabel}>
-              Mobile
-            </label>
-            <input
-              type="tel"
-              value={mobile || ''}
-              className={styles.matInput}
-              id="mobile"
-              onChange={e => { this.changeMobile(e.target.value); }}
+              id="linkedin_username"
+              onChange={e => { this.changeLinkedinUsername(e.target.value); }}
               onFocus={e => {
                 this.setInputActive(e);
               }}
