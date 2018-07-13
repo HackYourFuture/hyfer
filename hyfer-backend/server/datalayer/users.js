@@ -15,20 +15,27 @@ const UPDATE_USER_QUERY = `
   UPDATE users SET full_name=?, role=?, email=?, mobile=?
   WHERE id=?`;
 
+function getTeacher(con) {
+  return execQuery(con, `SELECT users.id , users.full_name FROM users WHERE 
+    users.role= 'teacher' ORDER BY full_name ASC`);
+}
 
-  function getTeacher(con) {
-    return execQuery(con , `SELECT users.id , users.full_name FROM users WHERE 
-    users.role= 'teacher'`);
-  }
+async function addTeacher(con, currentModule, teacherId) {
+  const query = `INSERT INTO running_module_teachers SET running_module_id = ${currentModule} ,
+        user_id = (  SELECT id  FROM users WHERE users.id =${teacherId})`;
+  const { insertId } = await execQuery(
+    con, query);
+  return insertId;
+}
 
-function getRunningModuleTeachers(con, running_module_id) {
-    return execQuery(con , `SELECT users.full_name , users.id
-    FROM users
-    INNER JOIN running_module_teachers
-    ON users.id = running_module_teachers.user_id
-    WHERE running_module_id=?`, running_module_id);
-  } 
- 
+// function getRunningModuleTeachers(con, running_module_id) {
+//   return execQuery(con, `SELECT users.full_name , users.id
+//     FROM users
+//     INNER JOIN running_module_teachers
+//     ON users.id = running_module_teachers.user_id
+//     WHERE running_module_id=?`, running_module_id);
+// }
+
 const USERS_MODULE_STUDENTS = `SELECT users.id , users.full_name, users.role, users.username,
  groups.starting_date,groups.group_name from users
  LEFT JOIN group_students ON users.id=group_students.user_id 
@@ -141,7 +148,8 @@ async function updateUser(con, id, user) {
 module.exports = {
   getUsers,
   getTeacher,
-  getRunningModuleTeachers,
+  addTeacher,
+  //getRunningModuleTeachers,
   getUserProfile,
   getUserByUsername,
   getUsersByGroup,
@@ -155,5 +163,3 @@ module.exports = {
   getUsersModulesInfo,
   getTeachers,
 };
-
-

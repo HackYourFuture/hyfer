@@ -35,10 +35,10 @@ async function getTeacher(req, res) {
   }
 }
 
-function getRunningModuleTeachers(req, res) {
+function addTeacher(req, res) {
   getConnection(req, res)
-    .then(con => db.getRunningModuleTeachers(con, +req.params.id))
-    .then(result => res.json(result[0]))
+    .then(con => db.addTeacher(con, +req.params.moduleId,+req.params.teacherId))
+    .then(result => res.json(result))
     .catch(err => handleError(err, res));
 }
 
@@ -103,8 +103,9 @@ router
   .get('/currentuser/:groupName', hasRole('teacher|student'), getCurrentStudentModules)
   .get('/teachers/:id', hasRole('teacher|student'), getTeachers)
   .get('/all', hasRole('teacher'), getUsers)
-  .get('/teachers/:runningId', getRunningModuleTeachers)
+  //.get('/teachers/:runningId', getRunningModuleTeachers)
   .get('/teachers', hasRole('teacher'), getTeacher)
+  .post(('/teachers/:moduleId/:teacherId'),hasRole('teacher') , addTeacher)
   .get('/group/:groupId', hasRole('teacher|student'), getRunningUsersByGroup)
   .get('/:id', hasRole('teacher|student'), getUserById)
   .patch('/:id', hasRole('teacher|student'), updateUser);
