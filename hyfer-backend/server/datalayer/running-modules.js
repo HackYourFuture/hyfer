@@ -121,6 +121,17 @@ async function updateNotes(con, runningId, notes) {
   return execQuery(con, sql, [notes, runningId]);
 }
 
+async function addTeacher(con, currentModule, userId) {
+  const query = `INSERT INTO running_module_teachers SET running_module_id=${currentModule} ,
+        user_id = (SELECT id FROM users WHERE users.id=${userId})`;
+  const { insertId } = await execQuery(con, query);
+  return insertId;
+}
+
+function deleteTeacher(con, moduleId, userId) {
+  return execQuery(con, `DELETE FROM running_module_teachers WHERE running_module_id=${moduleId} AND user_id=${userId};`);
+}
+
 module.exports = {
   getRunningModuleById,
   getRunningModules,
@@ -129,4 +140,6 @@ module.exports = {
   deleteRunningModule,
   splitRunningModule,
   updateNotes,
+  addTeacher,
+  deleteTeacher,
 };

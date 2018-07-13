@@ -47,20 +47,35 @@ export default class CurrentModuleStore {
       this.teachers = teachers;
     });
   }
-  async deleteTeacher(module_id, user_id) {
-    const token = localStorage.getItem('token');
-    const res = await fetch(`/api/user/deleteteacher/${module_id}/${user_id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + token,
-      },
-    });
-    if (!res.ok) {
-      stores.global.setLastError(res);
-    } else {
-      stores.global.setSuccessMessage(" deleted successfully");
-      this.getRunningModuleDetails(module_id);
+
+  addTeacher = async (moduleId, teacherId) => {
+    try {
+      const teachers = await fetchJSON(`/api/running/teacher/${moduleId}/${teacherId}`, 'POST');
+      runInAction(() => this.teachers = teachers);
+    } catch (err) {
+      stores.global.setLastError(err);
+    }
+  }
+
+  deleteTeacher = async (moduleId, userId) => {
+    try {
+      const teachers = await fetchJSON(`/api/running/teacher/${moduleId}/${userId}`, 'DELETE');
+      runInAction(() => this.teachers = teachers);
+    } catch (err) {
+      stores.global.setLastError(err);
+    }
+  }
+
+  saveNotes = async (notes) => {
+    try {
+      if (!this.currentModule) {
+        throw new Error('Cannot save notes: no current module set.');
+      }
+      const runningId = this.currentModule.id;
+      const runningModule = await fetchJSON(`/api/running/notes/${runningId}`, 'PATCH', { notes });
+      runInAction(() => this.currentModule = runningModule);
+    } catch (err) {
+      stores.global.setLastError(err);
     }
   }
 
@@ -99,18 +114,6 @@ export default class CurrentModuleStore {
     });
   }
 
-  saveNotes = async (notes) => {
-    try {
-      if (!this.currentModule) {
-        throw new Error('Cannot save notes: no current module set.');
-      }
-      const runningId = this.currentModule.id;
-      await fetchJSON(`/api/running/notes/${runningId}`, 'PATCH', { notes });
-    } catch (err) {
-      stores.global.setLastError(err);
-    }
-  }
-
   getReadme = async (repoName) => {
     if (!repoName) {
       this.readme = null;
@@ -127,6 +130,7 @@ export default class CurrentModuleStore {
       this.readme = { repoName, html };
     });
   }
+
   @action
   async fetchCurrentModuleUsers(group_name) {
     const token = localStorage.getItem('token');

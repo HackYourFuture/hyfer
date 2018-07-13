@@ -93,7 +93,6 @@ const styles = theme => ({
               <FormControl className={classes.formControl}>
                 <ListItemText primary="Select Module" />
                 <Select
-                  name="modulesSelect"
                   value={this.state.selectedModuleId}
                   onChange={this.handleChangeSelectedModuleId}
                 >

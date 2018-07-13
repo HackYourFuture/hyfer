@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import { inject, observer } from 'mobx-react';
 import UserCard from './UserCard';
+import AddTeacherDialog from './AddTeacherDialog';
 
 const styles = () => ({
   container: {
@@ -12,6 +13,7 @@ const styles = () => ({
     flexWrap: 'wrap',
     backgroundColor: '#fafafa',
     position: 'relative',
+    minHeight: 100,
   },
   fab: {
     position: 'absolute',
@@ -24,8 +26,16 @@ const styles = () => ({
 @observer
 class UserList extends React.Component {
 
-  addTeacher = () => {
-    console.log("Show the AddTeacherDialog here");
+  state = {
+    isOpen: false,
+  }
+
+  openDialog = () => {
+    this.setState({ isOpen: true });
+  }
+
+  closeDialog = () => {
+    this.setState({ isOpen: false });
   }
 
   render() {
@@ -38,14 +48,20 @@ class UserList extends React.Component {
       <div className={classes.container}>
         {users.map(user => <UserCard key={user.id} user={user} />)}
         {role === 'teacher' &&
-          <Button
-            onClick={this.handleClick}
-            variant="fab"
-            color="secondary"
-            aria-label="add"
-            className={classes.fab}>
-            <AddIcon />
-          </Button>}
+          <React.Fragment>
+            <AddTeacherDialog
+              open={this.state.isOpen}
+              onClose={this.closeDialog}
+            />
+            <Button
+              onClick={this.openDialog}
+              variant="fab"
+              color="secondary"
+              aria-label="add"
+              className={classes.fab}>
+              <AddIcon />
+            </Button>
+          </React.Fragment>}
       </div>
     );
   }
