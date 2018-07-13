@@ -19,7 +19,7 @@ export default class UserStore {
   teachers = [];
 
   @observable
-  assignedTeachers=[];
+  assignedTeachers = [];
 
   users = [];
 
@@ -42,7 +42,6 @@ export default class UserStore {
           'Content-Type': 'application/json',
           Authorization: 'Bearer ' + token,
         },
-
       });
     if (!res.ok) {
       stores.global.setLastError(res);
@@ -53,32 +52,27 @@ export default class UserStore {
         return this.teachers = response;
       });
     }
-
   }
 
-  @action
-  async getRunningModuleTeachers(groupsId) {
-    const res = await fetch(`http://localhost:3005/api/user/teachers/${groupsId}`
-      , {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + token,
-        },
-
-      });
-    if (!res.ok) {
-      stores.global.setLastError(res);
-
-    } else {
-      const response = await res.json();
-      runInAction(() => {
-        return this.assignedTeachers = response;
-      });
-    }
-
-  }
-
+  // @action
+  // async getRunningModuleTeachers(groupsId) {
+  //   const res = await fetch(`http://localhost:3005/api/user/teachers/${groupsId}`
+  //     , {
+  //       method: 'GET',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         Authorization: 'Bearer ' + token,
+  //       },
+  //     });
+  //   if (!res.ok) {
+  //     stores.global.setLastError(res);
+  //   } else {
+  //     const response = await res.json();
+  //     runInAction(() => {
+  //       return this.assignedTeachers = response;
+  //     });
+  //   }
+  // }
 
   @action
   saveProfile = async (Data, loadData) => {
@@ -117,7 +111,6 @@ export default class UserStore {
     });
     runInAction(() => {
       this.filteredUsers = updatedList;
-
     });
   };
 
@@ -128,14 +121,15 @@ export default class UserStore {
       this.resetProfile = user;
     });
   };
+
   @action
   resetUserProfile = () => {
     runInAction(() => {
       this.userProfile = {};
       this.resetProfile = {};
     });
-
   }
+
   @action
   resetUser = () => {
     runInAction(() => {
@@ -143,6 +137,4 @@ export default class UserStore {
       this.users = [];
     });
   }
-
 }
-

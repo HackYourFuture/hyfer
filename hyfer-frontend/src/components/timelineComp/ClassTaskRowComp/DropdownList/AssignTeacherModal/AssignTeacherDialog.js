@@ -3,7 +3,7 @@ import {
   Dialog, Select, DialogTitle,
   DialogContent, Button,
   MenuItem, FormControl, DialogActions,
-  // FormControlLabel,
+  ListItemText,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { observer, inject } from 'mobx-react';
@@ -14,7 +14,6 @@ const styles = theme => ({
     minWidth: 300,
   },
 });
-
 
 @inject('userStore', 'currentModuleStore')
 @observer
@@ -28,16 +27,23 @@ class AssignTeacherDialog extends Component {
     this.setState({ userId: event.target.value });
   }
 
-  handleAddTeacher = () => {
-    const { id } = this.props.currentModuleStore.currentModule;
-    console.log(this.state.userId, id);
+  handleAddTeacher = async () => {
+    try {
+      const { id } = this.props.currentModuleStore.currentModule;
+      const teacher_id = this.state.userId;
+      const token = localStorage.getItem('token');
+      await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/user/teachers/${id}/${teacher_id}`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: 'Bearer ' + token,
+          },
+        });
+    } catch (error) {
+      console.log(error);
+    }
     this.props.onClose();
-  }
-
-  // TODO: Arrange teachers alphabetically,
-  //FilterTeacher that are already assigned, ==>Inclined to do it, it is a dumb thing to do.
-  //backend: add a teacher for this running module==> Done
-  //backend: get the teachers that are assinged to the currently selected module==>doen
+  };
 
   render() {
     const { classes } = this.props;
@@ -54,7 +60,7 @@ class AssignTeacherDialog extends Component {
           <DialogContent>
             <form>
               <FormControl className={classes.formControl}>
-                {/* <FormControlLabel primary="Select Teacher" /> */}
+                <ListItemText primary="Select a Teacher" />
                 <Select
                   value={this.state.userId}
                   onChange={this.handleChange}
