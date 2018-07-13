@@ -25,17 +25,20 @@ async function getUsers(req, res) {
   }
 }
 
+async function getTeachers(req, res) {
+  try {
+    const con = await getConnection(req, res);
+    const result = await db.getTeachers(con);
+    res.json(result);
+  } catch (err) {
+    handleError(err, res);
+  }
+}
+
 function getUserById(req, res) {
   getConnection(req, res)
     .then(con => db.getUserById(con, +req.params.id))
     .then(result => res.json(result[0]))
-    .catch(err => handleError(err, res));
-}
-
-function getTeachers(req, res) {
-  getConnection(req, res)
-    .then(con => db.getTeachersByRunningModule(con, +req.params.id))
-    .then(result => res.json(result))
     .catch(err => handleError(err, res));
 }
 
@@ -59,12 +62,6 @@ function updateUser(req, res) {
     .then(() => res.sendStatus(204))
     .catch(err => handleError(err, res));
 }
-function deleteTeacher(req, res) {
-  getConnection(req, res)
-    .then(con => db.deleteTeacher(con, +req.params.module_id, +req.params.user_id))
-    .then(() => res.sendStatus(204))
-    .catch(err => handleError(err, res));
-}
 
 const router = express.Router();
 router
@@ -72,9 +69,9 @@ router
   .get('/currentuser/:groupName', hasRole('teacher|student'), getCurrentStudentModules)
   .get('/teachers/:id', hasRole('teacher|student'), getTeachers)
   .get('/all', hasRole('teacher'), getUsers)
+  .get('/teachers', hasRole('teacher'), getTeachers)
   .get('/group/:groupId', hasRole('teacher|student'), getRunningUsersByGroup)
   .get('/:id', hasRole('teacher|student'), getUserById)
-  .delete('/deleteteacher/:module_id/:user_id', deleteTeacher)
   .patch('/:id', hasRole('teacher|student'), updateUser);
 
 module.exports = router;

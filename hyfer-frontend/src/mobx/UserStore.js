@@ -15,6 +15,12 @@ export default class UserStore {
   @observable
   resetProfile = {};
 
+  @observable
+  teachers = [];
+
+  @observable
+  assignedTeachers = [];
+
   users = [];
 
   @action
@@ -26,6 +32,48 @@ export default class UserStore {
     });
     return;
   }
+
+  @action
+  async getTeachers() {
+    const res = await fetch(`http://localhost:3005/api/user/teachers/`
+      , {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token,
+        },
+      });
+    if (!res.ok) {
+      stores.global.setLastError(res);
+
+    } else {
+      const response = await res.json();
+      runInAction(() => {
+        return this.teachers = response;
+      });
+    }
+  }
+
+  // @action
+  // async getRunningModuleTeachers(groupsId) {
+  //   const res = await fetch(`http://localhost:3005/api/user/teachers/${groupsId}`
+  //     , {
+  //       method: 'GET',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         Authorization: 'Bearer ' + token,
+  //       },
+  //     });
+  //   if (!res.ok) {
+  //     stores.global.setLastError(res);
+  //   } else {
+  //     const response = await res.json();
+  //     runInAction(() => {
+  //       return this.assignedTeachers = response;
+  //     });
+  //   }
+  // }
+
   @action
   saveProfile = async (Data, loadData) => {
     const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/user/${this.userProfile.id}`, {
@@ -63,7 +111,6 @@ export default class UserStore {
     });
     runInAction(() => {
       this.filteredUsers = updatedList;
-
     });
   };
 
@@ -74,14 +121,15 @@ export default class UserStore {
       this.resetProfile = user;
     });
   };
+
   @action
   resetUserProfile = () => {
     runInAction(() => {
       this.userProfile = {};
       this.resetProfile = {};
     });
-
   }
+
   @action
   resetUser = () => {
     runInAction(() => {
@@ -89,6 +137,4 @@ export default class UserStore {
       this.users = [];
     });
   }
-
 }
-

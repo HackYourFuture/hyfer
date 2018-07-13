@@ -5,48 +5,33 @@ const {
   rollback,
 } = require('./database');
 
-const GET_USERS_QUERY = `
+const GET_USERS = `
   SELECT users.*, \`groups\`.group_name 
   FROM users
   LEFT JOIN group_students ON users.id=group_students.user_id      
   LEFT JOIN \`groups\` ON \`groups\`.id=group_students.group_id`;
 
-const UPDATE_USER_QUERY = `
+const UPDATE_USER = `
   UPDATE users SET full_name=?, role=?, email=?, mobile=?
   WHERE id=?`;
 
-const USERS_MODULE_STUDENTS = `SELECT  users.* ,
- groups.starting_date,groups.group_name from users
- LEFT JOIN group_students ON users.id=group_students.user_id 
- LEFT JOIN groups ON groups.id = group_students.group_id  
-`;
+const USERS_MODULE_STUDENTS = `
+  SELECT users.id , users.full_name, users.role, users.username,
+    groups.starting_date,groups.group_name from users
+    LEFT JOIN group_students ON users.id=group_students.user_id 
+    LEFT JOIN groups ON groups.id = group_students.group_id`;
 
-
-function getUsersModulesInfo(con, group_name) {
-  return execQuery(con, `${USERS_MODULE_STUDENTS} WHERE groups.group_name=?`, group_name);
+function getTeachers(con) {
+  return execQuery(con, `SELECT * FROM users WHERE 
+    users.role='teacher' ORDER BY full_name ASC`);
 }
 
-function deleteTeacher(con, module_id, user_id) {
-  return execQuery(con, `DELETE FROM running_module_teachers WHERE running_module_id =${module_id} AND user_id = ${user_id} ;
-`);
-
-}
-
-function getTeachers(con, id) {
-  return execQuery(con, `SELECT *
-  FROM users
-  WHERE users.id IN
-  (
-    SELECT teacher1_id FROM running_modules
-    WHERE running_modules.id= ${id}
-    UNION
-    SELECT teacher2_id FROM running_modules
-    WHERE running_modules.id= ${id}
-  )`);
+function getUsersModulesInfo(con, groupName) {
+  return execQuery(con, `${USERS_MODULE_STUDENTS} WHERE groups.group_name=?`, groupName);
 }
 
 function getUsers(con) {
-  return execQuery(con, `${GET_USERS_QUERY} ORDER BY full_name`);
+  return execQuery(con, `${GET_USERS} ORDER BY full_name`);
 }
 
 function getUserProfile(con, username) {
@@ -54,15 +39,15 @@ function getUserProfile(con, username) {
 }
 
 function getUserByUsername(con, username) {
-  return execQuery(con, `${GET_USERS_QUERY} WHERE username=?`, username);
+  return execQuery(con, `${GET_USERS} WHERE username=?`, username);
 }
 
 function getUserById(con, id) {
-  return execQuery(con, `${GET_USERS_QUERY} WHERE users.id=?`, id);
+  return execQuery(con, `${GET_USERS} WHERE users.id=?`, id);
 }
 
 function getUsersByGroup(con, groupId) {
-  return execQuery(con, `${GET_USERS_QUERY} WHERE \`groups\`.id=?`, groupId);
+  return execQuery(con, `${GET_USERS} WHERE \`groups\`.id=?`, groupId);
 }
 
 function getTeachersByRunningModule(con, runningId) {
@@ -108,7 +93,7 @@ async function bulkUpdateMemberships(con, groupAndUserIds) {
 async function updateUser(con, id, user) {
   try {
     await beginTransaction(con);
-    await execQuery(con, UPDATE_USER_QUERY, [
+    await execQuery(con, UPDATE_USER, [
       user.full_name,
       user.role,
       user.linkedin_username,
@@ -145,5 +130,4 @@ module.exports = {
   bulkUpdateMemberships,
   getUsersModulesInfo,
   getTeachers,
-  deleteTeacher
 };

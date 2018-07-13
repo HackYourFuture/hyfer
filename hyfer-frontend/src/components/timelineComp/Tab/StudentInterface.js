@@ -40,14 +40,16 @@ class StudentInterface extends React.Component {
 
   render() {
     const { classes, currentModuleStore } = this.props;
-    const { students, teachers } = currentModuleStore;
+    const { students, teachers, currentModule } = currentModuleStore;
+
+    const hasNotes = currentModule && currentModule.notes;
     const { value } = this.state;
 
     return (
       <div className={classes.root}>
         <Paper>
           <Tabs value={value} onChange={this.handleChange} >
-            <Tab label="Notes" />
+            <Tab label={hasNotes ? 'Notes*' : 'Notes'} />
             <Tab label={`Teachers (${teachers.length})`} />
             <Tab label={`Students (${students.length})`} />
           </Tabs>

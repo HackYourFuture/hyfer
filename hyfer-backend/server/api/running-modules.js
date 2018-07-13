@@ -115,13 +115,41 @@ function splitRunningModule(req, res) {
     .catch(err => handleError(err, res));
 }
 
-function updateNotes(req, res) {
-  const runningId = +req.params.id;
-  const { notes } = req.body;
-  getConnection(req, res)
-    .then(con => db.updateNotes(con, runningId, notes))
-    .then(() => res.json({ notes }))
-    .catch(err => handleError(err, res));
+async function updateNotes(req, res) {
+  try {
+    const { runningId } = req.params;
+    const { notes } = req.body;
+    const con = await getConnection(req, res);
+    await db.updateNotes(con, runningId, notes);
+    const [runningModule] = await db.getRunningModuleById(con, runningId);
+    res.json(runningModule);
+  } catch (err) {
+    handleError(err, res);
+  }
+}
+
+async function addTeacher(req, res) {
+  try {
+    const { runningId, userId } = req.params;
+    const con = await getConnection(req, res);
+    await db.addTeacher(con, runningId, userId);
+    const teachers = await dbUsers.getTeachersByRunningModule(con, runningId);
+    res.json(teachers);
+  } catch (err) {
+    handleError(err, res);
+  }
+}
+
+async function deleteTeacher(req, res) {
+  try {
+    const { runningId, userId } = req.params;
+    const con = await getConnection(req, res);
+    await db.deleteTeacher(con, runningId, userId);
+    const teachers = await dbUsers.getTeachersByRunningModule(con, runningId);
+    res.json(teachers);
+  } catch (err) {
+    handleError(err, res);
+  }
 }
 
 const router = express.Router();
@@ -132,6 +160,8 @@ router
   .patch('/split/:groupId/:position', hasRole('teacher'), splitRunningModule)
   .patch('/add/:moduleId/:groupId/:position', hasRole('teacher'), addModuleToRunningModules)
   .delete('/:groupId/:position', hasRole('teacher'), deleteRunningModule)
-  .patch('/notes/:id', hasRole('teacher'), updateNotes);
+  .post(('/teacher/:runningId/:userId'), hasRole('teacher'), addTeacher)
+  .delete('/teacher/:runningId/:userId', hasRole('teacher'), deleteTeacher)
+  .patch('/notes/:runningId', hasRole('teacher'), updateNotes);
 
 module.exports = router;
