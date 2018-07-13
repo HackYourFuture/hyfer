@@ -59,6 +59,12 @@ function updateUser(req, res) {
     .then(() => res.sendStatus(204))
     .catch(err => handleError(err, res));
 }
+function deleteTeacher(req, res) {
+  getConnection(req, res)
+    .then(con => db.deleteTeacher(con, +req.params.module_id, +req.params.user_id))
+    .then(() => res.sendStatus(204))
+    .catch(err => handleError(err, res));
+}
 
 const router = express.Router();
 router
@@ -68,6 +74,7 @@ router
   .get('/all', hasRole('teacher'), getUsers)
   .get('/group/:groupId', hasRole('teacher|student'), getRunningUsersByGroup)
   .get('/:id', hasRole('teacher|student'), getUserById)
+  .delete('/deleteteacher/:module_id/:user_id', deleteTeacher)
   .patch('/:id', hasRole('teacher|student'), updateUser);
 
 module.exports = router;
