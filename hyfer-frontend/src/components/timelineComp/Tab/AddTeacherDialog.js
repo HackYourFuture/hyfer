@@ -26,6 +26,7 @@ class AddTeacherDialog extends Component {
   componentDidMount() {
     this.props.userStore.getTeachers();
   }
+
   handleChange = (event) => {
     this.setState({ userId: event.target.value });
   }

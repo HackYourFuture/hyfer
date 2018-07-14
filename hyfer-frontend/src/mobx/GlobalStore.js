@@ -62,8 +62,8 @@ export default class GlobalStore {
       .then((res) => {
         runInAction(() => {
           this.currentUser = res;
-          if (this.currentUser.group_name !== null) {
-            stores.currentModuleStore.fetchCurrentModuleUsers(this.currentUser.group_name);
+          if (this.currentUser.group_name !== null && this.isStudent) {
+            stores.currentModuleStore.getGroupsByGroupName(this.currentUser.group_name);
           }
         });
       })
