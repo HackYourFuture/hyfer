@@ -35,38 +35,26 @@ export default class GlobalStore {
     return this.isLoggedIn ? `https://avatars.githubusercontent.com/${this.currentUser.username}` : null;
   }
 
-  @action.bound
-  setLastError(error) {
-    this.lastError = error;
-  }
+  @action
+  setLastError = (error) => { this.lastError = error; };
 
-  @action.bound
-  clearLastError() {
-    this.lastError = null;
-  }
+  @action
+  clearLastError = () => this.lastError = null;
 
-  @action.bound
-  setSuccessMessage(message) {
-    this.successMessage = message;
-  }
+  @action
+  setSuccessMessage = (message) => this.successMessage = message;
 
-  @action.bound
-  clearSuccessMessage() {
-    this.successMessage = null;
-  }
+  @action
+  clearSuccessMessage = () => this.successMessage = null;
 
-  @action.bound
-  setWarningMessage(warning) {
-    this.warningMessage = warning;
-  }
+  @action
+  setWarningMessage = (warning) => this.warningMessage = warning;
 
-  @action.bound
-  clearWarningMessage() {
-    this.warningMessage = null;
-  }
+  @action
+  clearWarningMessage = () => this.warningMessage = null;
 
-  @action.bound
-  fetchCurrentUser() {
+  @action
+  fetchCurrentUser = () => {
     if (this.currentUser) {
       return;
     }
@@ -80,5 +68,18 @@ export default class GlobalStore {
         });
       })
       .catch((error) => this.setLastError(error));
+  }
+
+  @action
+  updateCurrentUser = async (email, linkedInName) => {
+    const { id } = this.currentUser;
+    try {
+      await fetchJSON(`/api/user/${id}`, 'PATCH', {
+        email,
+        linkedInName,
+      });
+    } catch (error) {
+      this.setLastError(error);
+    }
   }
 }
