@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import { inject, observer } from 'mobx-react';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
@@ -8,16 +9,23 @@ import CardActions from '@material-ui/core/CardActions';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
 import FaGitHub from 'react-icons/lib/fa/github';
 import FaLinkedIn from 'react-icons/lib/fa/linkedin';
 import CancelIcon from '@material-ui/icons/Cancel';
-import { inject, observer } from 'mobx-react';
+import ProfileDialog from './ProfileDialog';
 
 const styles = {
+
   card: {
-    maxWidth: 350,
-    minWidth: 250,
     margin: 2,
+    width: 250,
+  },
+  actions: {
+    display: 'flex',
+  },
+  filler: {
+    flexGrow: 1,
   },
   media: {
     // paddingTop: '40.25%', // 16:9
@@ -33,9 +41,13 @@ const styles = {
   },
 };
 
-@inject("currentModuleStore", "global")
+@inject('currentModuleStore', 'global')
 @observer
 class UserCard extends React.Component {
+
+  state = {
+    open: false,
+  }
 
   handleDelete = () => {
     const { user } = this.props;
@@ -53,15 +65,30 @@ class UserCard extends React.Component {
     window.open(`http://github.com/${user.username}`, '_blank');
   };
 
+  handleClickOpen = () => {
+    this.setState({ open: true });
+  };
+
+  handleClose = () => {
+    this.setState({ open: false });
+  };
+
+  handleUpdate = async (email, linkedInName) => {
+    this.handleClose();
+    const { id } = this.props.currentModuleStore.currentModule;
+    await this.props.global.updateCurrentUser(email, linkedInName);
+    this.props.currentModuleStore.getRunningModuleDetails(id);
+  }
+
   render() {
-    const { classes } = this.props;
-    const { user } = this.props;
+    const { classes, user, showDeleteButton } = this.props;
+    const { currentUser } = this.props.global;
 
     return (
-      <div>
+      <React.Fragment>
         <Card className={classes.card}>
           <CardHeader
-            action={user.role === "teacher" && this.props.global.isTeacher &&
+            action={showDeleteButton && user.role === "teacher" && this.props.global.isTeacher &&
               <IconButton color="secondary" onClick={this.handleDelete}>
                 <CancelIcon className={classes.iconButton} />
               </IconButton>}>
@@ -75,15 +102,15 @@ class UserCard extends React.Component {
             <Typography
               align='center'
               gutterBottom
-              variant="headline"
-              component="h1">
+              variant="subheading"
+              component="h5">
               {user.username}
             </Typography>
-            <Typography variant="caption" gutterBottom align="center">
+            <Typography variant="body1" gutterBottom align="center">
               {user.role + (user.group_name ? ' / ' + user.group_name : '')}
             </Typography>
           </CardContent>
-          <CardActions>
+          <CardActions className={classes.actions}>
             <IconButton onClick={this.handleGitHub}>
               <FaGitHub className={classes.iconButton} />
             </IconButton>
@@ -91,14 +118,34 @@ class UserCard extends React.Component {
               <IconButton onClick={this.handleLinkedIn}>
                 <FaLinkedIn className={classes.iconButton} />
               </IconButton>}
+            {user.id === this.props.global.currentUser.id &&
+              <React.Fragment>
+                <span className={classes.filler} />
+                <IconButton onClick={this.handleClickOpen}>
+                  <EditIcon className={classes.iconButton} />
+                </IconButton>
+              </React.Fragment>}
           </CardActions>
         </Card>
-      </div >
+        <ProfileDialog
+          email={currentUser.email}
+          linkedInName={currentUser.linkedin_username}
+          open={this.state.open}
+          onClose={this.handleClose}
+          onUpdate={this.handleUpdate}
+        />
+      </React.Fragment>
     );
   }
 }
+
 UserCard.propTypes = {
   classes: PropTypes.object.isRequired,
+  showDeleteButton: PropTypes.bool.isRequired,
+};
+
+UserCard.defaultProps = {
+  showDeleteButton: false,
 };
 
 export default withStyles(styles)(UserCard);
