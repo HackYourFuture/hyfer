@@ -11,6 +11,6 @@ export async function fetchJSON(path, method = 'GET', data = null) {
   }
 
   const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}${path}`, options);
-  return res.json();
+  return res.status === 200 ? res.json() : undefined;
 }
 
