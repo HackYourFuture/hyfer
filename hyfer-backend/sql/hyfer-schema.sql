@@ -5,9 +5,9 @@
 # http://www.sequelpro.com/
 # https://github.com/sequelpro/sequelpro
 #
-# Host: localhost (MySQL 5.7.16)
-# Database: hyfer-sync
-# Generation Time: 2018-07-10 13:13:21 +0000
+# Host: palulu (MySQL 5.7.22)
+# Database: hyfer
+# Generation Time: 2018-07-14 13:05:32 +0000
 # ************************************************************
 
 
@@ -20,10 +20,22 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
-# Dump of table group_students
+# Dump of table events
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `group_students`;
+CREATE TABLE `events` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `event_name` varchar(32) NOT NULL DEFAULT '',
+  `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `username` varchar(32) NOT NULL DEFAULT '',
+  `notes` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+# Dump of table group_students
+# ------------------------------------------------------------
 
 CREATE TABLE `group_students` (
   `group_id` int(8) NOT NULL,
@@ -39,8 +51,6 @@ CREATE TABLE `group_students` (
 # Dump of table groups
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `groups`;
-
 CREATE TABLE `groups` (
   `id` int(8) NOT NULL AUTO_INCREMENT,
   `group_name` varchar(50) NOT NULL DEFAULT '',
@@ -54,8 +64,6 @@ CREATE TABLE `groups` (
 
 # Dump of table homework_assignments
 # ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `homework_assignments`;
 
 CREATE TABLE `homework_assignments` (
   `id` int(8) NOT NULL AUTO_INCREMENT,
@@ -72,8 +80,6 @@ CREATE TABLE `homework_assignments` (
 # Dump of table homework_reviews
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `homework_reviews`;
-
 CREATE TABLE `homework_reviews` (
   `id` int(8) NOT NULL AUTO_INCREMENT,
   `submission_id` int(8) NOT NULL,
@@ -87,8 +93,6 @@ CREATE TABLE `homework_reviews` (
 
 # Dump of table homework_submissions
 # ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `homework_submissions`;
 
 CREATE TABLE `homework_submissions` (
   `id` int(8) NOT NULL AUTO_INCREMENT,
@@ -104,8 +108,6 @@ CREATE TABLE `homework_submissions` (
 
 # Dump of table modules
 # ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `modules`;
 
 CREATE TABLE `modules` (
   `id` int(8) NOT NULL AUTO_INCREMENT,
@@ -125,8 +127,6 @@ CREATE TABLE `modules` (
 # Dump of table running_module_teachers
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `running_module_teachers`;
-
 CREATE TABLE `running_module_teachers` (
   `running_module_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
@@ -140,8 +140,6 @@ CREATE TABLE `running_module_teachers` (
 
 # Dump of table running_modules
 # ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `running_modules`;
 
 CREATE TABLE `running_modules` (
   `id` int(8) NOT NULL AUTO_INCREMENT,
@@ -162,8 +160,6 @@ CREATE TABLE `running_modules` (
 # Dump of table students_history
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `students_history`;
-
 CREATE TABLE `students_history` (
   `running_module_id` int(8) NOT NULL,
   `user_id` int(8) NOT NULL,
@@ -181,8 +177,6 @@ CREATE TABLE `students_history` (
 
 # Dump of table users
 # ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `users`;
 
 CREATE TABLE `users` (
   `id` int(8) NOT NULL AUTO_INCREMENT,
