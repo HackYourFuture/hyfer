@@ -2,8 +2,6 @@ import { fetchJSON } from './util';
 import { observable, action, runInAction } from 'mobx';
 import stores from '.';
 
-const token = localStorage.getItem('token');
-
 export default class UserStore {
 
   @observable
@@ -25,79 +23,28 @@ export default class UserStore {
 
   @action
   async loadUsers() {
-    const users = await fetchJSON('/api/user/all');
-    runInAction(() => {
-      this.filteredUsers = users;
-      this.users = users;
-    });
-    return;
+    try {
+      const users = await fetchJSON('/api/user/all');
+      runInAction(() => {
+        this.filteredUsers = users;
+        this.users = users;
+      });
+    } catch (err) {
+      stores.global.setLastError(err);
+    }
   }
 
   @action
   async getTeachers() {
-    const res = await fetch(`http://localhost:3005/api/user/teachers/`
-      , {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + token,
-        },
-      });
-    if (!res.ok) {
-      stores.global.setLastError(res);
-
-    } else {
-      const response = await res.json();
+    try {
+      const teachers = await fetchJSON('/api/user/teachers');
       runInAction(() => {
-        return this.teachers = response;
+        return this.teachers = teachers;
       });
+    } catch (err) {
+      stores.global.setLastError(err);
     }
   }
-
-  // @action
-  // async getRunningModuleTeachers(groupsId) {
-  //   const res = await fetch(`http://localhost:3005/api/user/teachers/${groupsId}`
-  //     , {
-  //       method: 'GET',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         Authorization: 'Bearer ' + token,
-  //       },
-  //     });
-  //   if (!res.ok) {
-  //     stores.global.setLastError(res);
-  //   } else {
-  //     const response = await res.json();
-  //     runInAction(() => {
-  //       return this.assignedTeachers = response;
-  //     });
-  //   }
-  // }
-
-  @action
-  saveProfile = async (Data, loadData) => {
-    const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/user/${this.userProfile.id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + token,
-      },
-      body: JSON.stringify(Data),
-    });
-
-    if (loadData === 'loadUsers') {
-      this.loadUsers(); // this error handling is propagated
-    } else if (loadData === 'loadUser') {
-      stores.global.fetchCurrentUser();
-    }
-    // throwing it in the end of the file because of the loading if it does happen an error the loading will be blocked
-    if (!res.ok) {
-      stores.global.setLastError(res);
-    }
-    else {
-      stores.global.setSuccessMessage('Your changes have been successfully saved!');
-    }
-  };
 
   @action
   searchUser = event => {
