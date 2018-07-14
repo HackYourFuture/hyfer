@@ -31,16 +31,13 @@ function getRunningModules(con, groupId) {
 }
 
 async function bulkUpdateRunningsModules(con, existingMods, updatedMods, groupId) {
-  if (existingMods.length !== updatedMods.length) {
-    throw new Error('Error updating running modules: length mismatch.');
-  }
 
   const inserts = updatedMods.filter(mod => mod.id === undefined);
   const deletes = existingMods.filter(mod1 => !updatedMods.find(mod2 => mod1.id === mod2.id));
   const updates = updatedMods.filter((mod) => {
     const existingMod = existingMods.find(mod2 => mod.id === mod2.id);
-    if (existingMod === null) {
-      throw new Error('Error updating running modules: cannot find matching module.');
+    if (existingMod == null) {
+      return false;
     }
     return existingMod.duration !== mod.duration
       || existingMod.position !== mod.position
@@ -118,7 +115,7 @@ async function deleteRunningModule(con, groupId, position) {
 
 async function addRunningModule(con, moduleId, groupId, position) {
   const [module] = await modules.getModule(con, moduleId);
-  const { module_id, default_duration: duration } = module;
+  const { id: module_id, default_duration: duration } = module;
 
   const newMod = {
     module_id,

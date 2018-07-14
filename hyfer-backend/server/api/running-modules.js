@@ -83,12 +83,12 @@ async function getRunningModuleDetails(req, res) {
   }
 }
 
-function addModuleToRunningModules(req, res) {
+function addRunningModule(req, res) {
   const moduleId = +req.params.moduleId;
   const groupId = +req.params.groupId;
   const position = +req.params.position;
   getConnection(req, res)
-    .then(con => db.addModuleToRunningModules(con, moduleId, groupId, position))
+    .then(con => db.addRunningModule(con, moduleId, groupId, position))
     .then(result => res.json(result))
     .catch(err => handleError(err, res));
 }
@@ -164,7 +164,7 @@ router
   .get('/details/:runningId', hasRole('teacher|student'), getRunningModuleDetails)
   .patch('/update/:groupId/:position', hasRole('teacher'), updateRunningModule)
   .patch('/split/:groupId/:position', hasRole('teacher'), splitRunningModule)
-  .patch('/add/:moduleId/:groupId/:position', hasRole('teacher'), addModuleToRunningModules)
+  .patch('/add/:moduleId/:groupId/:position', hasRole('teacher'), addRunningModule)
   .delete('/:groupId/:position', hasRole('teacher'), deleteRunningModule)
   .post(('/teacher/:runningId/:userId'), hasRole('teacher'), addTeacher)
   .delete('/teacher/:runningId/:userId', hasRole('teacher'), deleteTeacher)
