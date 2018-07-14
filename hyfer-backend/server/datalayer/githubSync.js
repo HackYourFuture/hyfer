@@ -23,11 +23,6 @@ function getTeamUsers(githubTeam) {
   }));
 }
 
-async function addSyncTime(con) {
-  const currentUser = process.env.USERNAME; //  ways: 1-fetch calling /api/user 2-auth-service file
-  insertSyncEvent(con, 'sync', currentUser);
-}
-
 /**
  * Get a list of unique users extracted from all GitHub class teams and
  * the teacher team.
@@ -126,7 +121,7 @@ function removeTeacherFromClasses(githubTeams) {
 /**
  * Synchronizes all GitHub class teams and the teachers team
  */
-async function githubSync(con, syncAll) {
+async function githubSync(con, username, syncAll) {
   const githubTeams = await getTeamMembers(con, syncAll);
   const teams = removeTeacherFromClasses(githubTeams);
   const githubUsers = getUniqueUsersFromTeams(teams);
@@ -168,9 +163,8 @@ async function githubSync(con, syncAll) {
 
   await createNewClasses(con, teams);
   await rebuildMemberships(con, teams);
-  await addSyncTime(con);
+  insertSyncEvent(con, 'GITHUB_SYNC', username);
 }
-
 
 module.exports = {
   githubSync,
