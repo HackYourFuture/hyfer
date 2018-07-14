@@ -8,6 +8,9 @@ const { getConnection } = require('./connection');
 const { hasRole } = require('../auth/auth-service');
 const handleError = require('./error')('running_modules');
 
+// Until we have implemented attendances in the frontend
+// refrain from trying to get them from the database
+const INCLUDE_ATTENDANCES = false;
 
 function getRunningModules(req, res) {
   const groupId = +req.params.groupId;
@@ -49,19 +52,22 @@ async function getRunningModuleDetails(req, res) {
     }
 
     let students = await dbUsers.getUsersByGroup(con, runningModule.group_id);
-    const promises = students.map(student =>
-      dbHistory.getStudentHistory(con, runningId, student.id));
-    const histories = await Promise.all(promises);
-    students = students.map((student, index) => {
-      const { attendance, homework } = normalizeHistory(runningModule.duration, histories[index]);
-      return Object.assign({}, student, {
-        history: {
-          duration: runningModule.duration,
-          attendance,
-          homework,
-        },
+
+    if (INCLUDE_ATTENDANCES) {
+      const promises = students.map(student =>
+        dbHistory.getStudentHistory(con, runningId, student.id));
+      const histories = await Promise.all(promises);
+      students = students.map((student, index) => {
+        const { attendance, homework } = normalizeHistory(runningModule.duration, histories[index]);
+        return Object.assign({}, student, {
+          history: {
+            duration: runningModule.duration,
+            attendance,
+            homework,
+          },
+        });
       });
-    });
+    }
 
     const teachers = await dbUsers.getTeachersByRunningModule(con, runningId);
 
