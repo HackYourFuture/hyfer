@@ -10,8 +10,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 export default class ProfileDialog extends React.Component {
 
   state = {
-    email: null,
-    linkedInName: null,
+    email: '',
+    linkedInName: '',
+    isChanged: false,
   };
 
   componentDidMount() {
@@ -19,9 +20,15 @@ export default class ProfileDialog extends React.Component {
     this.setState({ email, linkedInName });
   }
 
-  onEmailChange = e => this.setState({ email: e.target.value });
+  onEmailChange = e => this.setState({
+    email: e.target.value.trim(),
+    isChanged: true,
+  });
 
-  onLinkedInNameChange = e => this.setState({ linkedInName: e.target.value });
+  onLinkedInNameChange = e => this.setState({
+    linkedInName: e.target.value.trim(),
+    isChanged: true,
+  });
 
   onUpdate = () => {
     const { email, linkedInName } = this.state;
@@ -64,7 +71,11 @@ export default class ProfileDialog extends React.Component {
           <Button onClick={onClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={this.onUpdate} color="primary">
+          <Button
+            onClick={this.onUpdate}
+            color="primary"
+            disabled={!this.state.isChanged}
+          >
             Save
           </Button>
         </DialogActions>
