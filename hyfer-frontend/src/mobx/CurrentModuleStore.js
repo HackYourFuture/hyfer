@@ -2,6 +2,7 @@ import { observable, runInAction, action } from 'mobx';
 import { fetchJSON } from './util';
 import Showdown from 'showdown';
 import stores from '.';
+import moment from "moment";
 
 const HYF_GITHUB_URL = 'https://api.github.com/repos/HackYourFuture';
 
@@ -25,7 +26,7 @@ export default class CurrentModuleStore {
   group = null;
 
   @observable
-  module = null;
+  module = [];
 
   @observable
   currentModule = null;
@@ -139,7 +140,6 @@ export default class CurrentModuleStore {
         },
 
       });
-
     if (!res.ok) {
       runInAction(() => {
         stores.global.setLastError(res);
@@ -154,4 +154,38 @@ export default class CurrentModuleStore {
     }
   }
 
+  async getGroupsByGroupName(group_name) {
+    const token = localStorage.getItem('token');
+    const groupName = group_name.replace(' ', '');
+    const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/groups/currentgroups/${groupName}`
+      , {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token,
+        },
+      });
+
+    if (!res.ok) {
+      stores.global.setLastError(res);
+
+    } else {
+      const response = await res.json();
+      const runningModules = response;
+      let computedDate = moment(runningModules[0].starting_date);
+      const currentDate = moment();
+      let index = 0;
+      for (; index < runningModules.length; index++) {
+        const runningModule = runningModules[index];
+        const { duration } = runningModule;
+        computedDate = computedDate.add(duration, 'weeks');
+        if (computedDate > currentDate) {
+          break;
+        }
+      }
+      runInAction(() => {
+        this.getRunningModuleDetails(response[index].id);
+      });
+    }
+  }
 }

@@ -8,6 +8,9 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import UserList from './UserList';
 import ModuleNotes from './ModuleNotes';
+import FaGitHub from 'react-icons/lib/fa/github';
+
+const HYF_GITHUB_URL = 'https://github.com/HackYourFuture';
 
 function TabContainer(props) {
   return (
@@ -27,7 +30,7 @@ const styles = () => ({
   },
 });
 
-@inject('currentModuleStore')
+@inject('currentModuleStore', 'global')
 @observer
 class StudentInterface extends React.Component {
   state = {
@@ -39,9 +42,10 @@ class StudentInterface extends React.Component {
   };
 
   render() {
-    const { classes, currentModuleStore } = this.props;
-    const { students, teachers, module } = currentModuleStore;
+    const { classes, currentModuleStore, global } = this.props;
+    const { students, teachers, module, readme } = currentModuleStore;
     const { value } = this.state;
+    console.log(readme);
     return (
       <div className={classes.root}>
         <Paper>
@@ -49,7 +53,16 @@ class StudentInterface extends React.Component {
             <Tab label="Notes" />
             <Tab label={`Teachers (${teachers.length})`} />
             <Tab label={`Students (${students.length})`} />
-            <h4 style={{ position: "relative", left: "10%", textAlign: "center", color: `${module.color}` }}>{` module : ${module.module_name}  week(4/4)`}</h4>
+            {global.isStudent ?
+              <h4 style={{ position: "relative", left: "20%", color: `${module.color}`, fontSize: 18 }}>{`${module.module_name}`}</h4>
+              : ""}
+            {global.isStudent ?
+              <div style={{ position: "relative", left: "40%", marginTop: 15 }}>
+                <FaGitHub style={{ width: 40, height: 40 }} />
+                <a href={`${HYF_GITHUB_URL}/${module.module_name}`} style={{ fontSize: 20 }} target="_blank" > visit repositorie</a>
+              </div>
+              : ""}
+
           </Tabs>
         </Paper>
         {value === 0 && <TabContainer><ModuleNotes /></TabContainer>}
