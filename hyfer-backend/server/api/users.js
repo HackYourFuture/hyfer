@@ -39,12 +39,6 @@ function getTeachers(req, res) {
     .catch(err => handleError(err, res));
 }
 
-function getCurrentStudentModules(req, res) {
-  getConnection(req, res)
-    .then(con => db.getUsersModulesInfo(con, req.params.groupName))
-    .then(result => res.json(result))
-    .catch(err => handleError(err, res));
-}
 
 function getRunningUsersByGroup(req, res) {
   getConnection(req, res)
@@ -69,7 +63,6 @@ function deleteTeacher(req, res) {
 const router = express.Router();
 router
   .get('/', isAuthenticated(), getCurrentUser)
-  .get('/currentuser/:groupName', hasRole('teacher|student'), getCurrentStudentModules)
   .get('/teachers/:id', hasRole('teacher|student'), getTeachers)
   .get('/all', hasRole('teacher'), getUsers)
   .get('/group/:groupId', hasRole('teacher|student'), getRunningUsersByGroup)

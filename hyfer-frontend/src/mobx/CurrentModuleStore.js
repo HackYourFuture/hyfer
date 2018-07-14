@@ -1,4 +1,4 @@
-import { observable, runInAction, action } from 'mobx';
+import { observable, runInAction } from 'mobx';
 import { fetchJSON } from './util';
 import Showdown from 'showdown';
 import stores from '.';
@@ -123,35 +123,9 @@ export default class CurrentModuleStore {
     const readmeEncoded = await res.json();
     const readmeDecoded = atob(readmeEncoded.content);
     const html = this.converter.makeHtml(readmeDecoded);
-
     runInAction(() => {
       this.readme = { repoName, html };
     });
-  }
-  @action
-  async fetchCurrentModuleUsers(group_name) {
-    const token = localStorage.getItem('token');
-    const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/user/currentuser/${group_name}`
-      , {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + token,
-        },
-
-      });
-    if (!res.ok) {
-      runInAction(() => {
-        stores.global.setLastError(res);
-      });
-    } else {
-      const response = await res.json();
-      const moduelUsers = response;
-      runInAction(() => {
-        return this.students = moduelUsers;
-      });
-
-    }
   }
 
   async getGroupsByGroupName(group_name) {

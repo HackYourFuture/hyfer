@@ -15,16 +15,6 @@ const UPDATE_USER_QUERY = `
   UPDATE users SET full_name=?, role=?,linkedin_username=? ,email=?
   WHERE id=?`;
 
-const USERS_MODULE_STUDENTS = `SELECT  users.* ,
- groups.starting_date,groups.group_name from users
- LEFT JOIN group_students ON users.id=group_students.user_id 
- LEFT JOIN groups ON groups.id = group_students.group_id  
-`;
-
-
-function getUsersModulesInfo(con, group_name) {
-  return execQuery(con, `${USERS_MODULE_STUDENTS} WHERE groups.group_name=?`, group_name);
-}
 
 function deleteTeacher(con, module_id, user_id) {
   return execQuery(con, `DELETE FROM running_module_teachers WHERE running_module_id =${module_id} AND user_id = ${user_id} ;
@@ -142,7 +132,6 @@ module.exports = {
   bulkInsertUsers,
   bulkUpdateUsers,
   bulkUpdateMemberships,
-  getUsersModulesInfo,
   getTeachers,
   deleteTeacher
 };
