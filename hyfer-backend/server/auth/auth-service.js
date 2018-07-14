@@ -4,7 +4,7 @@ const GitHubStrategy = require('passport-github').Strategy;
 const jwt = require('jsonwebtoken');
 const expressJwt = require('express-jwt');
 const compose = require('composable-middleware');
-const { getUserProfile, addUser } = require('../datalayer/users');
+const { getUserByUsername, addUser } = require('../datalayer/users');
 const { getConnection } = require('../api/connection');
 
 const validateJwt = expressJwt({ secret: process.env.JWT_SECRET });
@@ -29,11 +29,10 @@ passport.use(new GitHubStrategy({
 async function gitHubCallback(req, res, next) {
   try {
     const con = await getConnection(req, res);
-    const rows = await getUserProfile(con, req.user.username);
+    const rows = await getUserByUsername(con, req.user.username);
     if (rows.length === 0) {
       const newUser = {
         username: req.user.username,
-        access_token: req.user.accessToken,
         full_name: req.user.full_name,
         email: req.user.email,
         role: 'guest',
@@ -52,7 +51,7 @@ function isAuthenticated() {
     .use(async (req, res, next) => {
       try {
         const con = await getConnection(req, res);
-        const rows = await getUserProfile(con, req.user.username);
+        const rows = await getUserByUsername(con, req.user.username);
         if (rows.length > 0) {
           [req.user] = rows;
           next();
