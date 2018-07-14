@@ -9,6 +9,7 @@ const {
 const { getGroups, addGroup } = require('./groups');
 const { getTeamMembers } = require('../api/github');
 
+const { insertSyncEvent } = require('./events');
 /**
  * Gets a list of users from a GitHub team
  * @param {[]} githubTeam The GitHub team from which to extract the members.
@@ -120,7 +121,7 @@ function removeTeacherFromClasses(githubTeams) {
 /**
  * Synchronizes all GitHub class teams and the teachers team
  */
-async function githubSync(con, syncAll) {
+async function githubSync(con, username, syncAll) {
   const githubTeams = await getTeamMembers(con, syncAll);
   const teams = removeTeacherFromClasses(githubTeams);
   const githubUsers = getUniqueUsersFromTeams(teams);
@@ -162,8 +163,8 @@ async function githubSync(con, syncAll) {
 
   await createNewClasses(con, teams);
   await rebuildMemberships(con, teams);
+  insertSyncEvent(con, 'GITHUB_SYNC', username);
 }
-
 
 module.exports = {
   githubSync,

@@ -10,34 +10,29 @@ import Button from '@material-ui/core/Button';
 import Showdown from 'showdown';
 
 const localStorageKey = 'hyfer:moduleNotes';
-const noNotes = '_There are no notes for this module._';
+const HYF_GITHUB_URL = 'https://github.com/HackYourFuture';
 
-const template =
-  `## YouTube Lecture Recordings
+function makeTemplate(module, group, duration) {
+
+  let template = `# ${group.group_name.toUpperCase()} – ${module.module_name}
+
+### Visit GitHub repository: [${module.module_name}](${HYF_GITHUB_URL}/${module.git_repo})
+
+## YouTube Lecture Recordings
 
 <!--
   To embed a YouTube videos, click the share button
   below the video and select Embed Video. Paste the
   <iframe ...> HTML segment under the Week x header
-  in this file. Example:
+  in this file. 
+-->`;
 
-  ### Week 1
+  for (let i = 0; i < duration; i++) {
+    template += `\n\n### Week ${i + 1}\n\nNot yet available.`;
+  }
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/AO3U2OsteHM" 
-    frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
---> 
-
-### Week 1
-
-Not yet available.
-
-### Week 2
-
-Not yet available.
-
-### Week 3
-
-Not yet available.`;
+  return template;
+}
 
 const styles = theme => ({
   container: {
@@ -160,7 +155,7 @@ class ModuleNotes extends Component {
   setEditMode = () => {
     let { notes } = this.state;
     if (!notes) {
-      notes = template;
+      notes = this.defaultNotes();
     }
     this.setState({
       inEditMode: true,
@@ -207,9 +202,14 @@ class ModuleNotes extends Component {
     );
   }
 
+  defaultNotes() {
+    const { module, group, currentModule } = this.props.currentModuleStore;
+    return makeTemplate(module, group, currentModule.duration);
+  }
+
   renderArticle() {
     const { classes } = this.props;
-    const notes = this.state.notes || noNotes;
+    const notes = this.state.notes || this.defaultNotes();
     const __html = this.converter.makeHtml(notes);
     return (
       <article

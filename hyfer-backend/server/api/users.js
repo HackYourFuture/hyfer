@@ -25,6 +25,17 @@ async function getUsers(req, res) {
   }
 }
 
+async function getLastEvent(req, res) {
+  try {
+    const con = await getConnection(req, res);
+    const result = await db.getLastEvent(con, req.params.eventName);
+    res.json(result);
+  } catch (err) {
+    handleError(err, res);
+  }
+}
+
+
 async function getTeachers(req, res) {
   try {
     const con = await getConnection(req, res);
@@ -42,12 +53,13 @@ function getUserById(req, res) {
     .catch(err => handleError(err, res));
 }
 
-function getCurrentStudentModules(req, res) {
+function getTeachersByRunningModule(req, res) {
   getConnection(req, res)
-    .then(con => db.getUsersModulesInfo(con, req.params.groupName))
+    .then(con => db.getTeachersByRunningModule(con, +req.params.id))
     .then(result => res.json(result))
     .catch(err => handleError(err, res));
 }
+
 
 function getRunningUsersByGroup(req, res) {
   getConnection(req, res)
@@ -66,8 +78,8 @@ function updateUser(req, res) {
 const router = express.Router();
 router
   .get('/', isAuthenticated(), getCurrentUser)
-  .get('/currentuser/:groupName', hasRole('teacher|student'), getCurrentStudentModules)
-  .get('/teachers/:id', hasRole('teacher|student'), getTeachers)
+  .get('/teachers/:id', hasRole('teacher|student'), getTeachersByRunningModule)
+  .get('/event/:eventName', hasRole('teacher'), getLastEvent)
   .get('/all', hasRole('teacher'), getUsers)
   .get('/teachers', hasRole('teacher'), getTeachers)
   .get('/group/:groupId', hasRole('teacher|student'), getRunningUsersByGroup)

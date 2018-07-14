@@ -25,7 +25,7 @@ module.exports = (app) => {
   app.patch('/api/studentsState', hasRole('teacher'), states.updateUser, states.assignToClass);
   app.get('/api/students', hasRole('teacher|student'), github.getTeamMembers);
   app.get('/user/emails', hasRole('teacher'), github.getUserEmails);
-  app.post('/api/githubSync', hasRole('teacher'), githubSync.githubSync);
+  app.post('/api/githubSync/:username', hasRole('teacher'), githubSync.githubSync);
   app.patch('/api/set-email', isAuthenticated(), setEmail);
   app.post('/api/sendEmail', hasRole('teacher|student'), sendGrid.sendAnEmail);
 
