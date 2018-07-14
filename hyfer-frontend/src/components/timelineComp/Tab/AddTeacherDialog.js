@@ -20,7 +20,7 @@ const styles = theme => ({
 class AddTeacherDialog extends Component {
 
   state = {
-    userId: 0,
+    userId: -1,
   }
 
   componentDidMount() {
@@ -75,12 +75,20 @@ class AddTeacherDialog extends Component {
             </form>
           </DialogContent>
           <DialogActions>
-            <Button color="inherit" onClick={this.props.onClose} aria-label="Close">
+            <Button
+              color="inherit"
+              onClick={this.props.onClose}
+              aria-label="Close"
+            >
               Cancel
-              </Button>
-            <Button onClick={this.handleAddTeacher} color="inherit">
+            </Button>
+            <Button
+              onClick={this.handleAddTeacher}
+              color="inherit"
+              disabled={this.state.userId === -1}
+            >
               Add
-              </Button>
+            </Button>
           </DialogActions>
         </Dialog>
       </Fragment>
