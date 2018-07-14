@@ -6,23 +6,13 @@ const {
 } = require('./database');
 const { getCurriculumModules } = require('./modules');
 
-const GET_GROUPS_BY_GROUP_NAME = ` SELECT  groups.starting_date,groups.group_name,modules.module_name,running_modules.duration,running_modules.id from groups INNER JOIN running_modules ON running_modules.group_id = groups.id INNER JOIN modules ON running_modules.module_id = modules.id `;
-
-const GET_TIME_LINE_QUERY = `SELECT \`groups\`.id,
-  \`groups\`.group_name,
-  \`groups\`.starting_date,
-  running_modules.duration,
-  running_modules.id AS running_module_id,
-  running_modules.position,
+const GET_GROUPS_BY_GROUP_NAME = `
+  SELECT groups.starting_date, groups.group_name,
   modules.module_name,
-  modules.color,
-  modules.git_repo,
-  modules.optional
-  FROM \`groups\`
-  INNER JOIN running_modules ON running_modules.group_id = \`groups\`.id
-  INNER JOIN modules ON running_modules.module_id = modules.id
-  WHERE \`groups\`.archived=0
-  ORDER BY \`groups\`.starting_date, running_modules.position`;
+  running_modules.duration,running_modules.id
+  FROM groups
+  INNER JOIN running_modules ON running_modules.group_id=groups.id
+  INNER JOIN modules ON running_modules.module_id=modules.id`;
 
 const ADD_GROUP_QUERY = 'INSERT INTO `groups` SET ?';
 const UPDATE_GROUP_QUERY = 'UPDATE `groups` SET ? WHERE id = ?';
@@ -30,11 +20,8 @@ const DELETE_GROUP_QUERY = 'DELETE FROM `groups` WHERE id = ?';
 
 const ADD_RUNNING_MODULES_QUERY = 'INSERT INTO running_modules (description, module_id, group_id, duration, position) VALUES';
 
-function getTimeline(con) {
-  return execQuery(con, GET_TIME_LINE_QUERY);
-}
-function getGropsByGroupName(con, group_name) {
-  return execQuery(con, `${GET_GROUPS_BY_GROUP_NAME} WHERE groups.group_name=?`, group_name);
+function getGroupsByGroupName(con, groupName) {
+  return execQuery(con, `${GET_GROUPS_BY_GROUP_NAME} WHERE groups.group_name=?`, groupName);
 }
 function getGroups(con) {
   return execQuery(con, 'SELECT * FROM `groups` ORDER BY starting_date');
@@ -113,12 +100,11 @@ async function addGroup(con, group) {
 }
 
 module.exports = {
-  getTimeline,
   getGroupById,
   getGroups,
   addGroup,
   updateGroup,
   deleteGroup,
   getActiveGroups,
-  getGropsByGroupName,
+  getGroupsByGroupName,
 };
