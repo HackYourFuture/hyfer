@@ -29,11 +29,11 @@ function getUsers(con) {
 }
 
 function getUserByUsername(con, username) {
-  return execQuery(con, 'SELECT * FROM users WHERE username=?', username);
+  return execQuery(con, `${GET_USERS} WHERE username=?`, username);
 }
 
 function getUserById(con, id) {
-  return execQuery(con, 'SELECT * FROM users WHERE users.id=?', id);
+  return execQuery(con, `${GET_USERS}  WHERE users.id=?`, id);
 }
 
 function getUsersByGroup(con, groupId) {
