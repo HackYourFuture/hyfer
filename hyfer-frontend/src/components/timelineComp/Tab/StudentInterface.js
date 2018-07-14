@@ -40,9 +40,8 @@ class StudentInterface extends React.Component {
 
   render() {
     const { classes, currentModuleStore } = this.props;
-    const { students, teachers } = currentModuleStore;
+    const { students, teachers, module } = currentModuleStore;
     const { value } = this.state;
-
     return (
       <div className={classes.root}>
         <Paper>
@@ -50,6 +49,7 @@ class StudentInterface extends React.Component {
             <Tab label="Notes" />
             <Tab label={`Teachers (${teachers.length})`} />
             <Tab label={`Students (${students.length})`} />
+            <h4 style={{ position: "relative", left: "10%", textAlign: "center", color: `${module.color}` }}>{` module : ${module.module_name}  week(4/4)`}</h4>
           </Tabs>
         </Paper>
         {value === 0 && <TabContainer><ModuleNotes /></TabContainer>}

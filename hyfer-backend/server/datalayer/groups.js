@@ -6,7 +6,7 @@ const {
 } = require('./database');
 const { getCurriculumModules } = require('./modules');
 
-const GET_GROUPS_BY_GROUP_NAME = ` SELECT  groups.starting_date,groups.group_name,modules.module_name,running_modules.duration,running_modules.id from groups INNER JOIN running_modules ON running_modules.group_id = groups.id INNER JOIN modules ON running_modules.module_id = modules.id `;
+const GET_GROUPS_BY_GROUP_NAME = ` SELECT  groups.starting_date,groups.group_name,modules.module_name,modules.color,running_modules.duration,running_modules.id from groups INNER JOIN running_modules ON running_modules.group_id = groups.id INNER JOIN modules ON running_modules.module_id = modules.id `;
 
 const GET_TIME_LINE_QUERY = `SELECT \`groups\`.id,
   \`groups\`.group_name,

@@ -56,7 +56,7 @@ class UserCard extends React.Component {
   render() {
     const { classes } = this.props;
     const { user } = this.props;
-
+    console.log(this.props.currentModuleStore.currentModuleTest);
     return (
       <div>
         <Card className={classes.card}>
