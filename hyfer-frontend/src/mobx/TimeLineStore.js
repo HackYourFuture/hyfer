@@ -33,8 +33,6 @@ function addModuleDates(timelineItems) {
 
 export default class TimeLineStore {
 
-  dataFetched = false;
-
   @observable
   items = null;
 
@@ -51,15 +49,14 @@ export default class TimeLineStore {
   allWeeks = null;
 
   fetchItems = async () => {
-    // if (this.dataFetched) {
-    //   return;
-    // }
-
-    const timelineItems = await fetchJSON('/api/timeline');
+    const timeline = await fetchJSON('/api/running/timeline');
+    this.setTimelineItems(timeline);
     const groupsWithIds = await fetchJSON('/api/groups');
-    this.dataFetched = true;
+    runInAction(() => this.groupsWithIds = groupsWithIds);
+  }
 
-    const items = addModuleDates(timelineItems);
+  setTimelineItems = (timeline) => {
+    const items = addModuleDates(timeline);
 
     const allModules = Object.keys(items)
       .reduce((acc, groupName) => {
@@ -86,14 +83,13 @@ export default class TimeLineStore {
 
     runInAction(() => {
       this.items = items;
-      this.groupsWithIds = groupsWithIds;
       this.allSundays = allSundays;
       this.allWeeks = allWeeks;
     });
   }
 
+
   addNewClass = async (className, starting_date) => {
-    this.dataFetched = false;
     const date = new Date(starting_date);
     const body = {
       group_name: className,
@@ -107,34 +103,38 @@ export default class TimeLineStore {
     }
   }
 
-  patchGroupsModules = async (item, newPosition, newDuration) => {
-    this.dataFetched = false;
-    // we need position for request and group_name to filter the group id wanted
-    const body = {
-      duration: newDuration,
-      position: newPosition,
-    };
+  updateModule = async (item, position, duration) => {
     try {
-      await fetchJSON(`/api/running/update/${item.group_id}/${item.position}`, 'PATCH', body);
+      const timeline = await fetchJSON(`/api/running/update/${item.group_id}/${item.position}`,
+        'PATCH', { position, duration });
+      this.setTimelineItems(timeline);
     } catch (err) {
       stores.global.setLastError(err);
     }
   }
 
   addModule = async (moduleId, groupId, position) => {
-    this.dataFetched = false;
     try {
-      await fetchJSON(`/api/running/add/${moduleId}/${groupId}/${position}`, 'PATCH');
+      const timeline = await fetchJSON(`/api/running/add/${moduleId}/${groupId}/${position}`, 'PATCH');
+      this.setTimelineItems(timeline);
     } catch (error) {
       stores.global.setLastError(error);
     }
   }
 
-  removeModule = async (chosenModule) => {
-    this.dataFetched = false;
-    const { group_id, position } = chosenModule;
+  removeModule = async (groupId, position) => {
     try {
-      await fetchJSON(`/api/running/${group_id}/${position}`, 'DELETE');
+      const timeline = await fetchJSON(`/api/running/${groupId}/${position}`, 'DELETE');
+      this.setTimelineItems(timeline);
+    } catch (error) {
+      stores.global.setLastError(error);
+    }
+  }
+
+  splitModule = async (groupId, position) => {
+    try {
+      const timeline = await fetchJSON(`/api/running/split/${groupId}/${position}`, 'PATCH');
+      this.setTimelineItems(timeline);
     } catch (error) {
       stores.global.setLastError(error);
     }

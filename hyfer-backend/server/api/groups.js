@@ -10,12 +10,11 @@ function getGroups(req, res) {
     .then(result => res.json(result))
     .catch(err => handleError(err, res));
 }
+
 function getGroupsByGroupName(req, res) {
   getConnection(req, res)
-    .then(con => db.getGropsByGroupName(con, req.params.group_name))
-    .then(result => {
-      return res.json(result)
-    })
+    .then(con => db.getGroupsByGroupName(con, req.params.group_name))
+    .then(result => res.json(result))
     .catch(err => handleError(err, res));
 }
 

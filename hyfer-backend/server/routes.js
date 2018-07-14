@@ -1,7 +1,6 @@
 const github = require('./api/github');
 const githubSync = require('./api/githubSync');
 const sendGrid = require('./api/sendGrid');
-const timelineApi = require('./api/timeline');
 const groupsApi = require('./api/groups');
 const modulesApi = require('./api/modules');
 const runningModulesApi = require('./api/running-modules');
@@ -15,7 +14,6 @@ const { isAuthenticated, hasRole, router: authApi } = require('./auth/auth-servi
 module.exports = (app) => {
   app.use('/api/modules', modulesApi);
   app.use('/api/running', runningModulesApi);
-  app.use('/api/timeline', timelineApi);
   app.use('/api/groups', groupsApi);
   app.use('/api/user', usersApi);
   app.use('/api/homework', homeworkApi);

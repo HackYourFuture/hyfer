@@ -13,7 +13,7 @@ export default class ModuleList extends Component {
   weekWidth = 1;
 
   componentDidMount() {
-    this.props.modulesStore.initModules();
+    this.props.modulesStore.getModules();
     window.addEventListener('resize', this.computeWeekWidth);
     this.computeWeekWidth();
   }

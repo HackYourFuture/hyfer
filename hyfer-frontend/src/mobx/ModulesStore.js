@@ -4,8 +4,6 @@ import stores from '.';
 
 export default class ModulesStore {
 
-  dataFetched = false;
-
   @observable
   modules = [];
 
@@ -14,55 +12,41 @@ export default class ModulesStore {
 
   serverModules = [];
 
-  @action.bound
-  async initModules() {
+  async getModules() {
     try {
-      if (!this.dataFetched) {
-        this.serverModules = await fetchJSON('/api/modules');
-        this.dataFetched = true;
-      }
+      this.serverModules = await fetchJSON('/api/modules');
       runInAction(() => this.setModules(this.serverModules, false));
     } catch (error) {
       stores.global.setLastError(error);
     }
   }
 
-  @action.bound
-  setModules(modules, isChanged = true) {
+  @action
+  setModules = (modules, isChanged = true) => {
     this.modules = [...modules];
     this.isChanged = isChanged;
   }
 
-  @action.bound
-  addModule(module) {
-    this.setModules([...this.modules, module]);
-  }
+  addModule = (module) => this.setModules([...this.modules, module]);
 
-  @action.bound
-  updateModule(module) {
+  updateModule = (module) => {
     const modules = this.modules.map(m => m.id === module.id ? module : m);
     this.setModules(modules);
   }
 
-  @action.bound
-  deleteModule(module) {
+  deleteModule = (module) => {
     const modules = this.modules.filter(m => m.id !== module.id);
     this.setModules(modules);
   }
 
-  @action.bound
-  async saveChanges() {
-    this.dataFetched = false;
+  saveChanges = async () => {
     try {
       await fetchJSON('/modules', 'PATCH', this.modules);
-      this.initModules();
+      this.getModules();
     } catch (error) {
       stores.global.setLastError(error);
     }
   }
 
-  @action.bound
-  undoChanges() {
-    this.setModules(this.serverModules, false);
-  }
+  undoChanges = () => this.setModules(this.serverModules, false);
 }

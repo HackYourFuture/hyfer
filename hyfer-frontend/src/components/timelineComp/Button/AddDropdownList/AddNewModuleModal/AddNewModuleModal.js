@@ -276,7 +276,7 @@ export default class AddNewModuleModal extends Component {
           item
         );
         // send to backend the new duration to the backend
-        return this.props.timeLineStore.patchGroupsModules(
+        return this.props.timeLineStore.updateModule(
           item,
           item.position,
           newDuration,
@@ -290,7 +290,7 @@ export default class AddNewModuleModal extends Component {
           return this.props.timeLineStore.addModule(selectedModuleId, selectedGroupId, position)
             .then(() =>
               // 2- change the duration
-              this.props.timeLineStore.patchGroupsModules(
+              this.props.timeLineStore.updateModule(
                 { position },
                 null,
                 duration,
@@ -310,7 +310,7 @@ export default class AddNewModuleModal extends Component {
                 this.props.timeLineStore.addModule(splittedModuleId, selectedGroupId, otherHalfPosition)
                   // now adjust the duration so that it's just the rest of the module not a new one
                   .then(() => {
-                    return this.props.timeLineStore.patchGroupsModules(
+                    return this.props.timeLineStore.updateModule(
                       { position: otherHalfPosition }, //instead of whole item just the part with position
                       null,
                       remainingDuration,
@@ -328,7 +328,7 @@ export default class AddNewModuleModal extends Component {
         const position = +item.position + 1;
         return this.props.timeLineStore.addModule(selectedModuleId, selectedGroupId, position)
           .then(() =>
-            this.props.timeLineStore.patchGroupsModules(
+            this.props.timeLineStore.updateModule(
               { position },
               null,
               duration,

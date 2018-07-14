@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+const _ = require('lodash');
 const {
   execQuery,
   beginTransaction,
@@ -7,6 +8,22 @@ const {
 } = require('./database');
 const modules = require('./modules');
 
+const GET_TIME_LINE_QUERY = `
+  SELECT \`groups\`.id,
+    \`groups\`.group_name,
+    \`groups\`.starting_date,
+    running_modules.duration,
+    running_modules.id AS running_module_id,
+    running_modules.position,
+    modules.module_name,
+    modules.color,
+    modules.git_repo,
+    modules.optional
+    FROM \`groups\`
+    INNER JOIN running_modules ON running_modules.group_id = \`groups\`.id
+    INNER JOIN modules ON running_modules.module_id = modules.id
+    WHERE \`groups\`.archived=0
+    ORDER BY \`groups\`.starting_date, running_modules.position`;
 const GET_RUNNING_MODULES_QUERY =
   'SELECT * FROM running_modules';
 const GET_RUNNING_MODULE_BY_ID =
@@ -19,6 +36,30 @@ const INSERT_RUNNING_MODULE =
   'INSERT INTO running_modules (module_id, group_id, duration, position, notes) VALUES(?,?,?,?,?)';
 
 const resequenceModules = mods => mods.map((mod, index) => ({ ...mod, position: index }));
+
+async function getTimeline(con) {
+  const rows = await execQuery(con, GET_TIME_LINE_QUERY);
+  const grouped = _.groupBy(rows, row => row.group_name);
+  return Object.keys(grouped)
+    .reduce((acc, groupName) => {
+      let mods = grouped[groupName];
+      const { id: group_id, starting_date } = mods[0];
+      mods = mods.map(m => ({
+        duration: m.duration,
+        git_repo: m.git_repo,
+        module_name: m.module_name,
+        position: m.position,
+        running_module_id: m.running_module_id,
+        color: m.color,
+      }));
+      acc[groupName] = {
+        group_id,
+        starting_date,
+        modules: mods,
+      };
+      return acc;
+    }, {});
+}
 
 function getRunningModuleById(con, runningId) {
   const sql = GET_RUNNING_MODULE_BY_ID;
@@ -108,7 +149,6 @@ async function deleteRunningModule(con, groupId, position) {
   const existingMods = await getRunningModules(con, groupId);
   let updatedMods = existingMods.filter(mod => mod.position !== position);
   updatedMods = resequenceModules(updatedMods);
-
   return bulkUpdateRunningsModules(con, existingMods, updatedMods, groupId);
 }
 
@@ -156,8 +196,9 @@ async function splitRunningModule(con, groupId, position) {
   };
 
   let updatedMods = [...existingMods];
+  updatedMods[position] = { ...updatedMods[position] };
   updatedMods[position].duration -= newMod.duration;
-  existingMods.splice(position + 1, 0, newMod);
+  updatedMods.splice(position + 1, 0, newMod);
   updatedMods = resequenceModules(updatedMods);
 
   return bulkUpdateRunningsModules(con, existingMods, updatedMods, groupId);
@@ -180,6 +221,7 @@ function deleteTeacher(con, moduleId, userId) {
 }
 
 module.exports = {
+  getTimeline,
   getRunningModuleById,
   getRunningModules,
   addRunningModule,

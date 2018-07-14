@@ -73,11 +73,20 @@ export default class GlobalStore {
   @action
   updateCurrentUser = async (email, linkedInName) => {
     const { id } = this.currentUser;
+    if (!email && !linkedInName) {
+      return;
+    }
+
+    const updates = {};
+    if (email) {
+      updates.email = email;
+    }
+    if (linkedInName) {
+      updates.linkedInName = linkedInName;
+    }
+
     try {
-      await fetchJSON(`/api/user/${id}`, 'PATCH', {
-        email,
-        linkedInName,
-      });
+      await fetchJSON(`/api/user/${id}`, 'PATCH', updates);
     } catch (error) {
       this.setLastError(error);
     }

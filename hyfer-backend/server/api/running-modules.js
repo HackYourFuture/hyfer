@@ -12,6 +12,16 @@ const handleError = require('./error')('running_modules');
 // refrain from trying to get them from the database
 const INCLUDE_ATTENDANCES = false;
 
+async function getTimeline(req, res) {
+  try {
+    const con = await getConnection(req, res);
+    const timeline = await db.getTimeline(con);
+    res.json(timeline);
+  } catch (err) {
+    handleError(err, res);
+  }
+}
+
 function getRunningModules(req, res) {
   const groupId = +req.params.groupId;
   getConnection(req, res)
@@ -83,42 +93,53 @@ async function getRunningModuleDetails(req, res) {
   }
 }
 
-function addRunningModule(req, res) {
-  const moduleId = +req.params.moduleId;
-  const groupId = +req.params.groupId;
-  const position = +req.params.position;
-  getConnection(req, res)
-    .then(con => db.addRunningModule(con, moduleId, groupId, position))
-    .then(result => res.json(result))
-    .catch(err => handleError(err, res));
+async function addRunningModule(req, res) {
+  try {
+    const { moduleId, groupId, position } = req.params;
+    const con = await getConnection(req, res);
+    await db.addRunningModule(con, +moduleId, +groupId, +position);
+    const timeline = await db.getTimeline(con);
+    res.json(timeline);
+  } catch (err) {
+    handleError(err, res);
+  }
 }
 
-function updateRunningModule(req, res) {
-  const groupId = +req.params.groupId;
-  const position = +req.params.position;
-  const updates = req.body;
-  getConnection(req, res)
-    .then(con => db.updateRunningModule(con, updates, groupId, position))
-    .then(result => res.json(result))
-    .catch(err => handleError(err, res));
+async function updateRunningModule(req, res) {
+  try {
+    const { groupId, position } = req.params;
+    const updates = req.body;
+    const con = await getConnection(req, res);
+    await db.updateRunningModule(con, updates, +groupId, +position);
+    const timeline = await db.getTimeline(con);
+    res.json(timeline);
+  } catch (err) {
+    handleError(err, res);
+  }
 }
 
-function deleteRunningModule(req, res) {
-  const groupId = +req.params.groupId;
-  const position = +req.params.position;
-  getConnection(req, res)
-    .then(con => db.deleteRunningModule(con, groupId, position))
-    .then(result => res.json(result))
-    .catch(err => handleError(err, res));
+async function deleteRunningModule(req, res) {
+  try {
+    const { groupId, position } = req.params;
+    const con = await getConnection(req, res);
+    await db.deleteRunningModule(con, +groupId, +position);
+    const timeline = await db.getTimeline(con);
+    res.json(timeline);
+  } catch (err) {
+    handleError(err, res);
+  }
 }
 
-function splitRunningModule(req, res) {
-  const groupId = +req.params.groupId;
-  const position = +req.params.position;
-  getConnection(req, res)
-    .then(con => db.splitRunningModule(con, groupId, position))
-    .then(result => res.json(result))
-    .catch(err => handleError(err, res));
+async function splitRunningModule(req, res) {
+  try {
+    const { groupId, position } = req.params;
+    const con = await getConnection(req, res);
+    await db.splitRunningModule(con, +groupId, +position);
+    const timeline = await db.getTimeline(con);
+    res.json(timeline);
+  } catch (err) {
+    handleError(err, res);
+  }
 }
 
 async function updateNotes(req, res) {
@@ -127,7 +148,7 @@ async function updateNotes(req, res) {
     const { notes } = req.body;
     const con = await getConnection(req, res);
     await db.updateNotes(con, runningId, notes);
-    const [runningModule] = await db.getRunningModuleById(con, runningId);
+    const [runningModule] = await db.getRunningModuleById(con, +runningId);
     res.json(runningModule);
   } catch (err) {
     handleError(err, res);
@@ -138,8 +159,8 @@ async function addTeacher(req, res) {
   try {
     const { runningId, userId } = req.params;
     const con = await getConnection(req, res);
-    await db.addTeacher(con, runningId, userId);
-    const teachers = await dbUsers.getTeachersByRunningModule(con, runningId);
+    await db.addTeacher(con, runningId, +userId);
+    const teachers = await dbUsers.getTeachersByRunningModule(con, +runningId);
     res.json(teachers);
   } catch (err) {
     handleError(err, res);
@@ -150,8 +171,8 @@ async function deleteTeacher(req, res) {
   try {
     const { runningId, userId } = req.params;
     const con = await getConnection(req, res);
-    await db.deleteTeacher(con, runningId, userId);
-    const teachers = await dbUsers.getTeachersByRunningModule(con, runningId);
+    await db.deleteTeacher(con, runningId, +userId);
+    const teachers = await dbUsers.getTeachersByRunningModule(con, +runningId);
     res.json(teachers);
   } catch (err) {
     handleError(err, res);
@@ -160,6 +181,7 @@ async function deleteTeacher(req, res) {
 
 const router = express.Router();
 router
+  .get('/timeline', getTimeline)
   .get('/:groupId', hasRole('teacher'), getRunningModules)
   .get('/details/:runningId', hasRole('teacher|student'), getRunningModuleDetails)
   .patch('/update/:groupId/:position', hasRole('teacher'), updateRunningModule)
