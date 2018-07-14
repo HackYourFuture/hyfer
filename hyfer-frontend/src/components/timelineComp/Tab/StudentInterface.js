@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { inject, observer } from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import Student from './Student';
-import Teachers from './Teachers';
+import UserList from './UserList';
 import ModuleNotes from './ModuleNotes';
 
 function TabContainer(props) {
@@ -27,6 +27,8 @@ const styles = () => ({
   },
 });
 
+@inject('currentModuleStore')
+@observer
 class StudentInterface extends React.Component {
   state = {
     value: 0,
@@ -37,26 +39,31 @@ class StudentInterface extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, currentModuleStore } = this.props;
+    const { students, teachers, currentModule } = currentModuleStore;
+
+    const hasNotes = currentModule && currentModule.notes;
     const { value } = this.state;
+
     return (
       <div className={classes.root}>
         <Paper>
           <Tabs value={value} onChange={this.handleChange} >
-            <Tab label="Notes" />
-            <Tab label="Teachers" />
-            <Tab label="Students" />
+            <Tab label={hasNotes ? 'Notes*' : 'Notes'} />
+            <Tab label={`Teachers (${teachers.length})`} />
+            <Tab label={`Students (${students.length})`} />
           </Tabs>
         </Paper>
         {value === 0 && <TabContainer><ModuleNotes /></TabContainer>}
-        {value === 1 && <TabContainer><Teachers /></TabContainer>}
-        {value === 2 && <TabContainer><Student /></TabContainer>}
+        {value === 1 && <TabContainer><UserList role="teacher" /></TabContainer>}
+        {value === 2 && <TabContainer><UserList role="student" /></TabContainer>}
       </div>
     );
   }
 }
 
-StudentInterface.propTypes = {
+StudentInterface.wrappedComponent.propTypes = {
+  currentModuleStore: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
 };
 

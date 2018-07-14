@@ -94,7 +94,6 @@ export default class Attendance extends React.Component {
           <div className={styles.content_wrapper}>{content}</div>
           {buttons}
         </div>
-        {/* <CommitsInfo commits={this.state.commits} /> */}
       </div>
     );
   }

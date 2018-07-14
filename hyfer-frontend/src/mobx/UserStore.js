@@ -2,8 +2,6 @@ import { fetchJSON } from './util';
 import { observable, action, runInAction } from 'mobx';
 import stores from '.';
 
-const token = localStorage.getItem('token');
-
 export default class UserStore {
 
   @observable
@@ -15,41 +13,38 @@ export default class UserStore {
   @observable
   resetProfile = {};
 
+  @observable
+  teachers = [];
+
+  @observable
+  assignedTeachers = [];
+
   users = [];
 
   @action
   async loadUsers() {
-    const users = await fetchJSON('/api/user/all');
-    runInAction(() => {
-      this.filteredUsers = users;
-      this.users = users;
-    });
-    return;
+    try {
+      const users = await fetchJSON('/api/user/all');
+      runInAction(() => {
+        this.filteredUsers = users;
+        this.users = users;
+      });
+    } catch (err) {
+      stores.global.setLastError(err);
+    }
   }
-  @action
-  saveProfile = async (Data, loadData) => {
-    const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/user/${this.userProfile.id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + token,
-      },
-      body: JSON.stringify(Data),
-    });
 
-    if (loadData === 'loadUsers') {
-      this.loadUsers(); // this error handling is propagated
-    } else if (loadData === 'loadUser') {
-      stores.global.fetchCurrentUser();
+  @action
+  async getTeachers() {
+    try {
+      const teachers = await fetchJSON('/api/user/teachers');
+      runInAction(() => {
+        return this.teachers = teachers;
+      });
+    } catch (err) {
+      stores.global.setLastError(err);
     }
-    // throwing it in the end of the file because of the loading if it does happen an error the loading will be blocked
-    if (!res.ok) {
-      stores.global.setLastError(res);
-    }
-    else {
-      stores.global.setSuccessMessage('Your changes have been successfully saved!');
-    }
-  };
+  }
 
   @action
   searchUser = event => {
@@ -63,7 +58,6 @@ export default class UserStore {
     });
     runInAction(() => {
       this.filteredUsers = updatedList;
-
     });
   };
 
@@ -74,14 +68,15 @@ export default class UserStore {
       this.resetProfile = user;
     });
   };
+
   @action
   resetUserProfile = () => {
     runInAction(() => {
       this.userProfile = {};
       this.resetProfile = {};
     });
-
   }
+
   @action
   resetUser = () => {
     runInAction(() => {
@@ -89,6 +84,4 @@ export default class UserStore {
       this.users = [];
     });
   }
-
 }
-

@@ -39,7 +39,7 @@ export default class ClassRowComp extends Component {
           <div className={popUpStyle.popUp_window}>
             <p
               className={popUpStyle.confirm_q}
-            >{`Are you sure you want to delete ${group[0].group_name} ??`}</p>
+            >{`Are you sure you want to archive ${group[0].group_name} ??`}</p>
             <button
               className={popUpStyle.button_cancel}
               onClick={() => this.cancelArchiving()}

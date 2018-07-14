@@ -48,6 +48,37 @@ export default class CurrentModuleStore {
     });
   }
 
+  addTeacher = async (moduleId, teacherId) => {
+    try {
+      const teachers = await fetchJSON(`/api/running/teacher/${moduleId}/${teacherId}`, 'POST');
+      runInAction(() => this.teachers = teachers);
+    } catch (err) {
+      stores.global.setLastError(err);
+    }
+  }
+
+  deleteTeacher = async (moduleId, userId) => {
+    try {
+      const teachers = await fetchJSON(`/api/running/teacher/${moduleId}/${userId}`, 'DELETE');
+      runInAction(() => this.teachers = teachers);
+    } catch (err) {
+      stores.global.setLastError(err);
+    }
+  }
+
+  saveNotes = async (notes) => {
+    try {
+      if (!this.currentModule) {
+        throw new Error('Cannot save notes: no current module set.');
+      }
+      const runningId = this.currentModule.id;
+      const runningModule = await fetchJSON(`/api/running/notes/${runningId}`, 'PATCH', { notes });
+      runInAction(() => this.currentModule = runningModule);
+    } catch (err) {
+      stores.global.setLastError(err);
+    }
+  }
+
   getHistory = async (runningModule) => {
     this.currentModule = runningModule;
     this.getReadme(this.currentModule && this.currentModule.git_repo);
@@ -83,18 +114,6 @@ export default class CurrentModuleStore {
     });
   }
 
-  saveNotes = async (notes) => {
-    try {
-      if (!this.currentModule) {
-        throw new Error('Cannot save notes: no current module set.');
-      }
-      const runningId = this.currentModule.id;
-      await fetchJSON(`/api/running/notes/${runningId}`, 'PATCH', { notes });
-    } catch (err) {
-      stores.global.setLastError(err);
-    }
-  }
-
   getReadme = async (repoName) => {
     if (!repoName) {
       this.readme = null;
@@ -111,6 +130,7 @@ export default class CurrentModuleStore {
       this.readme = { repoName, html };
     });
   }
+
   @action
   async fetchCurrentModuleUsers(group_name) {
     const token = localStorage.getItem('token');

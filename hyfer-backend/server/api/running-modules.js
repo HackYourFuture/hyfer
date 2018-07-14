@@ -8,6 +8,9 @@ const { getConnection } = require('./connection');
 const { hasRole } = require('../auth/auth-service');
 const handleError = require('./error')('running_modules');
 
+// Until we have implemented attendances in the frontend
+// refrain from trying to get them from the database
+const INCLUDE_ATTENDANCES = false;
 
 function getRunningModules(req, res) {
   const groupId = +req.params.groupId;
@@ -49,19 +52,22 @@ async function getRunningModuleDetails(req, res) {
     }
 
     let students = await dbUsers.getUsersByGroup(con, runningModule.group_id);
-    const promises = students.map(student =>
-      dbHistory.getStudentHistory(con, runningId, student.id));
-    const histories = await Promise.all(promises);
-    students = students.map((student, index) => {
-      const { attendance, homework } = normalizeHistory(runningModule.duration, histories[index]);
-      return Object.assign({}, student, {
-        history: {
-          duration: runningModule.duration,
-          attendance,
-          homework,
-        },
+
+    if (INCLUDE_ATTENDANCES) {
+      const promises = students.map(student =>
+        dbHistory.getStudentHistory(con, runningId, student.id));
+      const histories = await Promise.all(promises);
+      students = students.map((student, index) => {
+        const { attendance, homework } = normalizeHistory(runningModule.duration, histories[index]);
+        return Object.assign({}, student, {
+          history: {
+            duration: runningModule.duration,
+            attendance,
+            homework,
+          },
+        });
       });
-    });
+    }
 
     const teachers = await dbUsers.getTeachersByRunningModule(con, runningId);
 
@@ -77,12 +83,12 @@ async function getRunningModuleDetails(req, res) {
   }
 }
 
-function addModuleToRunningModules(req, res) {
+function addRunningModule(req, res) {
   const moduleId = +req.params.moduleId;
   const groupId = +req.params.groupId;
   const position = +req.params.position;
   getConnection(req, res)
-    .then(con => db.addModuleToRunningModules(con, moduleId, groupId, position))
+    .then(con => db.addRunningModule(con, moduleId, groupId, position))
     .then(result => res.json(result))
     .catch(err => handleError(err, res));
 }
@@ -115,13 +121,41 @@ function splitRunningModule(req, res) {
     .catch(err => handleError(err, res));
 }
 
-function updateNotes(req, res) {
-  const runningId = +req.params.id;
-  const { notes } = req.body;
-  getConnection(req, res)
-    .then(con => db.updateNotes(con, runningId, notes))
-    .then(() => res.json({ notes }))
-    .catch(err => handleError(err, res));
+async function updateNotes(req, res) {
+  try {
+    const { runningId } = req.params;
+    const { notes } = req.body;
+    const con = await getConnection(req, res);
+    await db.updateNotes(con, runningId, notes);
+    const [runningModule] = await db.getRunningModuleById(con, runningId);
+    res.json(runningModule);
+  } catch (err) {
+    handleError(err, res);
+  }
+}
+
+async function addTeacher(req, res) {
+  try {
+    const { runningId, userId } = req.params;
+    const con = await getConnection(req, res);
+    await db.addTeacher(con, runningId, userId);
+    const teachers = await dbUsers.getTeachersByRunningModule(con, runningId);
+    res.json(teachers);
+  } catch (err) {
+    handleError(err, res);
+  }
+}
+
+async function deleteTeacher(req, res) {
+  try {
+    const { runningId, userId } = req.params;
+    const con = await getConnection(req, res);
+    await db.deleteTeacher(con, runningId, userId);
+    const teachers = await dbUsers.getTeachersByRunningModule(con, runningId);
+    res.json(teachers);
+  } catch (err) {
+    handleError(err, res);
+  }
 }
 
 const router = express.Router();
@@ -130,8 +164,10 @@ router
   .get('/details/:runningId', hasRole('teacher|student'), getRunningModuleDetails)
   .patch('/update/:groupId/:position', hasRole('teacher'), updateRunningModule)
   .patch('/split/:groupId/:position', hasRole('teacher'), splitRunningModule)
-  .patch('/add/:moduleId/:groupId/:position', hasRole('teacher'), addModuleToRunningModules)
+  .patch('/add/:moduleId/:groupId/:position', hasRole('teacher'), addRunningModule)
   .delete('/:groupId/:position', hasRole('teacher'), deleteRunningModule)
-  .patch('/notes/:id', hasRole('teacher'), updateNotes);
+  .post(('/teacher/:runningId/:userId'), hasRole('teacher'), addTeacher)
+  .delete('/teacher/:runningId/:userId', hasRole('teacher'), deleteTeacher)
+  .patch('/notes/:runningId', hasRole('teacher'), updateNotes);
 
 module.exports = router;

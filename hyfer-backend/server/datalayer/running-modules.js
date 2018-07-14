@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 const {
   execQuery,
   beginTransaction,
@@ -6,12 +7,18 @@ const {
 } = require('./database');
 const modules = require('./modules');
 
-const GET_RUNNING_MODULES_QUERY = 'SELECT * FROM running_modules';
-const GET_ALL_FROM_RUNNING_MODULES_QUERY = 'SELECT * FROM running_modules';
-const DELETE_ALL_RUNNING_MODULES_QUERY = 'DELETE FROM running_modules WHERE group_id=?';
-const INSERT_RUNNING_MODULES_QUERY = `INSERT INTO running_modules 
-  (module_id, group_id, duration, position) VALUES ?`;
-const GET_RUNNING_MODULE_BY_ID = 'SELECT * FROM running_modules WHERE id=?';
+const GET_RUNNING_MODULES_QUERY =
+  'SELECT * FROM running_modules';
+const GET_RUNNING_MODULE_BY_ID =
+  'SELECT * FROM running_modules WHERE id=?';
+const UPDATE_RUNNING_MODULE =
+  'UPDATE running_modules SET duration=?, position=?, notes=? WHERE id=?';
+const DELETE_RUNNING_MODULE =
+  'DELETE FROM running_modules WHERE id=?';
+const INSERT_RUNNING_MODULE =
+  'INSERT INTO running_modules (module_id, group_id, duration, position, notes) VALUES(?,?,?,?,?)';
+
+const resequenceModules = mods => mods.map((mod, index) => ({ ...mod, position: index }));
 
 function getRunningModuleById(con, runningId) {
   const sql = GET_RUNNING_MODULE_BY_ID;
@@ -23,97 +30,137 @@ function getRunningModules(con, groupId) {
   return execQuery(con, sql, [groupId]);
 }
 
-function getAllFromRunningModules(con, groupId) {
-  const sql = `${GET_ALL_FROM_RUNNING_MODULES_QUERY} WHERE group_id=? ORDER BY position`;
-  return execQuery(con, sql, [groupId]);
-}
+async function bulkUpdateRunningsModules(con, existingMods, updatedMods, groupId) {
+  const inserts = updatedMods.filter(mod => mod.id === undefined);
+  const deletes = existingMods.filter(mod1 => !updatedMods.find(mod2 => mod1.id === mod2.id));
+  const updates = updatedMods.filter((mod) => {
+    const existingMod = existingMods.find(mod2 => mod.id === mod2.id);
+    if (existingMod == null) {
+      return false;
+    }
+    return existingMod.duration !== mod.duration
+      || existingMod.position !== mod.position
+      || existingMod.notes !== mod.notes;
+  });
 
-function insertRunningModuleAtIndex(runningMods, targetMod, position) {
-  if (position >= 0 && position <= runningMods.length) {
-    runningMods.splice(position, 0, targetMod);
-  } else {
-    runningMods.push(targetMod);
-  }
-}
-
-function resequenceRunningModules(runningMods) {
-  return runningMods.map((module, position) => Object.assign({}, module, { position }));
-}
-
-function makeValueList(runningModules) {
-  return runningModules.reduce((values, mod) => {
-    values.push([
-      mod.module_id,
-      mod.group_id,
-      mod.duration,
-      mod.position,
+  const insertPromises = inserts.map((mod) => {
+    const {
+      module_id,
+      group_id,
+      duration,
+      position,
+      notes,
+    } = mod;
+    return execQuery(con, INSERT_RUNNING_MODULE, [
+      module_id,
+      group_id,
+      duration,
+      position,
+      notes || '',
     ]);
-    return values;
-  }, []);
-}
+  });
 
-async function replaceRunningModules(con, runningMods, groupId) {
-  try {
-    await beginTransaction(con);
-    await execQuery(con, DELETE_ALL_RUNNING_MODULES_QUERY, groupId);
-    const values = makeValueList(runningMods);
-    await execQuery(con, INSERT_RUNNING_MODULES_QUERY, [values]);
-    await commit(con);
-    return getAllFromRunningModules(con, groupId);
-  } catch (err) {
-    await rollback(con);
-    throw err;
+  const deletePromises = deletes.map(mod => execQuery(con, DELETE_RUNNING_MODULE, [mod.id]));
+
+  const updatePromises = updates.map((mod) => {
+    const {
+      duration,
+      position,
+      notes,
+      id,
+    } = mod;
+    return execQuery(con, UPDATE_RUNNING_MODULE, [
+      duration,
+      position,
+      notes || '',
+      id,
+    ]);
+  });
+
+  const allPromises = [...insertPromises, ...deletePromises, ...updatePromises];
+  if (allPromises.length > 0) {
+    try {
+      await beginTransaction(con);
+      await Promise.all(updatePromises);
+      await commit(con);
+    } catch (err) {
+      await rollback(con);
+      throw err;
+    }
   }
-}
 
-async function addModuleToRunningModules(con, moduleId, groupId, position) {
-  const [module] = await modules.getModule(con, moduleId);
-  const newMod = {
-    description: module.description,
-    module_id: moduleId,
-    group_id: groupId,
-    duration: module.default_duration,
-    teacher1_id: null,
-    teacher2_id: null,
-  };
-  const runningMods = await getAllFromRunningModules(con, groupId);
-  insertRunningModuleAtIndex(runningMods, newMod, position);
-  const resequencedModules = resequenceRunningModules(runningMods);
-  return replaceRunningModules(con, resequencedModules, groupId);
+  return getRunningModules(con, groupId);
 }
 
 async function updateRunningModule(con, updates, groupId, position) {
-  const runningMods = await getAllFromRunningModules(con, groupId);
-  const targetMod = runningMods[position];
-  runningMods.splice(position, 1);
-  Object.assign(targetMod, updates);
-  insertRunningModuleAtIndex(
-    runningMods,
-    targetMod,
-    updates.position || position
-  );
-  const resequencedModules = resequenceRunningModules(runningMods);
-  return replaceRunningModules(con, resequencedModules, groupId);
+  const existingMods = await getRunningModules(con, groupId);
+  const targetMod = { ...existingMods[position], ...updates };
+
+  let updatedMods = [...existingMods];
+  updatedMods.splice(position, 1);
+  updatedMods.splice(updates.position || position, 0, targetMod);
+  updatedMods = resequenceModules(updatedMods);
+
+  return bulkUpdateRunningsModules(con, existingMods, updatedMods, groupId);
 }
 
 async function deleteRunningModule(con, groupId, position) {
-  let runningMods = await getAllFromRunningModules(con, groupId);
-  runningMods = runningMods.filter(mod => mod.position !== position);
-  const resequencedModules = resequenceRunningModules(runningMods);
-  return replaceRunningModules(con, resequencedModules, groupId);
+  const existingMods = await getRunningModules(con, groupId);
+  let updatedMods = existingMods.filter(mod => mod.position !== position);
+  updatedMods = resequenceModules(updatedMods);
+
+  return bulkUpdateRunningsModules(con, existingMods, updatedMods, groupId);
+}
+
+async function addRunningModule(con, moduleId, groupId, position) {
+  const [module] = await modules.getModule(con, moduleId);
+  const { id: module_id, default_duration: duration } = module;
+
+  const newMod = {
+    module_id,
+    group_id: groupId,
+    duration,
+    position,
+    notes: '',
+  };
+
+  const existingMods = await getRunningModules(con, groupId);
+  let updatedMods = [...existingMods];
+  updatedMods.splice(position, 0, newMod);
+  updatedMods = resequenceModules(updatedMods);
+
+  await bulkUpdateRunningsModules(con, existingMods, updatedMods);
+  return getRunningModules(con, groupId);
 }
 
 async function splitRunningModule(con, groupId, position) {
-  const runningMods = await getAllFromRunningModules(con, groupId);
-  const newMod = Object.assign({}, runningMods[position]);
-  if (newMod.duration === 1) {
+  const existingMods = await getRunningModules(con, groupId);
+
+  const {
+    module_id,
+    group_id,
+    notes,
+    duration,
+  } = existingMods[position];
+
+  // Can't split a one week module
+  if (duration <= 1) {
     return Promise.resolve();
   }
-  newMod.duration = Math.floor(newMod.duration / 2);
-  runningMods[position].duration -= newMod.duration;
-  runningMods.splice(position, 0, newMod);
-  resequenceRunningModules(runningMods);
-  return replaceRunningModules(con, runningMods, groupId);
+
+  const newMod = {
+    module_id,
+    group_id,
+    duration: Math.floor(duration / 2),
+    notes,
+  };
+
+  let updatedMods = [...existingMods];
+  updatedMods[position].duration -= newMod.duration;
+  existingMods.splice(position + 1, 0, newMod);
+  updatedMods = resequenceModules(updatedMods);
+
+  return bulkUpdateRunningsModules(con, existingMods, updatedMods, groupId);
 }
 
 async function updateNotes(con, runningId, notes) {
@@ -121,12 +168,25 @@ async function updateNotes(con, runningId, notes) {
   return execQuery(con, sql, [notes, runningId]);
 }
 
+async function addTeacher(con, currentModule, userId) {
+  const query = `INSERT INTO running_module_teachers SET running_module_id=${currentModule} ,
+        user_id = (SELECT id FROM users WHERE users.id=${userId})`;
+  const { insertId } = await execQuery(con, query);
+  return insertId;
+}
+
+function deleteTeacher(con, moduleId, userId) {
+  return execQuery(con, `DELETE FROM running_module_teachers WHERE running_module_id=${moduleId} AND user_id=${userId};`);
+}
+
 module.exports = {
   getRunningModuleById,
   getRunningModules,
-  addModuleToRunningModules,
+  addRunningModule,
   updateRunningModule,
   deleteRunningModule,
   splitRunningModule,
   updateNotes,
+  addTeacher,
+  deleteTeacher,
 };
