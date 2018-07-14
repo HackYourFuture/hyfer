@@ -25,6 +25,17 @@ async function getUsers(req, res) {
   }
 }
 
+async function getLastEvent(req, res) {
+  try {
+    const con = await getConnection(req, res);
+    const result = await db.getLastEvent(con, req.params.eventName);
+    res.json(result);
+  } catch (err) {
+    handleError(err, res);
+  }
+}
+
+
 async function getTeachers(req, res) {
   try {
     const con = await getConnection(req, res);
@@ -68,6 +79,7 @@ const router = express.Router();
 router
   .get('/', isAuthenticated(), getCurrentUser)
   .get('/teachers/:id', hasRole('teacher|student'), getTeachersByRunningModule)
+  .get('/event/:eventName', hasRole('teacher'), getLastEvent)
   .get('/all', hasRole('teacher'), getUsers)
   .get('/teachers', hasRole('teacher'), getTeachers)
   .get('/group/:groupId', hasRole('teacher|student'), getRunningUsersByGroup)

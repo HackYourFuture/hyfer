@@ -75,6 +75,18 @@ function updateUser(con, id, data) {
   return execQuery(con, UPDATE_USER, [email, linkedInName, id]);
 }
 
+function getLastEvent(con, eventName) {
+  return execQuery(
+    con,
+    `SELECT username, date_created FROM events
+     WHERE  date_created = (
+       SELECT MAX(date_created) 
+       FROM events 
+       WHERE event_name = ?)
+;`, eventName
+  );
+}
+
 module.exports = {
   getUsers,
   getUserByUsername,
@@ -87,4 +99,5 @@ module.exports = {
   bulkUpdateUsers,
   bulkUpdateMemberships,
   getTeachers,
+  getLastEvent,
 };
