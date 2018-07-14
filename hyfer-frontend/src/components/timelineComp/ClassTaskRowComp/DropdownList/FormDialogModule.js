@@ -26,7 +26,7 @@ const styles = theme => ({
     async getModules() {
       try {
         const token = localStorage.getItem('token');
-        const data = await fetch('/api/modules', {
+        const data = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/modules`, {
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + token,

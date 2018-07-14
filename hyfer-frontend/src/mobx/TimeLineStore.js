@@ -132,9 +132,9 @@ export default class TimeLineStore {
 
   removeModule = async (chosenModule) => {
     this.dataFetched = false;
-    const { id, position } = chosenModule;
+    const { group_id, position } = chosenModule;
     try {
-      await fetchJSON(`/api/running/${id}/${position}`, 'DELETE');
+      await fetchJSON(`/api/running/${group_id}/${position}`, 'DELETE');
     } catch (error) {
       stores.global.setLastError(error);
     }
