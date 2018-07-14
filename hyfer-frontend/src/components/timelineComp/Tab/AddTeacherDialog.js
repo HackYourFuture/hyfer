@@ -44,8 +44,6 @@ class AddTeacherDialog extends Component {
       return null;
     }
 
-    console.log(this.props.userStore.teachers.length);
-
     return (
       <Fragment>
         <Dialog

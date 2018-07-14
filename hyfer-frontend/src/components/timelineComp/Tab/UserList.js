@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import { inject, observer } from 'mobx-react';
-import UserCard from './UserCard';
+import UserCard from '../../Users/UserCard';
 import AddTeacherDialog from './AddTeacherDialog';
 
 const styles = () => ({
@@ -46,7 +46,7 @@ class UserList extends React.Component {
 
     return (
       <div className={classes.container}>
-        {users.map(user => <UserCard key={user.id} user={user} />)}
+        {users.map(user => <UserCard key={user.id} user={user} showDeleteButton={role === 'teacher'} />)}
         {role === 'teacher' &&
           <React.Fragment>
             <AddTeacherDialog

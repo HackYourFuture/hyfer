@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styles from '../../assets/styles/users.css';
 // import store from '../../store/UserStore';
-import User from './User';
+import UserCard from './UserCard';
 import { inject, observer } from 'mobx-react';
 
 const HEADINGS = {
@@ -22,7 +22,7 @@ export class UserList extends Component {
           {this.props.userStore.filteredUsers.map(user => {
             if (user.role === role) {
               return (
-                <User key={user.id} user={user} />
+                <UserCard key={user.id} user={user} />
               );
             }
             return null;
