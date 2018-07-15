@@ -42,7 +42,7 @@
   top: 55px;
   z-index: 4;
   display: flex;
-  right: 32px;
+  left: 32px;
   flex-direction: column;
 }
 

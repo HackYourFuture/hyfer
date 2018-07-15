@@ -1,15 +1,23 @@
 import { inject, observer } from 'mobx-react';
 import React, { Component, Fragment } from 'react';
-//import RoundButton from '../../../Helpers/RoundButton/RoundButton';
-//import AddDropdownList from './AddDropdownList/AddDropdownList';
-import classes from './button.css';
+import { withStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import AddClassModal from './AddDropdownList/AddClassModal/AddClassModal';
 
+const styles = () => ({
+  buttonsWrapper: {
+    marginRight: 50,
+    zIndex: 3,
+  },
+  'buttonsWrapper > *': {
+    marginTop: 5,
+    display: 'inline-block',
+  },
+});
 
 @inject('global')
 @observer
-export default class ClassButton extends Component {
+class ClassButton extends Component {
   state = {
     isDialogOpen: false,
   };
@@ -23,22 +31,22 @@ export default class ClassButton extends Component {
   };
 
   render() {
+    const { classes, global } = this.props;
+    const { isTeacher } = global;
     let addGroupBtn = null;
-    const { isTeacher } = this.props.global;
     if (isTeacher) {
       addGroupBtn = (
         <Fragment>
           <Button
             onClick={this.openMenu}
-            // className={classes.btn}
             title="Add a class"
+            variant="contained"
             color="secondary">
             ADD CLASS
           </Button>
           <AddClassModal
             open={this.state.isDialogOpen}
-            onClose={this.closeMenu}
-          // isToggled={this.state.isToggled}
+            onClose={this.closeMenu}          // isToggled={this.state.isToggled}
           />
         </Fragment>
       );
@@ -48,10 +56,12 @@ export default class ClassButton extends Component {
         {addGroupBtn}
         <Button
           onClick={this.props.clickHandler}
-          color="secondary"
+          variant="contained"
           title="Go to today"
         >Today</Button>
       </div>
     );
   }
 }
+
+export default withStyles(styles)(ClassButton);
