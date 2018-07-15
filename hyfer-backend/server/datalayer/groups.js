@@ -18,7 +18,7 @@ const ADD_GROUP_QUERY = 'INSERT INTO `groups` SET ?';
 const UPDATE_GROUP_QUERY = 'UPDATE `groups` SET ? WHERE id = ?';
 const DELETE_GROUP_QUERY = 'DELETE FROM `groups` WHERE id = ?';
 
-const ADD_RUNNING_MODULES_QUERY = 'INSERT INTO running_modules (description, module_id, group_id, duration, position) VALUES';
+const ADD_RUNNING_MODULES_QUERY = 'INSERT INTO running_modules ( module_id, group_id, duration, position) VALUES';
 
 function getGroupsByGroupName(con, groupName) {
   return execQuery(con, `${GET_GROUPS_BY_GROUP_NAME} WHERE groups.group_name=?`, groupName);
@@ -48,7 +48,6 @@ function deleteGroup(con, id) {
 
 function makeRunningModules(groupId, mods) {
   return mods.map((module, position) => ({
-    description: module.description,
     module_id: module.id,
     group_id: groupId,
     duration: module.default_duration,
@@ -60,7 +59,6 @@ function makeValueList(runningModules) {
   let str = '';
   runningModules.forEach((module) => {
     const {
-      description,
       module_id,
       group_id,
       duration,
@@ -70,7 +68,7 @@ function makeValueList(runningModules) {
       str += ',';
     }
     // eslint-disable-next-line camelcase
-    str += `('${description}',${module_id},${group_id},${duration},${position})`;
+    str += `(${module_id},${group_id},${duration},${position})`;
   });
   return str;
 }
