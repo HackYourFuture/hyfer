@@ -37,6 +37,9 @@ export default class CurrentModuleStore {
   @observable
   teachers = [];
 
+  @observable
+  currentWeek = "";
+
   async getRunningModuleDetails(runningId) {
     const details = await fetchJSON(`/api/running/details/${runningId}`);
     runInAction(() => {
@@ -162,6 +165,9 @@ export default class CurrentModuleStore {
       }
       runInAction(() => {
         this.getRunningModuleDetails(response[index].id);
+        const date = computedDate.diff(currentDate, "weeks");
+        const start = response[index].duration - date;
+        this.currentWeek = start;
       });
     }
   }
