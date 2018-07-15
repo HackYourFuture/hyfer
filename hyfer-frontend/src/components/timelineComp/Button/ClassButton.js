@@ -1,20 +1,25 @@
 import { inject, observer } from 'mobx-react';
 import React, { Component, Fragment } from 'react';
 //import RoundButton from '../../../Helpers/RoundButton/RoundButton';
-import AddDropdownList from './AddDropdownList/AddDropdownList';
+//import AddDropdownList from './AddDropdownList/AddDropdownList';
 import classes from './button.css';
 import { Button } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import AddClassModal from './AddDropdownList/AddClassModal/AddClassModal';
+
 
 @inject('global')
 @observer
 export default class ClassButton extends Component {
   state = {
-    isToggled: false,
+    isDialogOpen: false,
   };
 
-  toggleDropdown = () => {
-    this.setState({ isToggled: !this.state.isToggled });
+  openMenu = () => {
+    this.setState({ isDialogOpen: true });
+  };
+
+  closeMenu = () => {
+    this.setState({ isDialogOpen: false });
   };
 
   render() {
@@ -23,18 +28,17 @@ export default class ClassButton extends Component {
     if (isTeacher) {
       addGroupBtn = (
         <Fragment>
-
           <Button
-            onClick={this.toggleDropdown}
-            mini
+            onClick={this.openMenu}
+            // className={classes.btn}
             title="Add a class"
-            variant="fab" color="secondary" aria-label="edit">
-            <AddIcon />
+            color="secondary">
+            ADD CLASS
           </Button>
-          <AddDropdownList
-            items={this.props.items}
-            groups={this.props.groups}
-            isToggled={this.state.isToggled}
+          <AddClassModal
+            open={this.state.isDialogOpen}
+            onClose={this.closeMenu}
+          // isToggled={this.state.isToggled}
           />
         </Fragment>
       );

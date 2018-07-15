@@ -2,6 +2,10 @@
   margin: 2rem 0;
   position: relative;
 }
+.formControl {
+  margin: theme.spacing.unit;
+  width: 300px;
+}
 
 .label {
   margin-bottom: 1rem;
