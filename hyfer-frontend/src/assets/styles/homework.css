@@ -1,0 +1,272 @@
+
+.homeworkPage {
+    padding: 0vh 5vw;
+    min-height: 400px;
+}
+
+.navBar {
+    margin-bottom: 8vh;
+    margin-top: -2vh;
+}
+
+.navLink {
+    padding: 1.5vh 1.5vw;
+    border: 2px solid;
+    color: #fff;
+    margin-right: 0.5vw;
+    font-size: 110%;
+    background-color:#3399cc;
+}
+
+
+.navLink:hover {
+    background-color: #22bb74;
+}
+
+.navLinkActive {
+    background-color:rgb(170, 34, 141);
+}
+
+.classPage {
+    text-align: center;
+}
+
+.classPage h1 {
+    font-family: Verdana;
+    color: green;
+    font-size: 200%;
+    margin-top: 5vh;
+}
+
+.classPage h2 {
+    font-family: Verdana;
+    color: purple;
+    font-size: 150%;
+}
+
+.addAssignmentForm {
+    margin: auto;
+    width: 80%;
+    margin-top: 5vh;
+}
+
+.addAssignmentForm input {
+    margin: 0vh 1vw;
+    padding: 0.5vh 0.5vw;
+    border-radius: 5%;
+}
+
+.addAssignmentForm button {
+    margin-top: 2vh;
+    padding: 2vh 1vw;
+}
+
+.classPage button {
+    padding: 1vh 1vw;
+    cursor: pointer;
+    border-radius: 3px;
+    color: white;
+    font-weight: bold;
+    font-size: 90%;
+    font-family: Verdana;
+    background: linear-gradient(#3399cc, rgb(101, 173, 221)) ;
+}
+
+.homework span {
+    color: green;
+    font-weight: bold;
+    font-size: 110%;
+}
+
+.assignmentsContainer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 7vh;
+}
+
+.selectModule{
+    width: 20%;
+    height: 40px;
+    margin-right: 2%;
+    display: block;
+    float: left;
+}
+
+.title{
+    width: 25%;
+    height: 40px;
+    margin-right: 2%;
+    padding: 0.5vh 0.5vw;
+    display: block;
+    float: left;
+}
+
+.githubLink{
+    width: 25%;
+    height: 40px;
+    margin-right: 0.5%;
+    padding: 0.5vh 0.5vw;
+    display: block;
+    float: left;
+}
+
+.deadline{
+    width: 100%;
+    display: block;
+    height: 40px;
+    margin-right: 2%;
+    margin-top: 4%;
+    margin-bottom: 4%;
+    float: left;
+}
+
+.cancelButton, 
+.saveButton{
+    width: 10% ;
+    margin: 1vh 1vw;
+}
+
+.assignmentDiv h3 {
+   display: block;
+}
+
+
+.assignmentDiv {
+    margin: 1vh 0vw;
+    width: 45%;
+    position: relative;
+}
+
+
+.assignmentDiv img {
+    display: block;
+    width: 20%;
+    margin: -2vh 0vw 2vh 0vw;
+    padding: 0.5vh;
+    border: 2px;
+    border-radius: 50%;
+}
+
+.assignmentDiv textarea {
+    width: 100%;
+    margin-top: 4vh;
+    padding: 3vh 2vw;
+    font-size: 110%;
+}
+
+.assignmentDiv a{
+    font-size: 120%;
+}
+
+.submission {
+    border-radius: 2%;
+    background: white;
+   -webkit-box-shadow: 0px -3px 10px 3px rgba(28, 78, 47, 0.65);
+   -moz-box-shadow: 0px -3px 10px 3px rgba(28, 78, 47, 0.65);
+    box-shadow: 0px -3px 10px 3px rgba(28, 78, 47, 0.65);
+    padding: 2vh 3vw 4vh 3vw;
+    margin: 5vh 0vw;
+    position: relative;
+}
+
+.submission h3 {
+    text-align: start;
+    color: purple;
+}
+
+
+.timestamp {
+    position: absolute;
+    top: 1vh;
+    right: 1.5vw;
+    font-size: 80%;
+    color: gray;
+}
+
+.assignReviewer {
+    width: 60%;
+    position: absolute;
+    top: 7vh;
+    right: 3vw;
+    margin: auto;
+}
+
+.assignReviewer button,
+.commentsDiv button {
+    padding: 1vh 1vw;
+    cursor: pointer;
+}
+
+.assignReviewer select {
+    width: 40%;
+    height: 40px;  
+}
+
+.commentsDiv {
+    margin-top: 2vh;
+}
+
+.submitBtn {
+    padding: 1vh 2vw;
+    cursor: pointer;
+}
+
+.expandBtn {
+    position: absolute;
+    bottom: 5vh;
+    right: 3vw;
+}
+
+.hideBtn {
+    position: absolute;
+    top: 23vh;
+    right: 3vw; 
+}
+
+.submitCommentBtn {
+    margin-top: 1vh;
+}
+
+.review {
+    padding: 0.5vh 1.5vw;
+    width: 100%;
+   -webkit-box-shadow: 0px -1px 5px 0px rgba(31, 26, 26, 0.65);
+   -moz-box-shadow: 0px -1px 5px 0px rgba(49, 40, 40, 0.65);
+    box-shadow: 0px -1px 5px 0px purple;
+    margin-top: 5vh;
+    position: relative;
+}
+
+.submitForm {
+    margin: 1vh 0vw;
+}
+
+.submitForm input {
+    padding: 1vh 2vw;
+    width: 50%;
+    font-size: 110%;
+}
+
+.submitForm button {
+    padding: 1vh 1vw;
+    margin: 1vh 1vw;
+    cursor: pointer;
+}
+
+.assignReviewer button {
+    float: right;
+}
+
+
+.saveButtonReviewer,
+.cancelButtonReviewer{
+    margin: 1vh 0vw 1vh 1vw;
+}
+
+.assignReviewer button {
+    float: right;
+}
+
+.newAssignment {
+   height: 8vh;
+}

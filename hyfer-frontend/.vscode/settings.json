@@ -1,0 +1,23 @@
+{
+  "javascript.implicitProjectConfig.experimentalDecorators": true,
+  "editor.detectIndentation": false,
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "cSpell.words": [
+    "Dropdown",
+    "Droppable",
+    "ISSTUDENT",
+    "ISTEACHER",
+    "NOREPO",
+    "Resizable",
+    "Submitters",
+    "backend",
+    "checkboxes",
+    "cssmodules",
+    "datepicker",
+    "freecodecamp",
+    "mailto",
+    "multiline",
+    "reviewee"
+  ]
+}
