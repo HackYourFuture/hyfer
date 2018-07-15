@@ -1,12 +1,14 @@
 import { inject, observer } from 'mobx-react';
 import React, { Component, Fragment } from 'react';
-import RoundButton from '../../../Helpers/RoundButton/RoundButton';
+//import RoundButton from '../../../Helpers/RoundButton/RoundButton';
 import AddDropdownList from './AddDropdownList/AddDropdownList';
 import classes from './button.css';
+import { Button } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
 
 @inject('global')
 @observer
-export default class Button extends Component {
+export default class ClassButton extends Component {
   state = {
     isToggled: false,
   };
@@ -21,11 +23,14 @@ export default class Button extends Component {
     if (isTeacher) {
       addGroupBtn = (
         <Fragment>
-          <RoundButton
-            clickHandler={this.toggleDropdown}
-            action="+"
+
+          <Button
+            onClick={this.toggleDropdown}
+            mini
             title="Add a class"
-          />
+            variant="fab" color="secondary" aria-label="edit">
+            <AddIcon />
+          </Button>
           <AddDropdownList
             items={this.props.items}
             groups={this.props.groups}
@@ -37,11 +42,11 @@ export default class Button extends Component {
     return (
       <div className={classes.buttonsWrapper}>
         {addGroupBtn}
-        <RoundButton
-          clickHandler={this.props.clickHandler}
-          action=">"
+        <Button
+          onClick={this.props.clickHandler}
+          color="secondary"
           title="Go to today"
-        />
+        >Today</Button>
       </div>
     );
   }

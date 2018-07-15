@@ -1,7 +1,7 @@
 /* eslint react/prop-types: error */
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import Button from '../Button/Button';
+import ClassButton from '../Button/ClassButton';
 import ClassBarRowComp from '../ClassBarRowComp/ClassBarRowComp';
 import ClassTaskRowComp from '../ClassTaskRowComp/ClassTaskRowComp';
 import WeekComp from '../WeekComp/WeekComp';
@@ -82,7 +82,10 @@ export default class Timeline extends Component {
 
     this.hasRendered = true;
 
-    return (
+    return (<React.Fragment>
+      <div ref={this.buttonsContainerRef} className={classes.buttonsContainer}>
+        <ClassButton clickHandler={this.handleClickTodayMarker} />
+      </div>
       <div className="rootContainer">
         <ClassBarRowComp
           rowHeight={rowHeight}
@@ -100,10 +103,8 @@ export default class Timeline extends Component {
             </div>
           </div>
         </div>
-        <div ref={this.buttonsContainerRef} className={classes.buttonsContainer}>
-          <Button clickHandler={this.handleClickTodayMarker} />
-        </div>
       </div>
+    </React.Fragment>
     );
   }
 }
