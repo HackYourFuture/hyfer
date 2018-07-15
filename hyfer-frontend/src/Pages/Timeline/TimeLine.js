@@ -25,7 +25,7 @@ export default class TimeLine extends Component {
         <div style={{ marginBottom: '3rem' }}>
           <TimelineComp
             itemWidth={170}
-            rowHeight={70}
+            rowHeight={60}
           />
         </div>
         {this.props.global.isTeacher || this.props.global.isStudent ? <StudentInterface /> : <ModuleReadMe />}
