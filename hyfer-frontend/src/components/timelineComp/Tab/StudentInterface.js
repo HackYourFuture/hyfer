@@ -65,7 +65,7 @@ class StudentInterface extends React.Component {
     return (
       <div className={classes.root}>
         <Paper>
-          <Tabs value={value} onChange={this.handleChange} centered>
+          <Tabs value={value} onChange={this.handleChange}>
             <Tab label={hasNotes ? 'Notes*' : 'Notes'} />
             <Tab label={`Teachers (${teachers.length})`} />
             <Tab label={`Students (${students.length})`} />
