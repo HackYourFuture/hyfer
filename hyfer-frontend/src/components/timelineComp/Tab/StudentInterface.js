@@ -57,15 +57,15 @@ class StudentInterface extends React.Component {
     let title = '';
     if (currentModule) {
       title = `${group.group_name} – ${module.module_name}`;
-      if (!global.isTeacher && currentModule.duration > 1) {
-        title += `\nweek (${currentWeek} of ${currentModule.duration})`;
+      if (currentWeek && currentModule.duration > 1) {
+        title += ` – Week (${currentWeek} of ${currentModule.duration})`;
       }
     }
 
     return (
       <div className={classes.root}>
         <Paper>
-          <Tabs value={value} onChange={this.handleChange} >
+          <Tabs value={value} onChange={this.handleChange} centered>
             <Tab label={hasNotes ? 'Notes*' : 'Notes'} />
             <Tab label={`Teachers (${teachers.length})`} />
             <Tab label={`Students (${students.length})`} />

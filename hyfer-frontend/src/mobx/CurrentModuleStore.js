@@ -38,7 +38,7 @@ export default class CurrentModuleStore {
   teachers = [];
 
   @observable
-  currentWeek = "";
+  currentWeek = null;
 
   async getRunningModuleDetails(runningId) {
     const details = await fetchJSON(`/api/running/details/${runningId}`);
