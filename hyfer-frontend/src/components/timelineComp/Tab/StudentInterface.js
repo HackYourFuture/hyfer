@@ -49,12 +49,12 @@ class StudentInterface extends React.Component {
 
   render() {
     const { classes, currentModuleStore } = this.props;
-    const { students, teachers, currentModule, module, group } = currentModuleStore;
+    const { students, teachers, currentModule, module, group, currentWeek } = currentModuleStore;
 
     const hasNotes = currentModule && currentModule.notes;
     const { value } = this.state;
 
-    const title = currentModule ? `${group.group_name} – ${module.module_name}` : '';
+    const title = currentModule ? `${group.group_name} – ${module.module_name} , week (${currentWeek} of ${currentModule.duration})` : '';
 
     return (
       <div className={classes.root}>

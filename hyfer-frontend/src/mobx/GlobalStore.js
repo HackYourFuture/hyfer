@@ -34,6 +34,10 @@ export default class GlobalStore {
   get avatarUrl() {
     return this.isLoggedIn ? `https://avatars.githubusercontent.com/${this.currentUser.username}` : null;
   }
+  @computed
+  get isArchived() {
+    return this.isLoggedIn && this.currentUser.archived === 1;
+  }
 
   @action
   setLastError = (error) => { this.lastError = error; };
@@ -62,7 +66,7 @@ export default class GlobalStore {
       .then((res) => {
         runInAction(() => {
           this.currentUser = res;
-          if (this.currentUser.group_name !== null && this.isStudent) {
+          if (this.currentUser.group_name !== null && this.isStudent && !this.isArchived) {
             stores.currentModuleStore.getGroupsByGroupName(this.currentUser.group_name);
           }
         });

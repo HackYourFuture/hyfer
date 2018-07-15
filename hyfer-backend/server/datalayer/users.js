@@ -1,7 +1,7 @@
 const { execQuery } = require('./database');
 
 const GET_USERS = `
-  SELECT users.*, \`groups\`.group_name 
+  SELECT users.*, \`groups\`.group_name ,  \`groups\`.archived
   FROM users
   LEFT JOIN group_students ON users.id=group_students.user_id      
   LEFT JOIN \`groups\` ON \`groups\`.id=group_students.group_id`;
