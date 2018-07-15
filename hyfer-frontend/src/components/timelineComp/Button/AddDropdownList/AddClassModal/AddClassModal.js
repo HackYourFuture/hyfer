@@ -1,7 +1,10 @@
-import React, { Component } from 'react';
-import Modal from '../../../../../Helpers/Modal/Modal';
+import React, { Fragment, Component } from 'react';
+import {
+  Dialog, DialogContentText, DialogTitle,
+  DialogContent, Button, TextField,
+  FormControl, DialogActions,
+} from '@material-ui/core';
 import classes from './addClassModal.css';
-// import { timelineStore } from '../../../../../store/';
 import moment from 'moment';
 import { inject, observer } from 'mobx-react';
 
@@ -11,7 +14,6 @@ export default class AddClassModal extends Component {
   state = {
     classNumber: '',
     starting_date: '',
-    errorMessage: '',
   };
 
   handleChangeClassNameInput = e => {
@@ -67,97 +69,72 @@ export default class AddClassModal extends Component {
     }
     this.props.timeLineStore.addNewClass(`Class ${classNumber}`, starting_date)
       .then(() => {
-        this.props.closeModal();
+        this.props.onClose();
         this.props.timeLineStore.fetchItems();
       })
       .catch((error) => {
-      const e = new Error(error);
-      this.setState({
-        errorMessage: e.message,
+        const e = new Error(error);
+        this.setState({
+          errorMessage: e.message,
+        });
       });
-    });
   };
 
   render() {
     return (
-      <Modal
-        title="Add a new class"
-        visible={this.props.isToggled}
-        closeModal={this.props.closeModal}
-      >
-        {' '}
-        <div className={classes.formContainer}>
-          {' '}
-          <label className={classes.label} htmlFor="classNumber">
-            {' '}
-            Class name{' '}
-          </label>{' '}
-          <div className={classes.classFieldContainer}>
-            {' '}
-            <span className={classes.classPrefix}>CLass </span>{' '}
-            <input
-              className={classes.classNumber}
-              placeholder="Class number"
-              name="classNumber"
-              type="text"
-              value={this.state.classNumber}
-              onChange={this.handleChangeClassNameInput}
-            />{' '}
-          </div>{' '}
-          <label className={classes.label} htmlFor="startingDate">
-            {' '}
-            Starting date of module{' '}
-            <span className={classes.dateInstr}>
-              {' '}
-              (If you choose a date that is not a Sunday, the date picker will
-              go automatically to the next Sunday){' '}
-            </span>{' '}
-          </label>{' '}
-          <input
-            id="startingDate"
-            type="date"
-            min={new moment().format('YYYY-MM-DD')}
-            value={this.state.starting_date}
-            onChange={this.handleChangeStartingDateInput}
-          />{' '}
-          <div className={classes.buttonsContainer}>
-            {' '}
-            <span className={classes.errorMessage}>
-              {' '}
-              {this.state.errorMessage}
-            </span>{' '}
-            <div>
-              {' '}
-              <button
-                className={`$ {
-                classes.btn
-            }
-            $ {
-                classes.ok
-            }
-            `}
-                onClick={this.addNewClass}
-              >
-                {' '}
-                Add class{' '}
-              </button>{' '}
-              <button
-                className={`$ {
-                classes.btn
-            }
-            $ {
-                classes.cancel
-            }
-            `}
-                onClick={this.props.closeModal}
-              >
-                {' '}
-                Cancel{' '}
-              </button>{' '}
-            </div>{' '}
-          </div>{' '}
-        </div>{' '}
-      </Modal>
+      <Fragment>
+        <Dialog
+          title="Add a new class"
+          open={this.props.open}
+          onClose={this.props.onClose}
+        >
+          <DialogTitle id="form-dialog-title">Add a Class</DialogTitle>
+          <DialogContent>
+            <form>
+              <FormControl className={classes.formControl}>
+                <DialogContentText>
+                  Class Name
+            </DialogContentText>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  label="Provide only a class number"
+                  type="number"
+                  value={this.state.classNumber}
+                  onChange={this.handleChangeClassNameInput}
+                  fullWidth
+                />
+                <br />
+                <DialogContentText>
+                  Start Date of Module
+                    </DialogContentText>
+                <input
+                  id="startingDate"
+                  type="date"
+                  min={new moment().format('YYYY-MM-DD')}
+                  value={this.state.starting_date}
+                  onChange={this.handleChangeStartingDateInput}
+                />
+              </FormControl>
+            </form>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              color="inherit"
+              onClick={this.props.onClose}
+              aria-label="Close"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={this.addNewClass}
+              color="inherit"
+            >
+              Add
+              </Button>
+          </DialogActions>
+        </Dialog>
+      </Fragment>
     );
   }
 }
