@@ -22,7 +22,7 @@ export default class TimeLine extends Component {
 
     return (
       <main>
-        <div style={{ marginBottom: '3rem' }}>
+        <div style={{ marginBottom: '1rem' }}>
           <TimelineComp
             itemWidth={170}
             rowHeight={60}
