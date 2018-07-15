@@ -54,7 +54,13 @@ class StudentInterface extends React.Component {
     const hasNotes = currentModule && currentModule.notes;
     const { value } = this.state;
 
-    const title = currentModule ? `${group.group_name} – ${module.module_name} , week (${currentWeek} of ${currentModule.duration})` : '';
+    let title = '';
+    if (currentModule) {
+      title = `${group.group_name} – ${module.module_name}`;
+      if (!global.isTeacher && currentModule.duration > 1) {
+        title += `\nweek (${currentWeek} of ${currentModule.duration})`;
+      }
+    }
 
     return (
       <div className={classes.root}>
