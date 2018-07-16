@@ -10,12 +10,12 @@ import Header from './components/Header/Header';
 import Popup from './components/Popup/Popup';
 import Homework from './Pages/Homework/Homework';
 import Modules from './Pages/Modules/Modules';
-import TimeLine from './Pages/Timeline/TimeLine';
+import TimelinePage from './Pages/Timeline/TimelinePage';
 import TrainTicket from './Pages/TrainTicket/TrainTicket';
 import Users from './Pages/Users/Users';
 
 const PUBLIC_ROUTES = [
-  { exact: true, path: '/timeline', component: TimeLine },
+  { exact: true, path: '/timeline', component: TimelinePage },
 ];
 
 const ROUTES = {
@@ -39,7 +39,7 @@ const defaultProfile = {
   role: 'guest',
 };
 
-@inject('global')
+@inject('currentUser')
 @observer
 class App extends Component {
 
@@ -51,7 +51,7 @@ class App extends Component {
     }
     token = window.localStorage.getItem('token');
     if (token) {
-      await this.props.global.fetchCurrentUser();
+      await this.props.currentUser.fetchCurrentUser();
     } else {
       window.localStorage.removeItem('token');
       this.setState({ profile: defaultProfile });
@@ -59,7 +59,7 @@ class App extends Component {
   }
 
   render() {
-    const { currentUser, isLoggedIn } = this.props.global;
+    const { currentUser, isLoggedIn } = this.props.currentUser;
     const routes = isLoggedIn ? [...PUBLIC_ROUTES, ...ROUTES[currentUser.role]] : [...PUBLIC_ROUTES];
     return (
       <BrowserRouter>

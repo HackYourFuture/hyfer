@@ -14,7 +14,7 @@ const styles = theme => ({
   },
 });
 
-@inject('modulesStore', 'timeLineStore', 'currentModuleStore')
+@inject('moduleStore', 'timeline', 'currentModuleStore')
 @observer
 class AddModuleDialog extends Component {
   state = {
@@ -25,15 +25,15 @@ class AddModuleDialog extends Component {
     this.props.onClose();
     const { moduleId } = this.state;
     const { group_id, position } = this.props.currentModuleStore.currentModule;
-    await this.props.timeLineStore.addModule(moduleId, group_id, position + 1);
-    this.props.timeLineStore.fetchItems();
+    await this.props.timeline.addModule(moduleId, group_id, position + 1);
+    this.props.timeline.fetchItems();
   };
 
   handleChange = (e) => this.setState({ moduleId: e.target.value });
 
   render() {
-    const { classes, modulesStore } = this.props;
-    const { modules } = modulesStore;
+    const { classes, moduleStore } = this.props;
+    const { modules } = moduleStore;
     if (modules.length === 0) {
       return null;
     }

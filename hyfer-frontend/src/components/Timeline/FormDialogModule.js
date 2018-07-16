@@ -14,26 +14,26 @@ const styles = theme => ({
   },
 });
 
-@inject('modulesStore', 'timeLineStore', 'currentModuleStore')
+@inject('moduleStore', 'timeline', 'currentModuleStore')
 @observer
   export default withStyles(styles)(class FormDialogModule extends Component {
     state = {
       open: false,
       selectedModuleId: '',
-      modules: [],
+      moduleStore: [],
     };
 
     async getModules() {
       try {
         const token = localStorage.getItem('token');
-        const data = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/modules`, {
+        const data = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/moduleStore`, {
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + token,
           },
         });
-        const modules = await data.json();
-        this.setState({ modules });
+        const moduleStore = await data.json();
+        this.setState({ moduleStore });
       } catch (error) {
         console.log(error);
       }
@@ -74,7 +74,7 @@ const styles = theme => ({
               Authorization: 'Bearer ' + token,
             },
           });
-        this.props.timeLineStore.fetchItems();
+        this.props.timeline.fetchItems();
       } catch (error) {
         console.log(error);
       }
@@ -96,7 +96,7 @@ const styles = theme => ({
                   value={this.state.selectedModuleId}
                   onChange={this.handleChangeSelectedModuleId}
                 >
-                  {this.state.modules.map(module => (
+                  {this.state.moduleStore.map(module => (
                     <MenuItem key={module.module_name} value={module.id}>
                       {module.module_name}
                     </MenuItem>

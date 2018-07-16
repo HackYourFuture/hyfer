@@ -6,7 +6,7 @@ import style from '../../assets/styles/modules.css';
 import ModuleForm from './ModuleForm';
 import { inject, observer } from 'mobx-react';
 
-@inject('modulesStore')
+@inject('moduleStore')
 @observer
 export default class ModuleItem extends Component {
   state = {
@@ -38,11 +38,11 @@ export default class ModuleItem extends Component {
   };
 
   deleteModule = () => {
-    this.props.modulesStore.deleteModule(this.props.module);
+    this.props.moduleStore.deleteModule(this.props.module);
   };
 
   updateModule = module => {
-    const curModulesArr = this.props.modulesStore.modules;
+    const curModulesArr = this.props.moduleStore.modules;
     const newModulesArr = curModulesArr.map(a => {
       if (a.id === module.id) {
         return module;
@@ -50,7 +50,7 @@ export default class ModuleItem extends Component {
         return { ...a };
       }
     });
-    this.props.modulesStore.setModules(newModulesArr);
+    this.props.moduleStore.setModules(newModulesArr);
   };
 
   render() {
@@ -89,14 +89,14 @@ export default class ModuleItem extends Component {
           maxWidth={this.props.weekWidth * 6}
           onResizeStop={(e, direction, ref, d) => {
             const newDuration = Math.round(d.width / this.props.weekWidth);
-            const modules = this.props.modulesStore.modules;
+            const modules = this.props.moduleStore.modules;
             const newModules = modules.map(a => ({ ...a }));
             for (const m of newModules) {
               if (m.id === module.id) {
                 m.default_duration += newDuration;
               }
             }
-            this.props.modulesStore.setModules(newModules);
+            this.props.moduleStore.setModules(newModules);
           }}
           onResizeStart={e => e.stopPropagation()}
         >
@@ -156,6 +156,6 @@ export default class ModuleItem extends Component {
 
 ModuleItem.wrappedComponent.propTypes = {
   module: PropTypes.object.isRequired,
-  modulesStore: PropTypes.object.isRequired,
+  moduleStore: PropTypes.object.isRequired,
   weekWidth: PropTypes.number.isRequired,
 };

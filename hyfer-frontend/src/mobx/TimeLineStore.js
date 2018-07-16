@@ -1,4 +1,4 @@
-import { observable, computed, runInAction } from 'mobx';
+import { observable, action, computed, runInAction } from 'mobx';
 import moment from 'moment';
 import { fetchJSON } from './util';
 import stores from '.';
@@ -21,7 +21,9 @@ function addModuleDates(timelineItems) {
       starting_date = moment(nextStarting);
       return newModule;
     });
+
     groupInfo.modules = modules;
+
     acc[groupName] = {
       group_id: groupInfo.group_id,
       starting_date: groupInfo.starting_date,
@@ -34,7 +36,13 @@ function addModuleDates(timelineItems) {
 export default class TimeLineStore {
 
   @observable
+  timeline = null;
+
+  @observable
   items = null;
+
+  @observable
+  filter = 'all';
 
   @observable
   groupsWithIds = [];
@@ -48,15 +56,36 @@ export default class TimeLineStore {
   @observable
   allWeeks = null;
 
-  fetchItems = async () => {
-    const timeline = await fetchJSON('/api/running/timeline');
-    this.setTimelineItems(timeline);
-    const groupsWithIds = await fetchJSON('/api/groups');
-    runInAction(() => this.groupsWithIds = groupsWithIds);
+  @action
+  setFilter = (filter) => {
+    this.filter = filter;
+    if (this.timeline) {
+      this.setTimelineItems(this.timeline);
+    }
   }
 
-  setTimelineItems = (timeline) => {
-    const items = addModuleDates(timeline);
+  @action
+  fetchItems = async () => {
+    const timeline = await fetchJSON('/api/running/timeline');
+    const groupsWithIds = await fetchJSON('/api/groups');
+    runInAction(() => {
+      this.groupsWithIds = groupsWithIds;
+      this.setTimelineItems(timeline);
+    });
+  }
+
+  @action
+  setTimelineItems(timeline) {
+    this.timeline = timeline;
+    const filteredTimeline = Object.keys(this.timeline)
+      .reduce((acc, key) => {
+        if (this.filter === 'all' || this.filter === key) {
+          acc[key] = this.timeline[key];
+        }
+        return acc;
+      }, {});
+
+    const items = addModuleDates(filteredTimeline);
 
     const allModules = Object.keys(items)
       .reduce((acc, groupName) => {
@@ -88,7 +117,7 @@ export default class TimeLineStore {
     });
   }
 
-
+  @action
   addNewClass = async (className, starting_date) => {
     const date = new Date(starting_date);
     const body = {
@@ -99,17 +128,18 @@ export default class TimeLineStore {
     try {
       await fetchJSON('/api/groups', 'POST', body);
     } catch (err) {
-      stores.global.setLastError(err);
+      stores.ui.setLastError(err);
     }
   }
 
+  @action
   updateModule = async (item, position, duration) => {
     try {
       const timeline = await fetchJSON(`/api/running/update/${item.group_id}/${item.position}`,
         'PATCH', { position, duration });
       this.setTimelineItems(timeline);
     } catch (err) {
-      stores.global.setLastError(err);
+      stores.ui.setLastError(err);
     }
   }
 
@@ -118,25 +148,27 @@ export default class TimeLineStore {
       const timeline = await fetchJSON(`/api/running/add/${moduleId}/${groupId}/${position}`, 'PATCH');
       this.setTimelineItems(timeline);
     } catch (error) {
-      stores.global.setLastError(error);
+      stores.ui.setLastError(error);
     }
   }
 
+  @action
   removeModule = async (groupId, position) => {
     try {
       const timeline = await fetchJSON(`/api/running/${groupId}/${position}`, 'DELETE');
       this.setTimelineItems(timeline);
     } catch (error) {
-      stores.global.setLastError(error);
+      stores.ui.setLastError(error);
     }
   }
 
+  @action
   splitModule = async (groupId, position) => {
     try {
       const timeline = await fetchJSON(`/api/running/split/${groupId}/${position}`, 'PATCH');
       this.setTimelineItems(timeline);
     } catch (error) {
-      stores.global.setLastError(error);
+      stores.ui.setLastError(error);
     }
   }
 }

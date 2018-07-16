@@ -22,7 +22,7 @@ const styles = () => ({
   },
 });
 
-@inject('currentModuleStore', 'global')
+@inject('currentModuleStore', 'currentUser')
 @observer
 class UserList extends React.Component {
 
@@ -47,7 +47,7 @@ class UserList extends React.Component {
     return (
       <div className={classes.container}>
         {users.map(user => <UserCard key={user.id} user={user} showDeleteButton={role === 'teacher'} />)}
-        {role === 'teacher' && this.props.global.isTeacher &&
+        {role === 'teacher' && this.props.currentUser.isTeacher &&
           <React.Fragment>
             <AddTeacherDialog
               open={this.state.isOpen}
@@ -69,7 +69,7 @@ class UserList extends React.Component {
 
 UserList.wrappedComponent.UserList = {
   currentModuleStore: PropTypes.object.isRequired,
-  global: PropTypes.object.isRequired,
+  currentUser: PropTypes.object.isRequired,
   role: PropTypes.string.isRequired,
 };
 

@@ -84,7 +84,7 @@ const restoreState = {
   isDirty: true,
 };
 
-@inject('global', 'currentModuleStore')
+@inject('currentUser', 'currentModuleStore')
 @observer
 class ModuleNotes extends Component {
   origNotes = '';
@@ -232,7 +232,7 @@ class ModuleNotes extends Component {
     return (
       <div className={classes.container}>
         <Paper className={classes.root} elevation={1}>
-          {this.props.global.isTeacher && <div>
+          {this.props.currentUser.isTeacher && <div>
             {!inEditMode && <div className={classes.bottomButtonContainer}>
               <IconButton
                 className={classes.button}
@@ -294,7 +294,7 @@ class ModuleNotes extends Component {
 }
 
 ModuleNotes.wrappedComponent.propTypes = {
-  global: PropTypes.object.isRequired,
+  currentUser: PropTypes.object.isRequired,
   currentModuleStore: PropTypes.object.isRequired,
 };
 

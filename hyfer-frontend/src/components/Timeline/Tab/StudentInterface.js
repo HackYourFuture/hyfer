@@ -33,7 +33,7 @@ const styles = (theme) => ({
   },
 });
 
-@inject('currentModuleStore', 'global')
+@inject('currentModuleStore', 'currentUser')
 @observer
 class StudentInterface extends React.Component {
   state = {

@@ -10,7 +10,7 @@ const defaultState = {
   confirm_email_input: '',
 };
 
-@inject('global')
+@inject('currentUser')
 @observer
 class Popup extends Component {
   state = {
@@ -34,7 +34,7 @@ class Popup extends Component {
     if (email_input !== confirm_email_input) {
       return warning("the emails didn't match ");
     }
-    const { id } = this.props.global.currentUser;
+    const { id } = this.props.currentUser.currentUser;
     const data = {
       id,
       email: email_input,
@@ -87,7 +87,7 @@ class Popup extends Component {
   };
 
   render() {
-    const { currentUser, isLoggedIn } = this.props.global;
+    const { currentUser, isLoggedIn } = this.props.currentUser;
     if (currentUser && !currentUser.email && !isLoggedIn && !this.state.submitted) {
       return this.popUpContent(true);
     } else {

@@ -1,4 +1,4 @@
-import { observable, runInAction } from 'mobx';
+import { observable, action, runInAction } from 'mobx';
 import { fetchJSON } from './util';
 import Showdown from 'showdown';
 import stores from '.';
@@ -26,7 +26,7 @@ export default class CurrentModuleStore {
   group = null;
 
   @observable
-  module = [];
+  module = null;
 
   @observable
   currentModule = null;
@@ -40,6 +40,7 @@ export default class CurrentModuleStore {
   @observable
   currentWeek = null;
 
+  @action
   async getRunningModuleDetails(runningId) {
     const details = await fetchJSON(`/api/running/details/${runningId}`);
     runInAction(() => {
@@ -57,7 +58,7 @@ export default class CurrentModuleStore {
       const teachers = await fetchJSON(`/api/running/teacher/${moduleId}/${teacherId}`, 'POST');
       runInAction(() => this.teachers = teachers);
     } catch (err) {
-      stores.global.setLastError(err);
+      stores.ui.setLastError(err);
     }
   }
 
@@ -66,7 +67,7 @@ export default class CurrentModuleStore {
       const teachers = await fetchJSON(`/api/running/teacher/${moduleId}/${userId}`, 'DELETE');
       runInAction(() => this.teachers = teachers);
     } catch (err) {
-      stores.global.setLastError(err);
+      stores.ui.setLastError(err);
     }
   }
 
@@ -79,7 +80,7 @@ export default class CurrentModuleStore {
       const runningModule = await fetchJSON(`/api/running/notes/${runningId}`, 'PATCH', { notes });
       runInAction(() => this.currentModule = runningModule);
     } catch (err) {
-      stores.global.setLastError(err);
+      stores.ui.setLastError(err);
     }
   }
 
@@ -87,7 +88,7 @@ export default class CurrentModuleStore {
     this.currentModule = runningModule;
     this.getReadme(this.currentModule && this.currentModule.git_repo);
 
-    if (!stores.global.isTeacher) {
+    if (!stores.currentUser.isTeacher) {
       return;
     }
 
@@ -147,7 +148,7 @@ export default class CurrentModuleStore {
       });
 
     if (!res.ok) {
-      stores.global.setLastError(res);
+      stores.ui.setLastError(res);
 
     } else {
       const response = await res.json();

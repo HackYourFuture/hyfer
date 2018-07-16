@@ -4,8 +4,9 @@ import React, { Component, Fragment } from 'react';
 import { observer, inject } from 'mobx-react';
 import moment from 'moment';
 
-import TaskComp from './TaskComp/TaskComp';
-import EmptyTaskCell from './EmptyTaskCell/EmptyTaskCell';
+import TimelineModule from './TimelineModule';
+import EmptyWeekModule from './EmptyWeekModule';
+
 
 export function getWeeksBeforeAndAfter(allWeeks, modules) {
   // starting date of the first module of a class
@@ -23,20 +24,20 @@ export function getWeeksBeforeAndAfter(allWeeks, modules) {
   };
 }
 
-@inject('timeLineStore')
+@inject('timeline')
 @observer
-export default class ClassTaskRowComp extends Component {
+export default class TimelineRow extends Component {
   renderAllTaskComps = () => {
-    const { allWeeks, items } = this.props.timeLineStore;
+    const { allWeeks, items } = this.props.timeline;
     const { width, height, groupName } = this.props;
     const { modules } = items[groupName];
     const { weeksBefore, weeksAfter } = getWeeksBeforeAndAfter(allWeeks, modules);
 
-    let rowCells = weeksBefore.map(week => <EmptyTaskCell key={week} week={week} width={width} height={height} />);
+    let rowCells = weeksBefore.map(week => <EmptyWeekModule key={week} week={week} width={width} height={height} />);
 
     const taskRowItems = modules.map((item, index) => {
       return (
-        <TaskComp
+        <TimelineModule
           key={item.running_module_id}
           item={item}
           width={width}
@@ -50,7 +51,7 @@ export default class ClassTaskRowComp extends Component {
     if (weeksAfter.length === 0) return rowCells;
 
     const cellsAfter = weeksAfter.map(week => (
-      <EmptyTaskCell key={week} width={width} height={height} />
+      <EmptyWeekModule key={week} width={width} height={height} />
     ));
 
     return [...rowCells, ...cellsAfter];
@@ -60,8 +61,8 @@ export default class ClassTaskRowComp extends Component {
   }
 }
 
-ClassTaskRowComp.wrappedComponent.propTypes = {
-  timeLineStore: PropTypes.object.isRequired,
+TimelineRow.wrappedComponent.propTypes = {
+  timeline: PropTypes.object.isRequired,
   groupName: PropTypes.string.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,

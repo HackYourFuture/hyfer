@@ -41,7 +41,7 @@ const styles = {
   },
 };
 
-@inject('currentModuleStore', 'global')
+@inject('currentModuleStore', 'currentUser')
 @observer
 class UserCard extends React.Component {
 
@@ -76,19 +76,19 @@ class UserCard extends React.Component {
   handleUpdate = async (email, linkedInName) => {
     this.handleClose();
     const { id } = this.props.currentModuleStore.currentModule;
-    await this.props.global.updateCurrentUser(email, linkedInName);
+    await this.props.currentUser.updateCurrentUser(email, linkedInName);
     this.props.currentModuleStore.getRunningModuleDetails(id);
   }
 
   render() {
     const { classes, user, showDeleteButton } = this.props;
-    const { currentUser } = this.props.global;
+    const { currentUser } = this.props.currentUser;
 
     return (
       <React.Fragment>
         <Card className={classes.card}>
           <CardHeader
-            action={showDeleteButton && user.role === "teacher" && this.props.global.isTeacher &&
+            action={showDeleteButton && user.role === "teacher" && this.props.currentUser.isTeacher &&
               <IconButton color="secondary" onClick={this.handleDelete}>
                 <CancelIcon className={classes.iconButton} />
               </IconButton>}>
@@ -118,7 +118,7 @@ class UserCard extends React.Component {
               <IconButton onClick={this.handleLinkedIn}>
                 <FaLinkedIn className={classes.iconButton} />
               </IconButton>}
-            {user.id === this.props.global.currentUser.id &&
+            {user.id === this.props.currentUser.currentUser.id &&
               <React.Fragment>
                 <span className={classes.filler} />
                 <IconButton onClick={this.handleClickOpen}>

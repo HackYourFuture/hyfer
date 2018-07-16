@@ -2,7 +2,7 @@ import { observable, action, runInAction } from 'mobx';
 import { fetchJSON } from './util';
 import stores from '.';
 
-export default class ModulesStore {
+export default class ModuleStore {
 
   @observable
   modules = [];
@@ -17,7 +17,7 @@ export default class ModulesStore {
       this.serverModules = await fetchJSON('/api/modules');
       runInAction(() => this.setModules(this.serverModules, false));
     } catch (error) {
-      stores.global.setLastError(error);
+      stores.ui.setLastError(error);
     }
   }
 
@@ -44,7 +44,7 @@ export default class ModulesStore {
       await fetchJSON('/modules', 'PATCH', this.modules);
       this.getModules();
     } catch (error) {
-      stores.global.setLastError(error);
+      stores.ui.setLastError(error);
     }
   }
 

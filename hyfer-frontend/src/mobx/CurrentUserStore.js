@@ -1,19 +1,11 @@
 import { action, computed, observable, runInAction } from 'mobx';
 import { fetchJSON } from './util';
 import stores from './';
+
 export default class GlobalStore {
 
   @observable
   currentUser = null;
-
-  @observable
-  lastError = null;
-
-  @observable
-  successMessage = null;
-
-  @observable
-  warningMessage = null;
 
   @computed
   get isLoggedIn() {
@@ -40,24 +32,6 @@ export default class GlobalStore {
   }
 
   @action
-  setLastError = (error) => { this.lastError = error; };
-
-  @action
-  clearLastError = () => this.lastError = null;
-
-  @action
-  setSuccessMessage = (message) => this.successMessage = message;
-
-  @action
-  clearSuccessMessage = () => this.successMessage = null;
-
-  @action
-  setWarningMessage = (warning) => this.warningMessage = warning;
-
-  @action
-  clearWarningMessage = () => this.warningMessage = null;
-
-  @action
   fetchCurrentUser = () => {
     if (this.currentUser) {
       return;
@@ -66,12 +40,14 @@ export default class GlobalStore {
       .then((res) => {
         runInAction(() => {
           this.currentUser = res;
-          if (this.currentUser.group_name !== null && this.isStudent && !this.isArchived) {
-            stores.currentModuleStore.getGroupsByGroupName(this.currentUser.group_name);
+          const { group_name: groupName } = this.currentUser;
+          if (groupName != null && this.isStudent && !this.isArchived) {
+            stores.currentModuleStore.getGroupsByGroupName(groupName);
+            stores.timeline.setFilter(groupName);
           }
         });
       })
-      .catch((error) => this.setLastError(error));
+      .catch((error) => stores.ui.setLastError(error));
   }
 
   @action
@@ -92,7 +68,7 @@ export default class GlobalStore {
     try {
       await fetchJSON(`/api/user/${id}`, 'PATCH', updates);
     } catch (error) {
-      this.setLastError(error);
+      stores.ui.setLastError(error);
     }
   }
 }

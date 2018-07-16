@@ -3,7 +3,7 @@ import stores from './mobx';
 import { notify } from 'react-notify-toast';
 
 autorun(() => {
-  const { lastError, clearLastError } = stores.global;
+  const { lastError, clearLastError } = stores.ui;
   if (lastError != null) {
     errorMessage(lastError);
     clearLastError();
@@ -11,7 +11,7 @@ autorun(() => {
 });
 
 autorun(() => {
-  const { successMessage, clearSuccessMessage } = stores.global;
+  const { successMessage, clearSuccessMessage } = stores.ui;
   if (successMessage != null) {
     success(successMessage);
     clearSuccessMessage();
@@ -19,7 +19,7 @@ autorun(() => {
 });
 
 autorun(() => {
-  const { warningMessage, clearWarningMessage } = stores.global;
+  const { warningMessage, clearWarningMessage } = stores.ui;
   if (warningMessage != null) {
     warning(warningMessage);
     clearWarningMessage();

@@ -1,11 +1,11 @@
-import { inject, observer } from 'mobx-react';
 import React, { Component } from 'react';
+import { inject, observer } from 'mobx-react';
 import cookie from 'react-cookies';
 import { NavLink, withRouter } from 'react-router-dom';
 import hyfIcon from '../../assets/images/icon.png';
 import styles from '../../assets/styles/header.css';
 
-@inject('global')
+@inject('currentUser')
 @withRouter
 @observer
 export default class Header extends Component {
@@ -17,7 +17,7 @@ export default class Header extends Component {
   };
 
   render() {
-    const { isLoggedIn, isTeacher, isStudent, avatarUrl } = this.props.global;
+    const { isLoggedIn, isTeacher, isStudent, avatarUrl } = this.props.currentUser;
 
     const student = (
       <ul className={styles.signed_in}>

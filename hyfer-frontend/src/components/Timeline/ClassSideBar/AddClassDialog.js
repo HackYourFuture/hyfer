@@ -1,16 +1,16 @@
 import React, { Fragment, Component } from 'react';
+import PropTypes from 'prop-types';
 import {
   Dialog, DialogContentText, DialogTitle,
   DialogContent, Button, TextField,
   FormControl, DialogActions,
 } from '@material-ui/core';
-import classes from './addClassModal.css';
 import moment from 'moment';
 import { inject, observer } from 'mobx-react';
 
-@inject('timeLineStore')
+@inject('timeline')
 @observer
-export default class AddClassModal extends Component {
+export default class AddClassDialog extends Component {
   state = {
     classNumber: '',
     starting_date: '',
@@ -67,10 +67,10 @@ export default class AddClassModal extends Component {
       });
       return;
     }
-    this.props.timeLineStore.addNewClass(`Class ${classNumber}`, starting_date)
+    this.props.timeline.addNewClass(`Class ${classNumber}`, starting_date)
       .then(() => {
         this.props.onClose();
-        this.props.timeLineStore.fetchItems();
+        this.props.timeline.fetchItems();
       })
       .catch((error) => {
         const e = new Error(error);
@@ -91,10 +91,10 @@ export default class AddClassModal extends Component {
           <DialogTitle id="form-dialog-title">Add a Class</DialogTitle>
           <DialogContent>
             <form>
-              <FormControl className={classes.formControl}>
+              <FormControl>
                 <DialogContentText>
                   Class Name
-            </DialogContentText>
+                </DialogContentText>
                 <TextField
                   autoFocus
                   margin="dense"
@@ -138,3 +138,7 @@ export default class AddClassModal extends Component {
     );
   }
 }
+
+AddClassDialog.wrappedComponent.propTypes = {
+  timeline: PropTypes.object.isRequired,
+};

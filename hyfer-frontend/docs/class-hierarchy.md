@@ -9,7 +9,7 @@ App
       StudentWithWeeks
       WeekIndicator
       CommitsInfo
-    TimelineComp
+    Timeline
       Button
         RoundButton
         AddDropdownList
@@ -67,7 +67,7 @@ App
   Header
   Timeline
     ModuleInfo   
-    TimelineComp
+    Timeline
       Button
         RoundButton
         AddDropdownList
@@ -104,7 +104,7 @@ App
   Header
   Timeline
     ModuleReadme
-    TimelineComp
+    Timeline
       Button
         RoundButton
         AddDropdownList

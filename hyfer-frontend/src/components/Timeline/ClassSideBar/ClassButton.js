@@ -1,14 +1,42 @@
+/* eslint react/prop-types: error */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { observer, inject } from 'mobx-react';
-import classes from './classRowComp.css';
-import { errorMessage } from '../../../../notify';
-import popUpStyle from './archivingPopUp.css';
+import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles';
+import { errorMessage } from '../../../notify';
 
 const token = localStorage.getItem('token');
 
+const styles = (theme) => ({
+  root: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: `${theme.spacing.unit / 2}px ${theme.spacing.unit}px`,
+  },
+  container: {
+    width: 65,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 8,
+    marginBottom: 0,
+    borderRadius: 8,
+    backgroundColor: '#ffffff',
+    boxShadow: 'inset 0 -1px 0 0 #eff2f3',
+  },
+  groupId: {
+    backgroundColor: 'rgb(13, 107, 196)',
+    color: 'white',
+    borderRadius: '50%',
+    padding: 8,
+  },
+});
+
 @inject('timeline')
 @observer
-export default class ClassButton extends Component {
+class ClassButton extends Component {
   state = {
     popUp: false,
   };
@@ -27,40 +55,8 @@ export default class ClassButton extends Component {
     });
   };
 
-  popUpDiv = () => {
-    const { classId } = this.props;
-    const group = this.props.timeline.groupsWithIds.filter(
-      group => group.group_name.replace(/ /g, '').slice(-2) === classId,
-    );
-
-    return (
-      <div>
-        <div className={popUpStyle.backDrop}>
-          <div className={popUpStyle.popUp_window}>
-            <p
-              className={popUpStyle.confirm_q}
-            >{`Are you sure you want to archive ${group[0].group_name} ??`}</p>
-            <button
-              className={popUpStyle.button_cancel}
-              onClick={() => this.cancelArchiving()}
-            >
-              No
-            </button>
-            <button
-              className={popUpStyle.button_yes}
-              onClick={() => this.confirmArchiving()}
-            >
-              Yes
-            </button>
-          </div>
-        </div>
-        {this.rowButton()}
-      </div>
-    );
-  };
-
   rowButton = () => {
-    const { classId, height } = this.props;
+    const { classId, height, classes } = this.props;
 
     return (
       <div style={{ height: height + 'px' }} className={classes.container}>
@@ -104,9 +100,27 @@ export default class ClassButton extends Component {
   };
 
   render() {
-    if (this.state.popUp) {
-      return this.popUpDiv();
-    }
-    return this.rowButton();
+    const { classId, height, classes, disabled } = this.props;
+
+    return (
+      <Button
+        variant="outlined"
+        className={classes.root}
+        style={{ height }}
+        disabled={disabled}
+      >
+        Class {classId}
+      </Button>
+    );
   }
 }
+
+ClassButton.wrappedComponent.propTypes = {
+  classes: PropTypes.object.isRequired,
+  classId: PropTypes.string.isRequired,
+  disabled: PropTypes.bool.isRequired,
+  height: PropTypes.number.isRequired,
+  timeline: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(ClassButton);

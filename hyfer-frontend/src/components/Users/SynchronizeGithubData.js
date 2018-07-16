@@ -7,7 +7,7 @@ import { inject, observer } from 'mobx-react';
 import moment from 'moment';
 const token = localStorage.getItem('token');
 
-@inject('userStore', 'global','timeLineStore')
+@inject('userStore', 'currentUser', 'timeline')
 @observer
 export default class SynchronizeGithubData extends Component {
 
@@ -40,7 +40,7 @@ export default class SynchronizeGithubData extends Component {
     try {
       this.setState({ isClicked: true, isLoading: true });
       console.log('state after : ', this.state.isClicked);
-      await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/githubSync/${this.props.global.currentUser.username}`, {
+      await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/githubSync/${this.props.currentUser.currentUser.username}`, {
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ export default class SynchronizeGithubData extends Component {
         if (res.status === 200) {
           success('Successfully Synchronized');
           this.setState({ isLoading: false });
-          this.props.timeLineStore.fetchItems();
+          this.props.timeline.fetchItems();
         } else {
           errorMessage('Something went wrong please try again');
           this.setState({ isLoading: false });

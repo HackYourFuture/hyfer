@@ -30,7 +30,7 @@ export default class UserStore {
         this.users = users;
       });
     } catch (err) {
-      stores.global.setLastError(err);
+      stores.ui.setLastError(err);
     }
   }
 
@@ -42,7 +42,7 @@ export default class UserStore {
         return this.teachers = teachers;
       });
     } catch (err) {
-      stores.global.setLastError(err);
+      stores.ui.setLastError(err);
     }
   }
 

@@ -6,14 +6,14 @@ import style from '../../assets/styles/modules.css';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { inject, observer } from 'mobx-react';
 
-@inject('modulesStore')
+@inject('moduleStore')
 @observer
 export default class ModuleList extends Component {
 
   weekWidth = 1;
 
   componentDidMount() {
-    this.props.modulesStore.getModules();
+    this.props.moduleStore.getModules();
     window.addEventListener('resize', this.computeWeekWidth);
     this.computeWeekWidth();
   }
@@ -33,7 +33,7 @@ export default class ModuleList extends Component {
     if (!result.destination) {
       return;
     }
-    const { modules, setModules } = this.props.modulesStore;
+    const { modules, setModules } = this.props.moduleStore;
     const newModules = [...modules];
     const [removed] = newModules.splice(result.source.index, 1);
     newModules.splice(result.destination.index, 0, removed);
@@ -41,7 +41,7 @@ export default class ModuleList extends Component {
   }
 
   render() {
-    const { modules } = this.props.modulesStore;
+    const { modules } = this.props.moduleStore;
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
         <Droppable droppableId="droppable">
@@ -84,5 +84,5 @@ export default class ModuleList extends Component {
 }
 
 ModuleList.wrappedComponent.propTypes = {
-  modulesStore: PropTypes.object.isRequired,
+  moduleStore: PropTypes.object.isRequired,
 };
