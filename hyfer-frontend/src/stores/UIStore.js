@@ -11,6 +11,9 @@ export default class UIStore {
   @observable
   warningMessage = null;
 
+  @observable
+  timelineTabIndex = 0;
+
   @action
   setLastError = (error) => {
     this.lastError = error;
@@ -31,4 +34,7 @@ export default class UIStore {
 
   @action
   clearWarningMessage = () => this.warningMessage = null;
+
+  @action
+  setTimelineTabIndex = (value) => this.timelineTabIndex = value;
 }

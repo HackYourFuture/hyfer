@@ -6,20 +6,20 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
-import CardMedia from '@material-ui/core/CardMedia';
+// import CardMedia from '@material-ui/core/CardMedia';
+import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import FaGitHub from 'react-icons/lib/fa/github';
-import FaLinkedIn from 'react-icons/lib/fa/linkedin';
+import FaLinkedIn from 'react-icons/lib/fa/linkedin-square';
 import CancelIcon from '@material-ui/icons/Cancel';
 import ProfileDialog from './ProfileDialog';
 
-const styles = {
-
+const styles = (theme) => ({
   card: {
-    margin: 2,
-    width: 250,
+    width: 150,
+    margin: 1,
   },
   actions: {
     display: 'flex',
@@ -27,19 +27,21 @@ const styles = {
   filler: {
     flexGrow: 1,
   },
-  media: {
-    // paddingTop: '40.25%', // 16:9
-    borderRadius: '50%',
-    marginTop: 7,
-    minHeight: 150,
-    maxHeight: 200,
-    backgroundSize: 'contain',
+  avatar: {
+    height: 104,
+    width: 104,
+    marginBottom: theme.spacing.unit * 2,
   },
   iconButton: {
     width: 24,
     height: 24,
   },
-};
+  actionIcon: {
+    width: 24,
+    height: 24,
+    cursor: 'pointer',
+  },
+});
 
 @inject('currentModuleStore', 'currentUser')
 @observer
@@ -85,44 +87,38 @@ class UserCard extends React.Component {
 
     return (
       <React.Fragment>
-        <Card className={classes.card}>
-          <CardHeader
-            action={showDeleteButton && user.role === "teacher" && currentUser.isTeacher &&
+        <Card className={classes.card} square elevation={1}>
+          {showDeleteButton && user.role === "teacher" && currentUser.isTeacher && <CardHeader
+            action={
               <IconButton color="secondary" onClick={this.handleDelete}>
                 <CancelIcon className={classes.iconButton} />
               </IconButton>}>
-          </CardHeader>
-          <CardMedia
-            className={classes.media}
-            image={`https://avatars.githubusercontent.com/${user.username}`}
-            title={`Profile - ${user.username}`}
-          />
+          </CardHeader>}
           <CardContent>
+            <Avatar
+              className={classes.avatar}
+              src={`https://avatars.githubusercontent.com/${user.username}`}
+              title={`Profile - ${user.username}`}
+            />
             <Typography
               align='center'
-              gutterBottom
-              variant="subheading"
-              component="h5">
+              gutter
+              variant="body1"
+            >
               {user.username}
             </Typography>
-            <Typography variant="body1" gutterBottom align="center">
+            <Typography variant="caption" gutterBottom align="center">
               {user.role + (user.group_name ? ' / ' + user.group_name : '')}
             </Typography>
           </CardContent>
           <CardActions className={classes.actions}>
-            <IconButton onClick={this.handleGitHub}>
-              <FaGitHub className={classes.iconButton} />
-            </IconButton>
+            <FaGitHub className={classes.actionIcon} onClick={this.handleGitHub} />
             {user.linkedin_username != null &&
-              <IconButton onClick={this.handleLinkedIn}>
-                <FaLinkedIn className={classes.iconButton} />
-              </IconButton>}
+              <FaLinkedIn className={classes.actionIcon} onClick={this.handleLinkedIn} />}
             {user.id === currentUser.id &&
               <React.Fragment>
                 <span className={classes.filler} />
-                <IconButton onClick={this.handleClickOpen}>
-                  <EditIcon className={classes.iconButton} />
-                </IconButton>
+                <EditIcon className={classes.actionIcon} onClick={this.handleClickOpen} />
               </React.Fragment>}
           </CardActions>
         </Card>

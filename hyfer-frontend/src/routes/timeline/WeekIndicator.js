@@ -10,12 +10,15 @@ import TodayMarker from './TodayMarker';
 
 export function getCurrentWeek(week, width) {
   const today = new moment();
-  if (!today.isAfter(week[0]) || !today.isBefore(week[1])) return null;
+  if (!today.isAfter(week[0]) || !today.isBefore(week[1])) {
+    return null;
+  }
   const dayDiff = today.diff(week[0], 'days');
   const oneDayWidth = width / 7;
   const offset = oneDayWidth * dayDiff;
   return offset;
 }
+
 const styles = (theme) => ({
   root: {
     position: 'relative',
@@ -39,9 +42,14 @@ const styles = (theme) => ({
 });
 
 class WeekIndicator extends Component {
+
   setTodayMarker = () => {
-    const offset = getCurrentWeek(this.props.week, this.props.itemWidth);
-    if (!offset && offset !== 0) return null;
+    const { week, itemWidth } = this.props;
+    const offset = getCurrentWeek(week, itemWidth);
+    if (!offset && offset !== 0) {
+      return null;
+    }
+
     return (
       <TodayMarker
         setTodayMarkerRef={this.props.setTodayMarkerRef}
@@ -70,8 +78,6 @@ class WeekIndicator extends Component {
 
     const { itemWidth } = this.props;
 
-    const todayMarkerComp = this.setTodayMarker();
-
     const { classes } = this.props;
 
     return (
@@ -80,7 +86,7 @@ class WeekIndicator extends Component {
         elevation={0}
         className={classes.root}
       >
-        {todayMarkerComp}
+        {this.setTodayMarker()}
         <Typography variant="body1"
           className={classes.monthContainer}
         >

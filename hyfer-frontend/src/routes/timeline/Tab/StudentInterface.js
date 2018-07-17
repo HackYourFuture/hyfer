@@ -28,6 +28,7 @@ TabContainer.propTypes = {
 const styles = (theme) => ({
   root: {
     flexGrow: 1,
+    paddingTop: theme.spacing.unit,
   },
   leftIcon: {
     marginRight: theme.spacing.unit,
@@ -37,15 +38,12 @@ const styles = (theme) => ({
   },
 });
 
-@inject('currentModuleStore', 'currentUser')
+@inject('currentModuleStore', 'currentUser', 'ui')
 @observer
 class StudentInterface extends React.Component {
-  state = {
-    value: 0,
-  };
 
   handleChange = (event, value) => {
-    this.setState({ value });
+    this.props.ui.setTimelineTabIndex(value);
   };
 
   visitGitHubRepo = () =>
@@ -53,28 +51,15 @@ class StudentInterface extends React.Component {
 
   render() {
     const { classes, currentModuleStore } = this.props;
-    const { students, teachers, currentModule, module, group, currentWeek } = currentModuleStore;
+    const { students, teachers } = currentModuleStore;
 
-    const hasNotes = currentModule && currentModule.notes;
-    const { value } = this.state;
-
-    let title = '';
-    if (currentModule) {
-      title = `${group.group_name} – ${module.module_name}`;
-      if (currentWeek && currentModule.duration > 1) {
-        title += ` – Week (${currentWeek} of ${currentModule.duration})`;
-      }
-    }
+    const { timelineTabIndex } = this.props.ui;
 
     return (
-      <div className={classes.root}>
-        <Paper>
-          <Tabs value={value} onChange={this.handleChange}>
-            <Tab label={
-              <Badge className={classes.padding} color="primary" badgeContent={hasNotes ? 1 : 0}>
-                Notes
-                </Badge>
-            } />
+      <React.Fragment>
+        <Paper className={classes.root}>
+          <Tabs value={timelineTabIndex} onChange={this.handleChange}>
+            <Tab label="Notes" />
             <Tab label={
               <Badge className={classes.padding} color="primary" badgeContent={teachers.length}>
                 Teachers
@@ -85,13 +70,12 @@ class StudentInterface extends React.Component {
                 Students
                 </Badge>
             } />
-            {currentModule && <Tab label={title} disabled />}
           </Tabs>
         </Paper>
-        {value === 0 && <TabContainer><ModuleNotes /></TabContainer>}
-        {value === 1 && <TabContainer><UserList role="teacher" /></TabContainer>}
-        {value === 2 && <TabContainer><UserList role="student" /></TabContainer>}
-      </div>
+        {timelineTabIndex === 0 && <TabContainer><ModuleNotes /></TabContainer>}
+        {timelineTabIndex === 1 && <TabContainer><UserList role="teacher" /></TabContainer>}
+        {timelineTabIndex === 2 && <TabContainer><UserList role="student" /></TabContainer>}
+      </React.Fragment>
     );
   }
 }
@@ -99,6 +83,7 @@ class StudentInterface extends React.Component {
 StudentInterface.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   currentModuleStore: PropTypes.object.isRequired,
+  ui: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(StudentInterface);

@@ -27,7 +27,7 @@ const styles = (theme) => {
       marginLeft: double,
     },
     menuButton: {
-      opacity: 0,
+      opacity: 0.25,
       '&:hover': {
         opacity: 1,
       },

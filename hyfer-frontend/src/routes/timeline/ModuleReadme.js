@@ -9,19 +9,14 @@ import classNames from 'classnames';
 const HYF_GITHUB_URL = 'https://github.com/HackYourFuture';
 
 const styles = (theme) => ({
-  linkToRepo: {
-    float: 'right',
-    cursor: 'pointer',
-    textAlign: 'center',
-    marginRight: '10%',
-    margin: 10,
-    '&:hover': {
-      boxShadow: '0px 3px 18px 1px rgba(0,0,0,0.1)',
-      backgroundColor: 'rgb(224, 224, 226)',
-    },
+  root: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
+  gitHubButton: {
+    marginRight: theme.spacing.unit,
     '& a': {
       textDecoration: 'none',
-      color: '#0366d6',
     },
   },
   icon: {
@@ -55,17 +50,19 @@ class ModuleReadMe extends Component {
     const { classes } = this.props;
 
     return (
-      <div className={classes.infoContainer}>
-        <div className={classes.linkToRepo}>
-          <a href={`${HYF_GITHUB_URL}/${readme.repoName}`} target="_blank">
-            <Button color="primary" className={classes.button}>
-              Visit Repository
+      <React.Fragment>
+        <div className={classes.root}>
+          <div className={classes.gitHubButton}>
+            <a href={`${HYF_GITHUB_URL}/${readme.repoName}`} target="_blank">
+              <Button color="primary" className={classes.button}>
+                Visit Repository
               <Icon className={classNames(classes.icon, 'fab fa-github')} />
-            </Button>
-          </a>
+              </Button>
+            </a>
+          </div>
         </div>
         <article className={`${classes.markdownBody} markdown-body`} dangerouslySetInnerHTML={{ __html: readme.html }} />
-      </div>
+      </React.Fragment>
     );
   }
 }
