@@ -17,6 +17,11 @@ export default class GlobalStore {
   }
 
   @computed
+  get userName() {
+    return this.currentUser.username;
+  }
+
+  @computed
   get role() {
     return this.currentUser.role;
   }
