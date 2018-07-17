@@ -7,6 +7,7 @@ import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import Button from '@material-ui/core/Button';
+import classNames from 'classnames';
 import Showdown from 'showdown';
 
 const localStorageKey = 'hyfer:moduleNotes';
@@ -68,6 +69,16 @@ const styles = theme => ({
   bottomButtonContainer: {
     display: 'flex',
     justifyContent: 'flex-end',
+  },
+  markdownBody: {
+    boxSizing: 'border-box',
+    minWidth: 200,
+    maxWidth: 980,
+    margin: '0 auto',
+    padding: 45,
+    '@media(max-width: 767px)': {
+      padding: 15,
+    },
   },
 });
 
@@ -212,11 +223,12 @@ class ModuleNotes extends Component {
     const notes = this.state.notes || this.defaultNotes();
     const __html = this.converter.makeHtml(notes);
     return (
-      <article
+      <div
         className={classes.article}
         styles={this.state.notes ? { minHeight: 480 } : 0}
-        dangerouslySetInnerHTML={{ __html }}
-      />
+      >
+        <article className={classNames(classes.markdownBody, 'markdown-body')} dangerouslySetInnerHTML={{ __html }} />
+      </div>
     );
   }
 
@@ -231,7 +243,7 @@ class ModuleNotes extends Component {
 
     return (
       <div className={classes.container}>
-        <Paper className={classes.root} elevation={1}>
+        <div className={classes.root}>
           {this.props.currentUser.isTeacher && <div>
             {!inEditMode && <div className={classes.bottomButtonContainer}>
               <IconButton
@@ -287,7 +299,7 @@ class ModuleNotes extends Component {
             </Button>
             </div>
           )}
-        </Paper>
+        </div>
       </div>
     );
   }

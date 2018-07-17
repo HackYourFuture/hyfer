@@ -15,7 +15,7 @@ import Button from '@material-ui/core/Button';
 // import IconButton from '@material-ui/core/IconButton';
 // import MenuIcon from '@material-ui/icons/Menu';
 import ConfirmationDialog from './ConfirmationDialog';
-import logo from '../assets/images/icon.png';
+import logo from '../assets/images/hyf-icon.svg';
 
 const styles = () => ({
   root: {
@@ -30,7 +30,7 @@ const styles = () => ({
     flex: 1,
   },
   logo: {
-    height: 50,
+    height: 40,
   },
 });
 

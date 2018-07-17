@@ -12,7 +12,7 @@ const styles = (theme) => ({
   },
 });
 
-@inject('timeline', 'currentUser')
+@inject('timeline', 'currentUser', 'currentModuleStore')
 @observer
 class TimelinePage extends Component {
 
@@ -22,6 +22,7 @@ class TimelinePage extends Component {
 
   render() {
     const { timeline, classes, currentUser } = this.props;
+    const { currentModule } = this.props.currentModuleStore;
 
     if (timeline.items == null) {
       return null;
@@ -35,7 +36,7 @@ class TimelinePage extends Component {
             rowHeight={48}
           />
         </div>
-        {currentUser.isTeacher || currentUser.isStudent
+        {(currentUser.isTeacher || currentUser.isStudent) && currentModule
           ? <StudentInterface />
           : <ModuleReadMe />}
       </main>
@@ -45,6 +46,7 @@ class TimelinePage extends Component {
 
 TimelinePage.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
+  currentModuleStore: PropTypes.object.isRequired,
   currentUser: PropTypes.object.isRequired,
   timeline: PropTypes.object.isRequired,
 };

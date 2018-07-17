@@ -31,11 +31,14 @@ const styles = (theme) => {
       '&:hover': {
         opacity: 1,
       },
+      [`@media(max-width: ${theme.breakpoints.values.sm}px)`]: {
+        opacity: 1,
+      },
     },
   };
 };
 
-@inject('currentModuleStore', 'userStore')
+@inject('currentModuleStore', 'currentUser', 'userStore')
 @observer
 class TimelineModule extends Component {
   state = {
@@ -51,7 +54,10 @@ class TimelineModule extends Component {
   };
 
   itemClickHandler = (item) => {
-    this.props.currentModuleStore.getRunningModuleDetails(item.running_module_id);
+    const { isStudent, isTeacher } = this.props.currentUser;
+    if (isStudent || isTeacher) {
+      this.props.currentModuleStore.getRunningModuleDetails(item.running_module_id);
+    }
   };
 
   render() {
@@ -102,6 +108,7 @@ class TimelineModule extends Component {
 TimelineModule.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   currentModuleStore: PropTypes.object.isRequired,
+  currentUser: PropTypes.object.isRequired,
   height: PropTypes.number.isRequired,
   isLast: PropTypes.bool.isRequired,
   item: PropTypes.object.isRequired,
