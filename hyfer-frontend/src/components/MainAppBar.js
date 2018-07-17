@@ -13,22 +13,32 @@ import Button from '@material-ui/core/Button';
 import ConfirmationDialog from './ConfirmationDialog';
 import logo from '../assets/images/hyf-icon.svg';
 
-const styles = () => ({
-  root: {
-    flexGrow: 1,
-  },
-  appBar: {
-    top: 0,
-    left: 0,
-    display: 'flex',
-  },
-  tabs: {
-    flex: 1,
-  },
-  logo: {
-    height: 40,
-  },
-});
+const styles = (theme) => {
+  const mediaQuery = `@media(max-width: ${theme.breakpoints.values.sm}px)`;
+  return {
+    root: {
+      flexGrow: 1,
+    },
+    appBar: {
+      top: 0,
+      left: 0,
+      display: 'flex',
+    },
+    tabs: {
+      flex: 1,
+    },
+    logo: {
+      height: 40,
+      [mediaQuery]: {
+        height: 24,
+      },
+    },
+    avatar: {
+      width: 32,
+      height: 32,
+    },
+  };
+};
 
 const routes = {
   guest: [
@@ -92,7 +102,7 @@ class MainAppBar extends Component {
 
   render() {
     const { classes, currentUser } = this.props;
-    const { isLoggedIn, isStudent, isTeacher, avatarUrl } = currentUser;
+    const { isLoggedIn, isStudent, isTeacher, userName, avatarUrl } = currentUser;
     const { value } = this.state;
 
     if (isLoggedIn) {
@@ -119,9 +129,9 @@ class MainAppBar extends Component {
                 <Tab key={route.path} label={route.label} />
               ))}
             </Tabs>
-            <Button color="inherit" onClick={this.handleSignInSignOut}>
+            <Button color="inherit" onClick={this.handleSignInSignOut} title={userName}>
               {isLoggedIn
-                ? <Avatar alt={'test'} src={avatarUrl} />
+                ? <Avatar alt={userName} src={avatarUrl} className={classes.avatar} />
                 : 'Sign in'}
             </Button>
           </Toolbar>
