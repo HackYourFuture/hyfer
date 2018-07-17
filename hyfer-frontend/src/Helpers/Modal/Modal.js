@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import classes from './modal.css';
 import hyfIcon from '../../assets/images/icon.png';
-import styles from '../../assets/styles/header.css';
 
 export default class ModalDialog extends Component {
   handleClickBackdrop = e => {
@@ -38,7 +37,6 @@ export default class ModalDialog extends Component {
               <img
                 src={hyfIcon}
                 alt="HackYourFuture logo"
-                className={styles.hyfIcon}
               />
             </a>
             {x()}

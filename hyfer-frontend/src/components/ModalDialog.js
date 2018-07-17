@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import style from '../assets/styles/ModalDialog.css';
+import style from './ModalDialog.css';
 
 export default class ModalDialog extends Component {
   state = {
     visible: false,
   };
 
-  showDialog() {}
+  showDialog() { }
 
   render() {
     return (

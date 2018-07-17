@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import styles from '../../assets/styles/footer.css';
+import styles from './footer.css';
 import hyfIcon from '../../assets/images/icon.png';
 
 export default class Footer extends Component {
