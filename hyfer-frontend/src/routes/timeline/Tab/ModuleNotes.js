@@ -294,6 +294,7 @@ class ModuleNotes extends Component {
 }
 
 ModuleNotes.wrappedComponent.propTypes = {
+  classes: PropTypes.object.isRequired,
   currentUser: PropTypes.object.isRequired,
   currentModuleStore: PropTypes.object.isRequired,
 };

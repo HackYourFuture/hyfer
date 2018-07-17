@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -9,15 +8,6 @@ import Dialog from '@material-ui/core/Dialog';
 import Typography from '@material-ui/core/Typography';
 
 export default class ConfirmationDialog extends React.Component {
-
-  handleCancel = () => {
-    this.props.onClose(this.props.value);
-  };
-
-  handleOk = () => {
-    this.props.onClose(this.state.value);
-  };
-
   render() {
     const { open, title, message, onOk, onCancel } = this.props;
 

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { Component } from 'react';
 import style from './ModalDialog.css';
 
@@ -33,3 +34,4 @@ export default class ModalDialog extends Component {
     );
   }
 }
+

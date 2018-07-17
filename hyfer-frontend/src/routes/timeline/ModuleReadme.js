@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styles from './moduleReadme.css';
 import { inject, observer } from 'mobx-react';
 
@@ -32,3 +33,7 @@ export default class ModuleReadMe extends Component {
     );
   }
 }
+
+ModuleReadMe.wrappedComponent.propTypes = {
+  currentModuleStore: PropTypes.object.isRequired,
+};

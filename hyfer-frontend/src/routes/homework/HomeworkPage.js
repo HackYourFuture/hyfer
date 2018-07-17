@@ -1,7 +1,8 @@
+/* eslint-disable react/prop-types */
 import React, { Component } from 'react';
 import { NavLink, BrowserRouter, Route } from 'react-router-dom';
 import ClassPage from './ClassPage';
-import { getData } from '../../mobx/HomeworkStore';
+import { getData } from '../../stores/HomeworkStore';
 import styles from './homework.css';
 
 export default class HomeworkPage extends Component {

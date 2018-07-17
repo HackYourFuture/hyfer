@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { withStyles } from '@material-ui/core/styles';
+import { withTheme } from '@material-ui/core/styles';
 import cookie from 'react-cookies';
 import Notifications from 'react-notify-toast';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import MainAppBar from './components/MainAppBar';
-import Popup from './components/Popup/Popup';
+// import Popup from './components/Popup/Popup';
 import TimelinePage from './routes/timeline/TimelinePage';
 import HomeworkPage from './routes//homework/HomeworkPage';
 import ModulesPage from './routes//modules/ModulesPage';
@@ -34,16 +34,6 @@ const ROUTES = {
   ],
 };
 
-const defaultProfile = {
-  username: 'guest',
-  full_name: 'Guest',
-  role: 'guest',
-};
-
-const styles = () => ({
-
-});
-
 @inject('currentUser')
 @observer
 class App extends Component {
@@ -56,17 +46,16 @@ class App extends Component {
     }
     token = window.localStorage.getItem('token');
     if (token) {
-      await this.props.currentUser.fetchCurrentUser();
+      await this.props.currentUser.fetchUser();
     } else {
       window.localStorage.removeItem('token');
-      this.setState({ profile: defaultProfile });
     }
   }
 
   render() {
     const { theme } = this.props;
-    const { currentUser, isLoggedIn } = this.props.currentUser;
-    const routes = isLoggedIn ? [...PUBLIC_ROUTES, ...ROUTES[currentUser.role]] : [...PUBLIC_ROUTES];
+    const { role, isLoggedIn } = this.props.currentUser;
+    const routes = isLoggedIn ? [...PUBLIC_ROUTES, ...ROUTES[role]] : [...PUBLIC_ROUTES];
     const paddingTop = theme.mixins.toolbar.minHeight + theme.spacing.unit;
 
     return (
@@ -75,7 +64,7 @@ class App extends Component {
           <CssBaseline />
           <MainAppBar />
           <div style={{ paddingTop }}>
-            <Popup />
+            {/* <Popup /> */}
             <Notifications />
             <Switch>
               {routes.map(route => (<Route key={route.path} {...route} />))}
@@ -88,7 +77,7 @@ class App extends Component {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(App);
+export default withTheme()(App);
 
 App.propTypes = {
   currentUser: PropTypes.object,

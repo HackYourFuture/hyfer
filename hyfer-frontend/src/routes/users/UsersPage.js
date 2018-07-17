@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styles from './users.css';
 import { UserList } from './UserList';
 import SynchronizeGithubData from './SynchronizeGithubData';
@@ -68,3 +69,7 @@ export default class UsersPage extends React.Component {
     );
   }
 }
+
+UsersPage.wrappedComponent.propTypes = {
+  userStore: PropTypes.object.isRequired,
+};

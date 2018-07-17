@@ -97,8 +97,8 @@ class StudentInterface extends React.Component {
 }
 
 StudentInterface.wrappedComponent.propTypes = {
-  currentModuleStore: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
+  currentModuleStore: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(StudentInterface);

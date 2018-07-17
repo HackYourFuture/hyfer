@@ -1,4 +1,3 @@
-/* eslint react/prop-types: error */
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';

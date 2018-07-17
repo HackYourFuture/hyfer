@@ -1,7 +1,8 @@
+/* eslint-disable react/prop-types */
 import React, { Component } from 'react';
 import Student from './student';
 import Styles from './selectStudent.css';
-import Modal from '../../Helpers/Modal/Modal';
+import Modal from './Modal';
 import Table from './table';
 import Icon from '@material-ui/core/Icon';
 

@@ -1,5 +1,5 @@
 import { autorun } from 'mobx';
-import stores from './mobx';
+import stores from './stores';
 import { notify } from 'react-notify-toast';
 
 autorun(() => {

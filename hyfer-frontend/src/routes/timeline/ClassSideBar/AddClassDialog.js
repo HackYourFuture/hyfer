@@ -140,5 +140,7 @@ export default class AddClassDialog extends Component {
 }
 
 AddClassDialog.wrappedComponent.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
   timeline: PropTypes.object.isRequired,
 };

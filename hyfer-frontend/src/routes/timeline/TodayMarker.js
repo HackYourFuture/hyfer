@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import PropTypes from 'prop-types';
 import classes from './todayMarker.css';
 
 export default class TodayMarker extends Component {
@@ -26,3 +26,9 @@ export default class TodayMarker extends Component {
     );
   }
 }
+
+TodayMarker.propTypes = {
+  offset: PropTypes.number.isRequired,
+  scrollingParentRef: PropTypes.object.isRequired,
+  setTodayMarkerRef: PropTypes.func.isRequired,
+};

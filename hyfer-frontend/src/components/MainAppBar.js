@@ -145,6 +145,7 @@ class MainAppBar extends Component {
 MainAppBar.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   currentUser: PropTypes.object.isRequired,
+  history: PropTypes.object,
 };
 
 export default withStyles(styles)(MainAppBar);

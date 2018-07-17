@@ -4,7 +4,7 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import { Provider } from 'mobx-react';
 import 'typeface-roboto';
-import stores from './mobx';
+import stores from './stores';
 
 ReactDOM.render(
   <Provider {...stores}>

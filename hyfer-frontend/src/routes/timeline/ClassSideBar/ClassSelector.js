@@ -66,6 +66,8 @@ class ClassSelector extends Component {
 }
 
 ClassSelector.wrappedComponent.propTypes = {
+  classes: PropTypes.object.isRequired,
+  currentUser: PropTypes.object.isRequired,
   timeline: PropTypes.object.isRequired,
 };
 

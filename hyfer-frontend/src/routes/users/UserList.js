@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styles from './users.css';
 import UserCard from '../../components/UserCard';
 import { inject, observer } from 'mobx-react';
@@ -31,3 +32,8 @@ export class UserList extends Component {
     );
   }
 }
+
+UserList.wrappedComponent.propTypes = {
+  role: PropTypes.string.isRequired,
+  userStore: PropTypes.object.isRequired,
+};

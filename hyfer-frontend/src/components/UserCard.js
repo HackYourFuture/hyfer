@@ -81,14 +81,13 @@ class UserCard extends React.Component {
   }
 
   render() {
-    const { classes, user, showDeleteButton } = this.props;
-    const { currentUser } = this.props.currentUser;
+    const { classes, user, showDeleteButton, currentUser } = this.props;
 
     return (
       <React.Fragment>
         <Card className={classes.card}>
           <CardHeader
-            action={showDeleteButton && user.role === "teacher" && this.props.currentUser.isTeacher &&
+            action={showDeleteButton && user.role === "teacher" && currentUser.isTeacher &&
               <IconButton color="secondary" onClick={this.handleDelete}>
                 <CancelIcon className={classes.iconButton} />
               </IconButton>}>
@@ -118,7 +117,7 @@ class UserCard extends React.Component {
               <IconButton onClick={this.handleLinkedIn}>
                 <FaLinkedIn className={classes.iconButton} />
               </IconButton>}
-            {user.id === this.props.currentUser.currentUser.id &&
+            {user.id === currentUser.id &&
               <React.Fragment>
                 <span className={classes.filler} />
                 <IconButton onClick={this.handleClickOpen}>
@@ -129,7 +128,7 @@ class UserCard extends React.Component {
         </Card>
         <ProfileDialog
           email={currentUser.email}
-          linkedInName={currentUser.linkedin_username}
+          linkedInName={currentUser.linkedInName}
           open={this.state.open}
           onClose={this.handleClose}
           onUpdate={this.handleUpdate}
@@ -141,7 +140,10 @@ class UserCard extends React.Component {
 
 UserCard.propTypes = {
   classes: PropTypes.object.isRequired,
+  currentModuleStore: PropTypes.object.isRequired,
+  currentUser: PropTypes.object.isRequired,
   showDeleteButton: PropTypes.bool.isRequired,
+  user: PropTypes.object.isRequired,
 };
 
 UserCard.defaultProps = {

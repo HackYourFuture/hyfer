@@ -85,9 +85,9 @@ export default class ProfileDialog extends React.Component {
 }
 
 ProfileDialog.propTypes = {
-  open: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  onUpdate: PropTypes.func.isRequired,
   email: PropTypes.string,
   linkedInName: PropTypes.string,
+  onClose: PropTypes.func.isRequired,
+  onUpdate: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
 };

@@ -1,5 +1,6 @@
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import style from './SynchronizeGithubData.css';
 import { success, errorMessage } from '../../notify';
 import loader from '../../assets/images/Ellipsis.gif';
@@ -87,3 +88,9 @@ export default class SynchronizeGithubData extends Component {
     );
   }
 }
+
+SynchronizeGithubData.wrappedComponent.propTypes = {
+  currentUser: PropTypes.object.isRequired,
+  timeline: PropTypes.object.isRequired,
+  userStore: PropTypes.object.isRequired,
+};

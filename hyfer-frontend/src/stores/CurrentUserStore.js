@@ -4,41 +4,82 @@ import stores from './';
 
 export default class GlobalStore {
 
+  isLoaded = false;
+
   @observable
-  currentUser = null;
+  currentUser = {
+    role: 'guest',
+  };
+
+  @computed
+  get id() {
+    return this.currentUser.id;
+  }
+
+  @computed
+  get role() {
+    return this.currentUser.role;
+  }
 
   @computed
   get isLoggedIn() {
-    return this.currentUser != null;
+    return this.currentUser.role !== 'guest';
   }
 
   @computed
   get isStudent() {
-    return this.isLoggedIn && this.currentUser.role === 'student';
+    return this.currentUser.role === 'student';
   }
 
   @computed
   get isTeacher() {
-    return this.isLoggedIn && this.currentUser.role === 'teacher';
+    return this.currentUser.role === 'teacher';
   }
 
   @computed
   get avatarUrl() {
-    return this.isLoggedIn ? `https://avatars.githubusercontent.com/${this.currentUser.username}` : null;
+    return `https://avatars.githubusercontent.com/${this.currentUser.username}`;
   }
+
   @computed
   get isArchived() {
-    return this.isLoggedIn && this.currentUser.archived === 1;
+    return this.currentUser.archived === 1;
+  }
+
+  @computed
+  get fullName() {
+    return this.currentUser.full_name;
+  }
+
+  @computed
+  get email() {
+    return this.currentUser.email;
+  }
+
+  @computed
+  get linkedInName() {
+    return this.currentUser.linkedin_username;
+  }
+
+  @computed
+  get groupName() {
+    return this.currentUser.group_name;
+  }
+
+  @computed
+  get registerDate() {
+    return this.currentUser.register_date;
   }
 
   @action
-  fetchCurrentUser = () => {
-    if (this.currentUser) {
+  fetchUser = () => {
+    if (this.isLoaded) {
       return;
     }
     fetchJSON('/api/user')
       .then((res) => {
         runInAction(() => {
+          this.isLoaded = true;
           this.currentUser = res;
           const { group_name: groupName } = this.currentUser;
           if (groupName != null && this.isStudent && !this.isArchived) {

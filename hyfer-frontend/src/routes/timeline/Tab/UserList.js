@@ -39,15 +39,15 @@ class UserList extends React.Component {
   }
 
   render() {
-    const { classes, currentModuleStore, role } = this.props;
-    const { students, teachers } = currentModuleStore;
+    const { classes, currentUser, currentModuleStore, role } = this.props;
+    const { currentModule, students, teachers } = currentModuleStore;
     let users = role === 'teacher' ? teachers : students;
     users = users.sort((a, b) => a.username.localeCompare(b.username));
 
     return (
       <div className={classes.container}>
         {users.map(user => <UserCard key={user.id} user={user} showDeleteButton={role === 'teacher'} />)}
-        {role === 'teacher' && this.props.currentUser.isTeacher &&
+        {role === 'teacher' && currentModule && currentUser.isTeacher &&
           <React.Fragment>
             <AddTeacherDialog
               open={this.state.isOpen}
@@ -67,7 +67,8 @@ class UserList extends React.Component {
   }
 }
 
-UserList.wrappedComponent.UserList = {
+UserList.wrappedComponent.propTypes = {
+  classes: PropTypes.object.isRequired,
   currentModuleStore: PropTypes.object.isRequired,
   currentUser: PropTypes.object.isRequired,
   role: PropTypes.string.isRequired,

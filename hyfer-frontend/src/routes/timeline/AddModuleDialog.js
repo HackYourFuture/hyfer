@@ -1,11 +1,16 @@
 import React, { Fragment, Component } from 'react';
-import {
-  Dialog, Select, DialogTitle,
-  DialogContent, Button, ListItemText,
-  MenuItem, FormControl, DialogActions,
-} from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 import { observer, inject } from 'mobx-react';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import FormControl from '@material-ui/core/FormControl';
+import ListItemText from '@material-ui/core/ListItemText';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
   formControl: {
@@ -78,5 +83,14 @@ class AddModuleDialog extends Component {
     );
   }
 }
+
+AddModuleDialog.wrappedComponent.propTypes = {
+  classes: PropTypes.object.isRequired,
+  currentModuleStore: PropTypes.object.isRequired,
+  moduleStore: PropTypes.object.isRequired,
+  onClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  timeline: PropTypes.object.isRequired,
+};
 
 export default withStyles(styles)(AddModuleDialog);
