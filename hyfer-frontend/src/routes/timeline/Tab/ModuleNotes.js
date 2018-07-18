@@ -4,6 +4,7 @@ import { autorun } from 'mobx';
 import { observer, inject } from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import Toolbar from '@material-ui/core/Toolbar';
 import EditIcon from '@material-ui/icons/Edit';
 import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
@@ -42,25 +43,30 @@ const styles = theme => ({
   },
   container: {
     width: 980,
-    padding: 32,
   },
   fab: {
     position: 'absolute',
     top: theme.spacing.unit * 2,
     right: theme.spacing.unit * 2,
   },
-  buttonBar: {
-    marginBottom: 8,
+  topBar: {
+    marginTop: theme.spacing.unit,
+    marginBottom: theme.spacing.unit / 2,
+  },
+  bottomBar: {
+    marginBottom: theme.spacing.unit / 2,
+    display: 'flex',
+    justifyContent: 'flex-end',
   },
   button: {
-    margin: theme.spacing.unit,
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
   },
   textArea: {
     minHeight: 480,
     border: '1px solid #ccc',
     borderRadius: 4,
     padding: 8,
-    marginBottom: 20,
     width: '100%',
     resize: 'none',
     ...theme.typography.body1,
@@ -71,15 +77,14 @@ const styles = theme => ({
     ...theme.mixins.gutters(),
     ...theme.typography.body1,
   },
-  bottomButtonContainer: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-  },
   markdownBody: {
     boxSizing: 'border-box',
     minWidth: 200,
     maxWidth: 980,
     margin: '0 auto',
+    padding: 15,
+  },
+  markdownPadding: {
     padding: 45,
     '@media(max-width: 767px)': {
       padding: 15,
@@ -225,12 +230,76 @@ class ModuleNotes extends Component {
 
   renderArticle() {
     const { classes } = this.props;
+    const { inEditMode } = this.state;
     const notes = this.state.notes || this.defaultNotes();
     const __html = this.converter.makeHtml(notes);
+
+    if (inEditMode) {
+      return (
+        <Paper>
+          <article
+            className={classNames(classes.markdownBody, 'markdown-body')}
+            dangerouslySetInnerHTML={{ __html }}
+          />
+        </Paper>
+      );
+    }
     return (
       <div className={classes.article}>
-        <article className={classNames(classes.markdownBody, 'markdown-body')} dangerouslySetInnerHTML={{ __html }} />
+        <article
+          className={classNames(classes.markdownBody, classes.markdownPadding, 'markdown-body')}
+          dangerouslySetInnerHTML={{ __html }}
+        />
       </div>
+    );
+  }
+
+  renderEditMode(classes) {
+    const { isEditing, isDirty } = this.state;
+    return (
+      <React.Fragment>
+        <Paper className={classes.topBar}>
+          <Toolbar variant="dense" disableGutters>
+            <Button color="primary" className={classes.button} onClick={this.setIsEditing} disabled={isEditing} >
+              Edit
+            </Button>
+            <Button color="primary" className={classes.button} onClick={this.clearIsEditing} disabled={!isEditing} >
+              View
+            </Button>
+          </Toolbar>
+        </Paper>
+
+        {isEditing
+          ? this.renderTextArea()
+          : this.renderArticle()}
+
+        <Paper className={classes.bottomBar}>
+          <Toolbar variant="dense" disableGutters>
+            <Button color="secondary" className={classes.button} onClick={this.cancelEdit}>
+              Cancel
+            </Button>
+            <Button color="primary" className={classes.button} onClick={this.saveNotes} disabled={!isDirty} >
+              Update Notes
+            </Button>
+          </Toolbar>
+        </Paper>
+      </React.Fragment>
+    );
+  }
+
+  renderViewMode(classes) {
+    const { isTeacher } = this.props.currentUser;
+    return (
+      <React.Fragment>
+        {isTeacher && (
+          <div className={classes.bottomButtonContainer}>
+            <Button variant="fab" color="primary" className={classes.fab} aria-label="Edit" onClick={this.setEditMode}>
+              <EditIcon />
+            </Button>
+          </div>
+        )}
+        {this.renderArticle()}
+      </React.Fragment>
     );
   }
 
@@ -240,51 +309,16 @@ class ModuleNotes extends Component {
       return null;
     }
 
-    const { inEditMode, isEditing, isDirty } = this.state;
+    const { inEditMode } = this.state;
     const { classes } = this.props;
 
     return (
       <div className={classes.root}>
         <div className={classes.container}>
-
-          {this.props.currentUser.isTeacher && (
-            <div>
-              {inEditMode ? (
-                <Paper className={classes.buttonBar} elevation={1}>
-                  <Button color="primary" className={classes.button} onClick={this.setIsEditing} disabled={isEditing} >
-                    Edit
-                </Button>
-                  <Button color="primary" className={classes.button} onClick={this.clearIsEditing} disabled={!isEditing} >
-                    View
-                </Button>
-                </Paper>
-              ) : (
-                  <div className={classes.bottomButtonContainer}>
-                    <Button variant="fab" color="primary" className={classes.fab} aria-label="Edit" onClick={this.setEditMode}>
-                      <EditIcon />
-                    </Button>
-                  </div>
-                )}
-            </div>
-          )}
-
-          <div>
-            {this.state.isEditing
-              ? this.renderTextArea()
-              : this.renderArticle()}
-          </div>
-
-          {inEditMode && (
-            <div className={classes.bottomButtonContainer}>
-              <Button variant="contained" color="secondary" className={classes.button} onClick={this.cancelEdit}>
-                Cancel
-              </Button>
-              <Button variant="contained" color="primary" className={classes.button} onClick={this.saveNotes} disabled={!isDirty} >
-                Update Notes
-              </Button>
-            </div>
-          )}
-
+          {inEditMode
+            ? this.renderEditMode(classes)
+            : this.renderViewMode(classes)
+          }
         </div>
       </div>
     );
