@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { autorun } from 'mobx';
+import { toJS, autorun } from 'mobx';
 import { observer, inject } from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Toolbar from '@material-ui/core/Toolbar';
 import EditIcon from '@material-ui/icons/Edit';
 import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
 import Showdown from 'showdown';
+import MarkdownEditor from '../../../components/MarkdownEditor';
+import '!style-loader!css-loader!github-markdown-css';
 
 const localStorageKey = 'hyfer:moduleNotes';
 const HYF_GITHUB_URL = 'https://github.com/HackYourFuture';
@@ -49,33 +49,6 @@ const styles = theme => ({
     top: theme.spacing.unit * 2,
     right: theme.spacing.unit * 2,
   },
-  topBar: {
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit / 2,
-    display: 'flex',
-  },
-  toolbar: {
-    display: 'flex',
-    flexGrow: 1,
-  },
-  bottomBar: {
-    marginBottom: theme.spacing.unit / 2,
-    display: 'flex',
-    justifyContent: 'flex-end',
-  },
-  button: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-  },
-  textArea: {
-    height: 400,
-    border: '1px solid #ccc',
-    borderRadius: 4,
-    padding: 8,
-    width: '100%',
-    resize: 'none',
-    ...theme.typography.body1,
-  },
   article: {
     textAlign: 'left',
     width: '100%',
@@ -95,15 +68,11 @@ const styles = theme => ({
 
 const defaultState = {
   inEditMode: false,
-  isEditing: false,
-  isDirty: false,
-  notes: '',
+  markdown: '',
 };
 
 const restoreState = {
   inEditMode: true,
-  isEditing: true,
-  isDirty: true,
 };
 
 @inject('currentUser', 'currentModuleStore')
@@ -132,27 +101,27 @@ class ModuleNotes extends Component {
         return;
       }
 
+      this.origNotes = currentModule && currentModule.notes;
+
       this.runningId = currentModule.id;
       const storageItem = window.sessionStorage.getItem(localStorageKey);
 
-      let notes = '';
+      let markdown = '';
       if (storageItem != null) {
         try {
           const storageObj = JSON.parse(storageItem);
           if (storageObj.runningId === this.runningId) {
-            notes = storageObj.notes;
-            this.setState({ ...restoreState, notes });
+            markdown = storageObj.markdown;
+            this.setState({ ...restoreState, markdown });
           }
           // eslint-disable-next-line no-empty
         } catch (_) { }
       }
 
-      if (notes === '') {
-        notes = currentModule && currentModule.notes;
-        this.setState({ ...defaultState, notes });
+      if (markdown === '') {
+        markdown = this.origNotes;
+        this.setState({ ...defaultState, markdown });
       }
-
-      this.origNotes = notes;
     });
   }
 
@@ -161,68 +130,44 @@ class ModuleNotes extends Component {
     window.sessionStorage.removeItem(localStorageKey);
   }
 
-  onChange = (e) => {
-    const notes = e.target.value;
+  onChange = (markdown) => {
     const storageItem = {
       runningId: this.runningId,
-      notes,
+      markdown,
     };
     window.sessionStorage.setItem(localStorageKey, JSON.stringify(storageItem));
-    this.setState({
-      notes,
-      isDirty: true,
-    });
+    this.setState({ markdown });
   };
 
   setEditMode = () => {
-    let { notes } = this.state;
-    if (!notes) {
-      notes = this.defaultNotes();
+    let { markdown } = this.state;
+    if (!markdown) {
+      markdown = this.defaultNotes();
     }
     this.setState({
       inEditMode: true,
-      isEditing: true,
-      notes,
+      markdown,
     });
   }
 
   setIsEditing = () => this.setState({ isEditing: true });
   clearIsEditing = () => this.setState({ isEditing: false });
 
-  saveNotes = () => {
+  saveNotes = (markdown) => {
     // Remove any embedded HTML comments
-    const notes = this.state.notes.replace(/<!--(.|\s)*?-->/g, '');
-
+    const notes = markdown.replace(/<!--(.|\s)*?-->/g, '');
     this.props.currentModuleStore.saveNotes(notes);
-    this.setState({
-      isDirty: false,
-      inEditMode: false,
-      isEditing: false,
-    });
-
+    this.setState({ inEditMode: false });
     window.sessionStorage.removeItem(localStorageKey);
   }
 
   cancelEdit = () => {
     this.setState({
-      notes: this.origNotes,
-      isDirty: false,
+      markdown: this.origNotes,
       inEditMode: false,
-      isEditing: false,
     });
     window.sessionStorage.removeItem(localStorageKey);
   };
-
-  renderTextArea() {
-    const { classes } = this.props;
-    return (
-      <textarea
-        className={classes.textArea}
-        value={this.state.notes}
-        onChange={this.onChange}>
-      </textarea>
-    );
-  }
 
   defaultNotes() {
     const { module, group, currentModule } = this.props.currentModuleStore;
@@ -231,54 +176,28 @@ class ModuleNotes extends Component {
 
   renderArticle() {
     const { classes } = this.props;
-    const { inEditMode } = this.state;
-    const notes = this.state.notes || this.defaultNotes();
-    const __html = this.converter.makeHtml(notes);
+    const markdown = this.state.markdown || this.defaultNotes();
+    const __html = this.converter.makeHtml(markdown);
 
-    const article = (
-      <article
-        className={classNames(classes.markdownBody, 'markdown-body')}
-        dangerouslySetInnerHTML={{ __html }}
-      />
-    );
-
-    if (inEditMode) {
-      return (
-        <Paper>{article}</Paper>
-      );
-    }
     return (
-      <div className={classes.article}>{article}</div>
+      <div className={classes.article}>
+        <article
+          className={classNames(classes.markdownBody, 'markdown-body')}
+          dangerouslySetInnerHTML={{ __html }}
+        />
+      </div>
     );
   }
 
-  renderEditMode(classes) {
-    const { isEditing, isDirty } = this.state;
+  renderEditMode() {
+    console.log();
     return (
-      <React.Fragment>
-        <Paper className={classes.topBar}>
-          <Toolbar className={classes.toolbar} variant="dense" disableGutters>
-            <Button color="primary" className={classes.button} onClick={this.setIsEditing} disabled={isEditing} >
-              Edit
-            </Button>
-            <Button color="primary" className={classes.button} onClick={this.clearIsEditing} disabled={!isEditing} >
-              View
-            </Button>
-            <span style={{ flexGrow: 1 }} />
-            <Button color="secondary" className={classes.button} onClick={this.cancelEdit}>
-              Cancel
-            </Button>
-            <Button color="primary" className={classes.button} onClick={this.saveNotes} disabled={!isDirty} >
-              Update Notes
-            </Button>
-
-          </Toolbar>
-        </Paper>
-
-        {isEditing
-          ? this.renderTextArea()
-          : this.renderArticle()}
-      </React.Fragment>
+      <MarkdownEditor
+        markdown={toJS(this.state.markdown)}
+        onChange={this.onChange}
+        onSave={this.saveNotes}
+        onCancel={this.cancelEdit}
+      />
     );
   }
 
@@ -311,7 +230,7 @@ class ModuleNotes extends Component {
       <div className={classes.root}>
         <div className={classes.container}>
           {inEditMode
-            ? this.renderEditMode(classes)
+            ? this.renderEditMode()
             : this.renderViewMode(classes)
           }
         </div>
