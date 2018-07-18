@@ -1,4 +1,4 @@
-import { observable, runInAction } from 'mobx';
+import { observable, runInAction, action } from 'mobx';
 import { fetchJSON } from './util';
 import Showdown from 'showdown';
 import stores from '.';
@@ -23,7 +23,7 @@ export default class CurrentModuleStore {
   readme = null;
 
   @observable
-  group = null;
+  group = [];
 
   @observable
   module = [];
@@ -38,7 +38,13 @@ export default class CurrentModuleStore {
   teachers = [];
 
   @observable
+  history = "";
+
+  @observable
   currentWeek = "";
+
+  @observable
+  aantalWeeks = [];
 
   async getRunningModuleDetails(runningId) {
     const details = await fetchJSON(`/api/running/details/${runningId}`);
@@ -49,6 +55,8 @@ export default class CurrentModuleStore {
       this.currentModule = runningModule;
       this.students = students;
       this.teachers = teachers;
+      this.history = students.history;
+      this.aantalWeeks = new Array(runningModule.duration);
     });
   }
 
@@ -123,7 +131,6 @@ export default class CurrentModuleStore {
       this.readme = null;
       return;
     }
-
     const res = await fetch(`${HYF_GITHUB_URL}/${repoName}/readme`);
     if (!res.ok) throw res;
     const readmeEncoded = await res.json();
@@ -134,7 +141,7 @@ export default class CurrentModuleStore {
     });
   }
 
-  async getGroupsByGroupName(group_name) {
+  async getGroupsByGroupName(group_name, update) {
     const token = localStorage.getItem('token');
     const groupName = group_name.replace(' ', '');
     const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/groups/currentgroups/${groupName}`
@@ -145,10 +152,8 @@ export default class CurrentModuleStore {
           Authorization: 'Bearer ' + token,
         },
       });
-
     if (!res.ok) {
       stores.global.setLastError(res);
-
     } else {
       const response = await res.json();
       const runningModules = response;
@@ -156,19 +161,65 @@ export default class CurrentModuleStore {
       const currentDate = moment();
       let index = 0;
       for (; index < runningModules.length; index++) {
-        const runningModule = runningModules[index];
-        const { duration } = runningModule;
-        computedDate = computedDate.add(duration, 'weeks');
         if (computedDate > currentDate) {
           break;
         }
+        const runningModule = runningModules[index];
+        const { duration } = runningModule;
+        computedDate = computedDate.add(duration, 'weeks');
+
       }
-      runInAction(() => {
-        this.getRunningModuleDetails(response[index].id);
-        const date = computedDate.diff(currentDate, "weeks");
-        const start = response[index].duration - date;
-        this.currentWeek = start;
+      if (update) {
+        runInAction(() => {
+          if (computedDate < currentDate) {
+            this.getRunningModuleDetails(response[index].id);
+            const date = computedDate.diff(currentDate, "weeks");
+            const start = response[index].duration - date;
+            this.currentWeek = start;
+          }
+        });
+      } else {
+        runInAction(() => {
+          if (computedDate < currentDate) {
+            const date = computedDate.diff(currentDate, "weeks");
+            const start = response[index].duration - date;
+            this.currentWeek = start;
+          }
+
+        });
+      }
+
+    }
+  }
+
+  @action
+  saveAttendance = async (user_id, week_num, attendance, homework) => {
+    this.getGroupsByGroupName(this.group.group_name, false);
+    if (week_num > this.currentWeek) {
+      stores.global.setWarningMessage(" you can not take the attendance for this week");
+    } else {
+      const token = localStorage.getItem('token');
+      const data = {
+        running_module_id: this.currentModule.id,
+        user_id: user_id,
+        week_num: week_num,
+        attendance: attendance,
+        homework: homework,
+      };
+      const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/history/test`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token,
+        },
+        method: "POST",
+        body: JSON.stringify(data),
       });
+      if (!res.ok) {
+        stores.global.setLastError(res);
+      } else {
+        this.getRunningModuleDetails(data.running_module_id);
+        stores.global.setSuccessMessage("saved");
+      }
     }
   }
 }

@@ -54,20 +54,20 @@ function orderAndGetList(histories) {
   Object.keys(histories).forEach((key) => {
     histories[key].forEach((history) => {
       const {
-        date,
-        group_id,
         running_module_id,
         user_id,
+        week_num,
+        date,
         attendance,
         homework,
       } = history;
       arr.push(
-        date,
-        group_id,
         running_module_id,
         user_id,
+        week_num,
+        date,
         attendance,
-        homework
+        homework,
       );
       list.push(arr);
       arr = [];
@@ -81,6 +81,7 @@ async function saveAttendances(req, res) {
   try {
     const con = await getConnection(req, res);
     const list = orderAndGetList(req.body);
+    console.log(req.body);
     const val = await db.saveHistory(con, list);
     res.json(val);
   } catch (err) {
@@ -88,9 +89,22 @@ async function saveAttendances(req, res) {
   }
 }
 
+async function Save(req, res) {
+  try {
+    const con = await getConnection(req, res);
+    const val = await db.saveHistory(con, req.body);
+    res.json(val);
+  } catch (err) {
+    handleError(err, res);
+  }
+}
+
+
 const router = express.Router();
 router
   .patch('/:moduleId/:groupId', isAuthenticated(), getHistory)
-  .post('/', isAuthenticated(), saveAttendances);
+  .post('/', isAuthenticated(), saveAttendances)
+  .post('/test', isAuthenticated(), Save);
+
 
 module.exports = router;

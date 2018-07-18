@@ -6,7 +6,7 @@ const GET_STUDENTS_BY_RUNNING_MODULE_ID = `
     JOIN users u ON sh.user_id=u.id WHERE running_module_id=?
 `;
 const SAVE_ATTENDANCES = `
-    REPLACE INTO students_history (date, group_id, running_module_id, user_id, attendance, homework) VALUES ?
+    REPLACE INTO students_history (running_module_id, user_id,week_num,date,attendance,homework) VALUES ?
 `;
 
 function getStudentHistory(con, runningId, userId) {
@@ -25,7 +25,14 @@ function getHistory(con, runningModuleId) {
 }
 
 function saveHistory(con, list) {
-  return execQuery(con, SAVE_ATTENDANCES, [list]);
+  const { running_module_id,
+    user_id,
+    week_num,
+    attendance,
+    homework } = list
+  return execQuery(con, `
+  REPLACE INTO students_history (running_module_id, user_id,week_num,attendance,homework) VALUES (?,?,?,?,?)
+`, [running_module_id, user_id, week_num, attendance, homework]);
 }
 
 module.exports = {
