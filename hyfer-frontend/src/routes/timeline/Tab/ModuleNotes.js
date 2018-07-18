@@ -228,10 +228,7 @@ class ModuleNotes extends Component {
     const notes = this.state.notes || this.defaultNotes();
     const __html = this.converter.makeHtml(notes);
     return (
-      <div
-        className={classes.article}
-        styles={this.state.notes ? { minHeight: 480 } : 0}
-      >
+      <div className={classes.article}>
         <article className={classNames(classes.markdownBody, 'markdown-body')} dangerouslySetInnerHTML={{ __html }} />
       </div>
     );
