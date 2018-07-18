@@ -14,7 +14,11 @@ import FaGitHub from 'react-icons/lib/fa/github';
 import FaLinkedIn from 'react-icons/lib/fa/linkedin';
 import CancelIcon from '@material-ui/icons/Cancel';
 import ProfileDialog from './ProfileDialog';
+// import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 
+// import Button from '@material-ui/core/Button';
 const styles = {
 
   card: {
@@ -39,6 +43,15 @@ const styles = {
     width: 24,
     height: 24,
   },
+  button: {
+    width: "50%",
+    height: 20,
+    borderRadius: 0,
+    border: 0,
+
+  },
+
+
 };
 
 @inject('currentModuleStore', 'global')
@@ -80,19 +93,54 @@ class UserCard extends React.Component {
     this.props.currentModuleStore.getRunningModuleDetails(id);
   }
 
-  render() {
-    const { classes, user, showDeleteButton } = this.props;
-    const { currentUser } = this.props.global;
+  saveAttendance = (user_id, week_num, attendance, homework) => {
+    const present = attendance === 0 ? 1 : 0;
+    this.props.currentModuleStore.saveAttendance(user_id, week_num, present, homework);
+  }
 
+  saveHomework = (user_id, week_num, attendance, homework) => {
+    const homeworkCheked = homework === 0 ? 1 : 0;
+    this.props.currentModuleStore.saveAttendance(user_id, week_num, attendance, homeworkCheked);
+  }
+  render() {
+    const { classes, user, showDeleteButton, selectedWeek } = this.props;
+    const { currentUser } = this.props.global;
+    const { module } = this.props.currentModuleStore;
     return (
       <React.Fragment>
         <Card className={classes.card}>
+          {user.role === "student" && module.module_name !== "Holiday" && this.props.global.isTeacher ?
+            <div style={{ display: "flex", flexWrap: "wrap", width: "100%" }}>
+              <FormControlLabel
+                style={{ marginLeft: 10 }}
+                control={
+                  <Checkbox
+                    checked={user.history.attendance[selectedWeek] === 0 ? false : true}
+                    onChange={() => this.saveAttendance(user.id, selectedWeek, user.history.attendance[selectedWeek], user.history.homework[selectedWeek])}
+                    value="present"
+                  />
+                }
+                label="present"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={user.history.homework[selectedWeek] === 0 ? false : true}
+                    onChange={() => this.saveHomework(user.id, selectedWeek, user.history.attendance[selectedWeek], user.history.homework[selectedWeek])}
+                    value="homework"
+                  />
+                }
+                label="homework"
+              />
+            </div>
+            : ""}
           <CardHeader
             action={showDeleteButton && user.role === "teacher" && this.props.global.isTeacher &&
               <IconButton color="secondary" onClick={this.handleDelete}>
                 <CancelIcon className={classes.iconButton} />
               </IconButton>}>
           </CardHeader>
+
           <CardMedia
             className={classes.media}
             image={`https://avatars.githubusercontent.com/${user.username}`}
@@ -124,8 +172,10 @@ class UserCard extends React.Component {
                 <IconButton onClick={this.handleClickOpen}>
                   <EditIcon className={classes.iconButton} />
                 </IconButton>
+
               </React.Fragment>}
           </CardActions>
+
         </Card>
         <ProfileDialog
           email={currentUser.email}

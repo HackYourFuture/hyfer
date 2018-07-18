@@ -39,14 +39,14 @@ class UserList extends React.Component {
   }
 
   render() {
-    const { classes, currentModuleStore, role } = this.props;
+    const { classes, currentModuleStore, role, selectedWeek } = this.props;
     const { students, teachers } = currentModuleStore;
     let users = role === 'teacher' ? teachers : students;
     users = users.sort((a, b) => a.username.localeCompare(b.username));
 
     return (
       <div className={classes.container}>
-        {users.map(user => <UserCard key={user.id} user={user} showDeleteButton={role === 'teacher'} />)}
+        {users.map(user => <UserCard selectedWeek={selectedWeek} key={user.id} user={user} showDeleteButton={role === 'teacher'} />)}
         {role === 'teacher' && this.props.global.isTeacher &&
           <React.Fragment>
             <AddTeacherDialog

@@ -8,6 +8,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import UserList from './UserList';
 import ModuleNotes from './ModuleNotes';
+import Attendance from "./Attendance";
 // import FaGitHub from 'react-icons/lib/fa/github';
 
 const HYF_GITHUB_URL = 'https://github.com/HackYourFuture';
@@ -48,14 +49,21 @@ class StudentInterface extends React.Component {
     window.open(`${HYF_GITHUB_URL}/${this.props.currentModuleStore.module.module_name}`, '_blank');
 
   render() {
-    const { classes, currentModuleStore } = this.props;
+    const { classes, currentModuleStore, global } = this.props;
     const { students, teachers, currentModule, module, group, currentWeek } = currentModuleStore;
-
+    console.log(students);
     const hasNotes = currentModule && currentModule.notes;
     const { value } = this.state;
 
-    const title = currentModule ? `${group.group_name} – ${module.module_name} , week (${currentWeek} of ${currentModule.duration})` : '';
+    let title = currentModule ? `${group.group_name} – ${module.module_name} , week (${currentWeek} of ${currentModule.duration})` : '';
+    if (global.isTeacher) {
 
+      title = currentModule ? `${group.group_name} – ${module.module_name} ` : '';
+
+    } else {
+      title = currentModule ? `${group.group_name} – ${module.module_name} , week (${currentWeek} of ${currentModule.duration})` : '';
+
+    }
     return (
       <div className={classes.root}>
         <Paper>
@@ -68,7 +76,7 @@ class StudentInterface extends React.Component {
         </Paper>
         {value === 0 && <TabContainer><ModuleNotes /></TabContainer>}
         {value === 1 && <TabContainer><UserList role="teacher" /></TabContainer>}
-        {value === 2 && <TabContainer><UserList role="student" /></TabContainer>}
+        {value === 2 && <TabContainer><Attendance /></TabContainer>}
       </div>
     );
   }

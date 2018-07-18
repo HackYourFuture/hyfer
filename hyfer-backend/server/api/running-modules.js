@@ -10,7 +10,7 @@ const handleError = require('./error')('running_modules');
 
 // Until we have implemented attendances in the frontend
 // refrain from trying to get them from the database
-const INCLUDE_ATTENDANCES = false;
+const INCLUDE_ATTENDANCES = true;
 
 async function getTimeline(req, res) {
   try {
