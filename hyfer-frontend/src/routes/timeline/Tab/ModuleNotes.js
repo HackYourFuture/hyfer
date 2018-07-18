@@ -4,7 +4,6 @@ import { autorun } from 'mobx';
 import { observer, inject } from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
@@ -36,13 +35,19 @@ function makeTemplate(module, group, duration) {
 }
 
 const styles = theme => ({
-  container: {
+  root: {
     display: 'flex',
     justifyContent: 'center',
+    position: 'relative',
   },
-  root: {
+  container: {
     width: 980,
     padding: 32,
+  },
+  fab: {
+    position: 'absolute',
+    top: theme.spacing.unit * 2,
+    right: theme.spacing.unit * 2,
   },
   buttonBar: {
     marginBottom: 8,
@@ -242,63 +247,47 @@ class ModuleNotes extends Component {
     const { classes } = this.props;
 
     return (
-      <div className={classes.container}>
-        <div className={classes.root}>
-          {this.props.currentUser.isTeacher && <div>
-            {!inEditMode && <div className={classes.bottomButtonContainer}>
-              <IconButton
-                className={classes.button}
-                aria-label="Edit"
-                onClick={this.setEditMode}
-              >
-                <EditIcon />
-              </IconButton>
-            </div>}
-            {inEditMode && <Paper className={classes.buttonBar} elevation={1}>
-              <Button
-                color="primary"
-                className={classes.button}
-                onClick={this.setIsEditing}
-                disabled={isEditing}
-              >
-                Edit
+      <div className={classes.root}>
+        <div className={classes.container}>
+
+          {this.props.currentUser.isTeacher && (
+            <div>
+              {inEditMode ? (
+                <Paper className={classes.buttonBar} elevation={1}>
+                  <Button color="primary" className={classes.button} onClick={this.setIsEditing} disabled={isEditing} >
+                    Edit
                 </Button>
-              <Button
-                color="primary"
-                className={classes.button}
-                onClick={this.clearIsEditing}
-                disabled={!isEditing}
-              >
-                View
+                  <Button color="primary" className={classes.button} onClick={this.clearIsEditing} disabled={!isEditing} >
+                    View
                 </Button>
-            </Paper>}
-          </div>}
+                </Paper>
+              ) : (
+                  <div className={classes.bottomButtonContainer}>
+                    <Button variant="fab" color="primary" className={classes.fab} aria-label="Edit" onClick={this.setEditMode}>
+                      <EditIcon />
+                    </Button>
+                  </div>
+                )}
+            </div>
+          )}
+
           <div>
             {this.state.isEditing
               ? this.renderTextArea()
               : this.renderArticle()}
           </div>
+
           {inEditMode && (
             <div className={classes.bottomButtonContainer}>
-              <Button
-                variant="contained"
-                color="secondary"
-                className={classes.button}
-                onClick={this.cancelEdit}
-              >
+              <Button variant="contained" color="secondary" className={classes.button} onClick={this.cancelEdit}>
                 Cancel
-            </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={this.saveNotes}
-                disabled={!isDirty}
-              >
+              </Button>
+              <Button variant="contained" color="primary" className={classes.button} onClick={this.saveNotes} disabled={!isDirty} >
                 Update Notes
-            </Button>
+              </Button>
             </div>
           )}
+
         </div>
       </div>
     );
