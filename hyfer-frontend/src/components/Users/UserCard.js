@@ -109,7 +109,7 @@ class UserCard extends React.Component {
     return (
       <React.Fragment>
         <Card className={classes.card}>
-          {user.role === "student" && module.module_name !== "Holiday" && this.props.global.isTeacher ?
+          {user.role === "student" && module.module_name !== "Holiday" && this.props.global.isTeacher && selectedWeek >= 0 ?
             <div style={{ display: "flex", flexWrap: "wrap", width: "100%" }}>
               <FormControlLabel
                 style={{ marginLeft: 10 }}

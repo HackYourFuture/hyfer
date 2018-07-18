@@ -3,7 +3,6 @@ import { fetchJSON } from './util';
 import Showdown from 'showdown';
 import stores from '.';
 import moment from "moment";
-// import { getCurrentWeek } from '../util';
 
 const HYF_GITHUB_URL = 'https://api.github.com/repos/HackYourFuture';
 
@@ -132,7 +131,6 @@ export default class CurrentModuleStore {
       this.readme = null;
       return;
     }
-
     const res = await fetch(`${HYF_GITHUB_URL}/${repoName}/readme`);
     if (!res.ok) throw res;
     const readmeEncoded = await res.json();
@@ -154,10 +152,8 @@ export default class CurrentModuleStore {
           Authorization: 'Bearer ' + token,
         },
       });
-
     if (!res.ok) {
       stores.global.setLastError(res);
-
     } else {
       const response = await res.json();
       const runningModules = response;
@@ -198,11 +194,9 @@ export default class CurrentModuleStore {
 
   @action
   saveAttendance = async (user_id, week_num, attendance, homework) => {
-    // const sunday = moment().day(0);
-    // if  the current date smaller   
     this.getGroupsByGroupName(this.group.group_name, false);
-    if (week_num > this.currentWeek && this.currentModule !== "") {
-      stores.global.setWarningMessage("do you see the future ??");
+    if (week_num > this.currentWeek) {
+      stores.global.setWarningMessage(" you can not take the attendance for this week");
     } else {
       const token = localStorage.getItem('token');
       const data = {
@@ -222,12 +216,10 @@ export default class CurrentModuleStore {
       });
       if (!res.ok) {
         stores.global.setLastError(res);
-
       } else {
         this.getRunningModuleDetails(data.running_module_id);
         stores.global.setSuccessMessage("saved");
       }
-
     }
   }
 }
