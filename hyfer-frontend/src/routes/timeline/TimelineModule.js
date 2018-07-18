@@ -73,7 +73,7 @@ class TimelineModule extends Component {
     const { spacing } = this.props.theme;
     const width = this.props.width * duration + spacing.unit * (duration - 1);
 
-    const { classes } = this.props;
+    const { classes, currentUser } = this.props;
 
     return (
       <Paper elevation={1}
@@ -89,17 +89,21 @@ class TimelineModule extends Component {
         >
           {module_name}
         </Typography>
-        <IconButton
-          onClick={this.openMenu}
-          className={classes.menuButton}
-        >
-          <MoreVertIcon color="action" />
-        </IconButton>
-        <TimelineMenu
-          runningModuleId={running_module_id}
-          anchorEl={this.state.anchorEl}
-          onClose={this.closeMenu}
-        />
+        {currentUser.isTeacher && (
+          <React.Fragment>
+            <IconButton
+              onClick={this.openMenu}
+              className={classes.menuButton}
+            >
+              <MoreVertIcon color="action" />
+            </IconButton>
+            <TimelineMenu
+              runningModuleId={running_module_id}
+              anchorEl={this.state.anchorEl}
+              onClose={this.closeMenu}
+            />
+          </React.Fragment>
+        )}
       </Paper >
     );
   }

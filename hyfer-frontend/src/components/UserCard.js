@@ -102,8 +102,9 @@ class UserCard extends React.Component {
             />
             <Typography
               align='center'
-              gutter
               variant="body1"
+              title={user.username}
+              noWrap
             >
               {user.username}
             </Typography>
@@ -134,7 +135,7 @@ class UserCard extends React.Component {
   }
 }
 
-UserCard.propTypes = {
+UserCard.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   currentModuleStore: PropTypes.object.isRequired,
   currentUser: PropTypes.object.isRequired,

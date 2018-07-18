@@ -79,7 +79,7 @@ class App extends Component {
 
 export default withTheme()(App);
 
-App.propTypes = {
+App.wrappedComponent.propTypes = {
   currentUser: PropTypes.object,
   theme: PropTypes.object.isRequired,
 };

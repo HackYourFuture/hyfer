@@ -9,21 +9,8 @@ import Badge from '@material-ui/core/Badge';
 import Typography from '@material-ui/core/Typography';
 import UserList from './UserList';
 import ModuleNotes from './ModuleNotes';
-// import FaGitHub from 'react-icons/lib/fa/github';
 
 const HYF_GITHUB_URL = 'https://github.com/HackYourFuture';
-
-function TabContainer(props) {
-  return (
-    <Typography component="div" style={{ padding: 8 * 3 }}>
-      {props.children}
-    </Typography>
-  );
-}
-
-TabContainer.propTypes = {
-  children: PropTypes.node.isRequired,
-};
 
 const styles = (theme) => ({
   root: {
@@ -36,7 +23,22 @@ const styles = (theme) => ({
   padding: {
     padding: `0 ${theme.spacing.unit * 2}px`,
   },
+  tabContainer: {
+    padding: theme.spacing.unit * 2,
+  },
 });
+
+function TabContainer(props) {
+  return (
+    <Typography component="div">
+      {props.children}
+    </Typography>
+  );
+}
+
+TabContainer.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
 @inject('currentModuleStore', 'currentUser', 'ui')
 @observer
@@ -72,9 +74,9 @@ class StudentInterface extends React.Component {
             } />
           </Tabs>
         </Paper>
-        {timelineTabIndex === 0 && <TabContainer><ModuleNotes /></TabContainer>}
-        {timelineTabIndex === 1 && <TabContainer><UserList role="teacher" /></TabContainer>}
-        {timelineTabIndex === 2 && <TabContainer><UserList role="student" /></TabContainer>}
+        {timelineTabIndex === 0 && <ModuleNotes />}
+        {timelineTabIndex === 1 && <UserList role="teacher" />}
+        {timelineTabIndex === 2 && <UserList role="student" />}
       </React.Fragment>
     );
   }

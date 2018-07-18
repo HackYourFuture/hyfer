@@ -52,6 +52,11 @@ const styles = theme => ({
   topBar: {
     marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit / 2,
+    display: 'flex',
+  },
+  toolbar: {
+    display: 'flex',
+    flexGrow: 1,
   },
   bottomBar: {
     marginBottom: theme.spacing.unit / 2,
@@ -63,7 +68,7 @@ const styles = theme => ({
     marginRight: theme.spacing.unit,
   },
   textArea: {
-    minHeight: 480,
+    height: 400,
     border: '1px solid #ccc',
     borderRadius: 4,
     padding: 8,
@@ -74,7 +79,6 @@ const styles = theme => ({
   article: {
     textAlign: 'left',
     width: '100%',
-    ...theme.mixins.gutters(),
     ...theme.typography.body1,
   },
   markdownBody: {
@@ -82,12 +86,9 @@ const styles = theme => ({
     minWidth: 200,
     maxWidth: 980,
     margin: '0 auto',
-    padding: 15,
-  },
-  markdownPadding: {
-    padding: 45,
+    padding: theme.spacing.unit * 4,
     '@media(max-width: 767px)': {
-      padding: 15,
+      padding: theme.spacing.unit * 2,
     },
   },
 });
@@ -234,23 +235,20 @@ class ModuleNotes extends Component {
     const notes = this.state.notes || this.defaultNotes();
     const __html = this.converter.makeHtml(notes);
 
+    const article = (
+      <article
+        className={classNames(classes.markdownBody, 'markdown-body')}
+        dangerouslySetInnerHTML={{ __html }}
+      />
+    );
+
     if (inEditMode) {
       return (
-        <Paper>
-          <article
-            className={classNames(classes.markdownBody, 'markdown-body')}
-            dangerouslySetInnerHTML={{ __html }}
-          />
-        </Paper>
+        <Paper>{article}</Paper>
       );
     }
     return (
-      <div className={classes.article}>
-        <article
-          className={classNames(classes.markdownBody, classes.markdownPadding, 'markdown-body')}
-          dangerouslySetInnerHTML={{ __html }}
-        />
-      </div>
+      <div className={classes.article}>{article}</div>
     );
   }
 
@@ -259,30 +257,27 @@ class ModuleNotes extends Component {
     return (
       <React.Fragment>
         <Paper className={classes.topBar}>
-          <Toolbar variant="dense" disableGutters>
+          <Toolbar className={classes.toolbar} variant="dense" disableGutters>
             <Button color="primary" className={classes.button} onClick={this.setIsEditing} disabled={isEditing} >
               Edit
             </Button>
             <Button color="primary" className={classes.button} onClick={this.clearIsEditing} disabled={!isEditing} >
               View
             </Button>
-          </Toolbar>
-        </Paper>
-
-        {isEditing
-          ? this.renderTextArea()
-          : this.renderArticle()}
-
-        <Paper className={classes.bottomBar}>
-          <Toolbar variant="dense" disableGutters>
+            <span style={{ flexGrow: 1 }} />
             <Button color="secondary" className={classes.button} onClick={this.cancelEdit}>
               Cancel
             </Button>
             <Button color="primary" className={classes.button} onClick={this.saveNotes} disabled={!isDirty} >
               Update Notes
             </Button>
+
           </Toolbar>
         </Paper>
+
+        {isEditing
+          ? this.renderTextArea()
+          : this.renderArticle()}
       </React.Fragment>
     );
   }
