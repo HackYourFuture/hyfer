@@ -18,12 +18,12 @@ const styles = (theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    position: 'relative',
   },
   container: {
     display: 'flex',
     flexWrap: 'wrap',
     backgroundColor: '#fafafa',
-    position: 'relative',
     margin: theme.spacing.unit,
   },
   toolbar: {
@@ -125,22 +125,22 @@ class UserList extends Component {
           </Paper>}
         <div className={classes.container}>
           {this.renderUsers(role, users, this.state.selectedWeek)}
-          {role === 'teacher' && currentModule && currentUser.isTeacher &&
-            <Fragment>
-              <AddTeacherDialog
-                open={this.state.isOpen}
-                onClose={this.closeDialog}
-              />
-              <Button
-                onClick={this.openDialog}
-                variant="fab"
-                color="secondary"
-                aria-label="add"
-                className={classes.fab}>
-                <AddIcon />
-              </Button>
-            </Fragment>}
         </div>
+        {role === 'teacher' && currentModule && currentUser.isTeacher &&
+          <Fragment>
+            <AddTeacherDialog
+              open={this.state.isOpen}
+              onClose={this.closeDialog}
+            />
+            <Button
+              onClick={this.openDialog}
+              variant="fab"
+              color="secondary"
+              aria-label="add"
+              className={classes.fab}>
+              <AddIcon />
+            </Button>
+          </Fragment>}
       </div>
     );
   }
