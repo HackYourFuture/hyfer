@@ -4,6 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import { inject, observer } from 'mobx-react';
 import UserCard from '../../../components/UserCard';
 import AddTeacherDialog from './AddTeacherDialog';
@@ -33,6 +35,7 @@ class UserList extends React.Component {
 
   state = {
     isOpen: false,
+    selectedWeek: 0,
   }
 
   openDialog = () => {
@@ -43,8 +46,8 @@ class UserList extends React.Component {
     this.setState({ isOpen: false });
   }
 
-  renderUsers(role, users) {
-    const { classes } = this.props;
+  renderUsers(role, users, selectedWeek) {
+    const { classes, showAttendance } = this.props;
     if (users.length === 0) {
       return (
         <Typography variant="subheading" color="textSecondary" align="center" className={classes.text}>
@@ -52,7 +55,39 @@ class UserList extends React.Component {
         </Typography>
       );
     }
-    return users.map(user => <UserCard key={user.id} user={user} showDeleteButton={role === 'teacher'} />);
+    return users.map(user => (
+      <UserCard
+        key={user.id}
+        user={user}
+        selectedWeek={selectedWeek}
+        showDeleteButton={role === 'teacher'}
+        showAttendance={showAttendance}
+      />
+    ));
+  }
+
+  renderSelectItems(duration) {
+    const items = [];
+    for (let i = 0; i < duration; i++) {
+      const label = `Week ${i + 1}`;
+      items.push(<MenuItem key={label} value={i}>{label}</MenuItem>);
+    }
+    return items;
+  }
+
+  handleWeekChange = (e) => this.setState({ selectedWeek: e.target.value })
+
+  renderWeekSelector(classes, duration) {
+    return (
+      <div>
+        <Select
+          value={this.state.selectedWeek}
+          onChange={this.handleWeekChange}
+        >
+          {this.renderSelectItems(duration)}
+        </Select>
+      </div>
+    );
   }
 
   render() {
@@ -63,7 +98,8 @@ class UserList extends React.Component {
 
     return (
       <div className={classes.root}>
-        {this.renderUsers(role, users)}
+        {role === 'student' && this.renderWeekSelector(classes, currentModule.duration)}
+        {this.renderUsers(role, users, this.state.selectedWeek)}
         {role === 'teacher' && currentModule && currentUser.isTeacher &&
           <React.Fragment>
             <AddTeacherDialog
@@ -89,6 +125,7 @@ UserList.wrappedComponent.propTypes = {
   currentModuleStore: PropTypes.object.isRequired,
   currentUser: PropTypes.object.isRequired,
   role: PropTypes.string.isRequired,
+  showAttendance: PropTypes.bool,
 };
 
 export default withStyles(styles)(UserList);

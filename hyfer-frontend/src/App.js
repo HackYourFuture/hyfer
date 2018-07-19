@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { withTheme } from '@material-ui/core/styles';
-import cookie from 'react-cookies';
-import Notifications from 'react-notify-toast';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import { withTheme } from '@material-ui/core/styles';
+import NotificationSnackbar from './components/NotificationSnackbar';
+import cookie from 'react-cookies';
 import MainAppBar from './components/MainAppBar';
-// import Popup from './components/Popup/Popup';
 import TimelinePage from './routes/timeline/TimelinePage';
 import HomeworkPage from './routes//homework/HomeworkPage';
 import ModulesPage from './routes//modules/ModulesPage';
@@ -34,7 +33,7 @@ const ROUTES = {
   ],
 };
 
-@inject('currentUser')
+@inject('currentUser', 'ui')
 @observer
 class App extends Component {
 
@@ -53,7 +52,7 @@ class App extends Component {
   }
 
   render() {
-    const { theme } = this.props;
+    const { theme, ui } = this.props;
     const { role, isLoggedIn } = this.props.currentUser;
     const routes = isLoggedIn ? [...PUBLIC_ROUTES, ...ROUTES[role]] : [...PUBLIC_ROUTES];
     const paddingTop = theme.mixins.toolbar.minHeight + theme.spacing.unit;
@@ -64,8 +63,7 @@ class App extends Component {
           <CssBaseline />
           <MainAppBar />
           <div style={{ paddingTop }}>
-            {/* <Popup /> */}
-            <Notifications />
+            {ui.notification && <NotificationSnackbar />}
             <Switch>
               {routes.map(route => (<Route key={route.path} {...route} />))}
               <Redirect exact strict from="/" to="/timeline" />
@@ -80,6 +78,7 @@ class App extends Component {
 export default withTheme()(App);
 
 App.wrappedComponent.propTypes = {
-  currentUser: PropTypes.object,
+  currentUser: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
+  ui: PropTypes.object.isRequired,
 };

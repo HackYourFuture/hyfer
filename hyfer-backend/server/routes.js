@@ -7,7 +7,6 @@ const runningModulesApi = require('./api/running-modules');
 const usersApi = require('./api/users');
 const homeworkApi = require('./api/homework');
 const historyApi = require('./api/history');
-const states = require('./api/states');
 const { setEmail } = require('./api/update-email');
 const { isAuthenticated, hasRole, router: authApi } = require('./auth/auth-service');
 
@@ -20,9 +19,6 @@ module.exports = (app) => {
   app.use('/api/history', historyApi);
   app.use('/auth/github', authApi);
 
-  // TODO: restructure these routes using router modules
-  app.get('/api/studentsState/:groupId', hasRole('teacher'), states.getStudentsState);
-  app.patch('/api/studentsState', hasRole('teacher'), states.updateUser, states.assignToClass);
   app.get('/api/students', hasRole('teacher|student'), github.getTeamMembers);
   app.get('/user/emails', hasRole('teacher'), github.getUserEmails);
   app.post('/api/githubSync/:username', hasRole('teacher'), githubSync.githubSync);

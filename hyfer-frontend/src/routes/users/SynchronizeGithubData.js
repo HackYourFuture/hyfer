@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import style from './SynchronizeGithubData.css';
-import { success, errorMessage } from '../../notify';
+import stores from '../../stores';
 import loader from '../../assets/images/Ellipsis.gif';
 import { inject, observer } from 'mobx-react';
 import moment from 'moment';
@@ -49,11 +49,11 @@ export default class SynchronizeGithubData extends Component {
         },
       }).then((res) => {
         if (res.status === 200) {
-          success('Successfully Synchronized');
+          stores.ui.setSuccessMessage('Successfully Synchronized');
           this.setState({ isLoading: false });
           this.props.timeline.fetchItems();
         } else {
-          errorMessage('Something went wrong please try again');
+          stores.ui.setLastError(new Error('Something went wrong please try again'));
           this.setState({ isLoading: false });
         }
         this.props.userStore.loadUsers();

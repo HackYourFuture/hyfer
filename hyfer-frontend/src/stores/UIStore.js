@@ -6,6 +6,9 @@ export default class UIStore {
   lastError = null;
 
   @observable
+  notification = null;
+
+  @observable
   successMessage = null;
 
   @observable
@@ -15,22 +18,18 @@ export default class UIStore {
   timelineTabIndex = 0;
 
   @action
-  setLastError = (error) => {
-    this.lastError = error;
-    throw error;
-  };
+  setLastError = (error) => this.notification = { variant: 'success', messsage: error.message };
 
   @action
-  clearLastError = () => this.lastError = null;
+  clearNotification = () => this.notification = null;
 
   @action
-  setSuccessMessage = (message) => this.successMessage = message;
+  setSuccessMessage = (message) => this.notification = { variant: 'success', message };
+
 
   @action
-  clearSuccessMessage = () => this.successMessage = null;
+  setWarningMessage = (message) => this.notification = { variant: 'warning', message };
 
-  @action
-  setWarningMessage = (warning) => this.warningMessage = warning;
 
   @action
   clearWarningMessage = () => this.warningMessage = null;

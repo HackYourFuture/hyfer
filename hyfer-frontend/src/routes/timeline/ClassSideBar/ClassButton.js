@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { observer, inject } from 'mobx-react';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
-import { errorMessage } from '../../../notify';
 
 const token = localStorage.getItem('token');
 
@@ -34,7 +33,7 @@ const styles = (theme) => ({
   },
 });
 
-@inject('timeline')
+@inject('timeline', 'ui')
 @observer
 class ClassButton extends Component {
   state = {
@@ -89,7 +88,7 @@ class ClassButton extends Component {
       });
       window.location.reload();
     } catch (err) {
-      errorMessage(err);
+      this.props.ui.setLastError(err);
     }
   };
 
@@ -121,6 +120,7 @@ ClassButton.wrappedComponent.propTypes = {
   disabled: PropTypes.bool.isRequired,
   height: PropTypes.number.isRequired,
   timeline: PropTypes.object.isRequired,
+  ui: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(ClassButton);

@@ -76,7 +76,7 @@ class StudentInterface extends React.Component {
         </Paper>
         {timelineTabIndex === 0 && <ModuleNotes />}
         {timelineTabIndex === 1 && <UserList role="teacher" />}
-        {timelineTabIndex === 2 && <UserList role="student" />}
+        {timelineTabIndex === 2 && <UserList role="student" showAttendance={true} />}
       </React.Fragment>
     );
   }

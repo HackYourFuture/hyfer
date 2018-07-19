@@ -1,7 +1,7 @@
 import { observable, action, configure, runInAction } from 'mobx';
 import React from 'react';
 import { sendAnEmail } from '../util';
-import { success, errorMessage } from '../notify';
+// import stores from '.';
 
 configure({ enforceActions: true });
 
@@ -231,9 +231,9 @@ export default class HomeworkStore {
                  <br/>
                    -- Hyfer`
       );
-      success('Email sent successfully');
-    } else {
-      errorMessage('Email not sent');
+      // stores.ui.setSuccessMessage('Email sent successfully');
+      // } else {
+      //   stores.ui.setLastError(new Error('Email not sent'));
     }
   };
 

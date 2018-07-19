@@ -9,7 +9,7 @@ import Reset from './reset';
 import Styles from './TrainTicket.css';
 import Icon from '@material-ui/core/Icon';
 import Badge from './Badge';
-import { errorMessage } from '../../notify';
+import stores from '../../stores';
 const token = localStorage.getItem('token');
 
 class TrainTicketPage extends Component {
@@ -71,7 +71,7 @@ class TrainTicketPage extends Component {
           members: newData,
         });
       })
-      .catch(errorMessage);
+      .catch(stores.ui.setLastError);
   }
   handleFieldChange = (event, field) => {
     this.setState({ [field]: event.target.value });

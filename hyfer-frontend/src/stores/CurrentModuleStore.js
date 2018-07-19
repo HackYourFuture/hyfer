@@ -6,13 +6,16 @@ import moment from "moment";
 
 const HYF_GITHUB_URL = 'https://api.github.com/repos/HackYourFuture';
 
-function getSundays(start, end) {
-  const allSundays = [];
-  while (start.day(0).isBefore(end)) {
-    allSundays.push(start.clone().format('YYYY/MM/DD'));
-    start.add(1, 'weeks');
+function normalizeHistory(duration, history) {
+  const normalized = [];
+  for (let weekNum = 0; weekNum < duration; weekNum += 1) {
+    const weekData = history.find(item => item.week_num === weekNum);
+    normalized.push({
+      attendance: weekData ? weekData.attendance : 0,
+      homework: weekData ? weekData.homework : 0,
+    });
   }
-  return allSundays;
+  return normalized;
 }
 
 export default class CurrentModuleStore {
@@ -23,7 +26,7 @@ export default class CurrentModuleStore {
   readme = null;
 
   @observable
-  group = null;
+  group = [];
 
   @observable
   module = null;
@@ -40,12 +43,22 @@ export default class CurrentModuleStore {
   @observable
   currentWeek = null;
 
+  @observable
+  aantalWeeks = [];
+
   @action
   async getRunningModuleDetails(runningId) {
     const details = await fetchJSON(`/api/running/details/${runningId}`);
     stores.ui.setTimelineTabIndex(0);
+
+    const { group, module, runningModule, teachers } = details;
+
+    const students = details.students.map((student) => {
+      const history = normalizeHistory(runningModule.duration, student.history);
+      return { ...student, history };
+    });
+
     runInAction(() => {
-      const { group, module, runningModule, students, teachers } = details;
       this.group = group;
       this.module = module;
       this.currentModule = runningModule;
@@ -85,41 +98,6 @@ export default class CurrentModuleStore {
     }
   }
 
-  getHistory = async (runningModule) => {
-    this.currentModule = runningModule;
-    this.getReadme(this.currentModule && this.currentModule.git_repo);
-
-    if (!stores.currentUser.isTeacher) {
-      return;
-    }
-
-    const {
-      running_module_id,
-      id: group_id,
-      starting_date,
-      ending_date,
-    } = runningModule;
-
-    const moduleSundays = getSundays(starting_date, ending_date);
-    const sundays = { sundays: moduleSundays };
-
-    const token = localStorage.getItem('token');
-    const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/history/${running_module_id}/${group_id}`, {
-      method: 'PATCH',
-      body: JSON.stringify(sundays),
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + token,
-      },
-    });
-    if (!res.ok) throw res;
-    const response = await res.json();
-
-    runInAction(() => {
-      this.history = response;
-    });
-  }
-
   getReadme = async (repoName) => {
     if (!repoName) {
       this.readme = null;
@@ -136,41 +114,58 @@ export default class CurrentModuleStore {
     });
   }
 
-  async getGroupsByGroupName(group_name) {
-    const token = localStorage.getItem('token');
+  async getGroupsByGroupName(group_name, update) {
     const groupName = group_name.replace(' ', '');
-    const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/groups/currentgroups/${groupName}`
-      , {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + token,
-        },
-      });
-
-    if (!res.ok) {
-      stores.ui.setLastError(res);
-
-    } else {
-      const response = await res.json();
-      const runningModules = response;
+    try {
+      const runningModules = await fetchJSON(`/api/groups/currentgroups/${groupName}`);
       let computedDate = moment(runningModules[0].starting_date);
       const currentDate = moment();
       let index = 0;
       for (; index < runningModules.length; index++) {
-        const runningModule = runningModules[index];
-        const { duration } = runningModule;
-        computedDate = computedDate.add(duration, 'weeks');
         if (computedDate > currentDate) {
           break;
         }
+        const runningModule = runningModules[index];
+        const { duration } = runningModule;
+        computedDate = computedDate.add(duration, 'weeks');
       }
       runInAction(() => {
-        this.getRunningModuleDetails(response[index].id);
-        const date = computedDate.diff(currentDate, "weeks");
-        const start = response[index].duration - date;
-        this.currentWeek = start;
+        if (update) {
+          if (computedDate < currentDate) {
+            this.getRunningModuleDetails(runningModules[index].id);
+            const date = computedDate.diff(currentDate, "weeks");
+            const start = runningModules[index].duration - date;
+            this.currentWeek = start;
+          }
+        } else {
+          if (computedDate < currentDate) {
+            const date = computedDate.diff(currentDate, "weeks");
+            const start = runningModules[index].duration - date;
+            this.currentWeek = start;
+          }
+        }
       });
+    } catch (err) {
+      stores.ui.setLastError(err);
+    }
+  }
+
+  @action
+  saveAttendance = async (student, weekNum, data) => {
+    const { id: runningId, duration } = this.currentModule;
+    try {
+      const result = await fetchJSON(`/api/history/${runningId}/${student.id}/${weekNum}`, 'POST', data);
+      const history = normalizeHistory(duration, result);
+
+      runInAction(() => {
+        const updatedStudent = this.students.find(s => s.id === student.id);
+        if (!updatedStudent) {
+          throw new Error(`Can't find student ${student.id}.`);
+        }
+        updatedStudent.history = history;
+      });
+    } catch (err) {
+      stores.ui.setLastError(err);
     }
   }
 }

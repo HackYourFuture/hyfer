@@ -88,7 +88,7 @@ export default class GlobalStore {
           this.currentUser = res;
           const { group_name: groupName } = this.currentUser;
           if (groupName != null && this.isStudent && !this.isArchived) {
-            stores.currentModuleStore.getGroupsByGroupName(groupName);
+            stores.currentModuleStore.getGroupsByGroupName(groupName, true);
             stores.timeline.setFilter(groupName);
           }
         });

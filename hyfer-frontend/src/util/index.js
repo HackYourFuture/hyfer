@@ -1,4 +1,4 @@
-import { success } from '../notify';
+// import stores from '../stores';
 
 const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 const token = localStorage.getItem('token');
@@ -19,6 +19,6 @@ export async function sendAnEmail(recipient, sender, subject, text) {
     body: JSON.stringify(body),
   });
   if (!res.ok) throw new Error(res);
-  else success('Email was sent successfully');
+  // else stores.ui.setSuccessMessage('Email was sent successfully');
 }
 

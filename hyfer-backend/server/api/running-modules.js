@@ -8,10 +8,6 @@ const { getConnection } = require('./connection');
 const { hasRole } = require('../auth/auth-service');
 const handleError = require('./error')('running_modules');
 
-// Until we have implemented attendances in the frontend
-// refrain from trying to get them from the database
-const INCLUDE_ATTENDANCES = false;
-
 async function getTimeline(req, res) {
   try {
     const con = await getConnection(req, res);
@@ -30,17 +26,6 @@ function getRunningModules(req, res) {
     .catch(err => res.status(500).json(err));
 }
 
-function normalizeHistory(moduleDuration, history) {
-  const attendance = [];
-  const homework = [];
-  for (let weekNum = 0; weekNum < moduleDuration; weekNum += 1) {
-    const weekData = history.find(item => item.week_num === weekNum);
-    attendance.push(weekData ? weekData.attendance : 0);
-    homework.push(weekData ? weekData.homework : 0);
-  }
-  return { attendance, homework };
-}
-
 async function getRunningModuleDetails(req, res) {
   try {
     const runningId = +req.params.runningId;
@@ -48,36 +33,28 @@ async function getRunningModuleDetails(req, res) {
 
     const [runningModule] = await db.getRunningModuleById(con, runningId);
     if (!runningModule) {
-      throw new Error('Error fetching running module data.');
+      res.status(404).json({ error: `Running module ${runningId} not found.` });
+      return;
     }
 
     const [group] = await dbGroups.getGroupById(con, runningModule.group_id);
     if (!group) {
-      throw new Error('Error fetching group data.');
+      res.status(404).json({ error: `Group ${runningModule.group_id} not found.` });
+      return;
     }
 
     const [module] = await dbModules.getModule(con, runningModule.module_id);
     if (!module) {
-      throw new Error('Error fetching module data.');
+      res.status(404).json({ error: `Module ${runningModule.module_id} not found.` });
+      return;
     }
 
     let students = await dbUsers.getUsersByGroup(con, runningModule.group_id);
 
-    if (INCLUDE_ATTENDANCES) {
-      const promises = students.map(student =>
-        dbHistory.getStudentHistory(con, runningId, student.id));
-      const histories = await Promise.all(promises);
-      students = students.map((student, index) => {
-        const { attendance, homework } = normalizeHistory(runningModule.duration, histories[index]);
-        return Object.assign({}, student, {
-          history: {
-            duration: runningModule.duration,
-            attendance,
-            homework,
-          },
-        });
-      });
-    }
+    const promises = students.map(student =>
+      dbHistory.getHistory(con, runningId, student.id));
+    const histories = await Promise.all(promises);
+    students = students.map((student, index) => ({ ...student, history: histories[index] }));
 
     const teachers = await dbUsers.getTeachersByRunningModule(con, runningId);
 
