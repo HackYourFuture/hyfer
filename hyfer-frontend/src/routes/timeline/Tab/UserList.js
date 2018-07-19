@@ -1,22 +1,40 @@
-import React from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import { inject, observer } from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import Select from '@material-ui/core/Select';
+import FormLabel from '@material-ui/core/FormLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import { inject, observer } from 'mobx-react';
 import UserCard from '../../../components/UserCard';
 import AddTeacherDialog from './AddTeacherDialog';
 
 const styles = (theme) => ({
   root: {
     display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  container: {
+    display: 'flex',
     flexWrap: 'wrap',
     backgroundColor: '#fafafa',
     position: 'relative',
     margin: theme.spacing.unit,
+  },
+  toolbar: {
+    margin: theme.spacing.unit,
+    width: 240,
+  },
+  select: {
+    marginLeft: theme.spacing.unit,
+  },
+  selectItem: {
+    textAlign: 'center',
   },
   text: {
     margin: theme.spacing.unit,
@@ -31,11 +49,12 @@ const styles = (theme) => ({
 
 @inject('currentModuleStore', 'currentUser')
 @observer
-class UserList extends React.Component {
+class UserList extends Component {
 
   state = {
     isOpen: false,
     selectedWeek: 0,
+    showAttendences: false,
   }
 
   openDialog = () => {
@@ -69,7 +88,7 @@ class UserList extends React.Component {
   renderSelectItems(duration) {
     const items = [];
     for (let i = 0; i < duration; i++) {
-      const label = `Week ${i + 1}`;
+      const label = `${i + 1}`;
       items.push(<MenuItem key={label} value={i}>{label}</MenuItem>);
     }
     return items;
@@ -79,14 +98,13 @@ class UserList extends React.Component {
 
   renderWeekSelector(classes, duration) {
     return (
-      <div>
-        <Select
-          value={this.state.selectedWeek}
-          onChange={this.handleWeekChange}
-        >
-          {this.renderSelectItems(duration)}
-        </Select>
-      </div>
+      <Select
+        className={classes.select}
+        value={this.state.selectedWeek}
+        onChange={this.handleWeekChange}
+      >
+        {this.renderSelectItems(duration)}
+      </Select>
     );
   }
 
@@ -98,23 +116,31 @@ class UserList extends React.Component {
 
     return (
       <div className={classes.root}>
-        {role === 'student' && this.renderWeekSelector(classes, currentModule.duration)}
-        {this.renderUsers(role, users, this.state.selectedWeek)}
-        {role === 'teacher' && currentModule && currentUser.isTeacher &&
-          <React.Fragment>
-            <AddTeacherDialog
-              open={this.state.isOpen}
-              onClose={this.closeDialog}
-            />
-            <Button
-              onClick={this.openDialog}
-              variant="fab"
-              color="secondary"
-              aria-label="add"
-              className={classes.fab}>
-              <AddIcon />
-            </Button>
-          </React.Fragment>}
+        {role === 'student' &&
+          <Paper className={classes.toolbar} elevation={2}>
+            <Toolbar>
+              <FormLabel>Selected Week</FormLabel>
+              {this.renderWeekSelector(classes, currentModule.duration)}
+            </Toolbar>
+          </Paper>}
+        <div className={classes.container}>
+          {this.renderUsers(role, users, this.state.selectedWeek)}
+          {role === 'teacher' && currentModule && currentUser.isTeacher &&
+            <Fragment>
+              <AddTeacherDialog
+                open={this.state.isOpen}
+                onClose={this.closeDialog}
+              />
+              <Button
+                onClick={this.openDialog}
+                variant="fab"
+                color="secondary"
+                aria-label="add"
+                className={classes.fab}>
+                <AddIcon />
+              </Button>
+            </Fragment>}
+        </div>
       </div>
     );
   }

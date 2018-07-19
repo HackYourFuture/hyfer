@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { inject, observer } from 'mobx-react';
@@ -8,6 +8,7 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
+import Divider from '@material-ui/core/Divider';
 import EditIcon from '@material-ui/icons/Edit';
 import FaGitHub from 'react-icons/lib/fa/github';
 import FaLinkedIn from 'react-icons/lib/fa/linkedin-square';
@@ -18,8 +19,8 @@ import ProfileDialog from './ProfileDialog';
 
 const styles = (theme) => ({
   card: {
-    width: 150,
-    margin: 1,
+    width: 180,
+    margin: theme.spacing.unit / 2,
   },
   actions: {
     display: 'flex',
@@ -48,11 +49,14 @@ const styles = (theme) => ({
     height: 24,
     cursor: 'pointer',
   },
+  attendance: {
+    marginLeft: theme.spacing.unit,
+  },
 });
 
 @inject('currentModuleStore', 'currentUser')
 @observer
-class UserCard extends React.Component {
+class UserCard extends Component {
 
   state = {
     open: false,
@@ -109,9 +113,8 @@ class UserCard extends React.Component {
     const { classes, user, showDeleteButton, currentUser, selectedWeek, showAttendance } = this.props;
 
     return (
-      <React.Fragment>
+      <Fragment>
         <Card className={classes.card} square elevation={1}>
-          {showAttendance && <Attendance user={user} selectedWeek={selectedWeek} />}
           {showDeleteButton && user.role === "teacher" && currentUser.isTeacher && <CardHeader
             action={
               <IconButton color="secondary" onClick={this.handleDelete}>
@@ -141,11 +144,19 @@ class UserCard extends React.Component {
             {user.linkedin_username != null &&
               <FaLinkedIn className={classes.actionIcon} onClick={this.handleLinkedIn} />}
             {user.id === currentUser.id &&
-              <React.Fragment>
+              <Fragment>
                 <span className={classes.filler} />
                 <EditIcon className={classes.actionIcon} onClick={this.handleClickOpen} />
-              </React.Fragment>}
+              </Fragment>}
           </CardActions>
+          {showAttendance &&
+            <Fragment>
+              <Divider />
+              <div className={classes.attendance} >
+                <Attendance user={user} selectedWeek={selectedWeek} />
+              </div>
+            </Fragment>
+          }
         </Card>
         <ProfileDialog
           email={currentUser.email}
@@ -154,7 +165,7 @@ class UserCard extends React.Component {
           onClose={this.handleClose}
           onUpdate={this.handleUpdate}
         />
-      </React.Fragment>
+      </Fragment>
     );
   }
 }

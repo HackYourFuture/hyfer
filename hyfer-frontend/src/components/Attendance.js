@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';
+import { withStyles } from '@material-ui/core/styles';
+import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+import Switch from '@material-ui/core/Switch';
+
+const styles = () => ({
+});
 
 @inject('currentModuleStore', 'currentUser')
 @observer
-export default class Attendance extends Component {
+class Attendance extends Component {
 
   saveAttendance = (e) => {
     const { user, selectedWeek } = this.props;
@@ -25,42 +30,46 @@ export default class Attendance extends Component {
   }
 
   render() {
-    const { user, selectedWeek, currentUser } = this.props;
+    const { classes, user, selectedWeek, currentUser } = this.props;
     const { attendance, homework } = user.history[selectedWeek];
 
     return (
-      <div style={{ display: "flex", flexWrap: "wrap", width: "100%" }}>
+      <FormGroup>
         <FormControlLabel
-          style={{ marginLeft: 10 }}
+          className={classes.checkBox}
           control={
-            <Checkbox
+            <Switch
               checked={Boolean(attendance)}
               onChange={this.saveAttendance}
               value="present"
               disabled={!currentUser.isTeacher}
             />
           }
-          label="present"
+          label={`Present wk ${selectedWeek + 1}`}
         />
         <FormControlLabel
           control={
-            <Checkbox
+            <Switch
+              className={classes.checkBox}
               checked={Boolean(homework)}
               onChange={this.saveHomework}
               value="homework"
               disabled={!currentUser.isTeacher}
             />
           }
-          label="homework"
+          label={`Homework wk ${selectedWeek + 1}`}
         />
-      </div>
+      </FormGroup>
     );
   }
 }
 
 Attendance.wrappedComponent.propTypes = {
+  classes: PropTypes.object.isRequired,
   currentModuleStore: PropTypes.object.isRequired,
   currentUser: PropTypes.object.isRequired,
   selectedWeek: PropTypes.number.isRequired,
   user: PropTypes.object.isRequired,
 };
+
+export default withStyles(styles)(Attendance);
