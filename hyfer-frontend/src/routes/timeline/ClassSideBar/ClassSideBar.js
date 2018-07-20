@@ -12,6 +12,7 @@ const styles = (theme) => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-end',
+    marginTop: theme.spacing.unit * 2,
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
     marginBottom: theme.spacing.unit,

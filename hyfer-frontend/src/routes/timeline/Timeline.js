@@ -19,7 +19,7 @@ const styles = (theme) => ({
   root2: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'stretch',
+    alignItems: 'flex-start',
   },
   timelineContainer: {
     position: 'relative',
