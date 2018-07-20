@@ -90,6 +90,7 @@ class UserList extends Component {
         user={user}
         selectedWeek={selectedWeek}
         showAttendance={showAttendance}
+        showRemoveTeacher={role === 'teacher'}
       />
     ));
   }
@@ -134,7 +135,7 @@ class UserList extends Component {
               <FormLabel>Attendance and Homework for week:</FormLabel>
               {this.renderWeekSelector(classes, currentModule.duration)}
               <Button className={classes.hideButton} color="secondary" onClick={this.toggleShowAttendance}>
-                Close
+                Hide attendances
               </Button>
             </Toolbar>
           </Paper>}

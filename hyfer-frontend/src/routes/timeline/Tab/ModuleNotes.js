@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import { toJS, autorun } from 'mobx';
 import { observer, inject } from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
-import EditIcon from '@material-ui/icons/Edit';
 import Button from '@material-ui/core/Button';
+import EditIcon from '@material-ui/icons/Edit';
+import Tooltip from '@material-ui/core/Tooltip';
 import classNames from 'classnames';
 import Showdown from 'showdown';
 import MarkdownEditor from '../../../components/MarkdownEditor';
@@ -207,9 +208,11 @@ class ModuleNotes extends Component {
       <React.Fragment>
         {isTeacher && (
           <div className={classes.bottomButtonContainer}>
-            <Button variant="fab" color="primary" className={classes.fab} aria-label="Edit" onClick={this.setEditMode}>
-              <EditIcon />
-            </Button>
+            <Tooltip title="Edit notes">
+              <Button variant="fab" color="primary" className={classes.fab} aria-label="Edit" onClick={this.setEditMode}>
+                <EditIcon />
+              </Button>
+            </Tooltip>
           </div>
         )}
         {this.renderArticle()}

@@ -87,7 +87,7 @@ class WeekIndicator extends Component {
         className={classes.root}
       >
         {this.setTodayMarker()}
-        <Typography variant="body1"
+        <Typography variant="caption"
           className={classes.monthContainer}
         >
           {month}
