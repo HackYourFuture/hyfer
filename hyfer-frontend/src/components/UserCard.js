@@ -3,34 +3,39 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { inject, observer } from 'mobx-react';
 import Avatar from '@material-ui/core/Avatar';
-import CancelIcon from '@material-ui/icons/Cancel';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
-import Divider from '@material-ui/core/Divider';
-import EditIcon from '@material-ui/icons/Edit';
-import FaGitHub from 'react-icons/lib/fa/github';
+import FaPencilSquare from 'react-icons/lib/fa/pencil';
+import FaGitHubIcon from 'react-icons/lib/fa/github';
 import FaLinkedIn from 'react-icons/lib/fa/linkedin-square';
-import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import Attendance from './Attendance';
 import ProfileDialog from './ProfileDialog';
 
 const styles = (theme) => ({
-  card: {
-    width: 180,
-    margin: theme.spacing.unit / 2,
+  root: {
+    margin: theme.spacing.unit,
   },
   actions: {
     display: 'flex',
+    justifyContent: 'center',
   },
   filler: {
     flexGrow: 1,
   },
+  cardContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
   avatar: {
     height: 104,
     width: 104,
+    marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit * 2,
   },
   iconButton: {
@@ -49,8 +54,10 @@ const styles = (theme) => ({
     height: 24,
     cursor: 'pointer',
   },
-  attendance: {
-    marginLeft: theme.spacing.unit,
+  teacherPanel: {
+    marginTop: theme.spacing.unit / 2,
+    display: 'flex',
+    justifyContent: 'center',
   },
 });
 
@@ -62,7 +69,7 @@ class UserCard extends Component {
     open: false,
   }
 
-  handleDelete = () => {
+  handleRemove = () => {
     const { user } = this.props;
     const { id: moduleId } = this.props.currentModuleStore.currentModule;
     this.props.currentModuleStore.deleteTeacher(moduleId, user.id);
@@ -110,18 +117,12 @@ class UserCard extends Component {
   }
 
   render() {
-    const { classes, user, showDeleteButton, currentUser, selectedWeek, showAttendance } = this.props;
+    const { classes, user, currentUser, selectedWeek, showAttendance } = this.props;
 
     return (
-      <Fragment>
-        <Card className={classes.card} square elevation={1}>
-          {showDeleteButton && user.role === "teacher" && currentUser.isTeacher && <CardHeader
-            action={
-              <IconButton color="secondary" onClick={this.handleDelete}>
-                <CancelIcon className={classes.iconButton} />
-              </IconButton>}>
-          </CardHeader>}
-          <CardContent>
+      <div className={classes.root}>
+        <Card>
+          <CardContent classes={{ root: classes.cardContent }}>
             <Avatar
               className={classes.avatar}
               src={`https://avatars.githubusercontent.com/${user.username}`}
@@ -135,29 +136,30 @@ class UserCard extends Component {
             >
               {user.username}
             </Typography>
-            <Typography variant="caption" gutterBottom align="center">
+            <Typography variant="caption" gutterBottom>
               {user.role + (user.group_name ? ' / ' + user.group_name : '')}
             </Typography>
           </CardContent>
           <CardActions className={classes.actions}>
-            <FaGitHub className={classes.actionIcon} onClick={this.handleGitHub} />
+            <FaGitHubIcon className={classes.actionIcon} onClick={this.handleGitHub} />
             {user.linkedin_username != null &&
               <FaLinkedIn className={classes.actionIcon} onClick={this.handleLinkedIn} />}
             {user.id === currentUser.id &&
               <Fragment>
                 <span className={classes.filler} />
-                <EditIcon className={classes.actionIcon} onClick={this.handleClickOpen} />
+                <Tooltip title="Edit profile">
+                  <FaPencilSquare className={classes.actionIcon} onClick={this.handleClickOpen} />
+                </Tooltip>
               </Fragment>}
           </CardActions>
-          {showAttendance &&
-            <Fragment>
-              <Divider />
-              <div className={classes.attendance} >
-                <Attendance user={user} selectedWeek={selectedWeek} />
-              </div>
-            </Fragment>
-          }
         </Card>
+        {user.role === "teacher" && currentUser.isTeacher &&
+          <Paper className={classes.teacherPanel}>
+            <Button color="secondary" onClick={this.handleRemove}>
+              Remove
+            </Button>
+          </Paper>}
+        {showAttendance && <Attendance user={user} selectedWeek={selectedWeek} />}
         <ProfileDialog
           email={currentUser.email}
           linkedInName={currentUser.linkedInName}
@@ -165,7 +167,7 @@ class UserCard extends Component {
           onClose={this.handleClose}
           onUpdate={this.handleUpdate}
         />
-      </Fragment>
+      </div>
     );
   }
 }
@@ -176,7 +178,6 @@ UserCard.wrappedComponent.propTypes = {
   currentUser: PropTypes.object.isRequired,
   selectedWeek: PropTypes.number.isRequired,
   showAttendance: PropTypes.bool,
-  showDeleteButton: PropTypes.bool.isRequired,
   user: PropTypes.object.isRequired,
 };
 

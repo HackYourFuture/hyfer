@@ -2,14 +2,16 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import Toolbar from '@material-ui/core/Toolbar';
-import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
-import Select from '@material-ui/core/Select';
+import Button from '@material-ui/core/Button';
+import Icon from '@material-ui/core/Icon';
 import FormLabel from '@material-ui/core/FormLabel';
 import MenuItem from '@material-ui/core/MenuItem';
+import Paper from '@material-ui/core/Paper';
+import Select from '@material-ui/core/Select';
+import Toolbar from '@material-ui/core/Toolbar';
+import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
 import UserCard from '../../../components/UserCard';
 import AddTeacherDialog from './AddTeacherDialog';
 
@@ -23,18 +25,23 @@ const styles = (theme) => ({
   container: {
     display: 'flex',
     flexWrap: 'wrap',
-    backgroundColor: '#fafafa',
+    backgroundColor: theme.palette.background.default,
     margin: theme.spacing.unit,
   },
-  toolbar: {
+  toolbarContainer: {
     margin: theme.spacing.unit,
-    width: 240,
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  hideButton: {
+    margin: theme.spacing.unit,
   },
   select: {
-    marginLeft: theme.spacing.unit,
+    margin: theme.spacing.unit,
   },
-  selectItem: {
-    textAlign: 'center',
+  selectMenu: {
+    paddingLeft: theme.spacing.unit * 2,
   },
   text: {
     margin: theme.spacing.unit,
@@ -54,7 +61,7 @@ class UserList extends Component {
   state = {
     isOpen: false,
     selectedWeek: 0,
-    showAttendences: false,
+    showAttendance: false,
   }
 
   openDialog = () => {
@@ -65,8 +72,11 @@ class UserList extends Component {
     this.setState({ isOpen: false });
   }
 
-  renderUsers(role, users, selectedWeek) {
-    const { classes, showAttendance } = this.props;
+  renderUsers(role, users) {
+
+    const { classes } = this.props;
+    const { showAttendance, selectedWeek } = this.state;
+
     if (users.length === 0) {
       return (
         <Typography variant="subheading" color="textSecondary" align="center" className={classes.text}>
@@ -79,7 +89,6 @@ class UserList extends Component {
         key={user.id}
         user={user}
         selectedWeek={selectedWeek}
-        showDeleteButton={role === 'teacher'}
         showAttendance={showAttendance}
       />
     ));
@@ -96,12 +105,15 @@ class UserList extends Component {
 
   handleWeekChange = (e) => this.setState({ selectedWeek: e.target.value })
 
+  toggleShowAttendance = () => this.setState({ showAttendance: !this.state.showAttendance });
+
   renderWeekSelector(classes, duration) {
     return (
       <Select
         className={classes.select}
         value={this.state.selectedWeek}
         onChange={this.handleWeekChange}
+        classes={{ selectMenu: classes.selectMenu }}
       >
         {this.renderSelectItems(duration)}
       </Select>
@@ -116,11 +128,14 @@ class UserList extends Component {
 
     return (
       <div className={classes.root}>
-        {role === 'student' &&
-          <Paper className={classes.toolbar} elevation={2}>
-            <Toolbar>
-              <FormLabel>Selected Week</FormLabel>
+        {role === 'student' && this.state.showAttendance &&
+          <Paper className={classes.toolbarContainer} elevation={2}>
+            <Toolbar className={classes.toolbar}>
+              <FormLabel>Attendance and Homework for week:</FormLabel>
               {this.renderWeekSelector(classes, currentModule.duration)}
+              <Button className={classes.hideButton} color="secondary" onClick={this.toggleShowAttendance}>
+                Close
+              </Button>
             </Toolbar>
           </Paper>}
         <div className={classes.container}>
@@ -132,15 +147,29 @@ class UserList extends Component {
               open={this.state.isOpen}
               onClose={this.closeDialog}
             />
+            <Tooltip title="Add teacher">
+              <Button
+                onClick={this.openDialog}
+                variant="fab"
+                color="secondary"
+                aria-label="add"
+                className={classes.fab}>
+                <AddIcon />
+              </Button>
+            </Tooltip>
+          </Fragment>}
+        {role === 'student' && currentModule && !this.state.showAttendance &&
+          <Tooltip title="Show attendances">
             <Button
-              onClick={this.openDialog}
+              onClick={this.toggleShowAttendance}
               variant="fab"
-              color="secondary"
+              color="default"
               aria-label="add"
               className={classes.fab}>
-              <AddIcon />
+              <Icon className="fas fa-briefcase" />
             </Button>
-          </Fragment>}
+          </Tooltip>}
+
       </div>
     );
   }

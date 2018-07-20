@@ -45,13 +45,13 @@ export default class ProfileDialog extends React.Component {
         onClose={onClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">UpdateProfile Details</DialogTitle>
+        <DialogTitle id="form-dialog-title">Update profile details</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             margin="dense"
             id="name"
-            label="Email Address"
+            label="Email address"
             type="email"
             value={email}
             onChange={this.onEmailChange}
@@ -60,7 +60,7 @@ export default class ProfileDialog extends React.Component {
           <TextField
             margin="dense"
             id="name"
-            label="LinkedIn Username"
+            label="LinkedIn username"
             type="text"
             value={linkedInName}
             onChange={this.onLinkedInNameChange}
@@ -68,15 +68,11 @@ export default class ProfileDialog extends React.Component {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClose} color="primary">
+          <Button onClick={onClose} color="secondary">
             Cancel
           </Button>
-          <Button
-            onClick={this.onUpdate}
-            color="primary"
-            disabled={!this.state.isChanged}
-          >
-            Save
+          <Button onClick={this.onUpdate} color="primary" disabled={!this.state.isChanged} >
+            Update
           </Button>
         </DialogActions>
       </Dialog>

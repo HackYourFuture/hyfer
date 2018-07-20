@@ -2,11 +2,25 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
+import Checkbox from '@material-ui/core/Checkbox';
 
-const styles = () => ({
+const styles = (theme) => ({
+  root: {
+    marginTop: theme.spacing.unit / 2,
+    ...theme.mixins.gutters({
+      paddingTop: theme.spacing.unit * 2,
+      paddingBottom: theme.spacing.unit * 2,
+    }),
+  },
+  formGroup: {
+    marginTop: theme.spacing.unit,
+  },
+  checkbox: {
+    height: 32,
+  },
 });
 
 @inject('currentModuleStore', 'currentUser')
@@ -34,32 +48,35 @@ class Attendance extends Component {
     const { attendance, homework } = user.history[selectedWeek];
 
     return (
-      <FormGroup>
-        <FormControlLabel
-          className={classes.checkBox}
-          control={
-            <Switch
-              checked={Boolean(attendance)}
-              onChange={this.saveAttendance}
-              value="present"
-              disabled={!currentUser.isTeacher}
-            />
-          }
-          label={`Present wk ${selectedWeek + 1}`}
-        />
-        <FormControlLabel
-          control={
-            <Switch
-              className={classes.checkBox}
-              checked={Boolean(homework)}
-              onChange={this.saveHomework}
-              value="homework"
-              disabled={!currentUser.isTeacher}
-            />
-          }
-          label={`Homework wk ${selectedWeek + 1}`}
-        />
-      </FormGroup>
+      <Paper className={classes.root}>
+        <FormGroup classes={{ root: classes.formGroup }}>
+          <FormControlLabel
+            className={classes.checkBox}
+            control={
+              <Checkbox
+                classes={{ root: classes.checkbox }}
+                checked={Boolean(attendance)}
+                onChange={this.saveAttendance}
+                value="present"
+                disabled={!currentUser.isTeacher}
+              />
+            }
+            label="Present"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                classes={{ root: classes.checkbox }}
+                checked={Boolean(homework)}
+                onChange={this.saveHomework}
+                value="homework"
+                disabled={!currentUser.isTeacher}
+              />
+            }
+            label="Homework"
+          />
+        </FormGroup>
+      </Paper>
     );
   }
 }
