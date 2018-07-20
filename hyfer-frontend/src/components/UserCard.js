@@ -19,6 +19,7 @@ import ProfileDialog from './ProfileDialog';
 const styles = (theme) => ({
   root: {
     margin: theme.spacing.unit,
+    width: 160,
   },
   actions: {
     display: 'flex',
@@ -117,7 +118,7 @@ class UserCard extends Component {
   }
 
   render() {
-    const { classes, user, currentUser, selectedWeek, showAttendance } = this.props;
+    const { classes, user, currentUser, selectedWeek, showAttendance, showRemoveTeacher } = this.props;
 
     return (
       <div className={classes.root}>
@@ -128,15 +129,13 @@ class UserCard extends Component {
               src={`https://avatars.githubusercontent.com/${user.username}`}
               title={`Profile - ${user.username}`}
             />
-            <Typography
-              align='center'
-              variant="body1"
-              title={user.username}
-              noWrap
-            >
+            <Typography align='center' variant="body2" title={user.username} noWrap>
               {user.username}
             </Typography>
-            <Typography variant="caption" gutterBottom>
+            <Typography align='center' variant="body1" noWrap>
+              {user.full_name && user.full_name !== user.username ? user.full_name : '-'}
+            </Typography>
+            <Typography variant="caption">
               {user.role + (user.group_name ? ' / ' + user.group_name : '')}
             </Typography>
           </CardContent>
@@ -153,7 +152,7 @@ class UserCard extends Component {
               </Fragment>}
           </CardActions>
         </Card>
-        {user.role === "teacher" && currentUser.isTeacher &&
+        {showRemoveTeacher && user.role === "teacher" && currentUser.isTeacher &&
           <Paper className={classes.teacherPanel}>
             <Button color="secondary" onClick={this.handleRemove}>
               Remove
@@ -178,11 +177,13 @@ UserCard.wrappedComponent.propTypes = {
   currentUser: PropTypes.object.isRequired,
   selectedWeek: PropTypes.number.isRequired,
   showAttendance: PropTypes.bool,
+  showRemoveTeacher: PropTypes.bool,
   user: PropTypes.object.isRequired,
 };
 
 UserCard.defaultProps = {
-  showDeleteButton: false,
+  showAttendance: false,
+  showRemoveTeacher: false,
   selectedWeek: 0,
 };
 
