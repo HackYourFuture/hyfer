@@ -6,7 +6,9 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import grey from '@material-ui/core/colors/grey';
 import TimelineMenu from './TimelineMenu';
+import classNames from 'classnames';
 
 const styles = (theme) => {
   const full = theme.spacing.unit;
@@ -21,6 +23,12 @@ const styles = (theme) => {
       alignItems: 'center',
       position: 'relative',
       cursor: 'pointer',
+      boxSizing: 'border-box',
+      border: `solid 4px transparent`,
+    },
+    selected: {
+      border: `dashed 4px ${grey[700]}`,
+      color: 'green',
     },
     moduleName: {
       color: 'white',
@@ -74,10 +82,12 @@ class TimelineModule extends Component {
     const width = this.props.width * duration + spacing.unit * (duration - 1);
 
     const { classes, currentUser } = this.props;
+    const { currentModule } = this.props.currentModuleStore;
+    const selected = currentModule && currentModule.id === running_module_id;
 
     return (
       <Paper elevation={1}
-        className={classes.container}
+        className={classNames(classes.container, selected ? classes.selected : '')}
         style={{ width, height: this.props.height, backgroundColor: color }}
         onClick={() => this.itemClickHandler(this.props.item)}
       >
