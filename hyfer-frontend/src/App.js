@@ -36,6 +36,9 @@ const ROUTES = {
 @inject('currentUserStore', 'uiStore')
 @observer
 class App extends Component {
+  state = {
+    initialized: false,
+  }
 
   async componentDidMount() {
     let token = cookie.load('token');
@@ -49,9 +52,15 @@ class App extends Component {
     } else {
       window.localStorage.removeItem('token');
     }
+    this.setState({ initialized: true });
   }
 
   render() {
+    if (!this.state.initialized) {
+      // TODO: shows spinner
+      return null;
+    }
+
     const { theme, uiStore } = this.props;
     const { role, isLoggedIn } = this.props.currentUserStore;
     const routes = isLoggedIn ? [...PUBLIC_ROUTES, ...ROUTES[role]] : [...PUBLIC_ROUTES];

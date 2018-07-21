@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { inject, observer } from 'mobx-react';
@@ -6,7 +6,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import FaPencilSquare from 'react-icons/lib/fa/pencil';
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import FaGitHubIcon from 'react-icons/lib/fa/github';
 import FaLinkedIn from 'react-icons/lib/fa/linkedin-square';
 import Button from '@material-ui/core/Button';
@@ -14,7 +14,7 @@ import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import Attendance from './Attendance';
-import ProfileEditDialog from './ProfileEditDialog';
+import ProfileViewDialog from './ProfileViewDialog';
 
 const styles = (theme) => ({
   root: {
@@ -64,7 +64,7 @@ const styles = (theme) => ({
 
 @inject('currentModuleStore', 'currentUserStore')
 @observer
-class UserCard extends Component {
+class UserCard extends React.Component {
 
   state = {
     open: false,
@@ -141,13 +141,10 @@ class UserCard extends Component {
             <FaGitHubIcon className={classes.actionIcon} onClick={this.handleGitHub} />
             {user.linkedin_username != null &&
               <FaLinkedIn className={classes.actionIcon} onClick={this.handleLinkedIn} />}
-            {user.id === currentUserStore.id &&
-              <Fragment>
-                <span className={classes.filler} />
-                <Tooltip title="Edit profile">
-                  <FaPencilSquare className={classes.actionIcon} onClick={this.handleClickOpen} />
-                </Tooltip>
-              </Fragment>}
+            <span className={classes.filler} />
+            {user.bio && <Tooltip title="View profile">
+              <MoreHorizIcon className={classes.actionIcon} color="action" onClick={this.handleClickOpen} />
+            </Tooltip>}
           </CardActions>
         </Card>
         {showRemoveTeacher && user.role === "teacher" && currentUserStore.isTeacher &&
@@ -157,12 +154,12 @@ class UserCard extends Component {
             </Button>
           </Paper>}
         {showAttendance && <Attendance user={user} selectedWeek={selectedWeek} />}
-        <ProfileEditDialog
-          profile={currentUserStore.user}
+        {user.bio && <ProfileViewDialog
+          profile={user}
           open={this.state.open}
           onClose={this.handleClose}
           onUpdate={this.handleUpdate}
-        />
+        />}
       </div>
     );
   }

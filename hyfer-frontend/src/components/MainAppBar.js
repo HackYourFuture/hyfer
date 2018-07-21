@@ -10,8 +10,10 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import ConfirmationDialog from './ConfirmationDialog';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import logo from '../assets/images/hyf-icon.svg';
+import ProfileEditDialog from './ProfileEditDialog';
 
 const styles = (theme) => {
   const mediaQuery = `@media(max-width: ${theme.breakpoints.values.sm}px)`;
@@ -62,7 +64,8 @@ const routes = {
 class MainAppBar extends Component {
   state = {
     value: 0,
-    isDialogOpen: false,
+    anchorEl: null,
+    dialogOpen: false,
   };
 
   role = 'guest';
@@ -73,37 +76,48 @@ class MainAppBar extends Component {
     history.push(routes[this.role][value].path);
   };
 
-  signIn() {
-    const url = process.env.NODE_ENV === 'development'
-      ? `${process.env.REACT_APP_API_BASE_URL}/auth/github`
-      : 'auth/github';
-    window.location.href = url;
-  }
-
   handleSignOut = () => {
-    this.setState({ isDialogOpen: false });
+    this.handleMenuClose();
     localStorage.removeItem('token');
     cookie.save('token', '');
     window.location.reload();
   }
 
-  handleCancelSignOut = () => this.setState({ isDialogOpen: false });
-
-  handleOpenSignOut = () => this.setState({ isDialogOpen: true });
-
-  handleSignInSignOut = () => {
+  handleClick = (event) => {
     const { isLoggedIn } = this.props.currentUserStore;
+
     if (isLoggedIn) {
-      this.setState({ isDialogOpen: true });
+      this.setState({ anchorEl: event.currentTarget });
     } else {
-      this.signIn();
+      const url = process.env.NODE_ENV === 'development'
+        ? `${process.env.REACT_APP_API_BASE_URL}/auth/github`
+        : 'auth/github';
+      window.location.href = url;
     }
   };
 
+  handleProfileUpdate = async (profile) => {
+    this.handleDialogClose();
+    await this.props.currentUserStore.updateCurrentUser(profile);
+  }
+
+  handleMenuClose = () => {
+    this.setState({ anchorEl: null });
+  };
+
+  handleDialogOpen = () => {
+    this.handleMenuClose();
+    this.setState({ dialogOpen: true });
+  };
+
+  handleDialogClose = () => {
+    this.setState({ dialogOpen: false });
+  };
+
   render() {
-    const { classes, currentUserStore } = this.props;
-    const { isLoggedIn, isStudent, isTeacher, userName, avatarUrl } = currentUserStore;
-    const { value } = this.state;
+    const { classes } = this.props;
+    const { isLoggedIn, isStudent, isTeacher, userName, avatarUrl } = this.props.currentUserStore;
+    const { value, anchorEl } = this.state;
 
     if (isLoggedIn) {
       if (isTeacher) {
@@ -129,19 +143,32 @@ class MainAppBar extends Component {
                 <Tab key={route.path} label={route.label} />
               ))}
             </Tabs>
-            <Button color="inherit" onClick={this.handleSignInSignOut} title={userName}>
+            <Button
+              aria-owns={anchorEl ? 'simple-menu' : null}
+              aria-haspopup="true"
+              color="inherit"
+              onClick={this.handleClick}
+              title={userName}>
               {isLoggedIn
                 ? <Avatar alt={userName} src={avatarUrl} className={classes.avatar} />
                 : 'Sign in'}
             </Button>
+            <Menu
+              id="simple-menu"
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={this.handleMenuClose}
+            >
+              <MenuItem onClick={this.handleDialogOpen}>Profile</MenuItem>
+              <MenuItem onClick={this.handleSignOut}>Sign out</MenuItem>
+            </Menu>
           </Toolbar>
         </AppBar>
-        <ConfirmationDialog
-          title="Confirm sign out"
-          message="Do you want to sign out?"
-          open={this.state.isDialogOpen}
-          onOk={this.handleSignOut}
-          onCancel={this.handleCancelSignOut}
+        <ProfileEditDialog
+          profile={this.props.currentUserStore.user}
+          open={this.state.dialogOpen}
+          onClose={this.handleDialogClose}
+          onUpdate={this.handleProfileUpdate}
         />
       </div>
     );
