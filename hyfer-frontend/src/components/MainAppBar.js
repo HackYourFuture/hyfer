@@ -57,6 +57,7 @@ const routes = {
     { label: 'Modules', path: 'modules' },
     { label: 'Users', path: 'users' },
     { label: 'Homework', path: 'homework' },
+    { label: 'Train ticket', path: 'TrainTicket' },
     { label: 'About', path: 'about' },
   ],
 };
