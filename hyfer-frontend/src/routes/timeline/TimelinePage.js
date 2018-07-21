@@ -32,7 +32,7 @@ class TimelinePage extends Component {
       <main>
         <div className={classes.root}>
           <Timeline
-            itemWidth={170}
+            itemWidth={150}
             rowHeight={48}
           />
         </div>
