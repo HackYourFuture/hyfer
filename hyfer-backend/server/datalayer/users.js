@@ -7,7 +7,7 @@ const GET_USERS = `
   LEFT JOIN \`groups\` ON \`groups\`.id=group_students.group_id`;
 
 const UPDATE_USER =
-  'UPDATE users SET email=?, linkedin_username=? WHERE id=?';
+  'UPDATE users SET ? WHERE id=?';
 
 function getTeachers(con) {
   return execQuery(con, `SELECT * FROM users WHERE 
@@ -70,9 +70,9 @@ async function bulkUpdateMemberships(con, groupAndUserIds) {
   return execQuery(con, 'INSERT INTO group_students (group_id, user_id) VALUES ?', [groupAndUserIds]);
 }
 
-function updateUser(con, id, data) {
-  const { email, linkedInName } = data;
-  return execQuery(con, UPDATE_USER, [email, linkedInName, id]);
+async function updateUser(con, id, data) {
+  await execQuery(con, UPDATE_USER, [data, id]);
+  return getUserById(con, id);
 }
 
 function getLastEvent(con, eventName) {

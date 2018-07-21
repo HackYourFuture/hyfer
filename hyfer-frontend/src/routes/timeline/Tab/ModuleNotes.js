@@ -191,7 +191,6 @@ class ModuleNotes extends Component {
   }
 
   renderEditMode() {
-    console.log();
     return (
       <MarkdownEditor
         markdown={toJS(this.state.markdown)}

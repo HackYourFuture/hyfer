@@ -2,6 +2,12 @@ import { action, computed, observable, runInAction } from 'mobx';
 import { fetchJSON } from './util';
 import stores from './';
 
+const profileKeyMap = {
+  linkedInName: 'linkedin_username',
+  email: 'email',
+  bio: 'bio',
+};
+
 export default class GlobalStore {
 
   isLoaded = false;
@@ -56,15 +62,6 @@ export default class GlobalStore {
     return this.currentUser.full_name;
   }
 
-  @computed
-  get email() {
-    return this.currentUser.email;
-  }
-
-  @computed
-  get linkedInName() {
-    return this.currentUser.linkedin_username;
-  }
 
   @computed
   get groupName() {
@@ -74,6 +71,21 @@ export default class GlobalStore {
   @computed
   get registerDate() {
     return this.currentUser.register_date;
+  }
+
+  @computed
+  get email() {
+    return this.profile.email;
+  }
+
+  @computed
+  get linkedInName() {
+    return this.profile.linkedin_username;
+  }
+
+  @computed
+  get bio() {
+    return this.profile.bio;
   }
 
   @action
@@ -86,6 +98,7 @@ export default class GlobalStore {
         runInAction(() => {
           this.isLoaded = true;
           this.currentUser = res;
+          this.profile = res;
           const { group_name: groupName } = this.currentUser;
           if (groupName != null && this.isStudent && !this.isArchived) {
             stores.currentModuleStore.getGroupsByGroupName(groupName, true);
@@ -97,22 +110,24 @@ export default class GlobalStore {
   }
 
   @action
-  updateCurrentUser = async (email, linkedInName) => {
+  updateCurrentUser = async (profile) => {
     const { id } = this.currentUser;
-    if (!email && !linkedInName) {
-      return;
-    }
 
-    const updates = {};
-    if (email) {
-      updates.email = email;
-    }
-    if (linkedInName) {
-      updates.linkedInName = linkedInName;
-    }
+    const updates = Object.keys(profile)
+      .reduce((acc, key) => {
+        const value = profile[key];
+        if (typeof value === 'string') {
+          const dbKey = profileKeyMap[key];
+          acc[dbKey] = value.trim();
+        }
+        return acc;
+      }, {});
 
     try {
-      await fetchJSON(`/api/user/${id}`, 'PATCH', updates);
+      const res = await fetchJSON(`/api/user/${id}`, 'PATCH', updates);
+      runInAction(() => {
+        this.currentUser = res;
+      });
     } catch (error) {
       stores.ui.setLastError(error);
     }

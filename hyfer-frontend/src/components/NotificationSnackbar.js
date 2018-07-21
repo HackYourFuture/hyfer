@@ -100,7 +100,6 @@ const styles2 = theme => ({
 class NotificationSnackbar extends Component {
 
   handleClose = (event, reason) => {
-    console.log('handleClose');
     if (reason === 'clickaway') {
       return;
     }
@@ -109,8 +108,6 @@ class NotificationSnackbar extends Component {
 
   render() {
     const { variant, message } = this.props.ui.notification;
-
-    console.log('snackbar render', variant, message);
 
     return (
       <Snackbar

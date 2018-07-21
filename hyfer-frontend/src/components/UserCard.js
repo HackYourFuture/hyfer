@@ -14,7 +14,7 @@ import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import Attendance from './Attendance';
-import ProfileDialog from './ProfileDialog';
+import ProfileEditDialog from './ProfileEditDialog';
 
 const styles = (theme) => ({
   root: {
@@ -94,11 +94,9 @@ class UserCard extends Component {
     this.setState({ open: false });
   };
 
-  handleUpdate = async (email, linkedInName) => {
+  handleUpdate = async (profile) => {
     this.handleClose();
-    const { id } = this.props.currentModuleStore.currentModule;
-    await this.props.currentUser.updateCurrentUser(email, linkedInName);
-    this.props.currentModuleStore.getRunningModuleDetails(id);
+    await this.props.currentUser.updateCurrentUser(profile);
   }
 
   saveAttendance = (e) => {
@@ -159,9 +157,8 @@ class UserCard extends Component {
             </Button>
           </Paper>}
         {showAttendance && <Attendance user={user} selectedWeek={selectedWeek} />}
-        <ProfileDialog
-          email={currentUser.email}
-          linkedInName={currentUser.linkedInName}
+        <ProfileEditDialog
+          profile={currentUser.currentUser}
           open={this.state.open}
           onClose={this.handleClose}
           onUpdate={this.handleUpdate}

@@ -35,7 +35,6 @@ async function getLastEvent(req, res) {
   }
 }
 
-
 async function getTeachers(req, res) {
   try {
     const con = await getConnection(req, res);
@@ -68,11 +67,14 @@ function getRunningUsersByGroup(req, res) {
     .catch(err => handleError(err, res));
 }
 
-function updateUser(req, res) {
-  getConnection(req, res)
-    .then(con => db.updateUser(con, +req.params.id, req.body))
-    .then(() => res.sendStatus(204))
-    .catch(err => handleError(err, res));
+async function updateUser(req, res) {
+  try {
+    const con = await getConnection(req, res);
+    const [result] = await db.updateUser(con, +req.params.id, req.body);
+    res.json(result);
+  } catch (err) {
+    handleError(err, res);
+  }
 }
 
 const router = express.Router();
