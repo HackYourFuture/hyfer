@@ -83,7 +83,7 @@ class WeekIndicator extends Component {
     return (
       <Paper
         style={{ width: itemWidth }}
-        elevation={0}
+        elevation={1}
         className={classes.root}
       >
         {this.setTodayMarker()}

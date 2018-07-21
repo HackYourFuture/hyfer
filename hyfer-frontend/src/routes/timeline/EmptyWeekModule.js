@@ -15,7 +15,7 @@ class EmptyWeekModule extends Component {
     const { width, height, classes } = this.props;
     return (
       <Paper
-        elevation={0}
+        elevation={1}
         className={classes.root}
         style={{ width, height }}
       />

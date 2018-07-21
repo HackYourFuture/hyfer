@@ -86,7 +86,7 @@ class TimelineModule extends Component {
     const selected = currentModule && currentModule.id === running_module_id;
 
     return (
-      <Paper elevation={1}
+      <Paper elevation={2}
         className={classNames(classes.container, selected ? classes.selected : '')}
         style={{ width, height: this.props.height, backgroundColor: color }}
         onClick={() => this.itemClickHandler(this.props.item)}
