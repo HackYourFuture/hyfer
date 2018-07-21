@@ -6,14 +6,16 @@ import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { withTheme } from '@material-ui/core/styles';
 import NotificationSnackbar from './components/NotificationSnackbar';
 import cookie from 'react-cookies';
-import MainAppBar from './components/MainAppBar';
-import TimelinePage from './routes/timeline/TimelinePage';
+import AboutPage from './routes/about/AboutPage';
 import HomeworkPage from './routes//homework/HomeworkPage';
+import MainAppBar from './components/MainAppBar';
 import ModulesPage from './routes//modules/ModulesPage';
+import TimelinePage from './routes/timeline/TimelinePage';
 import TrainTicketPage from './routes//trainTicket/TrainTicketPage';
 import UsersPage from './routes//users/UsersPage';
 
 const PUBLIC_ROUTES = [
+  { exact: true, path: '/about', component: AboutPage },
   { exact: true, path: '/timeline', component: TimelinePage },
 ];
 

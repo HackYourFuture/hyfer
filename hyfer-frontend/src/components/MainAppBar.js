@@ -45,16 +45,19 @@ const styles = (theme) => {
 const routes = {
   guest: [
     { label: 'Timeline', path: 'timeline' },
+    { label: 'About', path: 'about' },
   ],
   student: [
     { label: 'Timeline', path: 'timeline' },
     { label: 'Homework', path: 'homework' },
+    { label: 'About', path: 'about' },
   ],
   teacher: [
     { label: 'Timeline', path: 'timeline' },
     { label: 'Modules', path: 'modules' },
     { label: 'Users', path: 'users' },
     { label: 'Homework', path: 'homework' },
+    { label: 'About', path: 'about' },
   ],
 };
 

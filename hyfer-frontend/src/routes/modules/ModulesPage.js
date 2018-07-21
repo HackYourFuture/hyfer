@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import ModuleHeader from './ModuleHeader';
 import ModuleList from './ModuleList';
 import ModuleFooter from './ModuleFooter';
 import style from './modules.css';
 
-export default class ModulesPage extends Component {
+export default class ModulesPage extends React.Component {
 
   render() {
     return (
