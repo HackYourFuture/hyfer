@@ -56,7 +56,7 @@ const routes = {
   ],
 };
 
-@inject('currentUser')
+@inject('currentUserStore')
 @withRouter
 @observer
 class MainAppBar extends Component {
@@ -92,7 +92,7 @@ class MainAppBar extends Component {
   handleOpenSignOut = () => this.setState({ isDialogOpen: true });
 
   handleSignInSignOut = () => {
-    const { isLoggedIn } = this.props.currentUser;
+    const { isLoggedIn } = this.props.currentUserStore;
     if (isLoggedIn) {
       this.setState({ isDialogOpen: true });
     } else {
@@ -101,8 +101,8 @@ class MainAppBar extends Component {
   };
 
   render() {
-    const { classes, currentUser } = this.props;
-    const { isLoggedIn, isStudent, isTeacher, userName, avatarUrl } = currentUser;
+    const { classes, currentUserStore } = this.props;
+    const { isLoggedIn, isStudent, isTeacher, userName, avatarUrl } = currentUserStore;
     const { value } = this.state;
 
     if (isLoggedIn) {
@@ -150,7 +150,7 @@ class MainAppBar extends Component {
 
 MainAppBar.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
-  currentUser: PropTypes.object.isRequired,
+  currentUserStore: PropTypes.object.isRequired,
   history: PropTypes.object,
 };
 

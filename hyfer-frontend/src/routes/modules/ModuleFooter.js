@@ -5,7 +5,7 @@ import ModuleButton from './ModuleButton';
 import ModuleForm from './ModuleForm';
 import { inject, observer } from 'mobx-react';
 
-@inject('moduleStore', 'ui')
+@inject('moduleStore', 'uiStore')
 @observer
 export default class ModuleFooter extends Component {
 
@@ -15,13 +15,13 @@ export default class ModuleFooter extends Component {
 
   saveChanges = (modules) => {
     this.props.moduleStore.saveChanges(modules);
-    this.props.ui.setSuccessMessage('Your changes have been successfully saved.');
+    this.props.uiStore.setSuccessMessage('Your changes have been successfully saved.');
   }
 
   undoChanges = () => {
-    const { moduleStore, ui } = this.props;
+    const { moduleStore, uiStore } = this.props;
     moduleStore.undoChanges();
-    ui.setWarningMessage('Your changes have been cancelled.');
+    uiStore.setWarningMessage('Your changes have been cancelled.');
   }
 
   render() {
@@ -61,5 +61,5 @@ export default class ModuleFooter extends Component {
 
 ModuleFooter.wrappedComponent.propTypes = {
   moduleStore: PropTypes.object.isRequired,
-  ui: PropTypes.object.isRequired,
+  uiStore: PropTypes.object.isRequired,
 };

@@ -12,10 +12,10 @@ configure({ enforceActions: true });
 
 export default {
   currentModuleStore: new CurrentModuleStore(),
-  currentUser: new CurrentUserStore(),
+  currentUserStore: new CurrentUserStore(),
   homeworkStore: new HomeworkStore(),
   moduleStore: new ModuleStore(),
-  timeline: new TimeLineStore(),
-  ui: new UIStore(),
+  timelineStore: new TimeLineStore(),
+  uiStore: new UIStore(),
   userStore: new UserStore(),
 };

@@ -13,7 +13,7 @@ const styles = (theme) => ({
   },
 });
 
-@inject('timeline', 'currentUser')
+@inject('timelineStore', 'currentUserStore')
 @observer
 class ClassSelector extends Component {
   state = {
@@ -33,13 +33,13 @@ class ClassSelector extends Component {
     if (value === 'add') {
       this.setState({ isOpen: true });
     } else {
-      this.props.timeline.setFilter(value);
+      this.props.timelineStore.setFilter(value);
     }
   };
 
   render() {
-    const { classes, currentUser } = this.props;
-    const { timeline, filter } = this.props.timeline;
+    const { classes, currentUserStore } = this.props;
+    const { timeline, filter } = this.props.timelineStore;
     return (
       <React.Fragment>
         <Select
@@ -53,10 +53,10 @@ class ClassSelector extends Component {
             const number = className.match(/(\d+)$/)[1];
             return <MenuItem key={number} value={className}>Class {number}</MenuItem>;
           })}
-          {currentUser.isTeacher && <Divider />}
-          {currentUser.isTeacher && <MenuItem value="add">Add Class</MenuItem>}
+          {currentUserStore.isTeacher && <Divider />}
+          {currentUserStore.isTeacher && <MenuItem value="add">Add Class</MenuItem>}
         </Select>
-        {currentUser.isTeacher && <AddClassDialog
+        {currentUserStore.isTeacher && <AddClassDialog
           open={this.state.isOpen}
           onClose={this.closeMenu}
         />}
@@ -67,8 +67,8 @@ class ClassSelector extends Component {
 
 ClassSelector.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
-  currentUser: PropTypes.object.isRequired,
-  timeline: PropTypes.object.isRequired,
+  currentUserStore: PropTypes.object.isRequired,
+  timelineStore: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(ClassSelector);

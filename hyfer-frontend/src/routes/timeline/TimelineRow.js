@@ -23,11 +23,11 @@ export function getWeeksBeforeAndAfter(allWeeks, modules) {
   };
 }
 
-@inject('timeline')
+@inject('timelineStore')
 @observer
 export default class TimelineRow extends Component {
   renderAllTaskComps = () => {
-    const { allWeeks, items } = this.props.timeline;
+    const { allWeeks, items } = this.props.timelineStore;
     const { width, height, groupName } = this.props;
     const { modules } = items[groupName];
     const { weeksBefore, weeksAfter } = getWeeksBeforeAndAfter(allWeeks, modules);
@@ -61,7 +61,7 @@ export default class TimelineRow extends Component {
 }
 
 TimelineRow.wrappedComponent.propTypes = {
-  timeline: PropTypes.object.isRequired,
+  timelineStore: PropTypes.object.isRequired,
   groupName: PropTypes.string.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,

@@ -95,7 +95,7 @@ const styles2 = theme => ({
 });
 
 
-@inject('ui')
+@inject('uiStore')
 @observer
 class NotificationSnackbar extends Component {
 
@@ -103,11 +103,11 @@ class NotificationSnackbar extends Component {
     if (reason === 'clickaway') {
       return;
     }
-    this.props.ui.clearNotification();
+    this.props.uiStore.clearNotification();
   };
 
   render() {
-    const { variant, message } = this.props.ui.notification;
+    const { variant, message } = this.props.uiStore.notification;
 
     return (
       <Snackbar
@@ -131,7 +131,7 @@ class NotificationSnackbar extends Component {
 
 NotificationSnackbar.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
-  ui: PropTypes.object.isRequired,
+  uiStore: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles2)(NotificationSnackbar);

@@ -19,6 +19,6 @@ export async function sendAnEmail(recipient, sender, subject, text) {
     body: JSON.stringify(body),
   });
   if (!res.ok) throw new Error(res);
-  // else stores.ui.setSuccessMessage('Email was sent successfully');
+  // else stores.uiStore.setSuccessMessage('Email was sent successfully');
 }
 

@@ -13,64 +13,64 @@ export default class GlobalStore {
   isLoaded = false;
 
   @observable
-  currentUser = {
+  user = {
     role: 'guest',
   };
 
   @computed
   get id() {
-    return this.currentUser.id;
+    return this.user.id;
   }
 
   @computed
   get userName() {
-    return this.currentUser.username;
+    return this.user.username;
   }
 
   @computed
   get role() {
-    return this.currentUser.role;
+    return this.user.role;
   }
 
   @computed
   get isLoggedIn() {
-    return this.currentUser.role !== 'guest';
+    return this.user.role !== 'guest';
   }
 
   @computed
   get isStudent() {
-    return this.currentUser.role === 'student';
+    return this.user.role === 'student';
   }
 
   @computed
   get isTeacher() {
-    return this.currentUser.role === 'teacher';
+    return this.user.role === 'teacher';
   }
 
   @computed
   get avatarUrl() {
-    return `https://avatars.githubusercontent.com/${this.currentUser.username}`;
+    return `https://avatars.githubusercontent.com/${this.user.username}`;
   }
 
   @computed
   get isArchived() {
-    return this.currentUser.archived === 1;
+    return this.user.archived === 1;
   }
 
   @computed
   get fullName() {
-    return this.currentUser.full_name;
+    return this.user.full_name;
   }
 
 
   @computed
   get groupName() {
-    return this.currentUser.group_name;
+    return this.user.group_name;
   }
 
   @computed
   get registerDate() {
-    return this.currentUser.register_date;
+    return this.user.register_date;
   }
 
   @computed
@@ -89,29 +89,29 @@ export default class GlobalStore {
   }
 
   @action
-  fetchUser = () => {
+  fetchUser = async () => {
     if (this.isLoaded) {
       return;
     }
-    fetchJSON('/api/user')
-      .then((res) => {
-        runInAction(() => {
-          this.isLoaded = true;
-          this.currentUser = res;
-          this.profile = res;
-          const { group_name: groupName } = this.currentUser;
-          if (groupName != null && this.isStudent && !this.isArchived) {
-            stores.currentModuleStore.getGroupsByGroupName(groupName, true);
-            stores.timeline.setFilter(groupName);
-          }
-        });
-      })
-      .catch((error) => stores.ui.setLastError(error));
+    try {
+      const res = await fetchJSON('/api/user');
+      runInAction(() => {
+        this.isLoaded = true;
+        this.user = res;
+        const { group_name: groupName } = this.user;
+        if (groupName != null && this.isStudent && !this.isArchived) {
+          stores.currentModuleStore.getGroupsByGroupName(groupName, true);
+          stores.timeline.setFilter(groupName);
+        }
+      });
+    } catch (err) {
+      stores.uiStore.setLastError(err);
+    }
   }
 
   @action
   updateCurrentUser = async (profile) => {
-    const { id } = this.currentUser;
+    const { id } = this.user;
 
     const updates = Object.keys(profile)
       .reduce((acc, key) => {
@@ -126,10 +126,10 @@ export default class GlobalStore {
     try {
       const res = await fetchJSON(`/api/user/${id}`, 'PATCH', updates);
       runInAction(() => {
-        this.currentUser = res;
+        this.user = res;
       });
     } catch (error) {
-      stores.ui.setLastError(error);
+      stores.uiStore.setLastError(error);
     }
   }
 }

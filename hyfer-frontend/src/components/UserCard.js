@@ -62,7 +62,7 @@ const styles = (theme) => ({
   },
 });
 
-@inject('currentModuleStore', 'currentUser')
+@inject('currentModuleStore', 'currentUserStore')
 @observer
 class UserCard extends Component {
 
@@ -96,7 +96,7 @@ class UserCard extends Component {
 
   handleUpdate = async (profile) => {
     this.handleClose();
-    await this.props.currentUser.updateCurrentUser(profile);
+    await this.props.currentUserStore.updateCurrentUser(profile);
   }
 
   saveAttendance = (e) => {
@@ -116,7 +116,7 @@ class UserCard extends Component {
   }
 
   render() {
-    const { classes, user, currentUser, selectedWeek, showAttendance, showRemoveTeacher } = this.props;
+    const { classes, user, currentUserStore, selectedWeek, showAttendance, showRemoveTeacher } = this.props;
 
     return (
       <div className={classes.root}>
@@ -141,7 +141,7 @@ class UserCard extends Component {
             <FaGitHubIcon className={classes.actionIcon} onClick={this.handleGitHub} />
             {user.linkedin_username != null &&
               <FaLinkedIn className={classes.actionIcon} onClick={this.handleLinkedIn} />}
-            {user.id === currentUser.id &&
+            {user.id === currentUserStore.id &&
               <Fragment>
                 <span className={classes.filler} />
                 <Tooltip title="Edit profile">
@@ -150,7 +150,7 @@ class UserCard extends Component {
               </Fragment>}
           </CardActions>
         </Card>
-        {showRemoveTeacher && user.role === "teacher" && currentUser.isTeacher &&
+        {showRemoveTeacher && user.role === "teacher" && currentUserStore.isTeacher &&
           <Paper className={classes.teacherPanel}>
             <Button color="secondary" onClick={this.handleRemove}>
               Remove
@@ -158,7 +158,7 @@ class UserCard extends Component {
           </Paper>}
         {showAttendance && <Attendance user={user} selectedWeek={selectedWeek} />}
         <ProfileEditDialog
-          profile={currentUser.currentUser}
+          profile={currentUserStore.user}
           open={this.state.open}
           onClose={this.handleClose}
           onUpdate={this.handleUpdate}
@@ -171,7 +171,7 @@ class UserCard extends Component {
 UserCard.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   currentModuleStore: PropTypes.object.isRequired,
-  currentUser: PropTypes.object.isRequired,
+  currentUserStore: PropTypes.object.isRequired,
   selectedWeek: PropTypes.number.isRequired,
   showAttendance: PropTypes.bool,
   showRemoveTeacher: PropTypes.bool,

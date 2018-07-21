@@ -49,7 +49,7 @@ export default class CurrentModuleStore {
   @action
   async getRunningModuleDetails(runningId) {
     const details = await fetchJSON(`/api/running/details/${runningId}`);
-    stores.ui.setTimelineTabIndex(0);
+    stores.uiStore.setTimelineTabIndex(0);
 
     const { group, module, runningModule, teachers } = details;
 
@@ -72,7 +72,7 @@ export default class CurrentModuleStore {
       const teachers = await fetchJSON(`/api/running/teacher/${moduleId}/${teacherId}`, 'POST');
       runInAction(() => this.teachers = teachers);
     } catch (err) {
-      stores.ui.setLastError(err);
+      stores.uiStore.setLastError(err);
     }
   }
 
@@ -81,7 +81,7 @@ export default class CurrentModuleStore {
       const teachers = await fetchJSON(`/api/running/teacher/${moduleId}/${userId}`, 'DELETE');
       runInAction(() => this.teachers = teachers);
     } catch (err) {
-      stores.ui.setLastError(err);
+      stores.uiStore.setLastError(err);
     }
   }
 
@@ -94,7 +94,7 @@ export default class CurrentModuleStore {
       const runningModule = await fetchJSON(`/api/running/notes/${runningId}`, 'PATCH', { notes });
       runInAction(() => this.currentModule = runningModule);
     } catch (err) {
-      stores.ui.setLastError(err);
+      stores.uiStore.setLastError(err);
     }
   }
 
@@ -146,7 +146,7 @@ export default class CurrentModuleStore {
         }
       });
     } catch (err) {
-      stores.ui.setLastError(err);
+      stores.uiStore.setLastError(err);
     }
   }
 
@@ -165,7 +165,7 @@ export default class CurrentModuleStore {
         updatedStudent.history = history;
       });
     } catch (err) {
-      stores.ui.setLastError(err);
+      stores.uiStore.setLastError(err);
     }
   }
 }

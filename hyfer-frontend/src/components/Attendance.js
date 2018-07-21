@@ -23,7 +23,7 @@ const styles = (theme) => ({
   },
 });
 
-@inject('currentModuleStore', 'currentUser')
+@inject('currentModuleStore', 'currentUserStore')
 @observer
 class Attendance extends Component {
 
@@ -44,7 +44,7 @@ class Attendance extends Component {
   }
 
   render() {
-    const { classes, user, selectedWeek, currentUser } = this.props;
+    const { classes, user, selectedWeek, currentUserStore } = this.props;
     const { attendance, homework } = user.history[selectedWeek];
 
     return (
@@ -58,7 +58,7 @@ class Attendance extends Component {
                 checked={Boolean(attendance)}
                 onChange={this.saveAttendance}
                 value="present"
-                disabled={!currentUser.isTeacher}
+                disabled={!currentUserStore.isTeacher}
               />
             }
             label="Present"
@@ -70,7 +70,7 @@ class Attendance extends Component {
                 checked={Boolean(homework)}
                 onChange={this.saveHomework}
                 value="homework"
-                disabled={!currentUser.isTeacher}
+                disabled={!currentUserStore.isTeacher}
               />
             }
             label="Homework"
@@ -84,7 +84,7 @@ class Attendance extends Component {
 Attendance.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   currentModuleStore: PropTypes.object.isRequired,
-  currentUser: PropTypes.object.isRequired,
+  currentUserStore: PropTypes.object.isRequired,
   selectedWeek: PropTypes.number.isRequired,
   user: PropTypes.object.isRequired,
 };

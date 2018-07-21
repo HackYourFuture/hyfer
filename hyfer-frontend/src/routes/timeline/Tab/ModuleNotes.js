@@ -76,7 +76,7 @@ const restoreState = {
   inEditMode: true,
 };
 
-@inject('currentUser', 'currentModuleStore')
+@inject('currentUserStore', 'currentModuleStore')
 @observer
 class ModuleNotes extends Component {
   origNotes = '';
@@ -202,7 +202,7 @@ class ModuleNotes extends Component {
   }
 
   renderViewMode(classes) {
-    const { isTeacher } = this.props.currentUser;
+    const { isTeacher } = this.props.currentUserStore;
     return (
       <React.Fragment>
         {isTeacher && (
@@ -243,7 +243,7 @@ class ModuleNotes extends Component {
 
 ModuleNotes.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
-  currentUser: PropTypes.object.isRequired,
+  currentUserStore: PropTypes.object.isRequired,
   currentModuleStore: PropTypes.object.isRequired,
 };
 

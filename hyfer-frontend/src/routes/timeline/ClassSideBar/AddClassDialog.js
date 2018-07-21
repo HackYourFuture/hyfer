@@ -8,7 +8,7 @@ import {
 import moment from 'moment';
 import { inject, observer } from 'mobx-react';
 
-@inject('timeline')
+@inject('timelineStore')
 @observer
 export default class AddClassDialog extends Component {
   state = {
@@ -67,10 +67,10 @@ export default class AddClassDialog extends Component {
       });
       return;
     }
-    this.props.timeline.addNewClass(`Class ${classNumber}`, starting_date)
+    this.props.timelineStore.addNewClass(`Class ${classNumber}`, starting_date)
       .then(() => {
         this.props.onClose();
-        this.props.timeline.fetchItems();
+        this.props.timelineStore.fetchItems();
       })
       .catch((error) => {
         const e = new Error(error);
@@ -142,5 +142,5 @@ export default class AddClassDialog extends Component {
 AddClassDialog.wrappedComponent.propTypes = {
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  timeline: PropTypes.object.isRequired,
+  timelineStore: PropTypes.object.isRequired,
 };

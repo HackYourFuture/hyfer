@@ -46,7 +46,7 @@ const styles = (theme) => {
   };
 };
 
-@inject('currentModuleStore', 'currentUser', 'userStore')
+@inject('currentModuleStore', 'currentUserStore', 'userStore')
 @observer
 class TimelineModule extends Component {
   state = {
@@ -62,7 +62,7 @@ class TimelineModule extends Component {
   };
 
   itemClickHandler = (item) => {
-    const { isStudent, isTeacher } = this.props.currentUser;
+    const { isStudent, isTeacher } = this.props.currentUserStore;
     if (isStudent || isTeacher) {
       this.props.currentModuleStore.getRunningModuleDetails(item.running_module_id);
     }
@@ -81,7 +81,7 @@ class TimelineModule extends Component {
     const { spacing } = this.props.theme;
     const width = this.props.width * duration + spacing.unit * (duration - 1);
 
-    const { classes, currentUser } = this.props;
+    const { classes, currentUserStore } = this.props;
     const { currentModule } = this.props.currentModuleStore;
     const selected = currentModule && currentModule.id === running_module_id;
 
@@ -99,7 +99,7 @@ class TimelineModule extends Component {
         >
           {module_name}
         </Typography>
-        {currentUser.isTeacher && (
+        {currentUserStore.isTeacher && (
           <React.Fragment>
             <IconButton
               onClick={this.openMenu}
@@ -122,7 +122,7 @@ class TimelineModule extends Component {
 TimelineModule.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   currentModuleStore: PropTypes.object.isRequired,
-  currentUser: PropTypes.object.isRequired,
+  currentUserStore: PropTypes.object.isRequired,
   height: PropTypes.number.isRequired,
   isLast: PropTypes.bool.isRequired,
   item: PropTypes.object.isRequired,

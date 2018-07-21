@@ -39,7 +39,7 @@ const styles = (theme) => ({
   },
 });
 
-@inject('timeline', 'currentUser')
+@inject('timelineStore', 'currentUserStore')
 @observer
 class Timeline extends Component {
   hasRendered = false;
@@ -53,7 +53,7 @@ class Timeline extends Component {
   classesContainerRef = React.createRef();
 
   componentDidMount() {
-    this.props.timeline.fetchItems()
+    this.props.timelineStore.fetchItems()
       .then(this.onTodayClick);
   }
 
@@ -70,7 +70,7 @@ class Timeline extends Component {
     const { rowHeight, itemWidth, classes } = this.props;
     return (
       <div className={classes.rowContainer}>
-        {this.props.timeline.allWeeks.map(week => (
+        {this.props.timelineStore.allWeeks.map(week => (
           <WeekIndicator
             setTodayMarkerRef={this.setTodayMarkerRef}
             scrollingParentRef={this.timelineWrapperRef}
@@ -85,7 +85,7 @@ class Timeline extends Component {
   }
 
   renderTaskRowComp() {
-    const { groups } = this.props.timeline;
+    const { groups } = this.props.timelineStore;
     return groups.map(groupName => {
       const { itemWidth, rowHeight, classes } = this.props;
       return (
@@ -101,11 +101,7 @@ class Timeline extends Component {
   }
 
   render() {
-    if (!this.props.timeline) {
-      return null;
-    }
-
-    const { allWeeks } = this.props.timeline;
+    const { allWeeks } = this.props.timelineStore;
     const { itemWidth, rowHeight, classes } = this.props;
     // if there items are fetched  width is the 200 times total weeks otherwise it's 100vh
     // FIXME: no idea why this is not working with just 16 instead of 21
@@ -145,7 +141,7 @@ Timeline.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   itemWidth: PropTypes.number.isRequired,
   rowHeight: PropTypes.number.isRequired,
-  timeline: PropTypes.object.isRequired,
+  timelineStore: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(Timeline);

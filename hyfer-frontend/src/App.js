@@ -33,7 +33,7 @@ const ROUTES = {
   ],
 };
 
-@inject('currentUser', 'ui')
+@inject('currentUserStore', 'uiStore')
 @observer
 class App extends Component {
 
@@ -45,15 +45,15 @@ class App extends Component {
     }
     token = window.localStorage.getItem('token');
     if (token) {
-      await this.props.currentUser.fetchUser();
+      await this.props.currentUserStore.fetchUser();
     } else {
       window.localStorage.removeItem('token');
     }
   }
 
   render() {
-    const { theme, ui } = this.props;
-    const { role, isLoggedIn } = this.props.currentUser;
+    const { theme, uiStore } = this.props;
+    const { role, isLoggedIn } = this.props.currentUserStore;
     const routes = isLoggedIn ? [...PUBLIC_ROUTES, ...ROUTES[role]] : [...PUBLIC_ROUTES];
     const paddingTop = theme.mixins.toolbar.minHeight + theme.spacing.unit;
 
@@ -63,7 +63,7 @@ class App extends Component {
           <CssBaseline />
           <MainAppBar />
           <div style={{ paddingTop }}>
-            {ui.notification && <NotificationSnackbar />}
+            {uiStore.notification && <NotificationSnackbar />}
             <Switch>
               {routes.map(route => (<Route key={route.path} {...route} />))}
               <Redirect exact strict from="/" to="/timeline" />
@@ -78,7 +78,7 @@ class App extends Component {
 export default withTheme()(App);
 
 App.wrappedComponent.propTypes = {
-  currentUser: PropTypes.object.isRequired,
+  currentUserStore: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
-  ui: PropTypes.object.isRequired,
+  uiStore: PropTypes.object.isRequired,
 };

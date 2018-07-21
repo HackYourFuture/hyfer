@@ -33,7 +33,7 @@ const styles = (theme) => ({
   },
 });
 
-@inject('timeline', 'ui')
+@inject('timelineStore', 'uiStore')
 @observer
 class ClassButton extends Component {
   state = {
@@ -70,7 +70,7 @@ class ClassButton extends Component {
   };
 
   handleClassArchive = async id => {
-    const group = this.props.timeline.groupsWithIds.filter(
+    const group = this.props.timelineStore.groupsWithIds.filter(
       group => group.group_name.replace(/ /g, '').substr(5) === id,
     );
 
@@ -88,7 +88,7 @@ class ClassButton extends Component {
       });
       window.location.reload();
     } catch (err) {
-      this.props.ui.setLastError(err);
+      this.props.uiStore.setLastError(err);
     }
   };
 
@@ -119,8 +119,8 @@ ClassButton.wrappedComponent.propTypes = {
   classId: PropTypes.string.isRequired,
   disabled: PropTypes.bool.isRequired,
   height: PropTypes.number.isRequired,
-  timeline: PropTypes.object.isRequired,
-  ui: PropTypes.object.isRequired,
+  timelineStore: PropTypes.object.isRequired,
+  uiStore: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(ClassButton);

@@ -5,7 +5,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import AddModuleDialog from './AddModuleDialog';
 
-@inject('timeline', 'currentModuleStore', 'moduleStore', 'currentUser')
+@inject('timelineStore', 'currentModuleStore', 'moduleStore', 'currentUserStore')
 @observer
 export default class TimelineMenu extends Component {
   state = {
@@ -27,7 +27,7 @@ export default class TimelineMenu extends Component {
     this.props.onClose();
     const { currentModule } = this.props.currentModuleStore;
     const { duration } = currentModule;
-    this.props.timeline.updateModule(currentModule, null, duration + 1);
+    this.props.timelineStore.updateModule(currentModule, null, duration + 1);
   };
 
   handleWeekShorter = (e) => {
@@ -35,7 +35,7 @@ export default class TimelineMenu extends Component {
     this.props.onClose();
     const { currentModule } = this.props.currentModuleStore;
     const { duration } = currentModule;
-    this.props.timeline.updateModule(currentModule, null, duration - 1);
+    this.props.timelineStore.updateModule(currentModule, null, duration - 1);
   };
 
   handleMoveLeft = (e) => {
@@ -43,7 +43,7 @@ export default class TimelineMenu extends Component {
     this.props.onClose();
     const { currentModule } = this.props.currentModuleStore;
     const { position, duration } = currentModule;
-    this.props.timeline.updateModule(currentModule, position - 1, duration);
+    this.props.timelineStore.updateModule(currentModule, position - 1, duration);
   };
 
   handleMoveRight = (e) => {
@@ -51,7 +51,7 @@ export default class TimelineMenu extends Component {
     this.props.onClose();
     const { currentModule } = this.props.currentModuleStore;
     const { position, duration } = currentModule;
-    this.props.timeline.updateModule(currentModule, position + 1, duration);
+    this.props.timelineStore.updateModule(currentModule, position + 1, duration);
   };
 
   handleRemoveModule = (e) => {
@@ -59,7 +59,7 @@ export default class TimelineMenu extends Component {
     this.props.onClose();
     const { currentModule } = this.props.currentModuleStore;
     const { group_id, position } = currentModule;
-    this.props.timeline.removeModule(group_id, position);
+    this.props.timelineStore.removeModule(group_id, position);
   };
 
   handleSplitModule = async (e) => {
@@ -67,7 +67,7 @@ export default class TimelineMenu extends Component {
     this.props.onClose();
     const { currentModule } = this.props.currentModuleStore;
     const { group_id, position } = currentModule;
-    this.props.timeline.splitModule(group_id, position);
+    this.props.timelineStore.splitModule(group_id, position);
   };
 
   render() {
@@ -134,7 +134,7 @@ TimelineMenu.wrappedComponent.propTypes = {
   moduleStore: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired,
   runningModuleId: PropTypes.number.isRequired,
-  timeline: PropTypes.object.isRequired,
+  timelineStore: PropTypes.object.isRequired,
 };
 
 TimelineMenu.wrappedComponent.defaultProps = {

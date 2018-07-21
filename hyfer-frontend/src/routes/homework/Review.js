@@ -8,12 +8,12 @@ import styles from './homework.css';
 @observer
 export default class Review extends Component {
   render() {
-    const { currentUser, students } = this.props.homeworkStore;
+    const { currentUserStore, students } = this.props.homeworkStore;
     const { reviewerId, comments, date } = this.props;
 
-    //currentUser is separate entry in db
+    //currentUserStore is separate entry in db
     const reviewer =
-      students.filter(student => student.id === reviewerId)[0] || currentUser;
+      students.filter(student => student.id === reviewerId)[0] || currentUserStore;
 
     return (
       <div className={styles.review}>

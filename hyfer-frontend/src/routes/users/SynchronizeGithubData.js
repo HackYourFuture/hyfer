@@ -8,7 +8,7 @@ import { inject, observer } from 'mobx-react';
 import moment from 'moment';
 const token = localStorage.getItem('token');
 
-@inject('userStore', 'currentUser', 'timeline')
+@inject('userStore', 'currentUserStore', 'timelineStore')
 @observer
 export default class SynchronizeGithubData extends Component {
 
@@ -41,7 +41,7 @@ export default class SynchronizeGithubData extends Component {
     try {
       this.setState({ isClicked: true, isLoading: true });
       console.log('state after : ', this.state.isClicked);
-      await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/githubSync/${this.props.currentUser.currentUser.username}`, {
+      await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/githubSync/${this.props.currentUserStore.userName}`, {
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
@@ -49,11 +49,11 @@ export default class SynchronizeGithubData extends Component {
         },
       }).then((res) => {
         if (res.status === 200) {
-          stores.ui.setSuccessMessage('Successfully Synchronized');
+          stores.uiStore.setSuccessMessage('Successfully Synchronized');
           this.setState({ isLoading: false });
-          this.props.timeline.fetchItems();
+          this.props.timelineStore.fetchItems();
         } else {
-          stores.ui.setLastError(new Error('Something went wrong please try again'));
+          stores.uiStore.setLastError(new Error('Something went wrong please try again'));
           this.setState({ isLoading: false });
         }
         this.props.userStore.loadUsers();
@@ -90,7 +90,7 @@ export default class SynchronizeGithubData extends Component {
 }
 
 SynchronizeGithubData.wrappedComponent.propTypes = {
-  currentUser: PropTypes.object.isRequired,
-  timeline: PropTypes.object.isRequired,
+  currentUserStore: PropTypes.object.isRequired,
+  timelineStore: PropTypes.object.isRequired,
   userStore: PropTypes.object.isRequired,
 };

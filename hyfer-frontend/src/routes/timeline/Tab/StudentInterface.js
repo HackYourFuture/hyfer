@@ -40,12 +40,12 @@ TabContainer.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-@inject('currentModuleStore', 'currentUser', 'ui')
+@inject('currentModuleStore', 'currentUserStore', 'uiStore')
 @observer
 class StudentInterface extends React.Component {
 
   handleChange = (event, value) => {
-    this.props.ui.setTimelineTabIndex(value);
+    this.props.uiStore.setTimelineTabIndex(value);
   };
 
   visitGitHubRepo = () =>
@@ -55,7 +55,7 @@ class StudentInterface extends React.Component {
     const { classes, currentModuleStore } = this.props;
     const { students, teachers } = currentModuleStore;
 
-    const { timelineTabIndex } = this.props.ui;
+    const { timelineTabIndex } = this.props.uiStore;
 
     return (
       <React.Fragment>
@@ -85,7 +85,7 @@ class StudentInterface extends React.Component {
 StudentInterface.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   currentModuleStore: PropTypes.object.isRequired,
-  ui: PropTypes.object.isRequired,
+  uiStore: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(StudentInterface);
