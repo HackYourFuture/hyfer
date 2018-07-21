@@ -3,15 +3,13 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { inject, observer } from 'mobx-react';
 import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import FaGitHubIcon from 'react-icons/lib/fa/github';
 import FaLinkedIn from 'react-icons/lib/fa/linkedin-square';
-import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import Attendance from './Attendance';
 import ProfileViewDialog from './ProfileViewDialog';
@@ -141,10 +139,9 @@ class UserCard extends React.Component {
             <FaGitHubIcon className={classes.actionIcon} onClick={this.handleGitHub} />
             {user.linkedin_username != null &&
               <FaLinkedIn className={classes.actionIcon} onClick={this.handleLinkedIn} />}
-            <span className={classes.filler} />
-            {user.bio && <Tooltip title="View profile">
-              <MoreHorizIcon className={classes.actionIcon} color="action" onClick={this.handleClickOpen} />
-            </Tooltip>}
+            {user.bio &&
+              <Button color="primary" size="small" onClick={this.handleClickOpen}>Bio</Button>
+            }
           </CardActions>
         </Card>
         {showRemoveTeacher && user.role === "teacher" && currentUserStore.isTeacher &&

@@ -114,7 +114,7 @@ class ProfileEditDialog extends React.Component {
                 About me:
                 </Typography>
               <MarkdownEditor
-                markdown={this.state.bio}
+                markdown={this.state.bio || ''}
                 onChange={this.onMarkdownChange}
               />
             </Grid>

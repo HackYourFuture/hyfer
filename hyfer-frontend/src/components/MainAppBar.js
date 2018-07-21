@@ -168,7 +168,7 @@ class MainAppBar extends Component {
           </Toolbar>
         </AppBar>
         <ProfileEditDialog
-          profile={this.props.currentUserStore.user}
+          profile={this.props.currentUserStore.profile}
           open={this.state.dialogOpen}
           onClose={this.handleDialogClose}
           onUpdate={this.handleProfileUpdate}

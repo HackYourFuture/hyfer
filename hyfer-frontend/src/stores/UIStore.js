@@ -18,7 +18,7 @@ export default class UIStore {
   timelineTabIndex = 0;
 
   @action
-  setLastError = (error) => this.notification = { variant: 'success', messsage: error.message };
+  setLastError = ({ message }) => this.notification = { variant: 'error', message };
 
   @action
   clearNotification = () => this.notification = null;

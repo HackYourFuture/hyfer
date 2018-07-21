@@ -17,6 +17,9 @@ export default class GlobalStore {
     role: 'guest',
   };
 
+  @observable
+  profile = null;
+
   @computed
   get id() {
     return this.user.id;
@@ -98,6 +101,7 @@ export default class GlobalStore {
       runInAction(() => {
         this.isLoaded = true;
         this.user = res;
+        this.profile = res;
         const { group_name: groupName } = this.user;
         if (groupName != null && this.isStudent && !this.isArchived) {
           stores.currentModuleStore.getGroupsByGroupName(groupName, true);
@@ -125,9 +129,7 @@ export default class GlobalStore {
 
     try {
       const res = await fetchJSON(`/api/user/${id}`, 'PATCH', updates);
-      runInAction(() => {
-        this.user = res;
-      });
+      runInAction(() => this.profile = res);
     } catch (error) {
       stores.uiStore.setLastError(error);
     }

@@ -19,7 +19,6 @@ const styles = (theme) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
     position: 'relative',
   },
   container: {
