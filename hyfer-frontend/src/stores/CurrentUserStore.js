@@ -5,7 +5,7 @@ import stores from './';
 const profileKeyMap = {
   linkedInName: 'linkedin_username',
   email: 'email',
-  bio: 'bio',
+  notes: 'notes',
 };
 
 export default class GlobalStore {
@@ -87,8 +87,8 @@ export default class GlobalStore {
   }
 
   @computed
-  get bio() {
-    return this.profile.bio;
+  get notes() {
+    return this.profile.notes;
   }
 
   @action

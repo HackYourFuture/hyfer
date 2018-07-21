@@ -38,13 +38,13 @@ class ProfileEditDialog extends React.Component {
   state = {
     email: '',
     linkedInName: '',
-    bio: '',
+    notes: '',
     isChanged: false,
   };
 
   componentDidMount() {
-    const { email, linkedin_username: linkedInName, bio } = this.props.profile;
-    this.setState({ email, linkedInName, bio });
+    const { email, linkedin_username: linkedInName, notes } = this.props.profile;
+    this.setState({ email, linkedInName, notes });
   }
 
   onEmailChange = e => this.setState({
@@ -58,11 +58,11 @@ class ProfileEditDialog extends React.Component {
   });
 
   onUpdate = () => {
-    const { email, linkedInName, bio } = this.state;
-    this.props.onUpdate({ email, linkedInName, bio });
+    const { email, linkedInName, notes } = this.state;
+    this.props.onUpdate({ email, linkedInName, notes });
   }
 
-  onMarkdownChange = (bio) => this.setState({ bio });
+  onMarkdownChange = (notes) => this.setState({ notes });
 
   render() {
     const { classes, open, onClose } = this.props;
@@ -111,10 +111,10 @@ class ProfileEditDialog extends React.Component {
                 fullWidth
               />
               <Typography variant="caption" color="textSecondary" className={classes.bioHeader} gutterBottom>
-                About me:
+                Notes:
                 </Typography>
               <MarkdownEditor
-                markdown={this.state.bio || ''}
+                markdown={this.state.notes || ''}
                 onChange={this.onMarkdownChange}
               />
             </Grid>

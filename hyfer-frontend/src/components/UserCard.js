@@ -7,10 +7,10 @@ import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import FaGitHubIcon from 'react-icons/lib/fa/github';
-import FaLinkedIn from 'react-icons/lib/fa/linkedin-square';
+import Icon from '@material-ui/core/Icon';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import classNames from 'classnames';
 import Attendance from './Attendance';
 import ProfileViewDialog from './ProfileViewDialog';
 
@@ -136,12 +136,23 @@ class UserCard extends React.Component {
             </Typography>
           </CardContent>
           <CardActions className={classes.actions}>
-            <FaGitHubIcon className={classes.actionIcon} onClick={this.handleGitHub} />
+            <Icon
+              className={classNames(classes.actionIcon, 'fab fa-github')}
+              color="action"
+              onClick={this.handleGitHub} />
             {user.linkedin_username != null &&
-              <FaLinkedIn className={classes.actionIcon} onClick={this.handleLinkedIn} />}
-            {user.bio &&
-              <Button color="primary" size="small" onClick={this.handleClickOpen}>Bio</Button>
-            }
+              <Icon
+                className={classNames(classes.actionIcon, 'fab fa-linkedin')}
+                color="action"
+                onClick={this.handleLinkedIn} />}
+            {user.notes &&
+              <React.Fragment>
+                <span className={classes.filler} />
+                <Icon
+                  className={classNames(classes.actionIcon, 'far fa-clipboard')}
+                  color="action"
+                  onClick={this.handleClickOpen} />
+              </React.Fragment>}
           </CardActions>
         </Card>
         {showRemoveTeacher && user.role === "teacher" && currentUserStore.isTeacher &&
@@ -151,7 +162,7 @@ class UserCard extends React.Component {
             </Button>
           </Paper>}
         {showAttendance && <Attendance user={user} selectedWeek={selectedWeek} />}
-        {user.bio && <ProfileViewDialog
+        {user.notes && <ProfileViewDialog
           profile={user}
           open={this.state.open}
           onClose={this.handleClose}

@@ -8,7 +8,6 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import Paper from '@material-ui/core/Paper';
 import Slide from '@material-ui/core/Slide';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -16,7 +15,7 @@ import MarkdownViewer from './MarkdownViewer';
 
 const styles = (theme) => ({
   root: {
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: theme.palette.background.paper,
   },
   appBar: {
     position: 'relative',
@@ -40,7 +39,7 @@ function Transition(props) {
 
 class ProfileViewDialog extends React.Component {
 
-  onMarkdownChange = (bio) => this.setState({ bio });
+  onMarkdownChange = (notes) => this.setState({ notes });
 
   render() {
     const { classes, open, onClose, profile } = this.props;
@@ -59,7 +58,7 @@ class ProfileViewDialog extends React.Component {
                 <CloseIcon />
               </IconButton>
               <Typography variant="title" color="inherit" className={classes.flex}>
-                Biography for {profile.username}
+                Notes for {profile.full_name || profile.username}
               </Typography>
               <Button color="inherit" onClick={onClose}>
                 Close
@@ -69,9 +68,7 @@ class ProfileViewDialog extends React.Component {
           <DialogContent className={classes.content}>
             <Grid container justify="center" spacing={24}>
               <Grid item xs={12} sm={8} lg={6} xl={4}>
-                <Paper elevation={2}>
-                  <MarkdownViewer markdown={profile.bio || 'Not provided.'} />
-                </Paper>
+                <MarkdownViewer markdown={profile.notes || 'Not provided.'} />
               </Grid>
             </Grid>
           </DialogContent>
