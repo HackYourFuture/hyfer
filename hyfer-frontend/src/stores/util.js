@@ -11,6 +11,15 @@ export async function fetchJSON(path, method = 'GET', data = null) {
   }
 
   const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}${path}`, options);
-  return res.status === 200 ? res.json() : undefined;
-}
 
+  if (res.status === 200) {
+    return await res.json();
+  }
+
+  if (res.status >= 400) {
+    const result = await res.json();
+    throw new Error(result.message || result.sqlMessage || 'Unexpected server error.');
+  }
+
+  return undefined;
+}

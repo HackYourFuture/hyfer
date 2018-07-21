@@ -63,7 +63,7 @@ class App extends Component {
       return null;
     }
 
-    const { theme, uiStore } = this.props;
+    const { theme } = this.props;
     const { role, isLoggedIn } = this.props.currentUserStore;
     const routes = isLoggedIn ? [...PUBLIC_ROUTES, ...ROUTES[role]] : [...PUBLIC_ROUTES];
     const paddingTop = theme.mixins.toolbar.minHeight + theme.spacing.unit;
@@ -74,7 +74,7 @@ class App extends Component {
           <CssBaseline />
           <MainAppBar />
           <div style={{ paddingTop }}>
-            {uiStore.notification && <NotificationSnackbar />}
+            <NotificationSnackbar />
             <Switch>
               {routes.map(route => (<Route key={route.path} {...route} />))}
               <Redirect exact strict from="/" to="/timeline" />

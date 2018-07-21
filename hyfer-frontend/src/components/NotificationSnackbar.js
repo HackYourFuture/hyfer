@@ -99,6 +99,7 @@ const styles2 = theme => ({
 @observer
 class NotificationSnackbar extends Component {
 
+
   handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -107,7 +108,10 @@ class NotificationSnackbar extends Component {
   };
 
   render() {
-    const { variant, message } = this.props.uiStore.notification;
+    const { notification } = this.props.uiStore;
+    if (!notification) {
+      return null;
+    }
 
     return (
       <Snackbar
@@ -115,14 +119,14 @@ class NotificationSnackbar extends Component {
           vertical: 'bottom',
           horizontal: 'left',
         }}
-        open={message != null}
-        autoHideDuration={2000}
+        open={notification != null}
+        autoHideDuration={5000}
         onClose={this.handleClose}
       >
         <MySnackbarContentWrapper
           onClose={this.handleClose}
-          variant={variant}
-          message={message}
+          variant={notification.variant}
+          message={notification.message}
         />
       </Snackbar>
     );
