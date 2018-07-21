@@ -70,9 +70,6 @@ class ProfileViewDialog extends React.Component {
             <Grid container justify="center" spacing={24}>
               <Grid item xs={12} sm={8} lg={6} xl={4}>
                 <Paper elevation={2}>
-                  {/* <div className={classes.bioHeader}>
-                  <Typography variant="title" color="textSecondary">Biography</Typography>
-                </div> */}
                   <MarkdownViewer markdown={profile.bio || 'Not provided.'} />
                 </Paper>
               </Grid>

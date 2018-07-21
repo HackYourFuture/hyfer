@@ -12,7 +12,7 @@ import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import MarkdownEditorBase from './MarkdownEditorBase';
+import MarkdownEditor from './MarkdownEditor';
 
 const styles = (theme) => ({
   appBar: {
@@ -113,7 +113,7 @@ class ProfileEditDialog extends React.Component {
               <Typography variant="caption" color="textSecondary" className={classes.bioHeader} gutterBottom>
                 About me:
                 </Typography>
-              <MarkdownEditorBase
+              <MarkdownEditor
                 markdown={this.state.bio}
                 onChange={this.onMarkdownChange}
               />

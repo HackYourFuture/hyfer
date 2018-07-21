@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { toJS, autorun } from 'mobx';
 import { observer, inject } from 'mobx-react';
@@ -6,9 +6,9 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import EditIcon from '@material-ui/icons/Edit';
 import Tooltip from '@material-ui/core/Tooltip';
-import classNames from 'classnames';
 import Showdown from 'showdown';
-import MarkdownEditor from '../../../components/MarkdownEditor';
+import ModuleNotesEditor from './ModuleNotesEditor';
+import MarkdownViewer from '../../../components/MarkdownViewer';
 import '!style-loader!css-loader!github-markdown-css';
 
 const localStorageKey = 'hyfer:moduleNotes';
@@ -50,21 +50,6 @@ const styles = theme => ({
     top: theme.spacing.unit * 2,
     right: theme.spacing.unit * 2,
   },
-  article: {
-    textAlign: 'left',
-    width: '100%',
-    ...theme.typography.body1,
-  },
-  markdownBody: {
-    boxSizing: 'border-box',
-    minWidth: 200,
-    maxWidth: 980,
-    margin: '0 auto',
-    padding: theme.spacing.unit * 4,
-    '@media(max-width: 767px)': {
-      padding: theme.spacing.unit * 2,
-    },
-  },
 });
 
 const defaultState = {
@@ -78,7 +63,7 @@ const restoreState = {
 
 @inject('currentUserStore', 'currentModuleStore')
 @observer
-class ModuleNotes extends Component {
+class ModuleNotes extends React.Component {
   origNotes = '';
   runningId = -1;
 
@@ -176,23 +161,13 @@ class ModuleNotes extends Component {
   }
 
   renderArticle() {
-    const { classes } = this.props;
     const markdown = this.state.markdown || this.defaultNotes();
-    const __html = this.converter.makeHtml(markdown);
-
-    return (
-      <div className={classes.article}>
-        <article
-          className={classNames(classes.markdownBody, 'markdown-body')}
-          dangerouslySetInnerHTML={{ __html }}
-        />
-      </div>
-    );
+    return <MarkdownViewer markdown={markdown} />;
   }
 
   renderEditMode() {
     return (
-      <MarkdownEditor
+      <ModuleNotesEditor
         markdown={toJS(this.state.markdown)}
         onChange={this.onChange}
         onSave={this.saveNotes}
