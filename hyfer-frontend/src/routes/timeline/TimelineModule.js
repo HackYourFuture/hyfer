@@ -81,7 +81,7 @@ class TimelineModule extends Component {
     const width = this.props.width * duration - spacing.unit;
 
     const { classes, currentUserStore } = this.props;
-    const { currentModule, group } = this.props.currentModuleStore;
+    const { currentModule } = this.props.currentModuleStore;
     const selected = currentModule && currentModule.id === running_module_id;
 
     return (
@@ -99,7 +99,7 @@ class TimelineModule extends Component {
           >
             {module_name}
           </Typography>
-          {group.archived === 0 && currentUserStore.isTeacher && (
+          {currentUserStore.isTeacher && (
             <React.Fragment>
               <IconButton
                 onClick={this.openMenu}
