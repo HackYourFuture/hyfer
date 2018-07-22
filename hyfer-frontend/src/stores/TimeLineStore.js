@@ -67,15 +67,15 @@ export default class TimeLineStore {
 
   @action
   setFilter = (filter) => {
-    this.filter = filter;
-    this.fetchTimeline();
+    if (filter !== 'add') {
+      this.filter = filter;
+    }
   }
 
   @action fetchGroups = async () => {
-    if (groups != null) {
+    if (this.groups != null) {
       return;
     }
-
     const groups = await fetchJSON('/api/groups');
     runInAction(() => {
       this.groups = groups;
@@ -87,17 +87,9 @@ export default class TimeLineStore {
     try {
       await this.fetchGroups();
 
-      const activeGroupNames = this.groups
-        .filter(group => group.archived === 0)
-        .map(group => group.group_name);
+      const queryParams = this.getQueryParams();
 
-      const selectedGroups = this.filter === 'active' ? activeGroupNames : [this.filter];
-
-      const queryParams = selectedGroups.reduce((query, groupName) => {
-        return query === '' ? `?group=${groupName}` : `${query}&group=${groupName}`;
-      }, '');
-
-      const timeline = await fetchJSON(`/api/running/timeline${queryParams}`);
+      const timeline = await fetchJSON(`/api/running/timeline?${queryParams}`);
       runInAction(() => {
         this.setTimelineItems(timeline);
       });
@@ -168,7 +160,8 @@ export default class TimeLineStore {
   @action
   updateModule = async (item, position, duration) => {
     try {
-      const timeline = await fetchJSON(`/api/running/update/${item.group_id}/${item.position}`,
+      const queryParams = this.getQueryParams();
+      const timeline = await fetchJSON(`/api/running/update/${item.group_id}/${item.position}?${queryParams}`,
         'PATCH', { position, duration });
       this.setTimelineItems(timeline);
     } catch (err) {
@@ -178,7 +171,8 @@ export default class TimeLineStore {
 
   addModule = async (moduleId, groupId, position) => {
     try {
-      const timeline = await fetchJSON(`/api/running/add/${moduleId}/${groupId}/${position}`, 'PATCH');
+      const queryParams = this.getQueryParams();
+      const timeline = await fetchJSON(`/api/running/add/${moduleId}/${groupId}/${position}?${queryParams}`, 'PATCH');
       this.setTimelineItems(timeline);
     } catch (error) {
       stores.uiStore.setLastError(error);
@@ -188,7 +182,8 @@ export default class TimeLineStore {
   @action
   removeModule = async (groupId, position) => {
     try {
-      const timeline = await fetchJSON(`/api/running/${groupId}/${position}`, 'DELETE');
+      const queryParams = this.getQueryParams();
+      const timeline = await fetchJSON(`/api/running/${groupId}/${position}?${queryParams}`, 'DELETE');
       this.setTimelineItems(timeline);
     } catch (error) {
       stores.uiStore.setLastError(error);
@@ -198,10 +193,21 @@ export default class TimeLineStore {
   @action
   splitModule = async (groupId, position) => {
     try {
-      const timeline = await fetchJSON(`/api/running/split/${groupId}/${position}`, 'PATCH');
+      const queryParams = this.getQueryParams();
+      const timeline = await fetchJSON(`/api/running/split/${groupId}/${position}?${queryParams}`, 'PATCH');
       this.setTimelineItems(timeline);
     } catch (error) {
       stores.uiStore.setLastError(error);
     }
+  }
+
+  getQueryParams() {
+    const activeGroupNames = this.groups
+      .filter(group => group.archived === 0)
+      .map(group => group.group_name);
+    const selectedGroups = this.filter === 'active' ? activeGroupNames : [this.filter];
+    return selectedGroups.reduce((query, groupName) => {
+      return query === '' ? `group=${groupName}` : `${query}&group=${groupName}`;
+    }, '');
   }
 }

@@ -21,20 +21,22 @@ export function getCurrentWeek(week, width) {
 
 const styles = (theme) => ({
   root: {
+    padding: theme.spacing.unit / 2,
+  },
+  container: {
     position: 'relative',
     margin: theme.spacing.unit / 2,
-    padding: theme.spacing.unit,
     display: 'flex',
     flexDirection: 'column',
   },
   monthContainer: {
-    marginBottom: theme.spacing.unit,
+    margin: theme.spacing.unit,
     display: 'flex',
     justifyContent: 'space-around',
     alignItems: 'center',
   },
   daysContainer: {
-    marginTop: theme.spacing.unit,
+    margin: theme.spacing.unit,
     display: 'flex',
     justifyContent: 'space-around',
     alignItems: 'center',
@@ -60,45 +62,32 @@ class WeekIndicator extends Component {
   };
 
   render() {
-    // eslint-disable-next-line prefer-const
-    let [startSunday, endSunday] = this.props.week;
+    const [startSunday, endSunday] = this.props.week;
+    const endSaturday = endSunday.clone().subtract(1, 'days');
+    const month = startSunday.format('MMMM YYYY');
 
-    // get the saturday before class of the week after this one
-    let endSaturday = endSunday.clone().subtract(1, 'days');
-
-    let month;
-    if (startSunday.format('MMM') === endSaturday.format('MMM')) {
-      month = startSunday.format('MMMM');
-    } else {
-      month = `${startSunday.format('MMMM')}/${endSaturday.format('MMMM')}`;
-    }
-
-    startSunday = startSunday.format('DD');
-    endSaturday = endSaturday.format('DD');
-
-    const { itemWidth } = this.props;
-
-    const { classes } = this.props;
+    const { classes, itemWidth } = this.props;
 
     return (
-      <Paper
-        style={{ width: itemWidth }}
-        elevation={1}
-        className={classes.root}
-      >
-        {this.setTodayMarker()}
-        <Typography variant="caption"
-          className={classes.monthContainer}
+      <div style={{ width: itemWidth }}>
+        <Paper
+          elevation={1}
+          className={classes.container}
         >
-          {month}
-        </Typography>
-        <Divider />
-        <Typography variant="subheading" className={classes.daysContainer}>
-          <div>Sun {startSunday}</div>
-          <div>–</div>
-          <div>Sat {endSaturday}</div>
-        </Typography>
-      </Paper>
+          {this.setTodayMarker()}
+          <Typography variant="caption"
+            className={classes.monthContainer}
+          >
+            {month}
+          </Typography>
+          <Divider />
+          <Typography variant="body2" color="textSecondary" className={classes.daysContainer}>
+            <div>Sun {startSunday.format('DD')}</div>
+            <div>–</div>
+            <div>Sat {endSaturday.format('DD')}</div>
+          </Typography>
+        </Paper>
+      </div>
     );
   }
 }

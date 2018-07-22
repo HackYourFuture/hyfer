@@ -31,13 +31,14 @@ class ClassSelector extends Component {
     this.setState({ isOpen: false });
   };
 
-  handleChange = event => {
+  handleChange = async (event) => {
     const { value } = event.target;
     if (value === 'add') {
       this.setState({ isOpen: true });
     } else {
       this.props.timelineStore.setFilter(value);
-      if (value !== 'active' && value !== 'add') {
+      this.props.timelineStore.fetchTimeline();
+      if (value !== 'active') {
         this.props.currentModuleStore.getGroupsByGroupName(value);
       } else {
         this.props.currentModuleStore.clearCurrentModule();
@@ -47,11 +48,11 @@ class ClassSelector extends Component {
 
   render() {
     const { classes, currentUserStore } = this.props;
-    const { groups, filter } = this.props.timelineStore;
+    const { groups } = this.props.timelineStore;
     return (
       <React.Fragment>
         <Select
-          value={filter}
+          value={this.props.timelineStore.filter}
           onChange={this.handleChange}
           className={classes.select}
         >
@@ -60,7 +61,14 @@ class ClassSelector extends Component {
 
           {groups.map(group => {
             const number = group.group_name.match(/(\d+)$/)[1];
-            return <MenuItem key={number} value={group.group_name} classes={{ root: classes.menuItem }}>Class {number}</MenuItem>;
+            const label = `Class ${number}${group.archived ? '*' : ''}`;
+            return <MenuItem
+              key={number}
+              value={group.group_name}
+              classes={{ root: classes.menuItem }}
+            >
+              {label}
+            </MenuItem>;
           })}
 
           {currentUserStore.isTeacher && <Divider />}

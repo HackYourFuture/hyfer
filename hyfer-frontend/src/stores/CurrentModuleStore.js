@@ -26,7 +26,7 @@ export default class CurrentModuleStore {
   readme = null;
 
   @observable
-  group = [];
+  group = null;
 
   @observable
   module = null;
@@ -133,8 +133,10 @@ export default class CurrentModuleStore {
       }
 
       index = Math.max(0, index - 1);
+
       const runningModule = runningModules[index];
-      this.getRunningModuleDetails(runningModule.id);
+      await this.getRunningModuleDetails(runningModule.id);
+
       const date = computedDate.diff(currentDate, "weeks");
       const start = runningModules[index].duration - date;
 

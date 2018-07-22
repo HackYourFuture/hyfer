@@ -48,21 +48,30 @@ class Timeline extends Component {
 
   state = {
     todayMarkerRef: null,
+    initialized: false,
   };
 
   setTodayMarkerRef = React.createRef();
   timelineWrapperRef = React.createRef();
   classesContainerRef = React.createRef();
 
-  componentDidMount() {
-    this.props.timelineStore.fetchTimeline()
-      .then(this.onTodayClick);
+  async componentDidMount() {
+    const { group_name } = this.props.currentUserStore.user;
+    if (group_name != null) {
+      await this.props.currentModuleStore.getGroupsByGroupName(group_name);
+      this.props.timelineStore.setFilter(group_name);
+      await this.props.timelineStore.fetchTimeline(group_name);
+    } else {
+      await this.props.timelineStore.fetchTimeline();
+    }
+
+    this.onTodayClick();
   }
 
   onTodayClick = () => {
     const { todayMarkerRef } = this.state;
     let leftPos = 0;
-    if (todayMarkerRef) {
+    if (todayMarkerRef && todayMarkerRef.current) {
       leftPos = todayMarkerRef.current.parentNode.getBoundingClientRect().x;
     }
     leftPos -= this.timelineWrapperRef.current.offsetWidth / 2 - this.classesContainerRef.current.offsetWidth;
@@ -89,7 +98,7 @@ class Timeline extends Component {
     );
   }
 
-  renderTimelineRow() {
+  renderTimelineRows() {
     const { items } = this.props.timelineStore;
     return Object.keys(items).map((groupName) => {
       const { itemWidth, rowHeight, classes } = this.props;
@@ -139,7 +148,7 @@ class Timeline extends Component {
             <div className={classes.timelineContainer} style={{ width }}>
               <div >
                 {this.renderWeekIndicators()}
-                {this.renderTimelineRow()}
+                {this.renderTimelineRows()}
               </div>
             </div>
           </div>

@@ -12,7 +12,9 @@ const GET_GROUPS_BY_GROUP_NAME = `
   running_modules.duration,running_modules.id
   FROM groups
   INNER JOIN running_modules ON running_modules.group_id=groups.id
-  INNER JOIN modules ON running_modules.module_id=modules.id`;
+  INNER JOIN modules ON running_modules.module_id=modules.id
+  WHERE groups.group_name=?
+  ORDER BY running_modules.position`;
 
 const ADD_GROUP_QUERY = 'INSERT INTO `groups` SET ?';
 const UPDATE_GROUP_QUERY = 'UPDATE `groups` SET ? WHERE id = ?';
@@ -21,7 +23,7 @@ const DELETE_GROUP_QUERY = 'DELETE FROM `groups` WHERE id = ?';
 const ADD_RUNNING_MODULES_QUERY = 'INSERT INTO running_modules ( module_id, group_id, duration, position) VALUES';
 
 function getGroupsByGroupName(con, groupName) {
-  return execQuery(con, `${GET_GROUPS_BY_GROUP_NAME} WHERE groups.group_name=?`, groupName);
+  return execQuery(con, GET_GROUPS_BY_GROUP_NAME, groupName);
 }
 function getGroups(con) {
   return execQuery(con, 'SELECT * FROM `groups` ORDER BY starting_date');

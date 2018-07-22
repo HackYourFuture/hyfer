@@ -122,7 +122,7 @@ class UserList extends Component {
 
   render() {
     const { classes, currentUserStore, currentModuleStore, role } = this.props;
-    const { currentModule, students, teachers } = currentModuleStore;
+    const { currentModule, module, students, teachers } = currentModuleStore;
     let users = role === 'teacher' ? teachers : students;
     users = users.sort((a, b) => a.username.localeCompare(b.username));
 
@@ -158,7 +158,7 @@ class UserList extends Component {
               </Button>
             </Tooltip>
           </Fragment>}
-        {role === 'student' && currentModule && !this.state.showAttendance &&
+        {role === 'student' && currentModule && module.active === 1 && !this.state.showAttendance &&
           <Tooltip title="Show attendances">
             <Button
               onClick={this.toggleShowAttendance}

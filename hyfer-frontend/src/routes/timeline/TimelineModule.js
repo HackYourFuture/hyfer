@@ -10,41 +10,39 @@ import grey from '@material-ui/core/colors/grey';
 import TimelineMenu from './TimelineMenu';
 import classNames from 'classnames';
 
-const styles = (theme) => {
-  const full = theme.spacing.unit;
-  const half = full / 2;
-  const double = full * 2;
-  return {
-    container: {
-      margin: half,
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      position: 'relative',
-      cursor: 'pointer',
-      boxSizing: 'border-box',
-      border: `solid 4px transparent`,
+const styles = (theme) => ({
+  root: {
+    padding: theme.spacing.unit / 2,
+  },
+  container: {
+    // margin: halfUnit,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    position: 'relative',
+    cursor: 'pointer',
+    boxSizing: 'border-box',
+    border: `solid 4px transparent`,
+  },
+  selected: {
+    border: `dashed 4px ${grey[700]}`,
+    color: 'green',
+  },
+  moduleName: {
+    color: 'white',
+    marginLeft: theme.spacing.unit * 2,
+  },
+  menuButton: {
+    opacity: 0.25,
+    '&:hover': {
+      opacity: 1,
     },
-    selected: {
-      border: `dashed 4px ${grey[700]}`,
-      color: 'green',
+    [`@media(max-width: ${theme.breakpoints.values.sm}px)`]: {
+      opacity: 1,
     },
-    moduleName: {
-      color: 'white',
-      marginLeft: double,
-    },
-    menuButton: {
-      opacity: 0.25,
-      '&:hover': {
-        opacity: 1,
-      },
-      [`@media(max-width: ${theme.breakpoints.values.sm}px)`]: {
-        opacity: 1,
-      },
-    },
-  };
-};
+  },
+});
 
 @inject('currentModuleStore', 'currentUserStore', 'userStore')
 @observer
@@ -79,42 +77,45 @@ class TimelineModule extends Component {
     // Add extra times width as much as needed but for the margin add all - 1 
     // (for the first item it doesn't need any margin)
     const { spacing } = this.props.theme;
-    const width = this.props.width * duration + spacing.unit * (duration - 1);
+    // const width = (this.props.width + spacing.unit) * duration - spacing.unit;
+    const width = this.props.width * duration - spacing.unit;
 
     const { classes, currentUserStore } = this.props;
-    const { currentModule } = this.props.currentModuleStore;
+    const { currentModule, group } = this.props.currentModuleStore;
     const selected = currentModule && currentModule.id === running_module_id;
 
     return (
-      <Paper elevation={2}
-        className={classNames(classes.container, selected ? classes.selected : '')}
-        style={{ width, height: this.props.height, backgroundColor: color }}
-        onClick={() => this.itemClickHandler(this.props.item)}
-      >
-        <Typography
-          variant="subheading"
-          title={module_name}
-          className={classes.moduleName}
-          noWrap
+      <div className={classes.root}>
+        <Paper elevation={2}
+          className={classNames(classes.container, selected ? classes.selected : '')}
+          style={{ width, height: this.props.height, backgroundColor: color }}
+          onClick={() => this.itemClickHandler(this.props.item)}
         >
-          {module_name}
-        </Typography>
-        {currentUserStore.isTeacher && (
-          <React.Fragment>
-            <IconButton
-              onClick={this.openMenu}
-              className={classes.menuButton}
-            >
-              <MoreVertIcon color="action" />
-            </IconButton>
-            <TimelineMenu
-              runningModuleId={running_module_id}
-              anchorEl={this.state.anchorEl}
-              onClose={this.closeMenu}
-            />
-          </React.Fragment>
-        )}
-      </Paper >
+          <Typography
+            variant="subheading"
+            title={module_name}
+            className={classes.moduleName}
+            noWrap
+          >
+            {module_name}
+          </Typography>
+          {group.archived === 0 && currentUserStore.isTeacher && (
+            <React.Fragment>
+              <IconButton
+                onClick={this.openMenu}
+                className={classes.menuButton}
+              >
+                <MoreVertIcon color="action" />
+              </IconButton>
+              <TimelineMenu
+                runningModuleId={running_module_id}
+                anchorEl={this.state.anchorEl}
+                onClose={this.closeMenu}
+              />
+            </React.Fragment>
+          )}
+        </Paper >
+      </div>
     );
   }
 }

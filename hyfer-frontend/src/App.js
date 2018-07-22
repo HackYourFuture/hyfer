@@ -35,7 +35,7 @@ const ROUTES = {
   ],
 };
 
-@inject('currentUserStore', 'uiStore')
+@inject('currentUserStore', 'timelineStore')
 @observer
 class App extends Component {
   state = {
@@ -49,6 +49,7 @@ class App extends Component {
       window.localStorage.setItem('token', token);
     }
     token = window.localStorage.getItem('token');
+
     if (token) {
       await this.props.currentUserStore.fetchUser();
     } else {
@@ -91,5 +92,5 @@ export default withTheme()(App);
 App.wrappedComponent.propTypes = {
   currentUserStore: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
-  uiStore: PropTypes.object.isRequired,
+  timelineStore: PropTypes.object.isRequired,
 };

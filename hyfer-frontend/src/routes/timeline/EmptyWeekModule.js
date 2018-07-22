@@ -5,7 +5,7 @@ import Paper from '@material-ui/core/Paper';
 
 const styles = (theme) => ({
   root: {
-    margin: theme.spacing.unit / 2,
+    padding: theme.spacing.unit / 2,
   },
 });
 
@@ -14,11 +14,9 @@ class EmptyWeekModule extends Component {
   render() {
     const { width, height, classes } = this.props;
     return (
-      <Paper
-        elevation={1}
-        className={classes.root}
-        style={{ width, height }}
-      />
+      <div className={classes.root} style={{ width, height }}>
+        <Paper elevation={1} />
+      </div>
     );
   }
 }
