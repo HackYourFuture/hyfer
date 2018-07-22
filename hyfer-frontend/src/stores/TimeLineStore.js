@@ -104,9 +104,10 @@ export default class TimeLineStore {
 
     const allWeeks = allSundays.reduce((acc, prevItem, index, arr) => {
       const nextItem = arr[index + 1];
-      if (!nextItem) return acc;
-      const oneWeek = [prevItem, nextItem];
-      acc.push(oneWeek);
+      if (nextItem) {
+        const oneWeek = [prevItem, nextItem];
+        acc.push(oneWeek);
+      }
       return acc;
     }, []);
 
