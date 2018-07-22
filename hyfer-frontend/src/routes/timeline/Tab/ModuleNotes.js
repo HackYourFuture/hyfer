@@ -177,10 +177,11 @@ class ModuleNotes extends React.Component {
   }
 
   renderViewMode(classes) {
-    const { isTeacher } = this.props.currentUserStore;
+    const { isTeacher, user } = this.props.currentUserStore;
+    const { currentModule } = this.props.currentModuleStore;
     return (
       <React.Fragment>
-        {isTeacher && (
+        {(isTeacher || user.group_id === currentModule.group_id) && (
           <div className={classes.bottomButtonContainer}>
             <Tooltip title="Edit notes">
               <Button variant="fab" color="primary" className={classes.fab} aria-label="Edit" onClick={this.setEditMode}>

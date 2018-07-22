@@ -102,10 +102,10 @@ export default class GlobalStore {
         this.isLoaded = true;
         this.user = res;
         this.profile = res;
-        const { group_name: groupName } = this.user;
-        if (groupName != null && this.isStudent && !this.isArchived) {
-          stores.currentModuleStore.getGroupsByGroupName(groupName);
-          stores.timelineStore.setFilter(groupName);
+        const { group_name } = this.user;
+        if (group_name != null && !this.isArchived) {
+          stores.currentModuleStore.getGroupsByGroupName(group_name);
+          stores.timelineStore.setFilter(group_name);
         }
       });
     } catch (err) {

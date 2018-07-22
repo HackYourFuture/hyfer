@@ -167,6 +167,6 @@ router
   .delete('/:groupId/:position', hasRole('teacher'), deleteRunningModule)
   .post(('/teacher/:runningId/:userId'), hasRole('teacher'), addTeacher)
   .delete('/teacher/:runningId/:userId', hasRole('teacher'), deleteTeacher)
-  .patch('/notes/:runningId', hasRole('teacher'), updateNotes);
+  .patch('/notes/:runningId', hasRole('student|teacher'), updateNotes);
 
 module.exports = router;

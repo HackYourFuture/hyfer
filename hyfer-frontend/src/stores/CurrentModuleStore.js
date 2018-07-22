@@ -114,8 +114,7 @@ export default class CurrentModuleStore {
     });
   }
 
-  async getGroupsByGroupName(group_name) {
-    const groupName = group_name.replace(' ', '');
+  async getGroupsByGroupName(groupName) {
     try {
       const runningModules = await fetchJSON(`/api/groups/currentgroups/${groupName}`);
       let computedDate = moment(runningModules[0].starting_date);
