@@ -114,36 +114,30 @@ export default class CurrentModuleStore {
     });
   }
 
-  async getGroupsByGroupName(group_name, update) {
+  async getGroupsByGroupName(group_name) {
     const groupName = group_name.replace(' ', '');
     try {
       const runningModules = await fetchJSON(`/api/groups/currentgroups/${groupName}`);
       let computedDate = moment(runningModules[0].starting_date);
       const currentDate = moment();
       let index = 0;
+
       for (; index < runningModules.length; index++) {
-        if (computedDate > currentDate) {
+        if (computedDate.isSameOrAfter(currentDate)) {
           break;
         }
-        const runningModule = runningModules[index];
-        const { duration } = runningModule;
+        const { duration } = runningModules[index];
         computedDate = computedDate.add(duration, 'weeks');
       }
+
+      index = Math.max(0, index - 1);
+      const runningModule = runningModules[index];
+      this.getRunningModuleDetails(runningModule.id);
+      const date = computedDate.diff(currentDate, "weeks");
+      const start = runningModules[index].duration - date;
+
       runInAction(() => {
-        if (update) {
-          if (computedDate < currentDate) {
-            this.getRunningModuleDetails(runningModules[index].id);
-            const date = computedDate.diff(currentDate, "weeks");
-            const start = runningModules[index].duration - date;
-            this.currentWeek = start;
-          }
-        } else {
-          if (computedDate < currentDate) {
-            const date = computedDate.diff(currentDate, "weeks");
-            const start = runningModules[index].duration - date;
-            this.currentWeek = start;
-          }
-        }
+        this.currentWeek = start;
       });
     } catch (err) {
       stores.uiStore.setLastError(err);
