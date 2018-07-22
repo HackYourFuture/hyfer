@@ -1,14 +1,19 @@
 
 const express = require('express');
+const _ = require('lodash');
 const db = require('../datalayer/users');
 const { getConnection } = require('./connection');
 const { hasRole, isAuthenticated } = require('../auth/auth-service');
 const handleError = require('./error')('users');
+const logger = require('../util/logger');
 
 async function getCurrentUser(req, res) {
   try {
     const con = await getConnection(req, res);
     const [result] = await db.getUserByUsername(con, req.user.username);
+    const { username, full_name, role } = result;
+    logger.info(`${_.capitalize(role)} signed in`, { username, full_name });
+
     res.json(result);
   } catch (err) {
     handleError(err, res);

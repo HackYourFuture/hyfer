@@ -6,6 +6,8 @@ import grey from '@material-ui/core/colors/grey';
 import ClassSideBar from './ClassSideBar/ClassSideBar';
 import TimelineRow from './TimelineRow';
 import WeekIndicator from './WeekIndicator';
+import ModuleReadMe from './ModuleReadme';
+import StudentInterface from './Tab/StudentInterface';
 
 const styles = (theme) => ({
   root: {
@@ -39,7 +41,7 @@ const styles = (theme) => ({
   },
 });
 
-@inject('timelineStore', 'currentUserStore')
+@inject('timelineStore', 'currentUserStore', 'currentModuleStore')
 @observer
 class Timeline extends Component {
   hasRendered = false;
@@ -53,20 +55,23 @@ class Timeline extends Component {
   classesContainerRef = React.createRef();
 
   componentDidMount() {
-    this.props.timelineStore.fetchItems()
+    this.props.timelineStore.fetchTimeline()
       .then(this.onTodayClick);
   }
 
   onTodayClick = () => {
     const { todayMarkerRef } = this.state;
-    let leftPos = todayMarkerRef.current.parentNode.getBoundingClientRect().x;
+    let leftPos = 0;
+    if (todayMarkerRef) {
+      leftPos = todayMarkerRef.current.parentNode.getBoundingClientRect().x;
+    }
     leftPos -= this.timelineWrapperRef.current.offsetWidth / 2 - this.classesContainerRef.current.offsetWidth;
     this.timelineWrapperRef.current.scrollLeft += leftPos;
   };
 
   setTodayMarkerRef = ref => this.setState({ todayMarkerRef: ref });
 
-  renderWeekComp() {
+  renderWeekIndicators() {
     const { rowHeight, itemWidth, classes } = this.props;
     return (
       <div className={classes.rowContainer}>
@@ -84,9 +89,9 @@ class Timeline extends Component {
     );
   }
 
-  renderTaskRowComp() {
-    const { groups } = this.props.timelineStore;
-    return groups.map(groupName => {
+  renderTimelineRow() {
+    const { items } = this.props.timelineStore;
+    return Object.keys(items).map((groupName) => {
       const { itemWidth, rowHeight, classes } = this.props;
       return (
         <div key={groupName} className={classes.rowContainer}>
@@ -103,6 +108,13 @@ class Timeline extends Component {
   render() {
     const { allWeeks } = this.props.timelineStore;
     const { itemWidth, rowHeight, classes } = this.props;
+    const { timelineStore, currentUserStore } = this.props;
+    const { currentModule } = this.props.currentModuleStore;
+
+    if (timelineStore.items == null) {
+      return null;
+    }
+
     // if there items are fetched  width is the 200 times total weeks otherwise it's 100vh
     // FIXME: no idea why this is not working with just 16 instead of 21
     const width = allWeeks
@@ -112,7 +124,7 @@ class Timeline extends Component {
     this.hasRendered = true;
 
     return (
-      <div >
+      <div>
         <div className={classes.root2}>
           <ClassSideBar
             rowHeight={rowHeight}
@@ -126,12 +138,15 @@ class Timeline extends Component {
           >
             <div className={classes.timelineContainer} style={{ width }}>
               <div >
-                {this.renderWeekComp()}
-                {this.renderTaskRowComp()}
+                {this.renderWeekIndicators()}
+                {this.renderTimelineRow()}
               </div>
             </div>
           </div>
         </div>
+        {(currentUserStore.isTeacher || currentUserStore.isStudent) && currentModule
+          ? <StudentInterface />
+          : <ModuleReadMe />}
       </div>
     );
   }
@@ -139,6 +154,8 @@ class Timeline extends Component {
 
 Timeline.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
+  currentModuleStore: PropTypes.object.isRequired,
+  currentUserStore: PropTypes.object.isRequired,
   itemWidth: PropTypes.number.isRequired,
   rowHeight: PropTypes.number.isRequired,
   timelineStore: PropTypes.object.isRequired,

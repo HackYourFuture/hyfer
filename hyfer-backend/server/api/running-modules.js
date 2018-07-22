@@ -10,8 +10,19 @@ const handleError = require('./error')('running_modules');
 
 async function getTimeline(req, res) {
   try {
+    const { group } = req.query;
+    if (group == null) {
+      throw new Error('Expected group query parameter.');
+    }
+    const groupNames = Array.isArray(group) ? group : [group];
+    groupNames.forEach((groupName) => {
+      if (!/^class\d+$/.test(groupName)) {
+        throw new Error("Expected group name with format 'classN'");
+      }
+    });
+
     const con = await getConnection(req, res);
-    const timeline = await db.getTimeline(con);
+    const timeline = await db.getTimeline(con, groupNames);
     res.json(timeline);
   } catch (err) {
     handleError(err, res);

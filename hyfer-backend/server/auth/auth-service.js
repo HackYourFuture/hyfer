@@ -4,8 +4,10 @@ const GitHubStrategy = require('passport-github').Strategy;
 const jwt = require('jsonwebtoken');
 const expressJwt = require('express-jwt');
 const compose = require('composable-middleware');
+const _ = require('lodash');
 const { getUserByUsername, addUser } = require('../datalayer/users');
 const { getConnection } = require('../api/connection');
+const logger = require('../util/logger');
 
 const validateJwt = expressJwt({ secret: process.env.JWT_SECRET });
 const EXPIRES_IN_SECONDS = 30 * 24 * 60 * 60; // 30 days
@@ -16,7 +18,6 @@ passport.use(new GitHubStrategy({
   callbackURL: process.env.CALLBACK_URL,
 }, (accessToken, refreshToken, profile, done) => {
   const userInfo = {
-    accessToken,
     username: profile.username,
     full_name: profile.displayName,
   };
@@ -31,13 +32,22 @@ async function gitHubCallback(req, res, next) {
     const con = await getConnection(req, res);
     const rows = await getUserByUsername(con, req.user.username);
     if (rows.length === 0) {
+      const { username, full_name, email } = req.user;
       const newUser = {
-        username: req.user.username,
-        full_name: req.user.full_name,
-        email: req.user.email,
+        username,
+        full_name,
+        email,
         role: 'guest',
       };
       await addUser(con, newUser);
+      logger.info('New GitHub guest authenticated', {
+        username,
+        full_name,
+        email,
+      });
+    } else {
+      const { username, full_name, role } = rows[0];
+      logger.info(`${_.capitalize(role)} authenticated`, { username, full_name });
     }
     next();
   } catch (err) {

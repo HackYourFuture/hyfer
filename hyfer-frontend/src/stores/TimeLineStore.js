@@ -42,13 +42,22 @@ export default class TimeLineStore {
   items = null;
 
   @observable
-  filter = 'all';
+  filter = 'active';
 
   @observable
-  groupsWithIds = [];
+  groups = null;
 
   @computed
-  get groups() { return Object.keys(this.items); }
+  get activeGroups() {
+    return this.groups.filter(group => group.archived === 0);
+  }
+
+  @computed
+  get selectedGroups() {
+    return this.filter === 'active'
+      ? this.activeGroups
+      : this.groups.filter(group => group.group_name === this.filter);
+  }
 
   @observable
   allSundays = null;
@@ -59,19 +68,42 @@ export default class TimeLineStore {
   @action
   setFilter = (filter) => {
     this.filter = filter;
-    if (this.timeline) {
-      this.setTimelineItems(this.timeline);
+    this.fetchTimeline();
+  }
+
+  @action fetchGroups = async () => {
+    if (groups != null) {
+      return;
     }
+
+    const groups = await fetchJSON('/api/groups');
+    runInAction(() => {
+      this.groups = groups;
+    });
   }
 
   @action
-  fetchItems = async () => {
-    const timeline = await fetchJSON('/api/running/timeline');
-    const groupsWithIds = await fetchJSON('/api/groups');
-    runInAction(() => {
-      this.groupsWithIds = groupsWithIds;
-      this.setTimelineItems(timeline);
-    });
+  fetchTimeline = async () => {
+    try {
+      await this.fetchGroups();
+
+      const activeGroupNames = this.groups
+        .filter(group => group.archived === 0)
+        .map(group => group.group_name);
+
+      const selectedGroups = this.filter === 'active' ? activeGroupNames : [this.filter];
+
+      const queryParams = selectedGroups.reduce((query, groupName) => {
+        return query === '' ? `?group=${groupName}` : `${query}&group=${groupName}`;
+      }, '');
+
+      const timeline = await fetchJSON(`/api/running/timeline${queryParams}`);
+      runInAction(() => {
+        this.setTimelineItems(timeline);
+      });
+    } catch (err) {
+      stores.uiStore.setLastError(err);
+    }
   }
 
   @action
@@ -79,7 +111,7 @@ export default class TimeLineStore {
     this.timeline = timeline;
     const filteredTimeline = Object.keys(this.timeline)
       .reduce((acc, key) => {
-        if (this.filter === 'all' || this.filter === key) {
+        if (this.filter === 'active' || this.filter === key) {
           acc[key] = this.timeline[key];
         }
         return acc;

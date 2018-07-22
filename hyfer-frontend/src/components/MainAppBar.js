@@ -163,17 +163,17 @@ class MainAppBar extends Component {
               open={Boolean(anchorEl)}
               onClose={this.handleMenuClose}
             >
-              <MenuItem onClick={this.handleDialogOpen}>Profile</MenuItem>
               <MenuItem onClick={this.handleSignOut}>Sign out</MenuItem>
+              <MenuItem onClick={this.handleDialogOpen}>Profile</MenuItem>
             </Menu>
           </Toolbar>
         </AppBar>
-        <ProfileEditDialog
+        {(isStudent || isTeacher) && <ProfileEditDialog
           profile={this.props.currentUserStore.profile}
           open={this.state.dialogOpen}
           onClose={this.handleDialogClose}
           onUpdate={this.handleProfileUpdate}
-        />
+        />}
       </div>
     );
   }

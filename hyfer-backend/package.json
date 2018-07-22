@@ -27,7 +27,7 @@
     "passport-github": "^1.1.0",
     "request": "^2.85.0",
     "serve-static": "^1.13.2",
-    "winston": "^2.4.2"
+    "winston": "^3.0.0"
   },
   "scripts": {
     "start": "nodemon server/app.js"

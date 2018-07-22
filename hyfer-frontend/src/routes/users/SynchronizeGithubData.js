@@ -51,7 +51,7 @@ export default class SynchronizeGithubData extends Component {
         if (res.status === 200) {
           stores.uiStore.setSuccessMessage('Successfully Synchronized');
           this.setState({ isLoading: false });
-          this.props.timelineStore.fetchItems();
+          this.props.timelineStore.fetchTimeline();
         } else {
           stores.uiStore.setLastError(new Error('Something went wrong please try again'));
           this.setState({ isLoading: false });

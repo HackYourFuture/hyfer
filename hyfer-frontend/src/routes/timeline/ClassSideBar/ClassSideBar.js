@@ -17,7 +17,7 @@ const styles = (theme) => ({
     marginRight: theme.spacing.unit,
     marginBottom: theme.spacing.unit,
     borderRight: `1px solid ${grey[500]}`,
-    width: 150,
+    width: 160,
     zIndex: 4,
     background: grey[50],
   },
@@ -32,13 +32,12 @@ const styles = (theme) => ({
 class ClassSideBar extends Component {
 
   renderButtons = () => {
-    const { timelineStore, currentUserStore } = this.props;
-    return timelineStore.groups.map(group => (
+    return this.props.timelineStore.selectedGroups.map((group) => (
       <ClassButton
-        key={group}
-        classId={group.replace(/ /g, '').substr(5)}
+        key={group.group_name}
+        group={group}
         height={this.props.rowHeight}
-        disabled={!currentUserStore.isTeacher}
+        disabled={!this.props.currentUserStore.isTeacher}
       />
     ));
   };

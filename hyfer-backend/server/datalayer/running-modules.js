@@ -22,7 +22,7 @@ const GET_TIME_LINE_QUERY = `
     FROM \`groups\`
     INNER JOIN running_modules ON running_modules.group_id = \`groups\`.id
     INNER JOIN modules ON running_modules.module_id = modules.id
-    WHERE \`groups\`.archived=0
+    WHERE \`groups\`.group_name IN (?)
     ORDER BY \`groups\`.starting_date, running_modules.position`;
 const GET_RUNNING_MODULES_QUERY =
   'SELECT * FROM running_modules';
@@ -37,8 +37,8 @@ const INSERT_RUNNING_MODULE =
 
 const resequenceModules = mods => mods.map((mod, index) => ({ ...mod, position: index }));
 
-async function getTimeline(con) {
-  const rows = await execQuery(con, GET_TIME_LINE_QUERY);
+async function getTimeline(con, groupNames) {
+  const rows = await execQuery(con, GET_TIME_LINE_QUERY, [groupNames]);
   const grouped = _.groupBy(rows, row => row.group_name);
   return Object.keys(grouped)
     .reduce((acc, groupName) => {

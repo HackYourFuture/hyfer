@@ -41,8 +41,8 @@ class ClassButton extends Component {
   };
 
   confirmArchiving = () => {
-    const { classId } = this.props;
-    this.handleClassArchive(classId);
+    const { group } = this.props;
+    this.handleClassArchive(group);
     this.setState({
       popUp: false,
     });
@@ -55,22 +55,22 @@ class ClassButton extends Component {
   };
 
   rowButton = () => {
-    const { classId, height, classes } = this.props;
+    const { group, height, classes } = this.props;
 
     return (
       <div style={{ height: height + 'px' }} className={classes.container}>
         <button
           onClick={() => this.archivingPopUp()}
-          className={this.props.classId && classes.groupId}
+          className={this.props.group && classes.groupId}
         >
-          {classId}
+          {group}
         </button>
       </div>
     );
   };
 
   handleClassArchive = async id => {
-    const group = this.props.timelineStore.groupsWithIds.filter(
+    const group = this.props.timelineStore.groups.filter(
       group => group.group_name.replace(/ /g, '').substr(5) === id,
     );
 
@@ -99,7 +99,8 @@ class ClassButton extends Component {
   };
 
   render() {
-    const { classId, height, classes, disabled } = this.props;
+    const { group, height, classes, disabled } = this.props;
+    const label = `Class ${group.group_name.match(/\d+/)[0]}`;
 
     return (
       <Button
@@ -108,7 +109,7 @@ class ClassButton extends Component {
         style={{ height }}
         disabled={disabled}
       >
-        Class {classId}
+        {label}
       </Button>
     );
   }
@@ -116,7 +117,7 @@ class ClassButton extends Component {
 
 ClassButton.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
-  classId: PropTypes.string.isRequired,
+  group: PropTypes.object.isRequired,
   disabled: PropTypes.bool.isRequired,
   height: PropTypes.number.isRequired,
   timelineStore: PropTypes.object.isRequired,

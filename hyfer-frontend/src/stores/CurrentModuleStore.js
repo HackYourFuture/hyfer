@@ -43,9 +43,6 @@ export default class CurrentModuleStore {
   @observable
   currentWeek = null;
 
-  @observable
-  aantalWeeks = [];
-
   @action
   async getRunningModuleDetails(runningId) {
     const details = await fetchJSON(`/api/running/details/${runningId}`);
@@ -65,6 +62,11 @@ export default class CurrentModuleStore {
       this.students = students;
       this.teachers = teachers;
     });
+  }
+
+  @action
+  clearCurrentModule = () => {
+    this.currentModule = null;
   }
 
   addTeacher = async (moduleId, teacherId) => {
@@ -99,8 +101,8 @@ export default class CurrentModuleStore {
   }
 
   getReadme = async (repoName) => {
-    if (!repoName) {
-      this.readme = null;
+
+    if (this.readme != null) {
       return;
     }
 
@@ -117,6 +119,7 @@ export default class CurrentModuleStore {
   async getGroupsByGroupName(groupName) {
     try {
       const runningModules = await fetchJSON(`/api/groups/currentgroups/${groupName}`);
+
       let computedDate = moment(runningModules[0].starting_date);
       const currentDate = moment();
       let index = 0;

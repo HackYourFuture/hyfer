@@ -103,7 +103,7 @@ export default class GlobalStore {
         this.user = res;
         this.profile = res;
         const { group_name } = this.user;
-        if (group_name != null && !this.isArchived) {
+        if (group_name != null) {
           stores.currentModuleStore.getGroupsByGroupName(group_name);
           stores.timelineStore.setFilter(group_name);
         }

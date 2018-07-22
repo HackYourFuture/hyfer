@@ -26,7 +26,8 @@ export function getWeeksBeforeAndAfter(allWeeks, modules) {
 @inject('timelineStore')
 @observer
 export default class TimelineRow extends Component {
-  renderAllTaskComps = () => {
+
+  renderTimelineModules = () => {
     const { allWeeks, items } = this.props.timelineStore;
     const { width, height, groupName } = this.props;
     const { modules } = items[groupName];
@@ -55,8 +56,9 @@ export default class TimelineRow extends Component {
 
     return [...rowCells, ...cellsAfter];
   };
+
   render() {
-    return <Fragment>{this.renderAllTaskComps()}</Fragment>;
+    return <Fragment>{this.renderTimelineModules()}</Fragment>;
   }
 }
 

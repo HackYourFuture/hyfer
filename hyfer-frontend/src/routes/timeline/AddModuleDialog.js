@@ -31,7 +31,7 @@ class AddModuleDialog extends Component {
     const { moduleId } = this.state;
     const { group_id, position } = this.props.currentModuleStore.currentModule;
     await this.props.timelineStore.addModule(moduleId, group_id, position + 1);
-    this.props.timelineStore.fetchItems();
+    this.props.timelineStore.fetchTimeline();
   };
 
   handleChange = (e) => this.setState({ moduleId: e.target.value });

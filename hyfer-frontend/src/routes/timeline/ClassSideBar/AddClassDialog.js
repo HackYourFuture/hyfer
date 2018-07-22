@@ -70,7 +70,7 @@ export default class AddClassDialog extends Component {
     this.props.timelineStore.addNewClass(`Class ${classNumber}`, starting_date)
       .then(() => {
         this.props.onClose();
-        this.props.timelineStore.fetchItems();
+        this.props.timelineStore.fetchTimeline();
       })
       .catch((error) => {
         const e = new Error(error);
