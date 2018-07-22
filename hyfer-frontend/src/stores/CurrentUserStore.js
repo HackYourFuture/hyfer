@@ -104,8 +104,8 @@ export default class GlobalStore {
         this.profile = res;
         const { group_name: groupName } = this.user;
         if (groupName != null && this.isStudent && !this.isArchived) {
-          stores.currentModuleStore.getGroupsByGroupName(groupName, true);
-          stores.timeline.setFilter(groupName);
+          stores.currentModuleStore.getGroupsByGroupName(groupName);
+          stores.timelineStore.setFilter(groupName);
         }
       });
     } catch (err) {
