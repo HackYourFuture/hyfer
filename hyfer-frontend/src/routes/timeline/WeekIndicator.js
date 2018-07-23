@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { inject, observer } from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Divider from '@material-ui/core/Divider';
@@ -43,10 +44,13 @@ const styles = (theme) => ({
   },
 });
 
+@inject('timelineStore')
+@observer
 class WeekIndicator extends Component {
 
   setTodayMarker = () => {
-    const { week, itemWidth } = this.props;
+    const { itemWidth } = this.props.timelineStore;
+    const { week } = this.props;
     const offset = getCurrentWeek(week, itemWidth);
     if (!offset && offset !== 0) {
       return null;
@@ -66,7 +70,8 @@ class WeekIndicator extends Component {
     const endSaturday = endSunday.clone().subtract(1, 'days');
     const month = startSunday.format('MMMM YYYY');
 
-    const { classes, itemWidth } = this.props;
+    const { classes } = this.props;
+    const { itemWidth } = this.props.timelineStore;
 
     return (
       <div style={{ width: itemWidth }}>
@@ -92,12 +97,12 @@ class WeekIndicator extends Component {
   }
 }
 
-WeekIndicator.propTypes = {
-  week: PropTypes.object.isRequired,
-  itemWidth: PropTypes.number.isRequired,
-  setTodayMarkerRef: PropTypes.func.isRequired,
-  scrollingParentRef: PropTypes.object.isRequired,
+WeekIndicator.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
+  scrollingParentRef: PropTypes.object.isRequired,
+  setTodayMarkerRef: PropTypes.func.isRequired,
+  timelineStore: PropTypes.object.isRequired,
+  week: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(WeekIndicator);

@@ -44,7 +44,7 @@ const styles = (theme) => ({
   },
 });
 
-@inject('currentModuleStore', 'currentUserStore', 'userStore')
+@inject('currentModuleStore', 'currentUserStore', 'userStore', 'timelineStore')
 @observer
 class TimelineModule extends Component {
   state = {
@@ -71,14 +71,15 @@ class TimelineModule extends Component {
       module_name,
       duration,
       color,
+      archived,
       running_module_id,
     } = this.props.item;
 
     // Add extra times width as much as needed but for the margin add all - 1 
     // (for the first item it doesn't need any margin)
     const { spacing } = this.props.theme;
-    // const width = (this.props.width + spacing.unit) * duration - spacing.unit;
-    const width = this.props.width * duration - spacing.unit;
+    const { itemWidth, rowHeight } = this.props.timelineStore;
+    const width = itemWidth * duration - spacing.unit;
 
     const { classes, currentUserStore } = this.props;
     const { currentModule } = this.props.currentModuleStore;
@@ -88,7 +89,7 @@ class TimelineModule extends Component {
       <div className={classes.root}>
         <Paper elevation={2}
           className={classNames(classes.container, selected ? classes.selected : '')}
-          style={{ width, height: this.props.height, backgroundColor: color }}
+          style={{ width, height: rowHeight, backgroundColor: color }}
           onClick={() => this.itemClickHandler(this.props.item)}
         >
           <Typography
@@ -99,7 +100,7 @@ class TimelineModule extends Component {
           >
             {module_name}
           </Typography>
-          {currentUserStore.isTeacher && (
+          {currentUserStore.isTeacher && archived === 0 && (
             <React.Fragment>
               <IconButton
                 onClick={this.openMenu}
@@ -124,12 +125,11 @@ TimelineModule.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   currentModuleStore: PropTypes.object.isRequired,
   currentUserStore: PropTypes.object.isRequired,
-  height: PropTypes.number.isRequired,
   isLast: PropTypes.bool.isRequired,
   item: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
+  timelineStore: PropTypes.object.isRequired,
   userStore: PropTypes.object.isRequired,
-  width: PropTypes.number.isRequired,
 };
 
 export default withStyles(styles, { withTheme: true })(TimelineModule);

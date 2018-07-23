@@ -34,10 +34,7 @@ function getGroupById(con, groupId) {
 }
 
 function getActiveGroups(con) {
-  return execQuery(
-    con,
-    'SELECT group_name FROM `groups` where archived = 0'
-  );
+  return execQuery(con, 'SELECT group_name FROM `groups` where archived = 0');
 }
 
 function updateGroup(con, module, id) {

@@ -36,7 +36,7 @@ class ClassSideBar extends Component {
       <ClassButton
         key={group.group_name}
         group={group}
-        height={this.props.rowHeight}
+        height={this.props.timelineStore.rowHeight}
         disabled={!this.props.currentUserStore.isTeacher}
       />
     ));
@@ -69,7 +69,6 @@ ClassSideBar.wrappedComponent.propTypes = {
   currentUserStore: PropTypes.object.isRequired,
   myRef: PropTypes.object.isRequired,
   onClick: PropTypes.func.isRequired,
-  rowHeight: PropTypes.number.isRequired,
   timelineStore: PropTypes.object.isRequired,
 };
 

@@ -7,18 +7,19 @@ const {
   rollback,
 } = require('./database');
 const modules = require('./modules');
+const groups = require('./groups');
 
 const GET_TIME_LINE_QUERY = `
   SELECT \`groups\`.id,
     \`groups\`.group_name,
     \`groups\`.starting_date,
+    \`groups\`.archived,
     running_modules.duration,
     running_modules.id AS running_module_id,
     running_modules.position,
     modules.module_name,
     modules.color,
-    modules.git_repo,
-    modules.optional
+    modules.git_repo
     FROM \`groups\`
     INNER JOIN running_modules ON running_modules.group_id = \`groups\`.id
     INNER JOIN modules ON running_modules.module_id = modules.id
@@ -38,25 +39,19 @@ const INSERT_RUNNING_MODULE =
 const resequenceModules = mods => mods.map((mod, index) => ({ ...mod, position: index }));
 
 async function getTimeline(con, groupNames) {
-  const rows = await execQuery(con, GET_TIME_LINE_QUERY, [groupNames]);
+  let names = groupNames;
+  if (!groupNames) {
+    const active = await groups.getActiveGroups(con);
+    names = active.map(group => group.group_name);
+  }
+  const rows = await execQuery(con, GET_TIME_LINE_QUERY, [names]);
   const grouped = _.groupBy(rows, row => row.group_name);
   return Object.keys(grouped)
     .reduce((acc, groupName) => {
       let mods = grouped[groupName];
       const { id: group_id, starting_date } = mods[0];
-      mods = mods.map(m => ({
-        duration: m.duration,
-        git_repo: m.git_repo,
-        module_name: m.module_name,
-        position: m.position,
-        running_module_id: m.running_module_id,
-        color: m.color,
-      }));
-      acc[groupName] = {
-        group_id,
-        starting_date,
-        modules: mods,
-      };
+      mods = mods.map(m => _.omit(m, 'starting_date'));
+      acc[groupName] = { group_id, starting_date, modules: mods };
       return acc;
     }, {});
 }

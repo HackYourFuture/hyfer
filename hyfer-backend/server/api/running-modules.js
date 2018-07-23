@@ -8,24 +8,10 @@ const { getConnection } = require('./connection');
 const { hasRole } = require('../auth/auth-service');
 const handleError = require('./error')('running_modules');
 
-function parseQueryParams(group) {
-  if (group == null) {
-    throw new Error('Expected group query parameter.');
-  }
-  const groupNames = Array.isArray(group) ? group : [group];
-  groupNames.forEach((groupName) => {
-    if (!/^class\d+$/.test(groupName)) {
-      throw new Error("Expected group name with format 'classN'");
-    }
-  });
-  return groupNames;
-}
-
 async function getTimeline(req, res) {
   try {
-    const groupNames = parseQueryParams(req.query.group);
     const con = await getConnection(req, res);
-    const timeline = await db.getTimeline(con, groupNames);
+    const timeline = await db.getTimeline(con, req.query.group);
     res.json(timeline);
   } catch (err) {
     handleError(err, res);
@@ -87,10 +73,9 @@ async function getRunningModuleDetails(req, res) {
 async function addRunningModule(req, res) {
   try {
     const { moduleId, groupId, position } = req.params;
-    const groupNames = parseQueryParams(req.query.group);
     const con = await getConnection(req, res);
     await db.addRunningModule(con, +moduleId, +groupId, +position);
-    const timeline = await db.getTimeline(con, groupNames);
+    const timeline = await db.getTimeline(con, req.query.group);
     res.json(timeline);
   } catch (err) {
     handleError(err, res);
@@ -100,11 +85,10 @@ async function addRunningModule(req, res) {
 async function updateRunningModule(req, res) {
   try {
     const { groupId, position } = req.params;
-    const groupNames = parseQueryParams(req.query.group);
     const updates = req.body;
     const con = await getConnection(req, res);
     await db.updateRunningModule(con, updates, +groupId, +position);
-    const timeline = await db.getTimeline(con, groupNames);
+    const timeline = await db.getTimeline(con, req.query.group);
     res.json(timeline);
   } catch (err) {
     handleError(err, res);
@@ -114,10 +98,9 @@ async function updateRunningModule(req, res) {
 async function deleteRunningModule(req, res) {
   try {
     const { groupId, position } = req.params;
-    const groupNames = parseQueryParams(req.query.group);
     const con = await getConnection(req, res);
     await db.deleteRunningModule(con, +groupId, +position);
-    const timeline = await db.getTimeline(con, groupNames);
+    const timeline = await db.getTimeline(con, req.query.group);
     res.json(timeline);
   } catch (err) {
     handleError(err, res);
@@ -127,10 +110,9 @@ async function deleteRunningModule(req, res) {
 async function splitRunningModule(req, res) {
   try {
     const { groupId, position } = req.params;
-    const groupNames = parseQueryParams(req.query.group);
     const con = await getConnection(req, res);
     await db.splitRunningModule(con, +groupId, +position);
-    const timeline = await db.getTimeline(con, groupNames);
+    const timeline = await db.getTimeline(con, req.query.group);
     res.json(timeline);
   } catch (err) {
     handleError(err, res);

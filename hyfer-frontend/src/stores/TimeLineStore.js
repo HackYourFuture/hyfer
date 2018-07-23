@@ -35,6 +35,10 @@ function addModuleDates(timelineItems) {
 
 export default class TimeLineStore {
 
+  itemWidth = 150;
+
+  rowHeight = 48;
+
   @observable
   timeline = null;
 
@@ -82,14 +86,14 @@ export default class TimeLineStore {
     });
   }
 
+  queryParam = () => this.filter === 'active' ? '' : `?group=${this.filter}`;
+
   @action
   fetchTimeline = async () => {
     try {
       await this.fetchGroups();
 
-      const queryParams = this.getQueryParams();
-
-      const timeline = await fetchJSON(`/api/running/timeline?${queryParams}`);
+      const timeline = await fetchJSON(`/api/running/timeline${this.queryParam()}`);
       runInAction(() => {
         this.setTimelineItems(timeline);
       });
@@ -160,8 +164,7 @@ export default class TimeLineStore {
   @action
   updateModule = async (item, position, duration) => {
     try {
-      const queryParams = this.getQueryParams();
-      const timeline = await fetchJSON(`/api/running/update/${item.group_id}/${item.position}?${queryParams}`,
+      const timeline = await fetchJSON(`/api/running/update/${item.group_id}/${item.position}${this.queryParam()}`,
         'PATCH', { position, duration });
       this.setTimelineItems(timeline);
     } catch (err) {
@@ -171,8 +174,7 @@ export default class TimeLineStore {
 
   addModule = async (moduleId, groupId, position) => {
     try {
-      const queryParams = this.getQueryParams();
-      const timeline = await fetchJSON(`/api/running/add/${moduleId}/${groupId}/${position}?${queryParams}`, 'PATCH');
+      const timeline = await fetchJSON(`/api/running/add/${moduleId}/${groupId}/${position}${this.queryParam()}`, 'PATCH');
       this.setTimelineItems(timeline);
     } catch (error) {
       stores.uiStore.setLastError(error);
@@ -182,8 +184,7 @@ export default class TimeLineStore {
   @action
   removeModule = async (groupId, position) => {
     try {
-      const queryParams = this.getQueryParams();
-      const timeline = await fetchJSON(`/api/running/${groupId}/${position}?${queryParams}`, 'DELETE');
+      const timeline = await fetchJSON(`/api/running/${groupId}/${position}${this.queryParam()}`, 'DELETE');
       this.setTimelineItems(timeline);
     } catch (error) {
       stores.uiStore.setLastError(error);
@@ -193,21 +194,11 @@ export default class TimeLineStore {
   @action
   splitModule = async (groupId, position) => {
     try {
-      const queryParams = this.getQueryParams();
-      const timeline = await fetchJSON(`/api/running/split/${groupId}/${position}?${queryParams}`, 'PATCH');
+      const timeline = await fetchJSON(`/api/running/split/${groupId}/${position}${this.queryParam()}`, 'PATCH');
       this.setTimelineItems(timeline);
     } catch (error) {
       stores.uiStore.setLastError(error);
     }
   }
 
-  getQueryParams() {
-    const activeGroupNames = this.groups
-      .filter(group => group.archived === 0)
-      .map(group => group.group_name);
-    const selectedGroups = this.filter === 'active' ? activeGroupNames : [this.filter];
-    return selectedGroups.reduce((query, groupName) => {
-      return query === '' ? `group=${groupName}` : `${query}&group=${groupName}`;
-    }, '');
-  }
 }

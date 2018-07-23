@@ -11,8 +11,12 @@ const styles = (theme) => ({
   select: {
     margin: theme.spacing.unit,
   },
-  menuItem: {
+  active: {
     justifyContent: 'center',
+  },
+  archived: {
+    justifyContent: 'center',
+    color: theme.palette.text.secondary,
   },
 });
 
@@ -61,13 +65,13 @@ class ClassSelector extends Component {
 
           {groups.map(group => {
             const number = group.group_name.match(/(\d+)$/)[1];
-            const label = `Class ${number}${group.archived ? '*' : ''}`;
+            const root = group.archived ? classes.archived : classes.active;
             return <MenuItem
               key={number}
               value={group.group_name}
-              classes={{ root: classes.menuItem }}
+              classes={{ root }}
             >
-              {label}
+              Class {number}
             </MenuItem>;
           })}
 

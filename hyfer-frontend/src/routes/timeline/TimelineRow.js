@@ -28,20 +28,19 @@ export function getWeeksBeforeAndAfter(allWeeks, modules) {
 export default class TimelineRow extends Component {
 
   renderTimelineModules = () => {
+    const { groupName } = this.props;
     const { allWeeks, items } = this.props.timelineStore;
-    const { width, height, groupName } = this.props;
+
     const { modules } = items[groupName];
     const { weeksBefore, weeksAfter } = getWeeksBeforeAndAfter(allWeeks, modules);
 
-    let rowCells = weeksBefore.map(week => <EmptyWeekModule key={week} week={week} width={width} height={height} />);
+    let rowCells = weeksBefore.map(week => <EmptyWeekModule key={week} week={week} />);
 
     const taskRowItems = modules.map((item, index) => {
       return (
         <TimelineModule
           key={item.running_module_id}
           item={item}
-          width={width}
-          height={height}
           isLast={index === modules.length - 1}
         />
       );
@@ -51,7 +50,7 @@ export default class TimelineRow extends Component {
     if (weeksAfter.length === 0) return rowCells;
 
     const cellsAfter = weeksAfter.map(week => (
-      <EmptyWeekModule key={week} width={width} height={height} />
+      <EmptyWeekModule key={week} />
     ));
 
     return [...rowCells, ...cellsAfter];
@@ -63,8 +62,6 @@ export default class TimelineRow extends Component {
 }
 
 TimelineRow.wrappedComponent.propTypes = {
-  timelineStore: PropTypes.object.isRequired,
   groupName: PropTypes.string.isRequired,
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
+  timelineStore: PropTypes.object.isRequired,
 };
