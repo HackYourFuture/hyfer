@@ -28,6 +28,7 @@ async function saveHistory(con, data) {
     attendance,
     homework,
   ]);
+
   return getHistory(con, runningId, userId);
 }
 

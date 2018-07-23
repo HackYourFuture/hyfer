@@ -3,41 +3,27 @@ const _ = require('lodash');
 const db = require('../datalayer/modules');
 const { getConnection } = require('./connection');
 const { hasRole } = require('../auth/auth-service');
-const handleError = require('./error')('modules');
+const handleError = require('./error')('Modules');
+const logger = require('../util/logger.js');
 
-function getModules(req, res) {
-  getConnection(req, res)
-    .then(con => db.getModules(con))
-    .then(result => res.json(result))
-    .catch(err => handleError(err, res));
+async function getModules(req, res) {
+  try {
+    const con = await getConnection(req, res);
+    const result = await db.getModules(con);
+    res.json(result);
+  } catch (err) {
+    handleError(req, res, err);
+  }
 }
 
-function getHomeworkModules(req, res) {
-  getConnection(req, res)
-    .then(con => db.getHomeworkModules(con))
-    .then(result => res.json(result))
-    .catch(err => handleError(err, res));
-}
-
-function addModule(req, res) {
-  getConnection(req, res)
-    .then(con => db.addModule(con, req.body))
-    .then(() => res.sendStatus(200))
-    .catch(err => handleError(err, res));
-}
-
-function updateModule(req, res) {
-  getConnection(req, res)
-    .then(con => db.updateModule(con, req.body, req.params.id))
-    .then(result => res.sendStatus(result.affectedRows > 0 ? 200 : 404))
-    .catch(err => handleError(err, res));
-}
-
-function deleteModule(req, res) {
-  getConnection(req, res)
-    .then(con => db.deleteModule(con, req.params.id))
-    .then(result => res.sendStatus(result.affectedRows > 0 ? 200 : 404))
-    .catch(err => handleError(err, res));
+async function getHomeworkModules(req, res) {
+  try {
+    const con = await getConnection(req, res);
+    const result = await db.getHomeworkModules(con);
+    res.json(result);
+  } catch (err) {
+    handleError(req, res, err);
+  }
 }
 
 function compareModules(mod1, mod2) {
@@ -85,7 +71,7 @@ function createBatchUpdate(currentModules, receivedModules) {
   return { updates, additions, deletions };
 }
 
-async function updateModules(req, res) {
+async function bulkUpdateModules(req, res) {
   const receivedModules = req.body;
   try {
     const con = await getConnection(req, res);
@@ -94,18 +80,16 @@ async function updateModules(req, res) {
     await db.updateModules(con, batchUpdate);
     const result = await db.getModules(con);
     res.json(result);
+    logger.info('Bulk-updated modules', { requester: req.user.username });
   } catch (err) {
-    handleError(err, res);
+    handleError(req, res, err);
   }
 }
 
 const router = express.Router();
 router
   .get('/', hasRole('teacher|student'), getModules)
-  .get('/homework', hasRole('teacher|student'), getHomeworkModules)
-  .post('/', hasRole('teacher|student'), addModule)
-  .patch('/', hasRole('teacher'), updateModules)
-  .patch('/:id', hasRole('teacher'), updateModule)
-  .delete('/:id', hasRole('teacher'), deleteModule);
+  .patch('/', hasRole('teacher'), bulkUpdateModules)
+  .get('/homework', hasRole('teacher|student'), getHomeworkModules);
 
 module.exports = router;

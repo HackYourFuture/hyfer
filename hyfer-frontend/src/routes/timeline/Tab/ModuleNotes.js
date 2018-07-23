@@ -14,26 +14,17 @@ import '!style-loader!css-loader!github-markdown-css';
 const localStorageKey = 'hyfer:moduleNotes';
 const HYF_GITHUB_URL = 'https://github.com/HackYourFuture';
 
-function makeTemplate(module, group, duration) {
+function standardHeader(selectedModule) {
+  const { group_name, module_name, starting_date, ending_date, git_repo } = selectedModule;
+  const classNumber = group_name.match(/\d+/)[0];
 
-  let template = `# ${group.group_name.toUpperCase()} – ${module.module_name}
+  return `# ${module_name}
+  
+  _Class ${classNumber}, ${starting_date.format('D MMMM YYYY')} – ${ending_date.format('D MMMM YYYY')}_
 
-### Visit GitHub repository: [${module.module_name}](${HYF_GITHUB_URL}/${module.git_repo})
+  [Visit Repository ](${HYF_GITHUB_URL}/${git_repo}) <i class="fab fa-github fa-lg"></i>
 
-## YouTube Lecture Recordings
-
-<!--
-  To embed a YouTube videos, click the share button
-  below the video and select Embed Video. Paste the
-  <iframe ...> HTML segment under the Week x header
-  in this file. 
--->`;
-
-  for (let i = 0; i < duration; i++) {
-    template += `\n\n### Week ${i + 1}\n\nNot yet available.`;
-  }
-
-  return template;
+`;
 }
 
 const styles = theme => ({
@@ -82,14 +73,13 @@ class ModuleNotes extends React.Component {
 
   componentDidMount() {
     this.disposeAutoRun = autorun(() => {
-      const { currentModule } = this.props.currentModuleStore;
-      if (!currentModule) {
+      const { selectedModule, notes } = this.props.currentModuleStore;
+      if (!selectedModule) {
         return;
       }
 
-      this.origNotes = currentModule && currentModule.notes;
-
-      this.runningId = currentModule.id;
+      this.origNotes = notes;
+      this.runningId = selectedModule.running_module_id;
       const storageItem = window.sessionStorage.getItem(localStorageKey);
 
       let markdown = '';
@@ -126,14 +116,7 @@ class ModuleNotes extends React.Component {
   };
 
   setEditMode = () => {
-    let { markdown } = this.state;
-    if (!markdown) {
-      markdown = this.defaultNotes();
-    }
-    this.setState({
-      inEditMode: true,
-      markdown,
-    });
+    this.setState({ inEditMode: true });
   }
 
   setIsEditing = () => this.setState({ isEditing: true });
@@ -155,13 +138,8 @@ class ModuleNotes extends React.Component {
     window.sessionStorage.removeItem(localStorageKey);
   };
 
-  defaultNotes() {
-    const { module, group, currentModule } = this.props.currentModuleStore;
-    return makeTemplate(module, group, currentModule.duration);
-  }
-
   renderArticle() {
-    const markdown = this.state.markdown || this.defaultNotes();
+    const markdown = standardHeader(this.props.currentModuleStore.selectedModule) + this.state.markdown;
     return <MarkdownViewer markdown={markdown} />;
   }
 
@@ -178,10 +156,10 @@ class ModuleNotes extends React.Component {
 
   renderViewMode(classes) {
     const { isTeacher, user } = this.props.currentUserStore;
-    const { currentModule } = this.props.currentModuleStore;
+    const { group } = this.props.currentModuleStore;
     return (
       <React.Fragment>
-        {(isTeacher || user.group_id === currentModule.group_id) && (
+        {(isTeacher || user.group_id === group.id) && (
           <div className={classes.bottomButtonContainer}>
             <Tooltip title="Edit notes">
               <Button variant="fab" color="primary" className={classes.fab} aria-label="Edit" onClick={this.setEditMode}>
@@ -196,8 +174,8 @@ class ModuleNotes extends React.Component {
   }
 
   render() {
-    const { currentModule } = this.props.currentModuleStore;
-    if (!currentModule) {
+    const { selectedModule } = this.props.currentModuleStore;
+    if (!selectedModule) {
       return null;
     }
 

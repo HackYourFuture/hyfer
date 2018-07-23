@@ -23,7 +23,7 @@ export default class CurrentModuleStore {
   converter = new Showdown.Converter({ tables: true, simplifiedAutoLink: true });
 
   @observable
-  readme = null;
+  readMe = null;
 
   @observable
   group = null;
@@ -32,7 +32,7 @@ export default class CurrentModuleStore {
   module = null;
 
   @observable
-  currentModule = null;
+  notes = '';
 
   @observable
   students = [];
@@ -43,32 +43,41 @@ export default class CurrentModuleStore {
   @observable
   currentWeek = null;
 
+  @observable
+  selectedModule = null;
+
   @action
-  async getRunningModuleDetails(runningId) {
-    const details = await fetchJSON(`/api/running/details/${runningId}`);
-    stores.uiStore.setTimelineTabIndex(0);
+  async getRunningModuleDetails(selectedModule) {
+    try {
+      const details = await fetchJSON(`/api/running/details/${selectedModule.running_module_id}`);
+      stores.uiStore.setTimelineTabIndex(0);
 
-    const { group, module, runningModule, teachers } = details;
+      const { group, module, teachers, notes } = details;
 
-    const students = details.students.map((student) => {
-      const history = normalizeHistory(runningModule.duration, student.history);
-      return { ...student, history };
-    });
+      const students = details.students.map((student) => {
+        const history = normalizeHistory(selectedModule.duration, student.history);
+        return { ...student, history };
+      });
 
-    runInAction(() => {
-      this.group = group;
-      this.module = module;
-      this.currentModule = runningModule;
-      this.students = students;
-      this.teachers = teachers;
-    });
+      runInAction(() => {
+        this.selectedModule = selectedModule;
+        this.group = group;
+        this.module = module;
+        this.notes = notes || '';
+        this.students = students;
+        this.teachers = teachers;
+      });
+    } catch (err) {
+      stores.uiStore.setLastError(err);
+    }
   }
 
   @action
-  clearCurrentModule = () => {
-    this.currentModule = null;
+  clearSelectedModule = () => {
+    this.selectedModule = null;
   }
 
+  @action
   addTeacher = async (moduleId, teacherId) => {
     try {
       const teachers = await fetchJSON(`/api/running/teacher/${moduleId}/${teacherId}`, 'POST');
@@ -78,6 +87,7 @@ export default class CurrentModuleStore {
     }
   }
 
+  @action
   deleteTeacher = async (moduleId, userId) => {
     try {
       const teachers = await fetchJSON(`/api/running/teacher/${moduleId}/${userId}`, 'DELETE');
@@ -87,35 +97,41 @@ export default class CurrentModuleStore {
     }
   }
 
+  @action
   saveNotes = async (notes) => {
     try {
-      if (!this.currentModule) {
+      if (!this.selectedModule) {
         throw new Error('Cannot save notes: no current module set.');
       }
-      const runningId = this.currentModule.id;
-      const runningModule = await fetchJSON(`/api/running/notes/${runningId}`, 'PATCH', { notes });
-      runInAction(() => this.currentModule = runningModule);
+      const { running_module_id } = this.selectedModule;
+      const updatedNotes = await fetchJSON(`/api/running/notes/${running_module_id}`, 'PATCH', { notes });
+      runInAction(() => this.notes = updatedNotes);
     } catch (err) {
       stores.uiStore.setLastError(err);
     }
   }
 
-  getReadme = async (repoName) => {
-
-    if (this.readme != null) {
+  @action
+  getReadMe = async (repoName) => {
+    if (this.readMe != null) {
       return;
     }
 
-    const res = await fetch(`${HYF_GITHUB_URL}/${repoName}/readme`);
-    if (!res.ok) throw res;
-    const readmeEncoded = await res.json();
-    const readmeDecoded = atob(readmeEncoded.content);
-    const html = this.converter.makeHtml(readmeDecoded);
-    runInAction(() => {
-      this.readme = { repoName, html };
-    });
+    try {
+      const res = await fetch(`${HYF_GITHUB_URL}/${repoName}/readme`);
+      if (!res.ok) throw res;
+      const readmeEncoded = await res.json();
+      const readmeDecoded = atob(readmeEncoded.content);
+      const html = this.converter.makeHtml(readmeDecoded);
+      runInAction(() => {
+        this.readMe = { repoName, html };
+      });
+    } catch (err) {
+      stores.uiStore.setLastError(err);
+    }
   }
 
+  @action
   async getGroupsByGroupName(groupName) {
     try {
       const runningModules = await fetchJSON(`/api/groups/currentgroups/${groupName}`);
@@ -150,9 +166,9 @@ export default class CurrentModuleStore {
 
   @action
   saveAttendance = async (student, weekNum, data) => {
-    const { id: runningId, duration } = this.currentModule;
+    const { running_module_id, duration } = this.selectedModule;
     try {
-      const result = await fetchJSON(`/api/history/${runningId}/${student.id}/${weekNum}`, 'POST', data);
+      const result = await fetchJSON(`/api/history/${running_module_id}/${student.id}/${weekNum}`, 'POST', data);
       const history = normalizeHistory(duration, result);
 
       runInAction(() => {

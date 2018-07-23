@@ -70,8 +70,8 @@ class UserCard extends React.Component {
 
   handleRemove = () => {
     const { user } = this.props;
-    const { id: moduleId } = this.props.currentModuleStore.currentModule;
-    this.props.currentModuleStore.deleteTeacher(moduleId, user.id);
+    const { running_module_id: runningId } = this.props.currentModuleStore.selectedModule;
+    this.props.currentModuleStore.deleteTeacher(runningId, user.id);
   };
 
   handleLinkedIn = () => {

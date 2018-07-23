@@ -122,11 +122,10 @@ class UserList extends Component {
 
   render() {
     const { classes, currentUserStore, currentModuleStore, role } = this.props;
-    const { currentModule, group, students, teachers } = currentModuleStore;
-    console.log(module);
+    const { selectedModule, group, students, teachers } = currentModuleStore;
 
     let users = role === 'teacher' ? teachers : students;
-    users = users.sort((a, b) => a.username.localeCompare(b.username));
+    users = users.slice().sort((a, b) => a.username.localeCompare(b.username));
 
     return (
       <div className={classes.root}>
@@ -134,7 +133,7 @@ class UserList extends Component {
           <Paper className={classes.toolbarContainer} elevation={2}>
             <Toolbar className={classes.toolbar}>
               <FormLabel>Attendance and Homework for week:</FormLabel>
-              {this.renderWeekSelector(classes, currentModule.duration)}
+              {this.renderWeekSelector(classes, selectedModule.duration)}
               <Button className={classes.hideButton} color="secondary" onClick={this.toggleShowAttendance}>
                 Hide attendance
               </Button>
@@ -143,7 +142,7 @@ class UserList extends Component {
         <div className={classes.container}>
           {this.renderUsers(role, users, this.state.selectedWeek)}
         </div>
-        {role === 'teacher' && currentModule && currentUserStore.isTeacher &&
+        {role === 'teacher' && selectedModule && currentUserStore.isTeacher &&
           <Fragment>
             <AddTeacherDialog
               open={this.state.isOpen}
@@ -160,7 +159,7 @@ class UserList extends Component {
               </Button>
             </Tooltip>
           </Fragment>}
-        {role === 'student' && currentModule && group.archived === 0 && !this.state.showAttendance &&
+        {role === 'student' && selectedModule && group.archived === 0 && !this.state.showAttendance &&
           <Tooltip title="Show attendances">
             <Button
               onClick={this.toggleShowAttendance}

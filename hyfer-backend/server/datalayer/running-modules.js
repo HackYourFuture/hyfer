@@ -27,8 +27,6 @@ const GET_TIME_LINE_QUERY = `
     ORDER BY \`groups\`.starting_date, running_modules.position`;
 const GET_RUNNING_MODULES_QUERY =
   'SELECT * FROM running_modules';
-const GET_RUNNING_MODULE_BY_ID =
-  'SELECT * FROM running_modules WHERE id=?';
 const UPDATE_RUNNING_MODULE =
   'UPDATE running_modules SET duration=?, position=?, notes=? WHERE id=?';
 const DELETE_RUNNING_MODULE =
@@ -57,7 +55,7 @@ async function getTimeline(con, groupNames) {
 }
 
 function getRunningModuleById(con, runningId) {
-  const sql = GET_RUNNING_MODULE_BY_ID;
+  const sql = 'SELECT * FROM running_modules WHERE id=?';
   return execQuery(con, sql, [runningId]);
 }
 

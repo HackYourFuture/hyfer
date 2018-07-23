@@ -38,12 +38,12 @@ const styles = (theme) => ({
 @observer
 class ModuleReadMe extends Component {
   componentDidMount() {
-    this.props.currentModuleStore.getReadme('curriculum');
+    this.props.currentModuleStore.getReadMe('curriculum');
   }
 
   render() {
-    const { readme } = this.props.currentModuleStore;
-    if (!readme) {
+    const { readMe } = this.props.currentModuleStore;
+    if (!readMe) {
       return null;
     }
 
@@ -53,7 +53,7 @@ class ModuleReadMe extends Component {
       <React.Fragment>
         <div className={classes.root}>
           <div className={classes.gitHubButton}>
-            <a href={`${HYF_GITHUB_URL}/${readme.repoName}`} target="_blank">
+            <a href={`${HYF_GITHUB_URL}/${readMe.repoName}`} target="_blank">
               <Button color="primary" className={classes.button}>
                 Visit Repository
               <Icon className={classNames(classes.icon, 'fab fa-github')} />
@@ -61,7 +61,7 @@ class ModuleReadMe extends Component {
             </a>
           </div>
         </div>
-        <article className={`${classes.markdownBody} markdown-body`} dangerouslySetInnerHTML={{ __html: readme.html }} />
+        <article className={`${classes.markdownBody} markdown-body`} dangerouslySetInnerHTML={{ __html: readMe.html }} />
       </React.Fragment>
     );
   }

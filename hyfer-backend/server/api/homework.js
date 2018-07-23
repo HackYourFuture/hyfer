@@ -1,6 +1,6 @@
 const express = require('express');
 const db = require('../datalayer/homework');
-const handleError = require('./error')('homework');
+const handleError = require('./error')('Homework');
 const { hasRole } = require('../auth/auth-service');
 const { getConnection } = require('./connection');
 
@@ -8,63 +8,63 @@ function getGroupAssignments(req, res) {
   getConnection(req, res)
     .then(con => db.getGroupAssignments(con, req.params.groupId))
     .then(result => res.json(result))
-    .catch(err => handleError(err, res));
+    .catch(err => handleError(req, res, err));
 }
 
 function getGroupStudents(req, res) {
   getConnection(req, res)
     .then(con => db.getGroupStudents(con, req.params.groupId))
     .then(result => res.json(result))
-    .catch(err => handleError(err, res));
+    .catch(err => handleError(req, res, err));
 }
 
 function getGroupSubmissions(req, res) {
   getConnection(req, res)
     .then(con => db.getGroupSubmissions(con, req.params.groupId))
     .then(result => res.json(result))
-    .catch(err => handleError(err, res));
+    .catch(err => handleError(req, res, err));
 }
 
 function getGroupReviews(req, res) {
   getConnection(req, res)
     .then(con => db.getGroupReviews(con, req.params.groupId))
     .then(result => res.json(result))
-    .catch(err => handleError(err, res));
+    .catch(err => handleError(req, res, err));
 }
 
 function getAssignmentSubmitters(req, res) {
   getConnection(req, res)
     .then(con => db.getAssignmentSubmitters(con, req.params.assignmentId))
     .then(result => res.json(result))
-    .catch(err => handleError(err, res));
+    .catch(err => handleError(req, res, err));
 }
 
 function addAssignment(req, res) {
   getConnection(req, res)
     .then(con => db.addAssignment(con, req.body))
     .then(() => res.sendStatus(200))
-    .catch(err => handleError(err, res));
+    .catch(err => handleError(req, res, err));
 }
 
 function addSubmission(req, res) {
   getConnection(req, res)
     .then(con => db.addSubmission(con, req.body))
     .then(() => res.sendStatus(200))
-    .catch(err => handleError(err, res));
+    .catch(err => handleError(req, res, err));
 }
 
 function addReview(req, res) {
   getConnection(req, res)
     .then(con => db.addReview(con, req.body))
     .then(() => res.sendStatus(200))
-    .catch(err => handleError(err, res));
+    .catch(err => handleError(req, res, err));
 }
 
 function addReviewer(req, res) {
   getConnection(req, res)
     .then(con => db.addReviewer(con, req.body.reviewer, req.body.submission_id))
     .then(() => res.sendStatus(200))
-    .catch(err => handleError(err, res));
+    .catch(err => handleError(req, res, err));
 }
 
 const router = express.Router();

@@ -25,56 +25,54 @@ export default class TimelineMenu extends Component {
   handleWeekLonger = (e) => {
     e.stopPropagation();
     this.props.onClose();
-    const { currentModule } = this.props.currentModuleStore;
-    const { duration } = currentModule;
-    this.props.timelineStore.updateModule(currentModule, null, duration + 1);
+    const { selectedModule, group } = this.props.currentModuleStore;
+    const { duration } = selectedModule;
+    this.props.timelineStore.updateModule(selectedModule, group.id, duration + 1);
   };
 
   handleWeekShorter = (e) => {
     e.stopPropagation();
     this.props.onClose();
-    const { currentModule } = this.props.currentModuleStore;
-    const { duration } = currentModule;
-    this.props.timelineStore.updateModule(currentModule, null, duration - 1);
+    const { selectedModule, group } = this.props.currentModuleStore;
+    const { duration } = selectedModule;
+    this.props.timelineStore.updateModule(selectedModule, group.id, duration - 1);
   };
 
   handleMoveLeft = (e) => {
     e.stopPropagation();
     this.props.onClose();
-    const { currentModule } = this.props.currentModuleStore;
-    const { position, duration } = currentModule;
-    this.props.timelineStore.updateModule(currentModule, position - 1, duration);
+    const { selectedModule, group } = this.props.currentModuleStore;
+    const { position, duration } = selectedModule;
+    this.props.timelineStore.updateModule(selectedModule, group.id, duration, position - 1);
   };
 
   handleMoveRight = (e) => {
     e.stopPropagation();
     this.props.onClose();
-    const { currentModule } = this.props.currentModuleStore;
-    const { position, duration } = currentModule;
-    this.props.timelineStore.updateModule(currentModule, position + 1, duration);
+    const { selectedModule, group } = this.props.currentModuleStore;
+    const { position, duration } = selectedModule;
+    this.props.timelineStore.updateModule(selectedModule, group.id, duration, position + 1);
   };
 
   handleRemoveModule = (e) => {
     e.stopPropagation();
     this.props.onClose();
-    const { currentModule } = this.props.currentModuleStore;
-    const { group_id, position } = currentModule;
-    this.props.timelineStore.removeModule(group_id, position);
+    const { selectedModule, group } = this.props.currentModuleStore;
+    this.props.timelineStore.removeModule(group.id, selectedModule.position);
   };
 
   handleSplitModule = async (e) => {
     e.stopPropagation();
     this.props.onClose();
-    const { currentModule } = this.props.currentModuleStore;
-    const { group_id, position } = currentModule;
-    this.props.timelineStore.splitModule(group_id, position);
+    const { selectedModule, group } = this.props.currentModuleStore;
+    this.props.timelineStore.splitModule(group.id, selectedModule.position);
   };
 
   render() {
     const { anchorEl, onClose, currentModuleStore, runningModuleId } = this.props;
-    const { currentModule } = currentModuleStore;
+    const { selectedModule } = currentModuleStore;
 
-    if (!currentModule || currentModule.id !== runningModuleId) {
+    if (!selectedModule || selectedModule.running_module_id !== runningModuleId) {
       return null;
     }
 
@@ -93,7 +91,7 @@ export default class TimelineMenu extends Component {
           </MenuItem>
           <MenuItem
             onClick={this.handleWeekShorter}
-            disabled={currentModule.duration <= 1}
+            disabled={selectedModule.duration <= 1}
           >
             Week shorter
           </MenuItem>
@@ -105,13 +103,13 @@ export default class TimelineMenu extends Component {
           </MenuItem>
           <MenuItem
             onClick={this.handleMoveLeft}
-            disabled={currentModule.position === 0}
+            disabled={selectedModule.position === 0}
           >
             Move left
           </MenuItem>
           <MenuItem
             onClick={this.handleSplitModule}
-            disabled={currentModule.duration <= 1}
+            disabled={selectedModule.duration <= 1}
           >
             Split
             </MenuItem>

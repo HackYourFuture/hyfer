@@ -4,7 +4,7 @@ const _ = require('lodash');
 const db = require('../datalayer/users');
 const { getConnection } = require('./connection');
 const { hasRole, isAuthenticated } = require('../auth/auth-service');
-const handleError = require('./error')('users');
+const handleError = require('./error')('Users');
 const logger = require('../util/logger');
 
 async function getCurrentUser(req, res) {
@@ -16,7 +16,7 @@ async function getCurrentUser(req, res) {
 
     res.json(result);
   } catch (err) {
-    handleError(err, res);
+    handleError(req, res, err);
   }
 }
 
@@ -26,7 +26,7 @@ async function getUsers(req, res) {
     const result = await db.getUsers(con);
     res.json(result);
   } catch (err) {
-    handleError(err, res);
+    handleError(req, res, err);
   }
 }
 
@@ -36,7 +36,7 @@ async function getLastEvent(req, res) {
     const result = await db.getLastEvent(con, req.params.eventName);
     res.json(result);
   } catch (err) {
-    handleError(err, res);
+    handleError(req, res, err);
   }
 }
 
@@ -46,7 +46,7 @@ async function getTeachers(req, res) {
     const result = await db.getTeachers(con);
     res.json(result);
   } catch (err) {
-    handleError(err, res);
+    handleError(req, res, err);
   }
 }
 
@@ -54,14 +54,14 @@ function getUserById(req, res) {
   getConnection(req, res)
     .then(con => db.getUserById(con, +req.params.id))
     .then(result => res.json(result[0]))
-    .catch(err => handleError(err, res));
+    .catch(err => handleError(req, res, err));
 }
 
 function getTeachersByRunningModule(req, res) {
   getConnection(req, res)
     .then(con => db.getTeachersByRunningModule(con, +req.params.id))
     .then(result => res.json(result))
-    .catch(err => handleError(err, res));
+    .catch(err => handleError(req, res, err));
 }
 
 
@@ -69,7 +69,7 @@ function getRunningUsersByGroup(req, res) {
   getConnection(req, res)
     .then(con => db.getRunningUsersByGroup(con, +req.params.groupId))
     .then(result => res.json(result))
-    .catch(err => handleError(err, res));
+    .catch(err => handleError(req, res, err));
 }
 
 async function updateUser(req, res) {
@@ -77,8 +77,9 @@ async function updateUser(req, res) {
     const con = await getConnection(req, res);
     const [result] = await db.updateUser(con, +req.params.id, req.body);
     res.json(result);
+    logger.info('Update user', { ...req.params, ...req.body, requester: req.user.username });
   } catch (err) {
-    handleError(err, res);
+    handleError(req, res, err);
   }
 }
 

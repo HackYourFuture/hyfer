@@ -1,8 +1,9 @@
 const express = require('express');
 const db = require('../datalayer/history');
-const handleError = require('./error')('history');
+const handleError = require('./error')('History');
 const { hasRole } = require('../auth/auth-service');
 const { getConnection } = require('./connection');
+const logger = require('../util/logger');
 
 async function save(req, res) {
   try {
@@ -17,8 +18,16 @@ async function save(req, res) {
       homework,
     });
     res.json(result);
+    logger.debug('Saved attendance', {
+      userId,
+      runningId,
+      weekNum,
+      attendance,
+      homework,
+      requester: req.user.username,
+    });
   } catch (err) {
-    handleError(err, res);
+    handleError(req, res, err);
   }
 }
 

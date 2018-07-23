@@ -41,7 +41,7 @@ export default class ModuleStore {
 
   saveChanges = async () => {
     try {
-      await fetchJSON('/modules', 'PATCH', this.modules);
+      await fetchJSON('/api/modules', 'PATCH', this.modules);
       this.getModules();
     } catch (error) {
       stores.uiStore.setLastError(error);

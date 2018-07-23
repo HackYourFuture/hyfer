@@ -103,7 +103,7 @@ WeekIndicator.wrappedComponent.propTypes = {
   scrollingParentRef: PropTypes.object.isRequired,
   setTodayMarkerRef: PropTypes.func.isRequired,
   timelineStore: PropTypes.object.isRequired,
-  week: PropTypes.object.isRequired,
+  week: PropTypes.array.isRequired,
 };
 
 export default withStyles(styles)(WeekIndicator);

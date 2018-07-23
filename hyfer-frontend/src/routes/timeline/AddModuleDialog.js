@@ -1,4 +1,4 @@
-import React, { Fragment, Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { observer, inject } from 'mobx-react';
 import Button from '@material-ui/core/Button';
@@ -21,7 +21,7 @@ const styles = theme => ({
 
 @inject('moduleStore', 'timelineStore', 'currentModuleStore')
 @observer
-class AddModuleDialog extends Component {
+class AddModuleDialog extends React.Component {
   state = {
     moduleId: -1,
   };
@@ -29,8 +29,9 @@ class AddModuleDialog extends Component {
   handleAddModule = async () => {
     this.props.onClose();
     const { moduleId } = this.state;
-    const { group_id, position } = this.props.currentModuleStore.currentModule;
-    await this.props.timelineStore.addModule(moduleId, group_id, position + 1);
+    const { id: groupId } = this.props.currentModuleStore.group;
+    const { position } = this.props.currentModuleStore.selectedModule;
+    await this.props.timelineStore.addModule(moduleId, groupId, position + 1);
   };
 
   handleChange = (e) => this.setState({ moduleId: e.target.value });
@@ -42,7 +43,7 @@ class AddModuleDialog extends Component {
       return null;
     }
 
-    return (<Fragment>
+    return (
       <Dialog
         open={this.props.open}
         onClose={this.props.onClose}
@@ -78,7 +79,6 @@ class AddModuleDialog extends Component {
           </Button>
         </DialogActions>
       </Dialog>
-    </Fragment>
     );
   }
 }

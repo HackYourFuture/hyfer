@@ -7,8 +7,7 @@ const runningModulesApi = require('./api/running-modules');
 const usersApi = require('./api/users');
 const homeworkApi = require('./api/homework');
 const historyApi = require('./api/history');
-const { setEmail } = require('./api/update-email');
-const { isAuthenticated, hasRole, router: authApi } = require('./auth/auth-service');
+const { hasRole, router: authApi } = require('./auth/auth-service');
 
 module.exports = (app) => {
   app.use('/api/modules', modulesApi);
@@ -19,10 +18,8 @@ module.exports = (app) => {
   app.use('/api/history', historyApi);
   app.use('/auth/github', authApi);
 
-  app.get('/api/students', hasRole('teacher|student'), github.getTeamMembers);
   app.get('/user/emails', hasRole('teacher'), github.getUserEmails);
   app.post('/api/githubSync/:username', hasRole('teacher'), githubSync.githubSync);
-  app.patch('/api/set-email', isAuthenticated(), setEmail);
   app.post('/api/sendEmail', hasRole('teacher|student'), sendGrid.sendAnEmail);
 
   app

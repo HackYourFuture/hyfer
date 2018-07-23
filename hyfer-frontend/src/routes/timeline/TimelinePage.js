@@ -6,7 +6,7 @@ import grey from '@material-ui/core/colors/grey';
 import ClassSideBar from './ClassSideBar/ClassSideBar';
 import TimelineRow from './TimelineRow';
 import WeekIndicator from './WeekIndicator';
-import ModuleReadMe from './ModuleReadme';
+import ModuleReadMe from './ModuleReadMe';
 import StudentInterface from './Tab/StudentInterface';
 
 const styles = (theme) => ({
@@ -113,7 +113,7 @@ class TimelinePage extends Component {
 
     const { classes } = this.props;
     const { isStudent, isTeacher } = this.props.currentUserStore;
-    const { currentModule } = this.props.currentModuleStore;
+    const { selectedModule } = this.props.currentModuleStore;
 
     if (this.props.timelineStore.items == null) {
       return null;
@@ -141,7 +141,7 @@ class TimelinePage extends Component {
             </div>
           </div>
         </div>
-        {(isTeacher || isStudent) && currentModule
+        {(isTeacher || isStudent) && selectedModule
           ? <StudentInterface />
           : <ModuleReadMe />}
       </React.Fragment>

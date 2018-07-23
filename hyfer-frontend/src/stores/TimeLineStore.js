@@ -162,10 +162,14 @@ export default class TimeLineStore {
   }
 
   @action
-  updateModule = async (item, position, duration) => {
+  updateModule = async (item, groupId, duration, position = null) => {
     try {
-      const timeline = await fetchJSON(`/api/running/update/${item.group_id}/${item.position}${this.queryParam()}`,
-        'PATCH', { position, duration });
+      const data = { duration };
+      if (position != null) {
+        data.position = position;
+      }
+      const timeline = await fetchJSON(`/api/running/update/${groupId}/${item.position}${this.queryParam()}`,
+        'PATCH', data);
       this.setTimelineItems(timeline);
     } catch (err) {
       stores.uiStore.setLastError(err);

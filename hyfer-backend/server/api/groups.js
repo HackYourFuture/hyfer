@@ -1,42 +1,61 @@
 const express = require('express');
 const db = require('../datalayer/groups');
-const handleError = require('./error')('groups');
+const handleError = require('./error')('Groups');
 const { hasRole } = require('../auth/auth-service');
 const { getConnection } = require('./connection');
+const logger = require('../util/logger');
 
-function getGroups(req, res) {
-  getConnection(req, res)
-    .then(con => db.getGroups(con))
-    .then(result => res.json(result))
-    .catch(err => handleError(err, res));
+async function getGroups(req, res) {
+  try {
+    const con = await getConnection(req, res);
+    const result = await db.getGroups(con);
+    res.json(result);
+  } catch (err) {
+    handleError(req, res, err);
+  }
 }
 
-function getGroupsByGroupName(req, res) {
-  getConnection(req, res)
-    .then(con => db.getGroupsByGroupName(con, req.params.group_name))
-    .then(result => res.json(result))
-    .catch(err => handleError(err, res));
+async function getGroupsByGroupName(req, res) {
+  try {
+    const con = await getConnection(req, res);
+    const result = await db.getGroupsByGroupName(con, req.params.group_name);
+    res.json(result);
+  } catch (err) {
+    handleError(req, res, err);
+  }
 }
 
-function addGroup(req, res) {
-  getConnection(req, res)
-    .then(con => db.addGroup(con, req.body))
-    .then(() => res.sendStatus(201))
-    .catch(err => handleError(err, res));
+async function addGroup(req, res) {
+  try {
+    const con = await getConnection(req, res);
+    await db.addGroup(con, req.body);
+    res.sendStatus(201);
+    logger.info('Add group', { ...req.params, ...req.body, requester: req.user.username });
+  } catch (err) {
+    handleError(req, res, err);
+  }
 }
 
-function updateGroup(req, res) {
-  getConnection(req, res)
-    .then(con => db.updateGroup(con, req.body, +req.params.id))
-    .then(result => res.sendStatus(result.affectedRows > 0 ? 204 : 404))
-    .catch(err => handleError(err, res));
+async function updateGroup(req, res) {
+  try {
+    const con = await getConnection(req, res);
+    const result = await db.updateGroup(con, req.body, +req.params.id);
+    res.sendStatus(result.affectedRows > 0 ? 204 : 404);
+    logger.info('Update group', { ...req.params, ...req.body, requester: req.user.username });
+  } catch (err) {
+    handleError(req, res, err);
+  }
 }
 
-function deleteGroup(req, res) {
-  getConnection(req, res)
-    .then(con => db.deleteGroup(con, +req.params.id))
-    .then(result => res.statusStatus(result.affectedRows > 0 ? 204 : 404))
-    .catch(err => handleError(err, res));
+async function deleteGroup(req, res) {
+  try {
+    const con = await getConnection(req, res);
+    const result = await db.deleteGroup(con, +req.params.id);
+    res.statusStatus(result.affectedRows > 0 ? 204 : 404);
+    logger.info('Delete group', { ...req.params, ...req.body, requester: req.user.username });
+  } catch (err) {
+    handleError(req, res, err);
+  }
 }
 
 const router = express.Router();

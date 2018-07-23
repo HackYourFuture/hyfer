@@ -38,9 +38,9 @@ class AddTeacherDialog extends Component {
   handleAddTeacher = async () => {
     this.props.onClose();
     const { currentModuleStore } = this.props;
-    const { id } = currentModuleStore.currentModule;
+    const { running_module_id: runningId } = currentModuleStore.selectedModule;
     const { userId } = this.state;
-    currentModuleStore.addTeacher(id, userId);
+    currentModuleStore.addTeacher(runningId, userId);
   };
 
   render() {

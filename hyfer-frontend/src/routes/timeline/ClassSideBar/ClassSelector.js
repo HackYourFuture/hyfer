@@ -45,7 +45,7 @@ class ClassSelector extends Component {
       if (value !== 'active') {
         this.props.currentModuleStore.getGroupsByGroupName(value);
       } else {
-        this.props.currentModuleStore.clearCurrentModule();
+        this.props.currentModuleStore.clearSelectedModule();
       }
     }
   };

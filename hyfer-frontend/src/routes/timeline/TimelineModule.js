@@ -62,7 +62,7 @@ class TimelineModule extends Component {
   itemClickHandler = (item) => {
     const { isStudent, isTeacher } = this.props.currentUserStore;
     if (isStudent || isTeacher) {
-      this.props.currentModuleStore.getRunningModuleDetails(item.running_module_id);
+      this.props.currentModuleStore.getRunningModuleDetails(item);
     }
   };
 
@@ -82,8 +82,8 @@ class TimelineModule extends Component {
     const width = itemWidth * duration - spacing.unit;
 
     const { classes, currentUserStore } = this.props;
-    const { currentModule } = this.props.currentModuleStore;
-    const selected = currentModule && currentModule.id === running_module_id;
+    const { selectedModule } = this.props.currentModuleStore;
+    const selected = selectedModule && selectedModule.running_module_id === running_module_id;
 
     return (
       <div className={classes.root}>
