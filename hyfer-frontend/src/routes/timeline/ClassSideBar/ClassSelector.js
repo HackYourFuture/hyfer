@@ -41,7 +41,7 @@ class ClassSelector extends Component {
       this.setState({ isOpen: true });
     } else {
       this.props.timelineStore.setFilter(value);
-      this.props.timelineStore.fetchTimeline();
+      await this.props.timelineStore.fetchTimeline();
       if (value !== 'active') {
         this.props.currentModuleStore.getGroupsByGroupName(value);
       } else {

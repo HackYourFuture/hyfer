@@ -45,7 +45,6 @@ const styles = (theme) => ({
 @inject('timelineStore', 'currentUserStore', 'currentModuleStore')
 @observer
 class TimelinePage extends Component {
-  hasRendered = false;
 
   state = {
     todayMarkerRef: null,
@@ -59,11 +58,13 @@ class TimelinePage extends Component {
   async componentDidMount() {
     const { group_name } = this.props.currentUserStore.user;
     if (group_name != null) {
-      await this.props.currentModuleStore.getGroupsByGroupName(group_name);
       this.props.timelineStore.setFilter(group_name);
       await this.props.timelineStore.fetchTimeline(group_name);
+      await this.props.currentModuleStore.getGroupsByGroupName(group_name);
+      this.setState({ initialized: true });
     } else {
       await this.props.timelineStore.fetchTimeline();
+      this.setState({ initialized: true });
     }
 
     this.onTodayClick();
@@ -115,11 +116,9 @@ class TimelinePage extends Component {
     const { isStudent, isTeacher } = this.props.currentUserStore;
     const { selectedModule } = this.props.currentModuleStore;
 
-    if (this.props.timelineStore.items == null) {
+    if (!this.state.initialized) {
       return null;
     }
-
-    this.hasRendered = true;
 
     return (
       <React.Fragment>

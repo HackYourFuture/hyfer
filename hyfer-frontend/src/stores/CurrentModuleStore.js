@@ -134,27 +134,27 @@ export default class CurrentModuleStore {
   @action
   async getGroupsByGroupName(groupName) {
     try {
-      const runningModules = await fetchJSON(`/api/groups/currentgroups/${groupName}`);
+      const { modules } = stores.timelineStore.timeline[groupName];
 
-      let computedDate = moment(runningModules[0].starting_date);
+      let computedDate = moment(modules[0].starting_date);
       const currentDate = moment();
       let index = 0;
 
-      for (; index < runningModules.length; index++) {
+      for (; index < modules.length; index++) {
         if (computedDate.isSameOrAfter(currentDate)) {
           break;
         }
-        const { duration } = runningModules[index];
+        const { duration } = modules[index];
         computedDate = computedDate.add(duration, 'weeks');
       }
 
       index = Math.max(0, index - 1);
 
-      const runningModule = runningModules[index];
-      await this.getRunningModuleDetails(runningModule.id);
+      const module = modules[index];
+      await this.getRunningModuleDetails(module);
 
       const date = computedDate.diff(currentDate, "weeks");
-      const start = runningModules[index].duration - date;
+      const start = modules[index].duration - date;
 
       runInAction(() => {
         this.currentWeek = start;
