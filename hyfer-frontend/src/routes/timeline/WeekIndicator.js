@@ -2,22 +2,22 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
 import moment from 'moment';
-
+import Divider from '@material-ui/core/Divider';
+import Paper from '@material-ui/core/Paper';
 import TodayMarker from './TodayMarker';
+import Typography from '@material-ui/core/Typography';
 
-export function getCurrentWeek(week, width) {
-  const today = new moment();
-  if (!today.isAfter(week[0]) || !today.isBefore(week[1])) {
-    return null;
+export function computeOffset(week, width) {
+  const today = moment();
+
+  if (today.isSameOrAfter(week[0]) && today.isBefore(week[1])) {
+    const dayDiff = today.diff(week[0], 'days');
+    const oneDayWidth = width / 7;
+    return oneDayWidth * dayDiff;
   }
-  const dayDiff = today.diff(week[0], 'days');
-  const oneDayWidth = width / 7;
-  const offset = oneDayWidth * dayDiff;
-  return offset;
+
+  return -1;
 }
 
 const styles = (theme) => ({
@@ -48,18 +48,19 @@ const styles = (theme) => ({
 @observer
 class WeekIndicator extends Component {
 
-  setTodayMarker = () => {
+  renderTodayMarker = () => {
+    const { week, setTodayMarkerRef, scrollingParentRef } = this.props;
     const { itemWidth } = this.props.timelineStore;
-    const { week } = this.props;
-    const offset = getCurrentWeek(week, itemWidth);
-    if (!offset && offset !== 0) {
+
+    const offset = computeOffset(week, itemWidth);
+    if (offset === -1) {
       return null;
     }
 
     return (
       <TodayMarker
-        setTodayMarkerRef={this.props.setTodayMarkerRef}
-        scrollingParentRef={this.props.scrollingParentRef}
+        setTodayMarkerRef={setTodayMarkerRef}
+        scrollingParentRef={scrollingParentRef}
         offset={offset}
       />
     );
@@ -79,7 +80,7 @@ class WeekIndicator extends Component {
           elevation={1}
           className={classes.container}
         >
-          {this.setTodayMarker()}
+          {this.renderTodayMarker()}
           <Typography variant="caption"
             className={classes.monthContainer}
           >

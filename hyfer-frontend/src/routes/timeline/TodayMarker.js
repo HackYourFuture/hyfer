@@ -1,34 +1,47 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import classes from './todayMarker.css';
+import { withStyles } from '@material-ui/core';
 
-export default class TodayMarker extends Component {
-  todayMarker = React.createRef();
+const styles = (theme) => ({
+  todayMarker: {
+    position: 'absolute',
+    width: 0,
+    borderWidth: 4,
+    borderStyle: 'solid',
+    borderColor: theme.palette.secondary.main,
+    height: '100vh',
+    top: 0,
+    zIndex: 3,
+    pointerEvents: 'none',
+    opacity: 0.25,
+  },
+});
+
+class TodayMarker extends React.Component {
+
+  todayMarkerRef = React.createRef();
 
   componentDidMount = () => {
-    this.props.setTodayMarkerRef(this.todayMarker);
-    const scrollElem = this.props.scrollingParentRef;
-    if (scrollElem.current) {
-      let leftPos = this.todayMarker.current.parentNode.getBoundingClientRect().x;
-      leftPos -= window.innerWidth / 2;
-      scrollElem.current.scrollLeft = leftPos;
-    }
+    this.props.setTodayMarkerRef(this.todayMarkerRef);
   };
 
   render() {
-    const { offset } = this.props;
+    const { classes, offset } = this.props;
     return (
       <div
-        ref={this.todayMarker}
-        style={{ left: offset + 'px' }}
-        className={classes.todayMarker + ' todayMarker'}
+        className={classes.todayMarker}
+        style={{ left: offset }}
+        ref={this.todayMarkerRef}
       />
     );
   }
 }
 
 TodayMarker.propTypes = {
+  classes: PropTypes.object.isRequired,
   offset: PropTypes.number.isRequired,
   scrollingParentRef: PropTypes.object.isRequired,
   setTodayMarkerRef: PropTypes.func.isRequired,
 };
+
+export default withStyles(styles)(TodayMarker);
