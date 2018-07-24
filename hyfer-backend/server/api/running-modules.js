@@ -125,7 +125,7 @@ async function updateNotes(req, res) {
     await db.updateNotes(con, runningId, notes);
     const [runningModule] = await db.getRunningModuleById(con, +runningId);
     res.json(runningModule.notes);
-    logger.info('Saved module module', { ...req.params, requester: req.user.username });
+    logger.info('Saved module', { ...req.params, requester: req.user.username });
   } catch (err) {
     handleError(req, res, err);
   }
