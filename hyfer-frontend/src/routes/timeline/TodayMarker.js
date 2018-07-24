@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core';
 
 const styles = (theme) => ({
-  todayMarker: {
+  root: {
     position: 'absolute',
     width: 0,
     borderWidth: 4,
@@ -29,7 +29,7 @@ class TodayMarker extends React.Component {
     const { classes, offset } = this.props;
     return (
       <div
-        className={classes.todayMarker}
+        className={classes.root}
         style={{ left: offset }}
         ref={this.todayMarkerRef}
       />
@@ -40,7 +40,6 @@ class TodayMarker extends React.Component {
 TodayMarker.propTypes = {
   classes: PropTypes.object.isRequired,
   offset: PropTypes.number.isRequired,
-  scrollingParentRef: PropTypes.object.isRequired,
   setTodayMarkerRef: PropTypes.func.isRequired,
 };
 

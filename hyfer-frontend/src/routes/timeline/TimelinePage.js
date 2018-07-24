@@ -2,39 +2,29 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
-import grey from '@material-ui/core/colors/grey';
 import ClassSideBar from './ClassSideBar/ClassSideBar';
 import TimelineRow from './TimelineRow';
 import WeekIndicator from './WeekIndicator';
 import ModuleReadMe from './ModuleReadMe';
 import StudentInterface from './Tab/StudentInterface';
+import { CLASS_SELECTION_CHANGED } from '../../stores';
 
 const styles = (theme) => ({
   root: {
+    position: 'relative',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'flex-start',
     marginBottom: theme.spacing.unit,
   },
-  container: {
+  scrollParent: {
     marginTop: theme.spacing.unit * 2,
     maxWidth: '100vw;',
     overflowX: 'scroll',
     overflowY: 'hidden',
     position: 'relative',
-    backgroundColor: grey[50],
-  },
-  timelineContainer: {
-    position: 'relative',
-    // backgroundColor: '#f6f6f8',
     display: 'flex',
     marginBottom: theme.spacing.unit,
-  },
-  rowsContainer: {
-    position: 'relative',
-    left: 81,
-    display: 'flex',
-    flexDirection: 'column',
   },
   rowContainer: {
     display: 'flex',
@@ -52,8 +42,8 @@ class TimelinePage extends Component {
   };
 
   setTodayMarkerRef = React.createRef();
-  timelineWrapperRef = React.createRef();
-  classesContainerRef = React.createRef();
+  scrollParentRef = React.createRef();
+  classSideBarRef = React.createRef();
 
   async componentDidMount() {
     const { group_name } = this.props.currentUserStore.user;
@@ -67,6 +57,10 @@ class TimelinePage extends Component {
       this.setState({ initialized: true });
     }
 
+    this.props.timelineStore.onNotify(CLASS_SELECTION_CHANGED, () => {
+      this.onTodayClick();
+    });
+
     this.onTodayClick();
   }
 
@@ -76,8 +70,9 @@ class TimelinePage extends Component {
     if (todayMarkerRef && todayMarkerRef.current) {
       leftPos = todayMarkerRef.current.parentNode.getBoundingClientRect().x;
     }
-    leftPos -= this.timelineWrapperRef.current.offsetWidth / 2 - this.classesContainerRef.current.offsetWidth;
-    this.timelineWrapperRef.current.scrollLeft += leftPos;
+    // leftPos -= this.scrollParentRef.current.offsetWidth / 2 - this.classSideBarRef.current.offsetWidth;
+    leftPos -= 2 * this.classSideBarRef.current.offsetWidth;
+    this.scrollParentRef.current.scrollLeft += leftPos;
   };
 
   setTodayMarkerRef = ref => this.setState({ todayMarkerRef: ref });
@@ -89,7 +84,7 @@ class TimelinePage extends Component {
         {this.props.timelineStore.allWeeks.map(week => (
           <WeekIndicator
             setTodayMarkerRef={this.setTodayMarkerRef}
-            scrollingParentRef={this.timelineWrapperRef}
+            scrollParentRef={this.scrollParentRef}
             key={week}
             week={week}
           />
@@ -98,7 +93,7 @@ class TimelinePage extends Component {
     );
   }
 
-  renderTimelineRows() {
+  renderRows() {
     const { classes } = this.props;
     const { items } = this.props.timelineStore;
     return Object.keys(items).map((groupName) => {
@@ -124,19 +119,16 @@ class TimelinePage extends Component {
       <React.Fragment>
         <div className={classes.root}>
           <ClassSideBar
-            myRef={this.classesContainerRef}
+            myRef={this.classSideBarRef}
             onClick={this.onTodayClick}
           />
           <div
-            className={classes.container}
-            ref={this.timelineWrapperRef}
-            onScroll={this.handleScroll}
+            className={classes.scrollParent}
+            ref={this.scrollParentRef}
           >
-            <div className={classes.timelineContainer}>
-              <div >
-                {this.renderWeekIndicators()}
-                {this.renderTimelineRows()}
-              </div>
+            <div>
+              {this.renderWeekIndicators()}
+              {this.renderRows()}
             </div>
           </div>
         </div>

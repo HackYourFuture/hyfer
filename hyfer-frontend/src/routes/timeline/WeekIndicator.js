@@ -21,9 +21,6 @@ export function computeOffset(week, width) {
 }
 
 const styles = (theme) => ({
-  root: {
-    padding: theme.spacing.unit / 2,
-  },
   container: {
     position: 'relative',
     margin: theme.spacing.unit / 2,
@@ -49,7 +46,7 @@ const styles = (theme) => ({
 class WeekIndicator extends Component {
 
   renderTodayMarker = () => {
-    const { week, setTodayMarkerRef, scrollingParentRef } = this.props;
+    const { week, setTodayMarkerRef, scrollParentRef } = this.props;
     const { itemWidth } = this.props.timelineStore;
 
     const offset = computeOffset(week, itemWidth);
@@ -60,7 +57,7 @@ class WeekIndicator extends Component {
     return (
       <TodayMarker
         setTodayMarkerRef={setTodayMarkerRef}
-        scrollingParentRef={scrollingParentRef}
+        scrollParentRef={scrollParentRef}
         offset={offset}
       />
     );
@@ -100,7 +97,7 @@ class WeekIndicator extends Component {
 
 WeekIndicator.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
-  scrollingParentRef: PropTypes.object.isRequired,
+  scrollParentRef: PropTypes.object.isRequired,
   setTodayMarkerRef: PropTypes.func.isRequired,
   timelineStore: PropTypes.object.isRequired,
   week: PropTypes.array.isRequired,

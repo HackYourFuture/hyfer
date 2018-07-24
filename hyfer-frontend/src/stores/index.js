@@ -10,6 +10,8 @@ import UserStore from './UserStore';
 
 configure({ enforceActions: true });
 
+export const CLASS_SELECTION_CHANGED = 'CLASS_SELECTION_CHANGED';
+
 export default {
   currentModuleStore: new CurrentModuleStore(),
   currentUserStore: new CurrentUserStore(),

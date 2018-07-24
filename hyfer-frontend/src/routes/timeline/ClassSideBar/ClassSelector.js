@@ -6,17 +6,15 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Divider from '@material-ui/core/Divider';
 import { inject, observer } from 'mobx-react';
 import AddClassDialog from './AddClassDialog';
+import { CLASS_SELECTION_CHANGED } from '../../../stores';
 
 const styles = (theme) => ({
   select: {
     margin: theme.spacing.unit,
+    textAlign: 'right',
   },
-  active: {
+  menuItem: {
     justifyContent: 'center',
-  },
-  archived: {
-    justifyContent: 'center',
-    color: theme.palette.text.secondary,
   },
 });
 
@@ -43,26 +41,55 @@ class ClassSelector extends Component {
       this.props.timelineStore.setFilter(value);
       await this.props.timelineStore.fetchTimeline();
       if (value !== 'active') {
-        this.props.currentModuleStore.getGroupsByGroupName(value);
+        await this.props.currentModuleStore.getGroupsByGroupName(value);
       } else {
-        this.props.currentModuleStore.clearSelectedModule();
+        await this.props.currentModuleStore.clearSelectedModule();
       }
+      this.props.timelineStore.notify(CLASS_SELECTION_CHANGED, value);
     }
   };
 
+  renderMenuItems({ isActive }) {
+    const { classes } = this.props;
+    const { groups } = this.props.timelineStore;
+    return groups
+      .filter(group => group.archived === (isActive ? 0 : 1))
+      .map(group => {
+        const number = group.group_name.match(/(\d+)$/)[1];
+        return <MenuItem
+          key={number}
+          value={group.group_name}
+          classes={{ root: classes.menuItem }}
+        >
+          {number}
+        </MenuItem>;
+      });
+  }
+
   render() {
     const { classes, currentUserStore } = this.props;
-    const { groups } = this.props.timelineStore;
+    // const { groups } = this.props.timelineStore;
     return (
       <React.Fragment>
         <Select
           value={this.props.timelineStore.filter}
           onChange={this.handleChange}
-          className={classes.select}
+          classes={{ root: classes.select }}
+          MenuProps={{
+            PaperProps: {
+              style: {
+                transform: 'translate3d(0, 0, 0)',
+              },
+            },
+          }}
         >
-          <MenuItem value='active' classes={{ root: classes.menuItem }}>All active</MenuItem>
+          <MenuItem value='active' classes={{ root: classes.menuItem }}>All</MenuItem>
           <Divider />
 
+          {this.renderMenuItems({ isActive: true })}
+          <Divider />
+          {this.renderMenuItems({ isActive: false })}
+          {/*           
           {groups.map(group => {
             const number = group.group_name.match(/(\d+)$/)[1];
             const root = group.archived ? classes.archived : classes.active;
@@ -73,7 +100,7 @@ class ClassSelector extends Component {
             >
               Class {number}
             </MenuItem>;
-          })}
+          })} */}
 
           {currentUserStore.isTeacher && <Divider />}
           {currentUserStore.isTeacher && <MenuItem value="add" classes={{ root: classes.menuItem }}>Add class</MenuItem>}

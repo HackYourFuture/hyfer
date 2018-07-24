@@ -1,5 +1,6 @@
 import { observable, action, computed, runInAction } from 'mobx';
 import moment from 'moment';
+import EventEmitter from 'events';
 import { fetchJSON } from './util';
 import stores from '.';
 
@@ -34,6 +35,8 @@ function addModuleDates(timelineItems) {
 }
 
 export default class TimeLineStore {
+
+  ee = new EventEmitter();
 
   itemWidth = 150;
 
@@ -205,4 +208,11 @@ export default class TimeLineStore {
     }
   }
 
+  notify(message, value) {
+    this.ee.emit(message, value);
+  }
+
+  onNotify(value, cb) {
+    this.ee.on(value, cb);
+  }
 }
