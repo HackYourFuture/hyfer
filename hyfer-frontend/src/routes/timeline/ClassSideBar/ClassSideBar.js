@@ -4,7 +4,7 @@ import { observer, inject } from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import grey from '@material-ui/core/colors/grey';
-import ClassSelector from './ClassSelector';
+import ClassMenu from './ClassMenu';
 import ClassButton from './ClassButton';
 
 const styles = (theme) => ({
@@ -57,7 +57,7 @@ class ClassSideBar extends Component {
           Today
         </Button>
 
-        <ClassSelector />
+        <ClassMenu />
         {this.renderButtons()}
       </div>
     );

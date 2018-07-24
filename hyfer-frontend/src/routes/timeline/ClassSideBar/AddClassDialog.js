@@ -1,146 +1,84 @@
-import React, { Fragment, Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Dialog, DialogContentText, DialogTitle,
-  DialogContent, Button, TextField,
-  FormControl, DialogActions,
-} from '@material-ui/core';
-import moment from 'moment';
 import { inject, observer } from 'mobx-react';
+import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import SundayPicker from './SundayPicker';
+
+const styles = (theme) => ({
+  sundayPicker: {
+    marginTop: theme.spacing.unit,
+  },
+});
 
 @inject('timelineStore')
 @observer
-export default class AddClassDialog extends Component {
+class AddClassDialog extends React.Component {
   state = {
-    classNumber: '',
-    starting_date: '',
+    open: false,
+    selectedDate: null,
   };
 
-  handleChangeClassNameInput = e => {
-    const { value } = e.target;
-    if (!isNaN(value)) {
-      this.setState({
-        classNumber: value,
-      });
-    } else {
-      // this.refs.classNrInput.value = this.state.classNumber;
-      this.setState({
-        errorMessage: 'Please provide only the number of the new class',
-      });
-      return;
-    }
-    const { starting_date } = this.state;
-    if (value && starting_date) {
-      this.setState({
-        errorMessage: '',
-      });
-    }
+  sundays = [];
+  nextClassNumber = 0;
+
+  handleAddClass = () => {
+    const { selectedDate } = this.state;
+    this.props.onAddClass({ classNumber: this.nextClassNumber, startingDate: selectedDate });
   };
 
-  handleChangeStartingDateInput = e => {
-    // if all valid remove weird error message
-    const { value } = e.target;
-    if (!value) {
-      this.setState({
-        errorMessage: 'Please provide a valid starting date for the class',
-      });
-    }
-    const { classNumber } = this.state;
-    if (classNumber && value) {
-      this.setState({
-        errorMessage: '',
-      });
-    }
-    const selectedDate = moment(value, 'YYYY-MM-DD');
-    const daysDif = 7 - selectedDate.day(); // till sunday
-    selectedDate.add(daysDif, 'days'); // keep going back in the week until it's a sunday
-    this.setState({
-      starting_date: selectedDate.format('YYYY-MM-DD'),
-    });
+  handleChange = (selectedDate) => {
+    this.setState({ selectedDate });
   };
 
-  addNewClass = () => {
-    const { classNumber, starting_date } = this.state;
-    if (!classNumber || !starting_date) {
-      this.setState({
-        errorMessage: 'Please make sure to fill all the inputs',
-      });
-      return;
-    }
-    this.props.timelineStore.addNewClass(`Class ${classNumber}`, starting_date)
-      .then(() => {
-        this.props.onClose();
-        this.props.timelineStore.fetchTimeline();
-      })
-      .catch((error) => {
-        const e = new Error(error);
-        this.setState({
-          errorMessage: e.message,
-        });
-      });
-  };
+  componentDidMount() {
+    const { groups } = this.props.timelineStore;
+    const classNumbers = groups.map(group => +(group.group_name.match(/\d+/)[0]));
+    this.nextClassNumber = Math.max(...classNumbers) + 1;
+  }
 
   render() {
+    // console.log(this.props);
+    const { classes } = this.props;
     return (
-      <Fragment>
-        <Dialog
-          title="Add a new class"
-          open={this.props.open}
-          onClose={this.props.onClose}
-        >
-          <DialogTitle id="form-dialog-title">Add a Class</DialogTitle>
-          <DialogContent>
-            <form>
-              <FormControl>
-                <DialogContentText>
-                  Class Name
-                </DialogContentText>
-                <TextField
-                  autoFocus
-                  margin="dense"
-                  label="Provide only a class number"
-                  type="number"
-                  value={this.state.classNumber}
-                  onChange={this.handleChangeClassNameInput}
-                  fullWidth
-                />
-                <br />
-                <DialogContentText>
-                  Start Date of Module
-                    </DialogContentText>
-                <input
-                  id="startingDate"
-                  type="date"
-                  min={new moment().format('YYYY-MM-DD')}
-                  value={this.state.starting_date}
-                  onChange={this.handleChangeStartingDateInput}
-                />
-              </FormControl>
-            </form>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              color="inherit"
-              onClick={this.props.onClose}
-              aria-label="Close"
-            >
-              Cancel
+      <Dialog
+        open={this.props.open}
+        onClose={this.props.onClose}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">Add class {this.nextClassNumber}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Please select a starting Sunday for the new class.
+            </DialogContentText>
+          <div className={classes.sundayPicker}>
+            <SundayPicker onChange={this.handleChange} />
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={this.props.onClose} color="primary">
+            Cancel
             </Button>
-            <Button
-              onClick={this.addNewClass}
-              color="inherit"
-            >
-              Add
-              </Button>
-          </DialogActions>
-        </Dialog>
-      </Fragment>
+          <Button onClick={this.handleAddClass} color="primary">
+            Add class
+            </Button>
+        </DialogActions>
+      </Dialog>
     );
   }
 }
 
 AddClassDialog.wrappedComponent.propTypes = {
+  classes: PropTypes.object.isRequired,
+  onAddClass: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   timelineStore: PropTypes.object.isRequired,
 };
+
+export default withStyles(styles)(AddClassDialog);

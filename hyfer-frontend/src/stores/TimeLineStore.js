@@ -80,9 +80,6 @@ export default class TimeLineStore {
   }
 
   @action fetchGroups = async () => {
-    if (this.groups != null) {
-      return;
-    }
     const groups = await fetchJSON('/api/groups');
     runInAction(() => {
       this.groups = groups;
@@ -150,11 +147,10 @@ export default class TimeLineStore {
   }
 
   @action
-  addNewClass = async (className, starting_date) => {
-    const date = new Date(starting_date);
+  addNewClass = async (className, startingDate) => {
     const body = {
       group_name: className,
-      starting_date: date.toISOString(),
+      starting_date: startingDate,
       archived: 0,
     };
     try {
