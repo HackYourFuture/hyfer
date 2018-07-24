@@ -69,9 +69,11 @@ class TimelinePage extends Component {
     let leftPos = 0;
     if (todayMarkerRef && todayMarkerRef.current) {
       leftPos = todayMarkerRef.current.parentNode.getBoundingClientRect().x;
+      leftPos -= 2 * this.classSideBarRef.current.offsetWidth;
+    } else {
+      // Go to the end of the timeline (assuming an archived class)
+      leftPos = this.scrollParentRef.current.children[0].clientWidth;
     }
-    // leftPos -= this.scrollParentRef.current.offsetWidth / 2 - this.classSideBarRef.current.offsetWidth;
-    leftPos -= 2 * this.classSideBarRef.current.offsetWidth;
     this.scrollParentRef.current.scrollLeft += leftPos;
   };
 
