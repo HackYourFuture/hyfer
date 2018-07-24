@@ -11,7 +11,7 @@ import HomeworkPage from './routes//homework/HomeworkPage';
 import MainAppBar from './components/MainAppBar';
 import ModulesPage from './routes//modules/ModulesPage';
 import TimelinePage from './routes/timeline/TimelinePage';
-import TrainTicketPage from './routes//trainTicket/TrainTicketPage';
+// import TrainTicketPage from './routes//trainTicket/TrainTicketPage';
 import UsersPage from './routes//users/UsersPage';
 
 const PUBLIC_ROUTES = [
@@ -25,7 +25,7 @@ const ROUTES = {
     { exact: true, path: '/users', component: UsersPage },
     { exact: true, path: '/homework', component: HomeworkPage },
     { exact: true, path: '/homework/:classNumber', component: HomeworkPage },
-    { exact: true, path: '/TrainTicket', component: TrainTicketPage },
+    // { exact: true, path: '/TrainTicket', component: TrainTicketPage },
   ],
   student: [
     { exact: true, path: '/homework', component: HomeworkPage },
