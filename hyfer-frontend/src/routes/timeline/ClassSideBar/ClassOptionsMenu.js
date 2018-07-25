@@ -41,6 +41,7 @@ class ClassOptionsMenu extends React.Component {
 
   archiveClass = async () => {
     this.props.onClose();
+    this.closeConfirmationDialog();
     const { group } = this.props;
     await this.props.timelineStore.updateClass(group.id, { archived: 1 });
     await this.props.timelineStore.fetchTimeline();

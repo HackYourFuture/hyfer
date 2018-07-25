@@ -18,6 +18,10 @@ const styles = (theme) => ({
 @observer
 class ClassButton extends Component {
 
+  handleClick = (e) => {
+    this.props.onClick(e, this.props.group);
+  }
+
   render() {
     const { group, classes, disabled } = this.props;
     const classNumber = group.group_name.match(/\d+/)[0];
@@ -27,8 +31,9 @@ class ClassButton extends Component {
         variant="outlined"
         className={classes.root}
         style={{ height: this.props.timelineStore.rowHeight }}
+        disableRipple
         disabled={disabled}
-        onClick={this.props.onClick}
+        onClick={this.handleClick}
       >
         {classNumber}
       </Button>

@@ -34,10 +34,11 @@ class ClassSideBar extends Component {
 
   state = {
     anchorEl: null,
+    group: null,
   }
 
-  handleClassButtonClick = (e) => {
-    this.setState({ anchorEl: e.target });
+  handleClassButtonClick = (e, group) => {
+    this.setState({ anchorEl: e.target, group });
   }
 
   onCloseOptionsMenu = () => {
@@ -46,24 +47,19 @@ class ClassSideBar extends Component {
 
   renderButtons = () => {
     return this.props.timelineStore.selectedGroups.map((group) => (
-      <React.Fragment key={group.group_name}>
-        <ClassButton
-          group={group}
-          height={this.props.timelineStore.rowHeight}
-          disabled={!this.props.currentUserStore.isTeacher}
-          onClick={this.handleClassButtonClick}
-        />
-        <ClassOptionsMenu
-          anchorEl={this.state.anchorEl}
-          onClose={this.onCloseOptionsMenu}
-          group={group}
-        />
-      </React.Fragment>
+      <ClassButton
+        key={group.group_name}
+        group={group}
+        height={this.props.timelineStore.rowHeight}
+        disabled={!this.props.currentUserStore.isTeacher}
+        onClick={this.handleClassButtonClick}
+      />
     ));
   };
 
   render() {
     const { classes, myRef, onClick } = this.props;
+    const { group } = this.state;
     return (
       <div
         className={classes.container}
@@ -79,6 +75,14 @@ class ClassSideBar extends Component {
 
         <ClassSelectMenu />
         {this.renderButtons()}
+        {group && (
+          <ClassOptionsMenu
+            anchorEl={this.state.anchorEl}
+            onClose={this.onCloseOptionsMenu}
+            group={this.state.group}
+          />
+        )}
+
       </div>
     );
   }
