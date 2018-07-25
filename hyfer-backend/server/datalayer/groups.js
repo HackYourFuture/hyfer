@@ -17,8 +17,7 @@ const GET_GROUPS_BY_GROUP_NAME = `
   ORDER BY running_modules.position`;
 
 const ADD_GROUP_QUERY = 'INSERT INTO `groups` SET ?';
-const UPDATE_GROUP_QUERY = 'UPDATE `groups` SET ? WHERE id = ?';
-const DELETE_GROUP_QUERY = 'DELETE FROM `groups` WHERE id = ?';
+const UPDATE_GROUP_QUERY = 'UPDATE `groups` SET ? WHERE id=?';
 
 const ADD_RUNNING_MODULES_QUERY = 'INSERT INTO running_modules ( module_id, group_id, duration, position) VALUES';
 
@@ -39,10 +38,6 @@ function getActiveGroups(con) {
 
 function updateGroup(con, module, id) {
   return execQuery(con, UPDATE_GROUP_QUERY, [module, id]);
-}
-
-function deleteGroup(con, id) {
-  return execQuery(con, DELETE_GROUP_QUERY, [id]);
 }
 
 function makeRunningModules(groupId, mods) {
@@ -101,7 +96,6 @@ module.exports = {
   getGroups,
   addGroup,
   updateGroup,
-  deleteGroup,
   getActiveGroups,
   getGroupsByGroupName,
 };

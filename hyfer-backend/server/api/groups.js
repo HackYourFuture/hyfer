@@ -47,23 +47,11 @@ async function updateGroup(req, res) {
   }
 }
 
-async function deleteGroup(req, res) {
-  try {
-    const con = await getConnection(req, res);
-    const result = await db.deleteGroup(con, +req.params.id);
-    res.statusStatus(result.affectedRows > 0 ? 204 : 404);
-    logger.info('Delete group', { ...req.params, ...req.body, requester: req.user.username });
-  } catch (err) {
-    handleError(req, res, err);
-  }
-}
-
 const router = express.Router();
 router
   .get('/', getGroups)
   .get('/currentgroups/:group_name', hasRole('teacher|student'), getGroupsByGroupName)
   .post('/', hasRole('teacher'), addGroup)
-  .patch('/:id', hasRole('teacher'), updateGroup)
-  .delete('/:id', hasRole('teacher'), deleteGroup);
+  .patch('/:id', hasRole('teacher'), updateGroup);
 
 module.exports = router;
