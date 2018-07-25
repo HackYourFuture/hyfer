@@ -4,8 +4,9 @@ import { observer, inject } from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import grey from '@material-ui/core/colors/grey';
-import ClassMenu from './ClassMenu';
+import ClassSelectMenu from './ClassSelectMenu';
 import ClassButton from './ClassButton';
+import ClassOptionsMenu from './ClassOptionsMenu';
 
 const styles = (theme) => ({
   container: {
@@ -31,14 +32,33 @@ const styles = (theme) => ({
 @observer
 class ClassSideBar extends Component {
 
+  state = {
+    anchorEl: null,
+  }
+
+  handleClassButtonClick = (e) => {
+    this.setState({ anchorEl: e.target });
+  }
+
+  onCloseOptionsMenu = () => {
+    this.setState({ anchorEl: null });
+  };
+
   renderButtons = () => {
     return this.props.timelineStore.selectedGroups.map((group) => (
-      <ClassButton
-        key={group.group_name}
-        group={group}
-        height={this.props.timelineStore.rowHeight}
-        disabled={!this.props.currentUserStore.isTeacher}
-      />
+      <React.Fragment key={group.group_name}>
+        <ClassButton
+          group={group}
+          height={this.props.timelineStore.rowHeight}
+          disabled={!this.props.currentUserStore.isTeacher}
+          onClick={this.handleClassButtonClick}
+        />
+        <ClassOptionsMenu
+          anchorEl={this.state.anchorEl}
+          onClose={this.onCloseOptionsMenu}
+          group={group}
+        />
+      </React.Fragment>
     ));
   };
 
@@ -57,7 +77,7 @@ class ClassSideBar extends Component {
           Today
         </Button>
 
-        <ClassMenu />
+        <ClassSelectMenu />
         {this.renderButtons()}
       </div>
     );

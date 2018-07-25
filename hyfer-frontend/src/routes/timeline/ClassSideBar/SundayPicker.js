@@ -25,7 +25,7 @@ export default class SundayPicker extends React.Component {
     let sunday = moment().utc().startOf('day').day(0).subtract(WEEKS_BEFORE - 1, 'weeks');
     for (let i = 0; i < WEEKS_BEFORE + WEEKS_AFTER; i++) {
       if (startDate && sunday.isSame(startDate)) {
-        this.selected = i;
+        this.setState({ selected: i });
       }
       this.sundays.push(sunday);
       sunday = sunday.clone().add(1, 'week');

@@ -36,8 +36,10 @@ function getActiveGroups(con) {
   return execQuery(con, 'SELECT group_name FROM `groups` where archived = 0');
 }
 
-function updateGroup(con, module, id) {
-  return execQuery(con, UPDATE_GROUP_QUERY, [module, id]);
+function updateGroup(con, updates, id) {
+  console.log('updates', updates);
+
+  return execQuery(con, UPDATE_GROUP_QUERY, [updates, id]);
 }
 
 function makeRunningModules(groupId, mods) {

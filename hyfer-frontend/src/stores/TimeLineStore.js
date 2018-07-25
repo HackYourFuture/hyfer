@@ -147,20 +147,6 @@ export default class TimeLineStore {
   }
 
   @action
-  addNewClass = async (className, startingDate) => {
-    const body = {
-      group_name: className,
-      starting_date: startingDate,
-      archived: 0,
-    };
-    try {
-      await fetchJSON('/api/groups', 'POST', body);
-    } catch (err) {
-      stores.uiStore.setLastError(err);
-    }
-  }
-
-  @action
   updateModule = async (item, groupId, duration, position = null) => {
     try {
       const data = { duration };
@@ -199,6 +185,29 @@ export default class TimeLineStore {
     try {
       const timeline = await fetchJSON(`/api/running/split/${groupId}/${position}${this.queryParam()}`, 'PATCH');
       this.setTimelineItems(timeline);
+    } catch (error) {
+      stores.uiStore.setLastError(error);
+    }
+  }
+
+  @action
+  addNewClass = async (className, startingDate) => {
+    const body = {
+      group_name: className,
+      starting_date: startingDate,
+      archived: 0,
+    };
+    try {
+      await fetchJSON('/api/groups', 'POST', body);
+    } catch (err) {
+      stores.uiStore.setLastError(err);
+    }
+  }
+
+  @action
+  updateClass = async (groupId, updates) => {
+    try {
+      await fetchJSON(`/api/groups/${groupId}`, 'PATCH', updates);
     } catch (error) {
       stores.uiStore.setLastError(error);
     }

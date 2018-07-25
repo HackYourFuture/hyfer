@@ -6,7 +6,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Divider from '@material-ui/core/Divider';
 import SelectClassDialog from './SelectClassDialog';
-import AddClassDialog from './AddClassDialog';
+import ClassStartDateDialog from './ClassStartDateDialog';
 import { CLASS_SELECTION_CHANGED } from '../../../stores';
 
 const styles = (theme) => ({
@@ -21,18 +21,24 @@ const styles = (theme) => ({
 
 @inject('timelineStore', 'currentUserStore', 'currentModuleStore')
 @observer
-class ClassMenu extends Component {
+class ClassSelectMenu extends Component {
+
+  nextClassNumber = 0;
+
   state = {
-    addClassDialogOpen: false,
+    classStartDateDialogOpen: false,
     selectClassDialogOpen: false,
   };
 
-  openMenu = () => {
-    this.setState({ addClassDialogOpen: true });
+  openClassStartDateDialog = () => {
+    const { groups } = this.props.timelineStore;
+    const classNumbers = groups.map(group => +(group.group_name.match(/\d+/)[0]));
+    this.nextClassNumber = Math.max(...classNumbers) + 1;
+    this.setState({ classStartDateDialogOpen: true });
   };
 
-  closeAddClassDialog = () => {
-    this.setState({ addClassDialogOpen: false });
+  closeClassStartDateDialog = () => {
+    this.setState({ classStartDateDialogOpen: false });
   };
 
   closeSelectClassDialog = () => {
@@ -52,7 +58,6 @@ class ClassMenu extends Component {
   }
 
   addClass = async ({ classNumber, startingDate }) => {
-    this.closeAddClassDialog();
     await this.props.timelineStore.addNewClass(`class${classNumber}`, startingDate.toISOString());
     this.props.timelineStore.fetchTimeline();
   };
@@ -60,7 +65,7 @@ class ClassMenu extends Component {
   handleChange = (event) => {
     const { value } = event.target;
     if (value === 'add') {
-      this.setState({ addClassDialogOpen: true });
+      this.openClassStartDateDialog();
     }
     else if (value === 'archived') {
       this.setState({ selectClassDialogOpen: true });
@@ -94,6 +99,7 @@ class ClassMenu extends Component {
           value={this.props.timelineStore.filter}
           onChange={this.handleChange}
           classes={{ root: classes.select }}
+          disabled={!currentUserStore.isStudentOrTeacher}
           MenuProps={{
             PaperProps: {
               style: {
@@ -114,10 +120,13 @@ class ClassMenu extends Component {
         </Select>
 
         {currentUserStore.isTeacher && (
-          <AddClassDialog
-            open={this.state.addClassDialogOpen}
-            onClose={this.closeAddClassDialog}
-            onAddClass={this.addClass}
+          <ClassStartDateDialog
+            open={this.state.classStartDateDialogOpen}
+            classNumber={this.nextClassNumber}
+            title="Add new class"
+            prompt="Please select a starting Sunday for the new class."
+            onClose={this.closeClassStartDateDialog}
+            onSave={this.addClass}
           />
         )}
 
@@ -132,11 +141,11 @@ class ClassMenu extends Component {
   }
 }
 
-ClassMenu.wrappedComponent.propTypes = {
+ClassSelectMenu.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   currentModuleStore: PropTypes.object.isRequired,
   currentUserStore: PropTypes.object.isRequired,
   timelineStore: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ClassMenu);
+export default withStyles(styles)(ClassSelectMenu);

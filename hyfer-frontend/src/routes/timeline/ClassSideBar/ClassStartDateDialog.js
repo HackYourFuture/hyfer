@@ -18,67 +18,66 @@ const styles = (theme) => ({
 
 @inject('timelineStore')
 @observer
-class AddClassDialog extends React.Component {
+class ClassStartDateDialog extends React.Component {
   state = {
     open: false,
     selectedDate: null,
   };
 
   sundays = [];
-  nextClassNumber = 0;
 
-  handleAddClass = () => {
+  handleSave = () => {
+    this.props.onClose();
     const { selectedDate } = this.state;
-    this.props.onAddClass({ classNumber: this.nextClassNumber, startingDate: selectedDate });
+    const { classNumber } = this.props;
+    this.props.onSave({ startingDate: selectedDate, classNumber });
   };
 
   handleChange = (selectedDate) => {
     this.setState({ selectedDate });
   };
 
-  componentDidMount() {
-    const { groups } = this.props.timelineStore;
-    const classNumbers = groups.map(group => +(group.group_name.match(/\d+/)[0]));
-    this.nextClassNumber = Math.max(...classNumbers) + 1;
-  }
-
   render() {
     // console.log(this.props);
-    const { classes } = this.props;
+    const { classes, open, onClose, startDate, title, classNumber, prompt } = this.props;
     return (
       <Dialog
-        open={this.props.open}
-        onClose={this.props.onClose}
+        open={open}
+        onClose={onClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Add class {this.nextClassNumber}</DialogTitle>
+        <DialogTitle id="form-dialog-title">{title} {classNumber}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Please select a starting Sunday for the new class.
-            </DialogContentText>
+            {prompt}
+          </DialogContentText>
           <div className={classes.sundayPicker}>
-            <SundayPicker onChange={this.handleChange} />
+            <SundayPicker startDate={startDate} onChange={this.handleChange} />
           </div>
         </DialogContent>
         <DialogActions>
           <Button onClick={this.props.onClose} color="primary">
             Cancel
             </Button>
-          <Button onClick={this.handleAddClass} color="primary">
-            Add class
-            </Button>
+          <Button onClick={this.handleSave} color="primary">
+            OK
+          </Button>
         </DialogActions>
       </Dialog>
     );
   }
 }
 
-AddClassDialog.wrappedComponent.propTypes = {
+ClassStartDateDialog.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
-  onAddClass: PropTypes.func.isRequired,
+  classNumber: PropTypes.number.isRequired,
   onClose: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
+  prompt: PropTypes.string.isRequired,
+  startDate: PropTypes.object,
   timelineStore: PropTypes.object.isRequired,
+  title: PropTypes.string.isRequired,
 };
 
-export default withStyles(styles)(AddClassDialog);
+export default withStyles(styles)(ClassStartDateDialog);

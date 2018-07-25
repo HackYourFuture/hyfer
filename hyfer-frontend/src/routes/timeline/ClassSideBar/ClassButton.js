@@ -28,6 +28,7 @@ class ClassButton extends Component {
         className={classes.root}
         style={{ height: this.props.timelineStore.rowHeight }}
         disabled={disabled}
+        onClick={this.props.onClick}
       >
         {classNumber}
       </Button>
@@ -39,7 +40,7 @@ ClassButton.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   group: PropTypes.object.isRequired,
   disabled: PropTypes.bool.isRequired,
-  // height: PropTypes.number.isRequired,
+  onClick: PropTypes.func.isRequired,
   timelineStore: PropTypes.object.isRequired,
   uiStore: PropTypes.object.isRequired,
 };

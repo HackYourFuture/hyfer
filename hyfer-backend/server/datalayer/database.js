@@ -4,8 +4,8 @@ const log = require('../util/logger');
 function execQuery(con, sql, args = []) {
   if (process.env.DB_DEBUG === '1') {
     log.debug('---------');
-    log.debug('SQL  =>', sql.trim());
-    log.debug('args =>', util.inspect(args));
+    log.debug(`SQL  => ${sql.trim()}`);
+    log.debug(`args => ${util.inspect(args)}`);
   }
   return new Promise((resolve, reject) => {
     con.query(sql, args, (err, rows) => {
