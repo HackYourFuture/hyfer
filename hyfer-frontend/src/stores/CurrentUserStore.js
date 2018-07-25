@@ -41,6 +41,11 @@ export default class GlobalStore {
   }
 
   @computed
+  get isStudentOrTeacher() {
+    return this.user && (this.user.role === 'student' || this.user.role === 'teacher');
+  }
+
+  @computed
   get isStudent() {
     return this.user.role === 'student';
   }
