@@ -48,8 +48,8 @@ export default class SynchronizeGithubData extends Component {
           Authorization: 'Bearer ' + token,
         },
       }).then((res) => {
-        if (res.status === 200) {
-          stores.uiStore.setSuccessMessage('Successfully Synchronized');
+        if (res.status < 400) {
+          stores.uiStore.setSuccessMessage('Successfully synchronized');
           this.setState({ isLoading: false });
           this.props.timelineStore.fetchTimeline();
         } else {
