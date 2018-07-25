@@ -54,7 +54,7 @@ class ClassSelectMenu extends Component {
     } else {
       await this.props.currentModuleStore.clearSelectedModule();
     }
-    this.props.timelineStore.notify(CLASS_SELECTION_CHANGED, groupName);
+    this.props.timelineStore.notify(CLASS_SELECTION_CHANGED);
   }
 
   addClass = async ({ classNumber, startingDate }) => {

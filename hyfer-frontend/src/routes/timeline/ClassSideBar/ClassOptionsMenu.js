@@ -6,6 +6,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ClassStartDateDialog from './ClassStartDateDialog';
 import ConfirmationDialog from '../../../components/ConfirmationDialog';
+import { CLASS_SELECTION_CHANGED } from '../../../stores';
 
 @inject('timelineStore')
 @observer
@@ -45,6 +46,7 @@ class ClassOptionsMenu extends React.Component {
     const { group } = this.props;
     await this.props.timelineStore.updateClass(group.id, { archived: 1 });
     await this.props.timelineStore.fetchTimeline();
+    this.props.timelineStore.notify(CLASS_SELECTION_CHANGED);
   }
 
   unarchiveClass = async () => {
@@ -52,6 +54,7 @@ class ClassOptionsMenu extends React.Component {
     const { group } = this.props;
     await this.props.timelineStore.updateClass(group.id, { archived: 0 });
     await this.props.timelineStore.fetchTimeline();
+    this.props.timelineStore.notify(CLASS_SELECTION_CHANGED);
   }
 
   openConfirmationDialog = () => {
@@ -77,10 +80,10 @@ class ClassOptionsMenu extends React.Component {
             <MenuItem onClick={this.openClassStartDateDialog}>Change class starting date</MenuItem>
           )}
           {group.archived === 1 && (
-            <MenuItem onClick={this.unarchiveClass}>Unarchive class</MenuItem>
+            <MenuItem onClick={this.unarchiveClass}>Unarchive class {this.classNumber}</MenuItem>
           )}
           {group.archived === 0 && (
-            <MenuItem onClick={this.openConfirmationDialog}>Archive class</MenuItem>
+            <MenuItem onClick={this.openConfirmationDialog}>Archive class {this.classNumber}</MenuItem>
           )}
         </Menu>
         <ClassStartDateDialog
