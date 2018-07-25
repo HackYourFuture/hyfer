@@ -168,12 +168,14 @@ class MainAppBar extends Component {
             </Menu>
           </Toolbar>
         </AppBar>
-        {(isStudent || isTeacher) && <ProfileEditDialog
-          profile={this.props.currentUserStore.profile}
-          open={this.state.dialogOpen}
-          onClose={this.handleDialogClose}
-          onUpdate={this.handleProfileUpdate}
-        />}
+        {(isStudent || isTeacher) && (
+          <ProfileEditDialog
+            profile={this.props.currentUserStore.profile}
+            open={this.state.dialogOpen}
+            onClose={this.handleDialogClose}
+            onUpdate={this.handleProfileUpdate}
+          />
+        )}
       </div>
     );
   }

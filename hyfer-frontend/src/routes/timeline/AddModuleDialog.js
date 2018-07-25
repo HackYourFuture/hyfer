@@ -48,7 +48,7 @@ class AddModuleDialog extends React.Component {
         open={this.props.open}
         onClose={this.props.onClose}
       >
-        <DialogTitle id="form-dialog-title">Add a new module</DialogTitle>
+        <DialogTitle id="form-dialog-title">Add New Module</DialogTitle>
         <DialogContent>
           <form>
             <FormControl className={classes.formControl}>

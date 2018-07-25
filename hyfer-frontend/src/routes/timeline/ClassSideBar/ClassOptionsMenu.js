@@ -95,7 +95,7 @@ class ClassOptionsMenu extends React.Component {
           open={this.state.confirmationDialogOpen}
           onOk={this.archiveClass}
           onCancel={this.closeConfirmationDialog}
-          title={`Archiving class ${this.classNumber}`}
+          title={`Archive Class ${this.classNumber}`}
           message="Are you sure you wish to archive this class?"
         />
       </React.Fragment>

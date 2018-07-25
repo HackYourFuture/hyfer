@@ -55,7 +55,7 @@ class AddTeacherDialog extends Component {
           open={open}
           onClose={onClose}
         >
-          <DialogTitle id="form-dialog-title">Add a Teacher</DialogTitle>
+          <DialogTitle id="form-dialog-title">Add Teacher</DialogTitle>
           <DialogContent>
             <form>
               <FormControl className={classes.formControl}>

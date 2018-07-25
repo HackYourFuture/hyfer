@@ -4,22 +4,24 @@ import { inject, observer } from 'mobx-react';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import AddModuleDialog from './AddModuleDialog';
+import ConfirmationDialog from '../../components/ConfirmationDialog';
 
 @inject('timelineStore', 'currentModuleStore', 'moduleStore', 'currentUserStore')
 @observer
 export default class TimelineMenu extends Component {
   state = {
-    isDialogOpen: false,
+    addModuleDialogOpen: false,
+    confirmationDialogOpen: false,
   };
 
   openAddModuleDialog = () => {
     this.props.moduleStore.getModules();
-    this.setState({ isDialogOpen: true });
+    this.setState({ addModuleDialogOpen: true });
     this.props.onClose();
   };
 
   closeAddModuleDialog = () => {
-    this.setState({ isDialogOpen: false });
+    this.setState({ addModuleDialogOpen: false });
   };
 
   handleWeekLonger = (e) => {
@@ -56,8 +58,9 @@ export default class TimelineMenu extends Component {
 
   handleRemoveModule = (e) => {
     e.stopPropagation();
-    this.props.onClose();
+    this.closeConfirmationDialog();
     const { selectedModule, group } = this.props.currentModuleStore;
+    this.props.currentModuleStore.clearSelectedModule();
     this.props.timelineStore.removeModule(group.id, selectedModule.position);
   };
 
@@ -66,6 +69,15 @@ export default class TimelineMenu extends Component {
     this.props.onClose();
     const { selectedModule, group } = this.props.currentModuleStore;
     this.props.timelineStore.splitModule(group.id, selectedModule.position);
+  };
+
+  openConfirmationDialog = () => {
+    this.props.onClose();
+    this.setState({ confirmationDialogOpen: true });
+  };
+
+  closeConfirmationDialog = () => {
+    this.setState({ confirmationDialogOpen: false });
   };
 
   render() {
@@ -112,13 +124,20 @@ export default class TimelineMenu extends Component {
             disabled={selectedModule.duration <= 1}
           >
             Split
-            </MenuItem>
-          <MenuItem onClick={this.handleRemoveModule}>Remove</MenuItem>
+          </MenuItem>
+          <MenuItem onClick={this.openConfirmationDialog}>Remove</MenuItem>
           <MenuItem onClick={this.openAddModuleDialog}>Insert module</MenuItem>
         </Menu>
         <AddModuleDialog
           onClose={this.closeAddModuleDialog}
-          open={this.state.isDialogOpen}
+          open={this.state.addModuleDialogOpen}
+        />
+        <ConfirmationDialog
+          open={this.state.confirmationDialogOpen}
+          title="Delete Module"
+          message="Are you sure you wish to delete this module?"
+          onOk={this.handleRemoveModule}
+          onCancel={this.closeConfirmationDialog}
         />
       </Fragment>
     );
