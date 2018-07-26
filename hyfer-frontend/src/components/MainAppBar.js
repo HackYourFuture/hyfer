@@ -62,7 +62,7 @@ const routes = {
   ],
 };
 
-@inject('currentUserStore')
+@inject('currentUser')
 @withRouter
 @observer
 class MainAppBar extends Component {
@@ -88,7 +88,7 @@ class MainAppBar extends Component {
   }
 
   handleClick = (event) => {
-    const { isLoggedIn } = this.props.currentUserStore;
+    const { isLoggedIn } = this.props.currentUser;
 
     if (isLoggedIn) {
       this.setState({ anchorEl: event.currentTarget });
@@ -102,7 +102,7 @@ class MainAppBar extends Component {
 
   handleProfileUpdate = async (profile) => {
     this.handleDialogClose();
-    await this.props.currentUserStore.updateCurrentUser(profile);
+    await this.props.currentUser.updateCurrentUser(profile);
   }
 
   handleMenuClose = () => {
@@ -120,7 +120,7 @@ class MainAppBar extends Component {
 
   render() {
     const { classes } = this.props;
-    const { isLoggedIn, isStudent, isTeacher, userName, avatarUrl } = this.props.currentUserStore;
+    const { isLoggedIn, isStudent, isTeacher, userName, avatarUrl } = this.props.currentUser;
     const { value, anchorEl } = this.state;
 
     if (isLoggedIn) {
@@ -170,7 +170,7 @@ class MainAppBar extends Component {
         </AppBar>
         {(isStudent || isTeacher) && (
           <ProfileEditDialog
-            profile={this.props.currentUserStore.profile}
+            profile={this.props.currentUser.profile}
             open={this.state.dialogOpen}
             onClose={this.handleDialogClose}
             onUpdate={this.handleProfileUpdate}
@@ -183,7 +183,7 @@ class MainAppBar extends Component {
 
 MainAppBar.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
-  currentUserStore: PropTypes.object.isRequired,
+  currentUser: PropTypes.object.isRequired,
   history: PropTypes.object,
 };
 

@@ -53,7 +53,7 @@ const styles = (theme) => ({
   },
 });
 
-@inject('currentModuleStore', 'currentUserStore')
+@inject('currentModule', 'currentUser')
 @observer
 class UserList extends Component {
 
@@ -121,8 +121,8 @@ class UserList extends Component {
   }
 
   render() {
-    const { classes, currentUserStore, currentModuleStore, role } = this.props;
-    const { selectedModule, group, students, teachers } = currentModuleStore;
+    const { classes, currentUser, currentModule, role } = this.props;
+    const { selectedModule, group, students, teachers } = currentModule;
 
     let users = role === 'teacher' ? teachers : students;
     users = users.slice().sort((a, b) => a.username.localeCompare(b.username));
@@ -142,7 +142,7 @@ class UserList extends Component {
         <div className={classes.container}>
           {this.renderUsers(role, users, this.state.selectedWeek)}
         </div>
-        {role === 'teacher' && selectedModule && currentUserStore.isTeacher &&
+        {role === 'teacher' && selectedModule && currentUser.isTeacher &&
           <Fragment>
             <AddTeacherDialog
               open={this.state.isOpen}
@@ -178,8 +178,8 @@ class UserList extends Component {
 
 UserList.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
-  currentModuleStore: PropTypes.object.isRequired,
-  currentUserStore: PropTypes.object.isRequired,
+  currentModule: PropTypes.object.isRequired,
+  currentUser: PropTypes.object.isRequired,
   role: PropTypes.string.isRequired,
   showAttendance: PropTypes.bool,
 };

@@ -60,7 +60,7 @@ const styles = (theme) => ({
   },
 });
 
-@inject('currentModuleStore', 'currentUserStore')
+@inject('currentModule', 'currentUser')
 @observer
 class UserCard extends React.Component {
 
@@ -70,8 +70,8 @@ class UserCard extends React.Component {
 
   handleRemove = () => {
     const { user } = this.props;
-    const { running_module_id: runningId } = this.props.currentModuleStore.selectedModule;
-    this.props.currentModuleStore.deleteTeacher(runningId, user.id);
+    const { running_module_id: runningId } = this.props.currentModule.selectedModule;
+    this.props.currentModule.deleteTeacher(runningId, user.id);
   };
 
   handleLinkedIn = () => {
@@ -94,12 +94,12 @@ class UserCard extends React.Component {
 
   handleUpdate = async (profile) => {
     this.handleClose();
-    await this.props.currentUserStore.updateCurrentUser(profile);
+    await this.props.currentUser.updateCurrentUser(profile);
   }
 
   saveAttendance = (e) => {
     const { user, selectedWeek } = this.props;
-    this.props.currentModuleStore.saveAttendance(user, selectedWeek, {
+    this.props.currentModule.saveAttendance(user, selectedWeek, {
       ...user.history[selectedWeek],
       attendance: e.target.checked ? 1 : 0,
     });
@@ -107,14 +107,14 @@ class UserCard extends React.Component {
 
   saveHomework = (e) => {
     const { user, selectedWeek } = this.props;
-    this.props.currentModuleStore.saveAttendance(user, selectedWeek, {
+    this.props.currentModule.saveAttendance(user, selectedWeek, {
       ...user.history[selectedWeek],
       homework: e.target.checked ? 1 : 0,
     });
   }
 
   render() {
-    const { classes, user, currentUserStore, selectedWeek, showAttendance, showRemoveTeacher } = this.props;
+    const { classes, user, currentUser, selectedWeek, showAttendance, showRemoveTeacher } = this.props;
 
     return (
       <div className={classes.root}>
@@ -155,7 +155,7 @@ class UserCard extends React.Component {
               </React.Fragment>}
           </CardActions>
         </Card>
-        {showRemoveTeacher && user.role === "teacher" && currentUserStore.isTeacher &&
+        {showRemoveTeacher && user.role === "teacher" && currentUser.isTeacher &&
           <Paper className={classes.teacherPanel}>
             <Button color="secondary" onClick={this.handleRemove}>
               Remove
@@ -175,8 +175,8 @@ class UserCard extends React.Component {
 
 UserCard.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
-  currentModuleStore: PropTypes.object.isRequired,
-  currentUserStore: PropTypes.object.isRequired,
+  currentModule: PropTypes.object.isRequired,
+  currentUser: PropTypes.object.isRequired,
   selectedWeek: PropTypes.number.isRequired,
   showAttendance: PropTypes.bool,
   showRemoveTeacher: PropTypes.bool,

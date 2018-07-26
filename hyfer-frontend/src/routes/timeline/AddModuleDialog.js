@@ -19,7 +19,7 @@ const styles = theme => ({
   },
 });
 
-@inject('moduleStore', 'timelineStore', 'currentModuleStore')
+@inject('moduleStore', 'timeline', 'currentModule')
 @observer
 class AddModuleDialog extends React.Component {
   state = {
@@ -29,9 +29,9 @@ class AddModuleDialog extends React.Component {
   handleAddModule = async () => {
     this.props.onClose();
     const { moduleId } = this.state;
-    const { id: groupId } = this.props.currentModuleStore.group;
-    const { position } = this.props.currentModuleStore.selectedModule;
-    await this.props.timelineStore.addModule(moduleId, groupId, position + 1);
+    const { id: groupId } = this.props.currentModule.group;
+    const { position } = this.props.currentModule.selectedModule;
+    await this.props.timeline.addModule(moduleId, groupId, position + 1);
   };
 
   handleChange = (e) => this.setState({ moduleId: e.target.value });
@@ -85,11 +85,11 @@ class AddModuleDialog extends React.Component {
 
 AddModuleDialog.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
-  currentModuleStore: PropTypes.object.isRequired,
+  currentModule: PropTypes.object.isRequired,
   moduleStore: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  timelineStore: PropTypes.object.isRequired,
+  timeline: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(AddModuleDialog);

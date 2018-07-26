@@ -13,7 +13,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 
-@inject('timelineStore')
+@inject('timeline')
 @observer
 class SelectClassDialog extends React.Component {
 
@@ -22,7 +22,7 @@ class SelectClassDialog extends React.Component {
   };
 
   renderListItems() {
-    const { groups } = this.props.timelineStore;
+    const { groups } = this.props.timeline;
     return groups.map(({ group_name }) => {
       const number = group_name.match(/(\d+)$/)[1];
       return (
@@ -69,7 +69,7 @@ SelectClassDialog.wrappedComponent.propTypes = {
   onClose: PropTypes.func.isRequired,
   onSelect: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  timelineStore: PropTypes.object.isRequired,
+  timeline: PropTypes.object.isRequired,
 };
 
 export default withMobileDialog()(SelectClassDialog);

@@ -38,12 +38,12 @@ export default class AssignmentSubmission extends Component {
 
   render() {
     const { id, submitterName, githubLink, date } = this.props;
-    const { currentUserStore, students, reviews } = this.props.homeworkStore;
+    const { currentUser, students, reviews } = this.props.homeworkStore;
     const { comments, commentsOpen } = this.state;
 
     const submitter =
       students.filter(student => student.username === submitterName)[0] ||
-      currentUserStore;
+      currentUser;
     const submissionReviews = reviews.filter(
       review => review.submission_id === id
     );

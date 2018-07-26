@@ -43,16 +43,19 @@ export default class TimeLineStore {
   rowHeight = 48;
 
   @observable
-  timeline = null;
-
-  @observable
-  items = null;
+  groupItems = null;
 
   @observable
   filter = 'active';
 
   @observable
   groups = null;
+
+  @observable
+  allSundays = null;
+
+  @observable
+  allWeeks = null;
 
   @computed
   get activeGroups() {
@@ -65,12 +68,6 @@ export default class TimeLineStore {
       ? this.activeGroups
       : this.groups.filter(group => group.group_name === this.filter);
   }
-
-  @observable
-  allSundays = null;
-
-  @observable
-  allWeeks = null;
 
   @action
   setFilter = (filter) => {
@@ -104,20 +101,19 @@ export default class TimeLineStore {
 
   @action
   setTimelineItems(timeline) {
-    this.timeline = timeline;
-    const filteredTimeline = Object.keys(this.timeline)
+    const filteredTimeline = Object.keys(timeline)
       .reduce((acc, key) => {
         if (this.filter === 'active' || this.filter === key) {
-          acc[key] = this.timeline[key];
+          acc[key] = timeline[key];
         }
         return acc;
       }, {});
 
-    const items = addModuleDates(filteredTimeline);
+    const groupItems = addModuleDates(filteredTimeline);
 
-    const allModules = Object.keys(items)
+    const allModules = Object.keys(groupItems)
       .reduce((acc, groupName) => {
-        return acc.concat(...items[groupName].modules);
+        return acc.concat(...groupItems[groupName].modules);
       }, []);
 
     const firstDate = moment.min(allModules.map(module => module.starting_date));
@@ -140,9 +136,10 @@ export default class TimeLineStore {
     }, []);
 
     runInAction(() => {
-      this.items = items;
+      this.groupItems = groupItems;
       this.allSundays = allSundays;
       this.allWeeks = allWeeks;
+      console.log(groupItems);
     });
   }
 

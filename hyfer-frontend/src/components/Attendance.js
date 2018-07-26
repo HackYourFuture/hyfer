@@ -23,13 +23,13 @@ const styles = (theme) => ({
   },
 });
 
-@inject('currentModuleStore', 'currentUserStore')
+@inject('currentModule', 'currentUser')
 @observer
 class Attendance extends Component {
 
   saveAttendance = (e) => {
     const { user, selectedWeek } = this.props;
-    this.props.currentModuleStore.saveAttendance(user, selectedWeek, {
+    this.props.currentModule.saveAttendance(user, selectedWeek, {
       ...user.history[selectedWeek],
       attendance: e.target.checked ? 1 : 0,
     });
@@ -37,14 +37,14 @@ class Attendance extends Component {
 
   saveHomework = (e) => {
     const { user, selectedWeek } = this.props;
-    this.props.currentModuleStore.saveAttendance(user, selectedWeek, {
+    this.props.currentModule.saveAttendance(user, selectedWeek, {
       ...user.history[selectedWeek],
       homework: e.target.checked ? 1 : 0,
     });
   }
 
   render() {
-    const { classes, user, selectedWeek, currentUserStore } = this.props;
+    const { classes, user, selectedWeek, currentUser } = this.props;
     const { attendance, homework } = user.history[selectedWeek];
 
     return (
@@ -58,7 +58,7 @@ class Attendance extends Component {
                 checked={Boolean(attendance)}
                 onChange={this.saveAttendance}
                 value="present"
-                disabled={!currentUserStore.isTeacher}
+                disabled={!currentUser.isTeacher}
               />
             }
             label="Present"
@@ -70,7 +70,7 @@ class Attendance extends Component {
                 checked={Boolean(homework)}
                 onChange={this.saveHomework}
                 value="homework"
-                disabled={!currentUserStore.isTeacher}
+                disabled={!currentUser.isTeacher}
               />
             }
             label="Homework"
@@ -83,8 +83,8 @@ class Attendance extends Component {
 
 Attendance.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
-  currentModuleStore: PropTypes.object.isRequired,
-  currentUserStore: PropTypes.object.isRequired,
+  currentModule: PropTypes.object.isRequired,
+  currentUser: PropTypes.object.isRequired,
   selectedWeek: PropTypes.number.isRequired,
   user: PropTypes.object.isRequired,
 };

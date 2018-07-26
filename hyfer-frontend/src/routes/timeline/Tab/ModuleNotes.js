@@ -52,7 +52,7 @@ const restoreState = {
   inEditMode: true,
 };
 
-@inject('currentUserStore', 'currentModuleStore')
+@inject('currentUser', 'currentModule')
 @observer
 class ModuleNotes extends React.Component {
   origNotes = '';
@@ -73,7 +73,7 @@ class ModuleNotes extends React.Component {
 
   componentDidMount() {
     this.disposeAutoRun = autorun(() => {
-      const { selectedModule, notes } = this.props.currentModuleStore;
+      const { selectedModule, notes } = this.props.currentModule;
       if (!selectedModule) {
         return;
       }
@@ -125,7 +125,7 @@ class ModuleNotes extends React.Component {
   saveNotes = (markdown) => {
     // Remove any embedded HTML comments
     const notes = markdown.replace(/<!--(.|\s)*?-->/g, '');
-    this.props.currentModuleStore.saveNotes(notes);
+    this.props.currentModule.saveNotes(notes);
     this.setState({ inEditMode: false });
     window.sessionStorage.removeItem(localStorageKey);
   }
@@ -139,7 +139,7 @@ class ModuleNotes extends React.Component {
   };
 
   renderArticle() {
-    const markdown = standardHeader(this.props.currentModuleStore.selectedModule) + this.state.markdown;
+    const markdown = standardHeader(this.props.currentModule.selectedModule) + this.state.markdown;
     return <MarkdownViewer markdown={markdown} />;
   }
 
@@ -155,8 +155,8 @@ class ModuleNotes extends React.Component {
   }
 
   renderViewMode(classes) {
-    const { isTeacher, user } = this.props.currentUserStore;
-    const { group } = this.props.currentModuleStore;
+    const { isTeacher, user } = this.props.currentUser;
+    const { group } = this.props.currentModule;
     return (
       <React.Fragment>
         {(isTeacher || user.group_id === group.id) && (
@@ -174,7 +174,7 @@ class ModuleNotes extends React.Component {
   }
 
   render() {
-    const { selectedModule } = this.props.currentModuleStore;
+    const { selectedModule } = this.props.currentModule;
     if (!selectedModule) {
       return null;
     }
@@ -197,8 +197,8 @@ class ModuleNotes extends React.Component {
 
 ModuleNotes.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
-  currentUserStore: PropTypes.object.isRequired,
-  currentModuleStore: PropTypes.object.isRequired,
+  currentUser: PropTypes.object.isRequired,
+  currentModule: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(ModuleNotes);

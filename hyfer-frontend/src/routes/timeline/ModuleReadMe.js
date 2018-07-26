@@ -34,15 +34,15 @@ const styles = (theme) => ({
   },
 });
 
-@inject('currentModuleStore')
+@inject('currentModule')
 @observer
 class ModuleReadMe extends Component {
   componentDidMount() {
-    this.props.currentModuleStore.getReadMe('curriculum');
+    this.props.currentModule.getReadMe('curriculum');
   }
 
   render() {
-    const { readMe } = this.props.currentModuleStore;
+    const { readMe } = this.props.currentModule;
     if (!readMe) {
       return null;
     }
@@ -69,7 +69,7 @@ class ModuleReadMe extends Component {
 
 ModuleReadMe.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
-  currentModuleStore: PropTypes.object.isRequired,
+  currentModule: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(ModuleReadMe);

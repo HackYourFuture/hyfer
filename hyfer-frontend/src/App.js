@@ -35,7 +35,7 @@ const ROUTES = {
   ],
 };
 
-@inject('currentUserStore', 'timelineStore')
+@inject('currentUser', 'timeline')
 @observer
 class App extends Component {
   state = {
@@ -51,7 +51,7 @@ class App extends Component {
     token = window.localStorage.getItem('token');
 
     if (token) {
-      await this.props.currentUserStore.fetchUser();
+      await this.props.currentUser.fetchUser();
     } else {
       window.localStorage.removeItem('token');
     }
@@ -65,7 +65,7 @@ class App extends Component {
     }
 
     const { theme } = this.props;
-    const { role, isLoggedIn } = this.props.currentUserStore;
+    const { role, isLoggedIn } = this.props.currentUser;
     const routes = isLoggedIn ? [...PUBLIC_ROUTES, ...ROUTES[role]] : [...PUBLIC_ROUTES];
     const paddingTop = theme.mixins.toolbar.minHeight + theme.spacing.unit;
 
@@ -90,7 +90,7 @@ class App extends Component {
 export default withTheme()(App);
 
 App.wrappedComponent.propTypes = {
-  currentUserStore: PropTypes.object.isRequired,
+  currentUser: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
-  timelineStore: PropTypes.object.isRequired,
+  timeline: PropTypes.object.isRequired,
 };

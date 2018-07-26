@@ -10,7 +10,7 @@ async function fetchJSON(path) {
   return res.status === 200 ? res.text() : undefined;
 }
 
-@inject('currentModuleStore', 'currentUserStore', 'uiStore')
+@inject('currentModule', 'currentUser', 'uiStore')
 @observer
 export default class AboutPage extends React.Component {
   state = {

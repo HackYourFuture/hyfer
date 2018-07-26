@@ -40,7 +40,7 @@ TabContainer.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-@inject('currentModuleStore', 'currentUserStore', 'uiStore')
+@inject('currentModule', 'currentUser', 'uiStore')
 @observer
 class StudentInterface extends React.Component {
 
@@ -49,11 +49,11 @@ class StudentInterface extends React.Component {
   };
 
   visitGitHubRepo = () =>
-    window.open(`${HYF_GITHUB_URL}/${this.props.currentModuleStore.module.module_name}`, '_blank');
+    window.open(`${HYF_GITHUB_URL}/${this.props.currentModule.module.module_name}`, '_blank');
 
   render() {
-    const { classes, currentModuleStore } = this.props;
-    const { students, teachers } = currentModuleStore;
+    const { classes, currentModule } = this.props;
+    const { students, teachers } = currentModule;
 
     const { timelineTabIndex } = this.props.uiStore;
 
@@ -84,7 +84,7 @@ class StudentInterface extends React.Component {
 
 StudentInterface.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
-  currentModuleStore: PropTypes.object.isRequired,
+  currentModule: PropTypes.object.isRequired,
   uiStore: PropTypes.object.isRequired,
 };
 

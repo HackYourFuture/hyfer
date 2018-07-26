@@ -8,7 +8,7 @@ import ClassStartDateDialog from './ClassStartDateDialog';
 import ConfirmationDialog from '../../../components/ConfirmationDialog';
 import { CLASS_SELECTION_CHANGED } from '../../../stores';
 
-@inject('timelineStore')
+@inject('timeline')
 @observer
 class ClassOptionsMenu extends React.Component {
 
@@ -34,27 +34,27 @@ class ClassOptionsMenu extends React.Component {
 
   changeStartingDate = async ({ startingDate }) => {
     const { group } = this.props;
-    await this.props.timelineStore.updateClass(group.id, {
+    await this.props.timeline.updateClass(group.id, {
       starting_date: startingDate.format('YYYY-MM-DD'),
     });
-    await this.props.timelineStore.fetchTimeline();
+    await this.props.timeline.fetchTimeline();
   }
 
   archiveClass = async () => {
     this.props.onClose();
     this.closeConfirmationDialog();
     const { group } = this.props;
-    await this.props.timelineStore.updateClass(group.id, { archived: 1 });
-    await this.props.timelineStore.fetchTimeline();
-    this.props.timelineStore.notify(CLASS_SELECTION_CHANGED);
+    await this.props.timeline.updateClass(group.id, { archived: 1 });
+    await this.props.timeline.fetchTimeline();
+    this.props.timeline.notify(CLASS_SELECTION_CHANGED);
   }
 
   unarchiveClass = async () => {
     this.props.onClose();
     const { group } = this.props;
-    await this.props.timelineStore.updateClass(group.id, { archived: 0 });
-    await this.props.timelineStore.fetchTimeline();
-    this.props.timelineStore.notify(CLASS_SELECTION_CHANGED);
+    await this.props.timeline.updateClass(group.id, { archived: 0 });
+    await this.props.timeline.fetchTimeline();
+    this.props.timeline.notify(CLASS_SELECTION_CHANGED);
   }
 
   openConfirmationDialog = () => {
@@ -111,7 +111,7 @@ ClassOptionsMenu.wrappedComponent.propTypes = {
   anchorEl: PropTypes.object,
   group: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired,
-  timelineStore: PropTypes.object.isRequired,
+  timeline: PropTypes.object.isRequired,
 };
 
 export default ClassOptionsMenu;

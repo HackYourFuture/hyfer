@@ -19,7 +19,7 @@ const styles = (theme) => ({
   },
 });
 
-@inject('timelineStore', 'currentUserStore', 'currentModuleStore')
+@inject('timeline', 'currentUser', 'currentModule')
 @observer
 class ClassSelectMenu extends Component {
 
@@ -31,7 +31,7 @@ class ClassSelectMenu extends Component {
   };
 
   openClassStartDateDialog = () => {
-    const { groups } = this.props.timelineStore;
+    const { groups } = this.props.timeline;
     const classNumbers = groups.map(group => +(group.group_name.match(/\d+/)[0]));
     this.nextClassNumber = Math.max(...classNumbers) + 1;
     this.setState({ classStartDateDialogOpen: true });
@@ -47,19 +47,19 @@ class ClassSelectMenu extends Component {
 
   selectClass = async (groupName) => {
     this.closeSelectClassDialog();
-    this.props.timelineStore.setFilter(groupName);
-    await this.props.timelineStore.fetchTimeline();
+    this.props.timeline.setFilter(groupName);
+    await this.props.timeline.fetchTimeline();
     if (groupName !== 'active') {
-      await this.props.currentModuleStore.getGroupsByGroupName(groupName);
+      await this.props.currentModule.getGroupsByGroupName(groupName);
     } else {
-      await this.props.currentModuleStore.clearSelectedModule();
+      await this.props.currentModule.clearSelectedModule();
     }
-    this.props.timelineStore.notify(CLASS_SELECTION_CHANGED);
+    this.props.timeline.notify(CLASS_SELECTION_CHANGED);
   }
 
   addClass = async ({ classNumber, startingDate }) => {
-    await this.props.timelineStore.addNewClass(`class${classNumber}`, startingDate.toISOString());
-    this.props.timelineStore.fetchTimeline();
+    await this.props.timeline.addNewClass(`class${classNumber}`, startingDate.toISOString());
+    this.props.timeline.fetchTimeline();
   };
 
   handleChange = (event) => {
@@ -76,7 +76,7 @@ class ClassSelectMenu extends Component {
 
   renderMenuItems() {
     const { classes } = this.props;
-    const { groups } = this.props.timelineStore;
+    const { groups } = this.props.timeline;
     return groups
       .filter(group => group.archived === 0)
       .map(group => {
@@ -92,14 +92,14 @@ class ClassSelectMenu extends Component {
   }
 
   render() {
-    const { classes, currentUserStore } = this.props;
+    const { classes, currentUser } = this.props;
     return (
       <React.Fragment>
         <Select
-          value={this.props.timelineStore.filter}
+          value={this.props.timeline.filter}
           onChange={this.handleChange}
           classes={{ root: classes.select }}
-          disabled={!currentUserStore.isStudentOrTeacher}
+          disabled={!currentUser.isStudentOrTeacher}
           MenuProps={{
             PaperProps: {
               style: {
@@ -113,13 +113,13 @@ class ClassSelectMenu extends Component {
           {this.renderMenuItems()}
           <Divider />
           <MenuItem value='archived' classes={{ root: classes.menuItem }}>Archived</MenuItem>
-          {currentUserStore.isTeacher && <Divider />}
-          {currentUserStore.isTeacher && (
+          {currentUser.isTeacher && <Divider />}
+          {currentUser.isTeacher && (
             <MenuItem value="add" classes={{ root: classes.menuItem }}>Add class</MenuItem>
           )}
         </Select>
 
-        {currentUserStore.isTeacher && (
+        {currentUser.isTeacher && (
           <ClassStartDateDialog
             open={this.state.classStartDateDialogOpen}
             classNumber={this.nextClassNumber}
@@ -143,9 +143,9 @@ class ClassSelectMenu extends Component {
 
 ClassSelectMenu.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
-  currentModuleStore: PropTypes.object.isRequired,
-  currentUserStore: PropTypes.object.isRequired,
-  timelineStore: PropTypes.object.isRequired,
+  currentModule: PropTypes.object.isRequired,
+  currentUser: PropTypes.object.isRequired,
+  timeline: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(ClassSelectMenu);

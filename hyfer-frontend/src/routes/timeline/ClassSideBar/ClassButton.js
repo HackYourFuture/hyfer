@@ -1,5 +1,5 @@
 /* eslint react/prop-types: error */
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { observer, inject } from 'mobx-react';
 import Button from '@material-ui/core/Button';
@@ -14,9 +14,9 @@ const styles = (theme) => ({
   },
 });
 
-@inject('timelineStore', 'uiStore')
+@inject('timeline', 'uiStore')
 @observer
-class ClassButton extends Component {
+class ClassButton extends React.Component {
 
   handleClick = (e) => {
     this.props.onClick(e, this.props.group);
@@ -30,7 +30,7 @@ class ClassButton extends Component {
       <Button
         variant="outlined"
         className={classes.root}
-        style={{ height: this.props.timelineStore.rowHeight }}
+        style={{ height: this.props.timeline.rowHeight }}
         disableRipple
         disabled={disabled}
         onClick={this.handleClick}
@@ -46,7 +46,7 @@ ClassButton.wrappedComponent.propTypes = {
   group: PropTypes.object.isRequired,
   disabled: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
-  timelineStore: PropTypes.object.isRequired,
+  timeline: PropTypes.object.isRequired,
   uiStore: PropTypes.object.isRequired,
 };
 

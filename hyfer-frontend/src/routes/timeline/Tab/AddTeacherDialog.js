@@ -19,7 +19,7 @@ const styles = theme => ({
   },
 });
 
-@inject('userStore', 'currentModuleStore')
+@inject('userStore', 'currentModule')
 @observer
 class AddTeacherDialog extends Component {
 
@@ -37,10 +37,10 @@ class AddTeacherDialog extends Component {
 
   handleAddTeacher = async () => {
     this.props.onClose();
-    const { currentModuleStore } = this.props;
-    const { running_module_id: runningId } = currentModuleStore.selectedModule;
+    const { currentModule } = this.props;
+    const { running_module_id: runningId } = currentModule.selectedModule;
     const { userId } = this.state;
-    currentModuleStore.addTeacher(runningId, userId);
+    currentModule.addTeacher(runningId, userId);
   };
 
   render() {

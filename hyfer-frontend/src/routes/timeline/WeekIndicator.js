@@ -41,13 +41,13 @@ const styles = (theme) => ({
   },
 });
 
-@inject('timelineStore')
+@inject('timeline')
 @observer
 class WeekIndicator extends Component {
 
   renderTodayMarker = () => {
     const { week, setTodayMarkerRef, scrollParentRef } = this.props;
-    const { itemWidth } = this.props.timelineStore;
+    const { itemWidth } = this.props.timeline;
 
     const offset = computeOffset(week, itemWidth);
     if (offset === -1) {
@@ -69,7 +69,7 @@ class WeekIndicator extends Component {
     const month = startSunday.format('MMMM YYYY');
 
     const { classes } = this.props;
-    const { itemWidth } = this.props.timelineStore;
+    const { itemWidth } = this.props.timeline;
 
     return (
       <div style={{ width: itemWidth }}>
@@ -99,7 +99,7 @@ WeekIndicator.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   scrollParentRef: PropTypes.object.isRequired,
   setTodayMarkerRef: PropTypes.func.isRequired,
-  timelineStore: PropTypes.object.isRequired,
+  timeline: PropTypes.object.isRequired,
   week: PropTypes.array.isRequired,
 };
 

@@ -134,7 +134,7 @@ export default class CurrentModuleStore {
   @action
   async getGroupsByGroupName(groupName) {
     try {
-      const { modules } = stores.timelineStore.timeline[groupName];
+      const { modules } = stores.timeline.groupItems[groupName];
 
       let computedDate = moment(modules[0].starting_date);
       const currentDate = moment();

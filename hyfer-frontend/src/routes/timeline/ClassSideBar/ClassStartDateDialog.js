@@ -16,7 +16,7 @@ const styles = (theme) => ({
   },
 });
 
-@inject('timelineStore')
+@inject('timeline')
 @observer
 class ClassStartDateDialog extends React.Component {
   state = {
@@ -76,7 +76,7 @@ ClassStartDateDialog.wrappedComponent.propTypes = {
   open: PropTypes.bool.isRequired,
   prompt: PropTypes.string.isRequired,
   startDate: PropTypes.object,
-  timelineStore: PropTypes.object.isRequired,
+  timeline: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired,
 };
 

@@ -34,7 +34,7 @@ function getAvatarUrl(username) {
 }
 
 export default class HomeworkStore {
-  @observable currentUserStore = {};
+  @observable currentUser = {};
 
   @observable currentGroup = {};
 
@@ -60,7 +60,7 @@ export default class HomeworkStore {
   getCurrentUser = async () => {
     const userData = await getData('user');
     runInAction(() => {
-      this.currentUserStore = {
+      this.currentUser = {
         id: userData.id,
         username: userData.username,
         full_name: userData.full_name,
@@ -174,7 +174,7 @@ export default class HomeworkStore {
   addSubmission = async (assignment_id, github_link, date) => {
     const newSubmission = {
       assignment_id,
-      submitter_id: this.currentUserStore.id,
+      submitter_id: this.currentUser.id,
       github_link,
       date,
     };
@@ -186,7 +186,7 @@ export default class HomeworkStore {
   addReview = async (submission_id, comments, date) => {
     const newReview = {
       submission_id,
-      reviewer_id: this.currentUserStore.id,
+      reviewer_id: this.currentUser.id,
       comments,
       date,
     };

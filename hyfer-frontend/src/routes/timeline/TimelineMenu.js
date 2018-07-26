@@ -6,7 +6,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import AddModuleDialog from './AddModuleDialog';
 import ConfirmationDialog from '../../components/ConfirmationDialog';
 
-@inject('timelineStore', 'currentModuleStore', 'moduleStore', 'currentUserStore')
+@inject('timeline', 'currentModule', 'moduleStore', 'currentUser')
 @observer
 export default class TimelineMenu extends Component {
   state = {
@@ -27,48 +27,48 @@ export default class TimelineMenu extends Component {
   handleWeekLonger = (e) => {
     e.stopPropagation();
     this.props.onClose();
-    const { selectedModule, group } = this.props.currentModuleStore;
+    const { selectedModule, group } = this.props.currentModule;
     const { duration } = selectedModule;
-    this.props.timelineStore.updateModule(selectedModule, group.id, duration + 1);
+    this.props.timeline.updateModule(selectedModule, group.id, duration + 1);
   };
 
   handleWeekShorter = (e) => {
     e.stopPropagation();
     this.props.onClose();
-    const { selectedModule, group } = this.props.currentModuleStore;
+    const { selectedModule, group } = this.props.currentModule;
     const { duration } = selectedModule;
-    this.props.timelineStore.updateModule(selectedModule, group.id, duration - 1);
+    this.props.timeline.updateModule(selectedModule, group.id, duration - 1);
   };
 
   handleMoveLeft = (e) => {
     e.stopPropagation();
     this.props.onClose();
-    const { selectedModule, group } = this.props.currentModuleStore;
+    const { selectedModule, group } = this.props.currentModule;
     const { position, duration } = selectedModule;
-    this.props.timelineStore.updateModule(selectedModule, group.id, duration, position - 1);
+    this.props.timeline.updateModule(selectedModule, group.id, duration, position - 1);
   };
 
   handleMoveRight = (e) => {
     e.stopPropagation();
     this.props.onClose();
-    const { selectedModule, group } = this.props.currentModuleStore;
+    const { selectedModule, group } = this.props.currentModule;
     const { position, duration } = selectedModule;
-    this.props.timelineStore.updateModule(selectedModule, group.id, duration, position + 1);
+    this.props.timeline.updateModule(selectedModule, group.id, duration, position + 1);
   };
 
   handleRemoveModule = (e) => {
     e.stopPropagation();
     this.closeConfirmationDialog();
-    const { selectedModule, group } = this.props.currentModuleStore;
-    this.props.currentModuleStore.clearSelectedModule();
-    this.props.timelineStore.removeModule(group.id, selectedModule.position);
+    const { selectedModule, group } = this.props.currentModule;
+    this.props.currentModule.clearSelectedModule();
+    this.props.timeline.removeModule(group.id, selectedModule.position);
   };
 
   handleSplitModule = async (e) => {
     e.stopPropagation();
     this.props.onClose();
-    const { selectedModule, group } = this.props.currentModuleStore;
-    this.props.timelineStore.splitModule(group.id, selectedModule.position);
+    const { selectedModule, group } = this.props.currentModule;
+    this.props.timeline.splitModule(group.id, selectedModule.position);
   };
 
   openConfirmationDialog = () => {
@@ -81,8 +81,8 @@ export default class TimelineMenu extends Component {
   };
 
   render() {
-    const { anchorEl, onClose, currentModuleStore, runningModuleId } = this.props;
-    const { selectedModule } = currentModuleStore;
+    const { anchorEl, onClose, currentModule, runningModuleId } = this.props;
+    const { selectedModule } = currentModule;
 
     if (!selectedModule || selectedModule.running_module_id !== runningModuleId) {
       return null;
@@ -146,12 +146,12 @@ export default class TimelineMenu extends Component {
 
 TimelineMenu.wrappedComponent.propTypes = {
   anchorEl: PropTypes.object,
-  currentModuleStore: PropTypes.object.isRequired,
+  currentModule: PropTypes.object.isRequired,
   isLast: PropTypes.bool.isRequired,
   moduleStore: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired,
   runningModuleId: PropTypes.number.isRequired,
-  timelineStore: PropTypes.object.isRequired,
+  timeline: PropTypes.object.isRequired,
 };
 
 TimelineMenu.wrappedComponent.defaultProps = {

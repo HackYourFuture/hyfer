@@ -28,7 +28,7 @@ const styles = (theme) => ({
   },
 });
 
-@inject('currentUserStore', 'timelineStore')
+@inject('currentUser', 'timeline')
 @observer
 class ClassSideBar extends Component {
 
@@ -46,12 +46,12 @@ class ClassSideBar extends Component {
   };
 
   renderButtons = () => {
-    return this.props.timelineStore.selectedGroups.map((group) => (
+    return this.props.timeline.selectedGroups.map((group) => (
       <ClassButton
         key={group.group_name}
         group={group}
-        height={this.props.timelineStore.rowHeight}
-        disabled={!this.props.currentUserStore.isTeacher}
+        height={this.props.timeline.rowHeight}
+        disabled={!this.props.currentUser.isTeacher}
         onClick={this.handleClassButtonClick}
       />
     ));
@@ -90,10 +90,10 @@ class ClassSideBar extends Component {
 
 ClassSideBar.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
-  currentUserStore: PropTypes.object.isRequired,
+  currentUser: PropTypes.object.isRequired,
   myRef: PropTypes.object.isRequired,
   onClick: PropTypes.func.isRequired,
-  timelineStore: PropTypes.object.isRequired,
+  timeline: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(ClassSideBar);

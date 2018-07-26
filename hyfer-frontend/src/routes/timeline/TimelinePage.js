@@ -32,7 +32,7 @@ const styles = (theme) => ({
   },
 });
 
-@inject('timelineStore', 'currentUserStore', 'currentModuleStore')
+@inject('timeline', 'currentUser', 'currentModule')
 @observer
 class TimelinePage extends Component {
 
@@ -46,18 +46,18 @@ class TimelinePage extends Component {
   classSideBarRef = React.createRef();
 
   async componentDidMount() {
-    const { group_name } = this.props.currentUserStore.user;
+    const { group_name } = this.props.currentUser.user;
     if (group_name != null) {
-      this.props.timelineStore.setFilter(group_name);
-      await this.props.timelineStore.fetchTimeline(group_name);
-      await this.props.currentModuleStore.getGroupsByGroupName(group_name);
+      this.props.timeline.setFilter(group_name);
+      await this.props.timeline.fetchTimeline(group_name);
+      await this.props.currentModule.getGroupsByGroupName(group_name);
       this.setState({ initialized: true });
     } else {
-      await this.props.timelineStore.fetchTimeline();
+      await this.props.timeline.fetchTimeline();
       this.setState({ initialized: true });
     }
 
-    this.props.timelineStore.onNotify(CLASS_SELECTION_CHANGED, () => {
+    this.props.timeline.onNotify(CLASS_SELECTION_CHANGED, () => {
       this.onTodayClick();
     });
 
@@ -83,7 +83,7 @@ class TimelinePage extends Component {
     const { classes } = this.props;
     return (
       <div className={classes.rowContainer}>
-        {this.props.timelineStore.allWeeks.map(week => (
+        {this.props.timeline.allWeeks.map(week => (
           <WeekIndicator
             setTodayMarkerRef={this.setTodayMarkerRef}
             scrollParentRef={this.scrollParentRef}
@@ -97,8 +97,8 @@ class TimelinePage extends Component {
 
   renderRows() {
     const { classes } = this.props;
-    const { items } = this.props.timelineStore;
-    return Object.keys(items).map((groupName) => {
+    const { groupItems } = this.props.timeline;
+    return Object.keys(groupItems).map((groupName) => {
       return (
         <div key={groupName} className={classes.rowContainer}>
           <TimelineRow groupName={groupName} />
@@ -110,8 +110,8 @@ class TimelinePage extends Component {
   render() {
 
     const { classes } = this.props;
-    const { isStudent, isTeacher } = this.props.currentUserStore;
-    const { selectedModule } = this.props.currentModuleStore;
+    const { isStudent, isTeacher } = this.props.currentUser;
+    const { selectedModule } = this.props.currentModule;
 
     if (!this.state.initialized) {
       return null;
@@ -144,9 +144,9 @@ class TimelinePage extends Component {
 
 TimelinePage.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
-  currentModuleStore: PropTypes.object.isRequired,
-  currentUserStore: PropTypes.object.isRequired,
-  timelineStore: PropTypes.object.isRequired,
+  currentModule: PropTypes.object.isRequired,
+  currentUser: PropTypes.object.isRequired,
+  timeline: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(TimelinePage);
