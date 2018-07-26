@@ -95,7 +95,7 @@ export default class TimeLineStore {
         this.setTimelineItems(timeline);
       });
     } catch (err) {
-      stores.uiStore.setLastError(err);
+      stores.notification.setLastError(err);
     }
   }
 
@@ -154,7 +154,7 @@ export default class TimeLineStore {
         'PATCH', data);
       this.setTimelineItems(timeline);
     } catch (err) {
-      stores.uiStore.setLastError(err);
+      stores.notification.setLastError(err);
     }
   }
 
@@ -163,7 +163,7 @@ export default class TimeLineStore {
       const timeline = await fetchJSON(`/api/running/add/${moduleId}/${groupId}/${position}${this.queryParam()}`, 'PATCH');
       this.setTimelineItems(timeline);
     } catch (error) {
-      stores.uiStore.setLastError(error);
+      stores.notification.setLastError(error);
     }
   }
 
@@ -173,7 +173,7 @@ export default class TimeLineStore {
       const timeline = await fetchJSON(`/api/running/${groupId}/${position}${this.queryParam()}`, 'DELETE');
       this.setTimelineItems(timeline);
     } catch (error) {
-      stores.uiStore.setLastError(error);
+      stores.notification.setLastError(error);
     }
   }
 
@@ -183,7 +183,7 @@ export default class TimeLineStore {
       const timeline = await fetchJSON(`/api/running/split/${groupId}/${position}${this.queryParam()}`, 'PATCH');
       this.setTimelineItems(timeline);
     } catch (error) {
-      stores.uiStore.setLastError(error);
+      stores.notification.setLastError(error);
     }
   }
 
@@ -197,7 +197,7 @@ export default class TimeLineStore {
     try {
       await fetchJSON('/api/groups', 'POST', body);
     } catch (err) {
-      stores.uiStore.setLastError(err);
+      stores.notification.setLastError(err);
     }
   }
 
@@ -206,7 +206,7 @@ export default class TimeLineStore {
     try {
       await fetchJSON(`/api/groups/${groupId}`, 'PATCH', updates);
     } catch (error) {
-      stores.uiStore.setLastError(error);
+      stores.notification.setLastError(error);
     }
   }
 

@@ -19,7 +19,7 @@ const styles = theme => ({
   },
 });
 
-@inject('userStore', 'currentModule')
+@inject('users', 'currentModule')
 @observer
 class AddTeacherDialog extends Component {
 
@@ -28,7 +28,7 @@ class AddTeacherDialog extends Component {
   }
 
   componentDidMount() {
-    this.props.userStore.getTeachers();
+    this.props.users.getTeachers();
   }
 
   handleChange = (event) => {
@@ -45,7 +45,7 @@ class AddTeacherDialog extends Component {
 
   render() {
     const { classes, open, onClose } = this.props;
-    if (this.props.userStore.teachers.length === 0) {
+    if (this.props.users.teachers.length === 0) {
       return null;
     }
 
@@ -70,7 +70,7 @@ class AddTeacherDialog extends Component {
                       },
                     },
                   }}>
-                  {this.props.userStore.teachers.map((user) => (
+                  {this.props.users.teachers.map((user) => (
                     <MenuItem key={user.id} value={user.id}>
                       {user.full_name}
                     </MenuItem>
@@ -105,7 +105,7 @@ AddTeacherDialog.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  userStore: PropTypes.object.isRequired,
+  users: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(AddTeacherDialog);

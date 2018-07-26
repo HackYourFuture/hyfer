@@ -109,7 +109,7 @@ export default class GlobalStore {
         this.profile = res;
       });
     } catch (err) {
-      stores.uiStore.setLastError(err);
+      stores.notification.setLastError(err);
     }
   }
 
@@ -131,7 +131,7 @@ export default class GlobalStore {
       const res = await fetchJSON(`/api/user/${id}`, 'PATCH', updates);
       runInAction(() => this.profile = res);
     } catch (error) {
-      stores.uiStore.setLastError(error);
+      stores.notification.setLastError(error);
     }
   }
 }

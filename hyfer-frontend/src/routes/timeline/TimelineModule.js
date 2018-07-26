@@ -44,7 +44,7 @@ const styles = (theme) => ({
   },
 });
 
-@inject('currentModule', 'currentUser', 'userStore', 'timeline')
+@inject('currentModule', 'currentUser', 'users', 'timeline')
 @observer
 class TimelineModule extends Component {
   state = {
@@ -129,7 +129,7 @@ TimelineModule.wrappedComponent.propTypes = {
   item: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
   timeline: PropTypes.object.isRequired,
-  userStore: PropTypes.object.isRequired,
+  users: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles, { withTheme: true })(TimelineModule);

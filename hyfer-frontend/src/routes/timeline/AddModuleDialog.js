@@ -19,7 +19,7 @@ const styles = theme => ({
   },
 });
 
-@inject('moduleStore', 'timeline', 'currentModule')
+@inject('modulesStore', 'timeline', 'currentModule')
 @observer
 class AddModuleDialog extends React.Component {
   state = {
@@ -37,8 +37,8 @@ class AddModuleDialog extends React.Component {
   handleChange = (e) => this.setState({ moduleId: e.target.value });
 
   render() {
-    const { classes, moduleStore } = this.props;
-    const { modules } = moduleStore;
+    const { classes, modulesStore } = this.props;
+    const { modules } = modulesStore;
     if (modules.length === 0) {
       return null;
     }
@@ -86,7 +86,7 @@ class AddModuleDialog extends React.Component {
 AddModuleDialog.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   currentModule: PropTypes.object.isRequired,
-  moduleStore: PropTypes.object.isRequired,
+  modulesStore: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   timeline: PropTypes.object.isRequired,

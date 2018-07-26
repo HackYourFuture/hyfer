@@ -10,7 +10,7 @@ const HEADINGS = {
   teacher: 'Teacher List',
 };
 
-@inject('userStore')
+@inject('users')
 @observer
 export class UserList extends Component {
   render() {
@@ -19,7 +19,7 @@ export class UserList extends Component {
       <li className={styles.userList}>
         {HEADINGS[role]}:
         <ul className={styles.userContainer}>
-          {this.props.userStore.filteredUsers.map(user => {
+          {this.props.users.filteredUsers.map(user => {
             if (user.role === role) {
               return (
                 <UserCard key={user.id} user={user} />
@@ -35,5 +35,5 @@ export class UserList extends Component {
 
 UserList.wrappedComponent.propTypes = {
   role: PropTypes.string.isRequired,
-  userStore: PropTypes.object.isRequired,
+  users: PropTypes.object.isRequired,
 };

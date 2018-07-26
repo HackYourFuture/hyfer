@@ -4,7 +4,7 @@ import style from './modules.css';
 import ModalDialog from '../../components/ModalDialog';
 import { inject, observer } from 'mobx-react';
 
-@inject('moduleStore')
+@inject('modulesStore')
 @observer
 export default class ModuleForm extends React.Component {
   state = {

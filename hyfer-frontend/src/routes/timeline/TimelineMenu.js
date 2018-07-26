@@ -6,7 +6,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import AddModuleDialog from './AddModuleDialog';
 import ConfirmationDialog from '../../components/ConfirmationDialog';
 
-@inject('timeline', 'currentModule', 'moduleStore', 'currentUser')
+@inject('timeline', 'currentModule', 'modulesStore', 'currentUser')
 @observer
 export default class TimelineMenu extends Component {
   state = {
@@ -15,7 +15,7 @@ export default class TimelineMenu extends Component {
   };
 
   openAddModuleDialog = () => {
-    this.props.moduleStore.getModules();
+    this.props.modulesStore.getModules();
     this.setState({ addModuleDialogOpen: true });
     this.props.onClose();
   };
@@ -148,7 +148,7 @@ TimelineMenu.wrappedComponent.propTypes = {
   anchorEl: PropTypes.object,
   currentModule: PropTypes.object.isRequired,
   isLast: PropTypes.bool.isRequired,
-  moduleStore: PropTypes.object.isRequired,
+  modulesStore: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired,
   runningModuleId: PropTypes.number.isRequired,
   timeline: PropTypes.object.isRequired,

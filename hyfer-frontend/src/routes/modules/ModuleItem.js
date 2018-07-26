@@ -5,7 +5,7 @@ import style from './modules.css';
 import ModuleForm from './ModuleForm';
 import { inject, observer } from 'mobx-react';
 
-@inject('moduleStore')
+@inject('modulesStore')
 @observer
 export default class ModuleItem extends Component {
   state = {
@@ -37,11 +37,11 @@ export default class ModuleItem extends Component {
   };
 
   deleteModule = () => {
-    this.props.moduleStore.deleteModule(this.props.module);
+    this.props.modulesStore.deleteModule(this.props.module);
   };
 
   updateModule = module => {
-    const curModulesArr = this.props.moduleStore.modules;
+    const curModulesArr = this.props.modulesStore.modules;
     const newModulesArr = curModulesArr.map(a => {
       if (a.id === module.id) {
         return module;
@@ -49,7 +49,7 @@ export default class ModuleItem extends Component {
         return { ...a };
       }
     });
-    this.props.moduleStore.setModules(newModulesArr);
+    this.props.modulesStore.setModules(newModulesArr);
   };
 
   render() {
@@ -88,14 +88,14 @@ export default class ModuleItem extends Component {
           maxWidth={this.props.weekWidth * 6}
           onResizeStop={(e, direction, ref, d) => {
             const newDuration = Math.round(d.width / this.props.weekWidth);
-            const modules = this.props.moduleStore.modules;
+            const modules = this.props.modulesStore.modules;
             const newModules = modules.map(a => ({ ...a }));
             for (const m of newModules) {
               if (m.id === module.id) {
                 m.default_duration += newDuration;
               }
             }
-            this.props.moduleStore.setModules(newModules);
+            this.props.modulesStore.setModules(newModules);
           }}
           onResizeStart={e => e.stopPropagation()}
         >
@@ -155,6 +155,6 @@ export default class ModuleItem extends Component {
 
 ModuleItem.wrappedComponent.propTypes = {
   module: PropTypes.object.isRequired,
-  moduleStore: PropTypes.object.isRequired,
+  modulesStore: PropTypes.object.isRequired,
   weekWidth: PropTypes.number.isRequired,
 };

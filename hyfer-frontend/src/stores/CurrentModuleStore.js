@@ -50,7 +50,7 @@ export default class CurrentModuleStore {
   async getRunningModuleDetails(selectedModule) {
     try {
       const details = await fetchJSON(`/api/running/details/${selectedModule.running_module_id}`);
-      stores.uiStore.setTimelineTabIndex(0);
+      stores.notification.setTimelineTabIndex(0);
 
       const { group, module, teachers, notes } = details;
 
@@ -68,7 +68,7 @@ export default class CurrentModuleStore {
         this.teachers = teachers;
       });
     } catch (err) {
-      stores.uiStore.setLastError(err);
+      stores.notification.setLastError(err);
     }
   }
 
@@ -83,7 +83,7 @@ export default class CurrentModuleStore {
       const teachers = await fetchJSON(`/api/running/teacher/${moduleId}/${teacherId}`, 'POST');
       runInAction(() => this.teachers = teachers);
     } catch (err) {
-      stores.uiStore.setLastError(err);
+      stores.notification.setLastError(err);
     }
   }
 
@@ -93,7 +93,7 @@ export default class CurrentModuleStore {
       const teachers = await fetchJSON(`/api/running/teacher/${moduleId}/${userId}`, 'DELETE');
       runInAction(() => this.teachers = teachers);
     } catch (err) {
-      stores.uiStore.setLastError(err);
+      stores.notification.setLastError(err);
     }
   }
 
@@ -107,7 +107,7 @@ export default class CurrentModuleStore {
       const updatedNotes = await fetchJSON(`/api/running/notes/${running_module_id}`, 'PATCH', { notes });
       runInAction(() => this.notes = updatedNotes);
     } catch (err) {
-      stores.uiStore.setLastError(err);
+      stores.notification.setLastError(err);
     }
   }
 
@@ -127,7 +127,7 @@ export default class CurrentModuleStore {
         this.readMe = { repoName, html };
       });
     } catch (err) {
-      stores.uiStore.setLastError(err);
+      stores.notification.setLastError(err);
     }
   }
 
@@ -160,7 +160,7 @@ export default class CurrentModuleStore {
         this.currentWeek = start;
       });
     } catch (err) {
-      stores.uiStore.setLastError(err);
+      stores.notification.setLastError(err);
     }
   }
 
@@ -179,7 +179,7 @@ export default class CurrentModuleStore {
         updatedStudent.history = history;
       });
     } catch (err) {
-      stores.uiStore.setLastError(err);
+      stores.notification.setLastError(err);
     }
   }
 }

@@ -8,7 +8,7 @@ import { inject, observer } from 'mobx-react';
 import moment from 'moment';
 const token = localStorage.getItem('token');
 
-@inject('userStore', 'currentUser', 'timeline')
+@inject('users', 'currentUser', 'timeline')
 @observer
 export default class SynchronizeGithubData extends Component {
 
@@ -49,14 +49,14 @@ export default class SynchronizeGithubData extends Component {
         },
       }).then((res) => {
         if (res.status < 400) {
-          stores.uiStore.setSuccessMessage('Successfully synchronized');
+          stores.notification.setSuccessMessage('Successfully synchronized');
           this.setState({ isLoading: false });
           this.props.timeline.fetchTimeline();
         } else {
-          stores.uiStore.setLastError(new Error('Something went wrong please try again'));
+          stores.notification.setLastError(new Error('Something went wrong please try again'));
           this.setState({ isLoading: false });
         }
-        this.props.userStore.loadUsers();
+        this.props.users.loadUsers();
       });
     } catch (err) {
       console.log(err);
@@ -92,5 +92,5 @@ export default class SynchronizeGithubData extends Component {
 SynchronizeGithubData.wrappedComponent.propTypes = {
   currentUser: PropTypes.object.isRequired,
   timeline: PropTypes.object.isRequired,
-  userStore: PropTypes.object.isRequired,
+  users: PropTypes.object.isRequired,
 };

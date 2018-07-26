@@ -5,7 +5,7 @@ import { UserList } from './UserList';
 import SynchronizeGithubData from './SynchronizeGithubData';
 import { inject, observer } from 'mobx-react';
 
-@inject('userStore')
+@inject('users')
 @observer
 export default class UsersPage extends React.Component {
   state = {
@@ -13,11 +13,11 @@ export default class UsersPage extends React.Component {
   };
 
   componentWillUnmount() {
-    this.props.userStore.resetUser();
+    this.props.users.resetUser();
   }
 
   componentDidMount = () => {
-    this.props.userStore.loadUsers();
+    this.props.users.loadUsers();
     window.scrollTo(0, 0);
   };
 
@@ -48,7 +48,7 @@ export default class UsersPage extends React.Component {
             className={styles.userSearchBox}
             type="text"
             placeholder="lookup someone"
-            onChange={this.props.userStore.searchUser}
+            onChange={this.props.users.searchUser}
           />
           <select
             className={styles.listSelector}
@@ -71,5 +71,5 @@ export default class UsersPage extends React.Component {
 }
 
 UsersPage.wrappedComponent.propTypes = {
-  userStore: PropTypes.object.isRequired,
+  users: PropTypes.object.isRequired,
 };

@@ -10,7 +10,7 @@ async function fetchJSON(path) {
   return res.status === 200 ? res.text() : undefined;
 }
 
-@inject('currentModule', 'currentUser', 'uiStore')
+@inject('currentModule', 'currentUser', 'notification')
 @observer
 export default class AboutPage extends React.Component {
   state = {
@@ -20,7 +20,7 @@ export default class AboutPage extends React.Component {
   componentDidMount() {
     fetchJSON('./content/about.md')
       .then(markdown => this.setState({ markdown }))
-      .catch(this.props.uiStore.setLastError);
+      .catch(this.props.notification.setLastError);
   }
 
   render() {
@@ -41,5 +41,5 @@ export default class AboutPage extends React.Component {
 
 
 AboutPage.wrappedComponent.propTypes = {
-  uiStore: PropTypes.object.isRequired,
+  notification: PropTypes.object.isRequired,
 };

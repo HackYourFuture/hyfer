@@ -17,7 +17,7 @@ export default class ModuleStore {
       this.serverModules = await fetchJSON('/api/modules');
       runInAction(() => this.setModules(this.serverModules, false));
     } catch (error) {
-      stores.uiStore.setLastError(error);
+      stores.notification.setLastError(error);
     }
   }
 
@@ -44,7 +44,7 @@ export default class ModuleStore {
       await fetchJSON('/api/modules', 'PATCH', this.modules);
       this.getModules();
     } catch (error) {
-      stores.uiStore.setLastError(error);
+      stores.notification.setLastError(error);
     }
   }
 
