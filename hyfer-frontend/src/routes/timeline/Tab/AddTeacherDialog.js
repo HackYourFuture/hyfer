@@ -1,4 +1,4 @@
-import React, { Fragment, Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { observer, inject } from 'mobx-react';
 import Button from '@material-ui/core/Button';
@@ -21,7 +21,7 @@ const styles = theme => ({
 
 @inject('users', 'currentModule')
 @observer
-class AddTeacherDialog extends Component {
+class AddTeacherDialog extends React.Component {
 
   state = {
     userId: -1,
@@ -50,7 +50,7 @@ class AddTeacherDialog extends Component {
     }
 
     return (
-      <Fragment>
+      <React.Fragment>
         <Dialog
           open={open}
           onClose={onClose}
@@ -63,13 +63,8 @@ class AddTeacherDialog extends Component {
                 <Select
                   value={this.state.userId}
                   onChange={this.handleChange}
-                  MenuProps={{
-                    PaperProps: {
-                      style: {
-                        transform: 'translate3d(0, 0, 0)',
-                      },
-                    },
-                  }}>
+                  MenuProps={{ PaperProps: { style: { transform: 'translate3d(0, 0, 0)' } } }}
+                >
                   {this.props.users.teachers.map((user) => (
                     <MenuItem key={user.id} value={user.id}>
                       {user.full_name}
@@ -96,7 +91,7 @@ class AddTeacherDialog extends Component {
             </Button>
           </DialogActions>
         </Dialog>
-      </Fragment>
+      </React.Fragment>
     );
   }
 }

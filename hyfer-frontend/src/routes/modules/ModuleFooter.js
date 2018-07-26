@@ -15,13 +15,13 @@ export default class ModuleFooter extends Component {
 
   saveChanges = (modules) => {
     this.props.modulesStore.saveChanges(modules);
-    this.props.notification.setSuccessMessage('Your changes have been successfully saved.');
+    this.props.notification.reportSuccess('Your changes have been successfully saved.');
   }
 
   undoChanges = () => {
     const { modulesStore, notification } = this.props;
     modulesStore.undoChanges();
-    notification.setWarningMessage('Your changes have been cancelled.');
+    notification.reportWarning('Your changes have been cancelled.');
   }
 
   render() {

@@ -104,7 +104,7 @@ class NotificationSnackbar extends Component {
     if (reason === 'clickaway') {
       return;
     }
-    this.props.notification.clearNotification();
+    this.props.notification.clear();
   };
 
   render() {

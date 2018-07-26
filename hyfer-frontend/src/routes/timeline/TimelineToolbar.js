@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
@@ -22,7 +22,7 @@ const styles = (theme) => ({
 });
 
 @observer
-class TimelineToolbar extends Component {
+class TimelineToolbar extends React.Component {
   render() {
     const { classes } = this.props;
 

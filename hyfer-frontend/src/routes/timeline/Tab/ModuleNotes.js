@@ -20,9 +20,9 @@ function standardHeader(selectedModule) {
 
   return `# ${module_name}
   
-  _Class ${classNumber}, ${starting_date.format('D MMMM YYYY')} – ${ending_date.format('D MMMM YYYY')}_
+_Class ${classNumber}, ${starting_date.format('D MMMM YYYY')} – ${ending_date.format('D MMMM YYYY')}_
 
-  [Visit Repository ](${HYF_GITHUB_URL}/${git_repo}) <i class="fab fa-github fa-lg"></i>
+[Visit Repository ](${HYF_GITHUB_URL}/${git_repo}) <i class="fab fa-github fa-lg"></i>
 
 `;
 }
@@ -123,9 +123,7 @@ class ModuleNotes extends React.Component {
   clearIsEditing = () => this.setState({ isEditing: false });
 
   saveNotes = (markdown) => {
-    // Remove any embedded HTML comments
-    const notes = markdown.replace(/<!--(.|\s)*?-->/g, '');
-    this.props.currentModule.saveNotes(notes);
+    this.props.currentModule.saveNotes(markdown);
     this.setState({ inEditMode: false });
     window.sessionStorage.removeItem(localStorageKey);
   }
@@ -139,7 +137,8 @@ class ModuleNotes extends React.Component {
   };
 
   renderArticle() {
-    const markdown = standardHeader(this.props.currentModule.selectedModule) + this.state.markdown;
+    const { selectedModule } = this.props.currentModule;
+    const markdown = standardHeader(selectedModule) + this.state.markdown;
     return <MarkdownViewer markdown={markdown} />;
   }
 

@@ -40,12 +40,12 @@ TabContainer.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-@inject('currentModule', 'currentUser', 'notification')
+@inject('currentModule', 'currentUser', 'timeline')
 @observer
 class StudentInterface extends React.Component {
 
   handleChange = (event, value) => {
-    this.props.notification.setTimelineTabIndex(value);
+    this.props.timeline.setTabIndex(value);
   };
 
   visitGitHubRepo = () =>
@@ -55,12 +55,12 @@ class StudentInterface extends React.Component {
     const { classes, currentModule } = this.props;
     const { students, teachers } = currentModule;
 
-    const { timelineTabIndex } = this.props.notification;
+    const { tabIndex } = this.props.timeline;
 
     return (
       <React.Fragment>
         <Paper className={classes.root}>
-          <Tabs value={timelineTabIndex} onChange={this.handleChange}>
+          <Tabs value={tabIndex} onChange={this.handleChange}>
             <Tab label="Notes" />
             <Tab label={
               <Badge className={classes.padding} color="primary" badgeContent={teachers.length}>
@@ -74,9 +74,9 @@ class StudentInterface extends React.Component {
             } />
           </Tabs>
         </Paper>
-        {timelineTabIndex === 0 && <ModuleNotes />}
-        {timelineTabIndex === 1 && <UserList role="teacher" />}
-        {timelineTabIndex === 2 && <UserList role="student" showAttendance={true} />}
+        {tabIndex === 0 && <ModuleNotes />}
+        {tabIndex === 1 && <UserList role="teacher" />}
+        {tabIndex === 2 && <UserList role="student" showAttendance={true} />}
       </React.Fragment>
     );
   }
@@ -85,7 +85,7 @@ class StudentInterface extends React.Component {
 StudentInterface.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   currentModule: PropTypes.object.isRequired,
-  notification: PropTypes.object.isRequired,
+  timeline: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(StudentInterface);

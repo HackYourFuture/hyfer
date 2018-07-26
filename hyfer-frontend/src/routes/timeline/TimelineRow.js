@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types';
-import React, { Component, Fragment } from 'react';
+import React from 'react';
 import { observer, inject } from 'mobx-react';
 import moment from 'moment';
-
 import TimelineModule from './TimelineModule';
 import EmptyWeekModule from './EmptyWeekModule';
 
@@ -25,7 +24,7 @@ export function getWeeksBeforeAndAfter(allWeeks, modules) {
 
 @inject('timeline')
 @observer
-export default class TimelineRow extends Component {
+export default class TimelineRow extends React.Component {
 
   renderTimelineModules = () => {
     const { groupName } = this.props;
@@ -57,7 +56,7 @@ export default class TimelineRow extends Component {
   };
 
   render() {
-    return <Fragment>{this.renderTimelineModules()}</Fragment>;
+    return <React.Fragment>{this.renderTimelineModules()}</React.Fragment>;
   }
 }
 

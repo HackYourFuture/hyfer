@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Divider from '@material-ui/core/Divider';
-import SelectClassDialog from './SelectClassDialog';
-import ClassStartDateDialog from './ClassStartDateDialog';
+import SelectArchivedClassDialog from './SelectArchivedClassDialog';
+import StartDateDialog from './StartDateDialog';
 import { CLASS_SELECTION_CHANGED } from '../../../stores';
 
 const styles = (theme) => ({
@@ -21,24 +21,24 @@ const styles = (theme) => ({
 
 @inject('timeline', 'currentUser', 'currentModule')
 @observer
-class ClassSelectMenu extends Component {
+class ClassSelectMenu extends React.Component {
 
   nextClassNumber = 0;
 
   state = {
-    classStartDateDialogOpen: false,
+    startDateDialogOpen: false,
     selectClassDialogOpen: false,
   };
 
-  openClassStartDateDialog = () => {
+  openStartDateDialog = () => {
     const { groups } = this.props.timeline;
     const classNumbers = groups.map(group => +(group.group_name.match(/\d+/)[0]));
     this.nextClassNumber = Math.max(...classNumbers) + 1;
-    this.setState({ classStartDateDialogOpen: true });
+    this.setState({ startDateDialogOpen: true });
   };
 
-  closeClassStartDateDialog = () => {
-    this.setState({ classStartDateDialogOpen: false });
+  closeStartDateDialog = () => {
+    this.setState({ startDateDialogOpen: false });
   };
 
   closeSelectClassDialog = () => {
@@ -57,15 +57,15 @@ class ClassSelectMenu extends Component {
     this.props.timeline.notify(CLASS_SELECTION_CHANGED);
   }
 
-  addClass = async ({ classNumber, startingDate }) => {
-    await this.props.timeline.addNewClass(`class${classNumber}`, startingDate.toISOString());
+  addNewClass = async ({ classNumber, startDate }) => {
+    await this.props.timeline.addNewClass(`class${classNumber}`, startDate.toISOString());
     this.props.timeline.fetchTimeline();
   };
 
   handleChange = (event) => {
     const { value } = event.target;
     if (value === 'add') {
-      this.openClassStartDateDialog();
+      this.openStartDateDialog();
     }
     else if (value === 'archived') {
       this.setState({ selectClassDialogOpen: true });
@@ -76,17 +76,16 @@ class ClassSelectMenu extends Component {
 
   renderMenuItems() {
     const { classes } = this.props;
-    const { groups } = this.props.timeline;
-    return groups
+    return this.props.timeline.groups
       .filter(group => group.archived === 0)
       .map(group => {
-        const number = group.group_name.match(/(\d+)$/)[1];
+        const classNumber = group.group_name.match(/(\d+)$/)[1];
         return <MenuItem
-          key={number}
+          key={classNumber}
           value={group.group_name}
           classes={{ root: classes.menuItem }}
         >
-          {number}
+          {classNumber}
         </MenuItem>;
       });
   }
@@ -100,13 +99,7 @@ class ClassSelectMenu extends Component {
           onChange={this.handleChange}
           classes={{ root: classes.select }}
           disabled={!currentUser.isStudentOrTeacher}
-          MenuProps={{
-            PaperProps: {
-              style: {
-                transform: 'translate3d(0, 0, 0)',
-              },
-            },
-          }}
+          MenuProps={{ PaperProps: { style: { transform: 'translate3d(0, 0, 0)' } } }}
         >
           <MenuItem value='active' classes={{ root: classes.menuItem }}>All</MenuItem>
           <Divider />
@@ -120,17 +113,17 @@ class ClassSelectMenu extends Component {
         </Select>
 
         {currentUser.isTeacher && (
-          <ClassStartDateDialog
-            open={this.state.classStartDateDialogOpen}
+          <StartDateDialog
+            open={this.state.startDateDialogOpen}
             classNumber={this.nextClassNumber}
             title="Add new class"
             prompt="Please select a starting Sunday for the new class."
-            onClose={this.closeClassStartDateDialog}
-            onSave={this.addClass}
+            onClose={this.closeStartDateDialog}
+            onSave={this.addNewClass}
           />
         )}
 
-        <SelectClassDialog
+        <SelectArchivedClassDialog
           open={this.state.selectClassDialogOpen}
           onClose={this.closeSelectClassDialog}
           onSelect={this.selectClass}

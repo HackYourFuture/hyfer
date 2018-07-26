@@ -1,9 +1,8 @@
+import React from 'react';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import grey from '@material-ui/core/colors/grey';
 import ClassSelectMenu from './ClassSelectMenu';
 import ClassButton from './ClassButton';
 import ClassOptionsMenu from './ClassOptionsMenu';
@@ -17,20 +16,16 @@ const styles = (theme) => ({
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
     marginBottom: theme.spacing.unit,
-    borderRight: `1px solid ${grey[500]}`,
-    // width: 160,
-    zIndex: 4,
-    background: grey[50],
+    borderRight: `1px solid ${theme.palette.grey[500]}`,
   },
   button: {
-    marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
   },
 });
 
 @inject('currentUser', 'timeline')
 @observer
-class ClassSideBar extends Component {
+class ClassSideBar extends React.Component {
 
   state = {
     anchorEl: null,
@@ -58,16 +53,16 @@ class ClassSideBar extends Component {
   };
 
   render() {
-    const { classes, myRef, onClick } = this.props;
-    const { group } = this.state;
+    const { classes, sideBarRef, onTodayClick } = this.props;
+    const { group, anchorEl } = this.state;
     return (
       <div
         className={classes.container}
-        ref={myRef}
+        ref={sideBarRef}
       >
         <Button
           className={classes.button}
-          onClick={onClick}
+          onClick={onTodayClick}
           color="secondary"
           title="Go to today">
           Today
@@ -77,9 +72,9 @@ class ClassSideBar extends Component {
         {this.renderButtons()}
         {group && (
           <ClassOptionsMenu
-            anchorEl={this.state.anchorEl}
-            onClose={this.onCloseOptionsMenu}
-            group={this.state.group}
+            anchorEl={anchorEl}
+            onCloseMenu={this.onCloseOptionsMenu}
+            group={group}
           />
         )}
 
@@ -91,8 +86,8 @@ class ClassSideBar extends Component {
 ClassSideBar.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   currentUser: PropTypes.object.isRequired,
-  myRef: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired,
+  sideBarRef: PropTypes.object.isRequired,
+  onTodayClick: PropTypes.func.isRequired,
   timeline: PropTypes.object.isRequired,
 };
 

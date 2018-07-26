@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
@@ -43,7 +43,7 @@ const styles = (theme) => ({
 
 @inject('timeline')
 @observer
-class WeekIndicator extends Component {
+class WeekIndicator extends React.Component {
 
   renderTodayMarker = () => {
     const { week, setTodayMarkerRef, scrollParentRef } = this.props;

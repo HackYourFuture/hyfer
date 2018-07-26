@@ -231,9 +231,9 @@ export default class HomeworkStore {
                  <br/>
                    -- Hyfer`
       );
-      // stores.notification.setSuccessMessage('Email sent successfully');
+      // stores.notification.reportSuccess('Email sent successfully');
       // } else {
-      //   stores.notification.setLastError(new Error('Email not sent'));
+      //   stores.notification.reportError(new Error('Email not sent'));
     }
   };
 

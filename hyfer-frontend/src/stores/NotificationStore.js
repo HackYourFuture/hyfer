@@ -3,37 +3,17 @@ import { action, observable } from 'mobx';
 export default class UIStore {
 
   @observable
-  lastError = null;
-
-  @observable
   notification = null;
 
-  @observable
-  successMessage = null;
-
-  @observable
-  warningMessage = null;
-
-  @observable
-  timelineTabIndex = 0;
+  @action
+  reportError = ({ message }) => this.notification = { variant: 'error', message };
 
   @action
-  setLastError = ({ message }) => this.notification = { variant: 'error', message };
+  reportSuccess = (message) => this.notification = { variant: 'reportSuccess', message };
 
   @action
-  clearNotification = () => this.notification = null;
+  reportWarning = (message) => this.notification = { variant: 'warning', message };
 
   @action
-  setSuccessMessage = (message) => this.notification = { variant: 'success', message };
-
-
-  @action
-  setWarningMessage = (message) => this.notification = { variant: 'warning', message };
-
-
-  @action
-  clearWarningMessage = () => this.warningMessage = null;
-
-  @action
-  setTimelineTabIndex = (value) => this.timelineTabIndex = value;
+  clear = () => this.notification = null;
 }

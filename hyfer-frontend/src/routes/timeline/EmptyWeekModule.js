@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { observer, inject } from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
@@ -12,7 +12,7 @@ const styles = (theme) => ({
 
 @inject('timeline')
 @observer
-class EmptyWeekModule extends Component {
+class EmptyWeekModule extends React.Component {
 
   render() {
     const { classes, theme } = this.props;

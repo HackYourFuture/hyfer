@@ -71,7 +71,7 @@ class TrainTicketPage extends Component {
           members: newData,
         });
       })
-      .catch(stores.notification.setLastError);
+      .catch(stores.notification.reportError);
   }
   handleFieldChange = (event, field) => {
     this.setState({ [field]: event.target.value });

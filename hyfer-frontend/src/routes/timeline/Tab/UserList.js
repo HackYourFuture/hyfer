@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
@@ -55,7 +55,7 @@ const styles = (theme) => ({
 
 @inject('currentModule', 'currentUser')
 @observer
-class UserList extends Component {
+class UserList extends React.Component {
 
   state = {
     isOpen: false,
@@ -143,7 +143,7 @@ class UserList extends Component {
           {this.renderUsers(role, users, this.state.selectedWeek)}
         </div>
         {role === 'teacher' && selectedModule && currentUser.isTeacher &&
-          <Fragment>
+          <React.Fragment>
             <AddTeacherDialog
               open={this.state.isOpen}
               onClose={this.closeDialog}
@@ -158,7 +158,7 @@ class UserList extends Component {
                 <AddIcon />
               </Button>
             </Tooltip>
-          </Fragment>}
+          </React.Fragment>}
         {role === 'student' && selectedModule && group.archived === 0 && !this.state.showAttendance &&
           <Tooltip title="Show attendances">
             <Button

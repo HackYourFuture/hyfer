@@ -1,4 +1,4 @@
-import React, { Fragment, Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';
 import Menu from '@material-ui/core/Menu';
@@ -8,7 +8,7 @@ import ConfirmationDialog from '../../components/ConfirmationDialog';
 
 @inject('timeline', 'currentModule', 'modulesStore', 'currentUser')
 @observer
-export default class TimelineMenu extends Component {
+export default class TimelineMenu extends React.Component {
   state = {
     addModuleDialogOpen: false,
     confirmationDialogOpen: false,
@@ -89,7 +89,7 @@ export default class TimelineMenu extends Component {
     }
 
     return (
-      <Fragment>
+      <React.Fragment>
         <Menu
           id="simple-menu"
           anchorEl={anchorEl}
@@ -139,7 +139,7 @@ export default class TimelineMenu extends Component {
           onOk={this.handleRemoveModule}
           onCancel={this.closeConfirmationDialog}
         />
-      </Fragment>
+      </React.Fragment>
     );
   }
 }

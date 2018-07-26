@@ -18,23 +18,23 @@ const styles = (theme) => ({
 
 @inject('timeline')
 @observer
-class ClassStartDateDialog extends React.Component {
+class StartDateDialog extends React.Component {
   state = {
     open: false,
-    selectedDate: null,
+    startDate: null,
   };
 
   sundays = [];
 
   handleSave = () => {
     this.props.onClose();
-    const { selectedDate } = this.state;
+    const { startDate } = this.state;
     const { classNumber } = this.props;
-    this.props.onSave({ startingDate: selectedDate, classNumber });
+    this.props.onSave({ startDate, classNumber });
   };
 
-  handleChange = (selectedDate) => {
-    this.setState({ selectedDate });
+  handleChange = (startDate) => {
+    this.setState({ startDate });
   };
 
   render() {
@@ -68,7 +68,7 @@ class ClassStartDateDialog extends React.Component {
   }
 }
 
-ClassStartDateDialog.wrappedComponent.propTypes = {
+StartDateDialog.wrappedComponent.propTypes = {
   classes: PropTypes.object.isRequired,
   classNumber: PropTypes.number.isRequired,
   onClose: PropTypes.func.isRequired,
@@ -80,4 +80,4 @@ ClassStartDateDialog.wrappedComponent.propTypes = {
   title: PropTypes.string.isRequired,
 };
 
-export default withStyles(styles)(ClassStartDateDialog);
+export default withStyles(styles)(StartDateDialog);

@@ -14,7 +14,7 @@ const styles = (theme) => ({
   },
 });
 
-@inject('timeline', 'notification')
+@inject('timeline')
 @observer
 class ClassButton extends React.Component {
 
@@ -47,7 +47,6 @@ ClassButton.wrappedComponent.propTypes = {
   disabled: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
   timeline: PropTypes.object.isRequired,
-  notification: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(ClassButton);

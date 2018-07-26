@@ -49,11 +49,11 @@ export default class SynchronizeGithubData extends Component {
         },
       }).then((res) => {
         if (res.status < 400) {
-          stores.notification.setSuccessMessage('Successfully synchronized');
+          stores.notification.reportSuccess('Successfully synchronized');
           this.setState({ isLoading: false });
           this.props.timeline.fetchTimeline();
         } else {
-          stores.notification.setLastError(new Error('Something went wrong please try again'));
+          stores.notification.reportError(new Error('Something went wrong please try again'));
           this.setState({ isLoading: false });
         }
         this.props.users.loadUsers();

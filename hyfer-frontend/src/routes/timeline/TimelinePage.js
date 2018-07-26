@@ -1,5 +1,5 @@
+import React from 'react';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
 import ClassSideBar from './ClassSideBar/ClassSideBar';
@@ -34,7 +34,7 @@ const styles = (theme) => ({
 
 @inject('timeline', 'currentUser', 'currentModule')
 @observer
-class TimelinePage extends Component {
+class TimelinePage extends React.Component {
 
   state = {
     todayMarkerRef: null,
@@ -43,7 +43,7 @@ class TimelinePage extends Component {
 
   setTodayMarkerRef = React.createRef();
   scrollParentRef = React.createRef();
-  classSideBarRef = React.createRef();
+  sideBarRef = React.createRef();
 
   async componentDidMount() {
     const { group_name } = this.props.currentUser.user;
@@ -69,7 +69,7 @@ class TimelinePage extends Component {
     let leftPos = 0;
     if (todayMarkerRef && todayMarkerRef.current) {
       leftPos = todayMarkerRef.current.parentNode.getBoundingClientRect().x;
-      leftPos -= 2 * this.classSideBarRef.current.offsetWidth;
+      leftPos -= 2 * this.sideBarRef.current.offsetWidth;
     } else {
       // Go to the end of the timeline (assuming an archived class)
       leftPos = this.scrollParentRef.current.children[0].clientWidth;
@@ -121,8 +121,8 @@ class TimelinePage extends Component {
       <React.Fragment>
         <div className={classes.root}>
           <ClassSideBar
-            myRef={this.classSideBarRef}
-            onClick={this.onTodayClick}
+            sideBarRef={this.sideBarRef}
+            onTodayClick={this.onTodayClick}
           />
           <div
             className={classes.scrollParent}

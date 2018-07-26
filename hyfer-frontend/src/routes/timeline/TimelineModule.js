@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React from 'react';
 import { observer, inject } from 'mobx-react';
 import { withStyles } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
@@ -46,12 +46,12 @@ const styles = (theme) => ({
 
 @inject('currentModule', 'currentUser', 'users', 'timeline')
 @observer
-class TimelineModule extends Component {
+class TimelineModule extends React.Component {
   state = {
     anchorEl: null,
   };
 
-  openMenu = event => {
+  openMenu = (event) => {
     this.setState({ anchorEl: event.currentTarget });
   };
 
@@ -60,8 +60,7 @@ class TimelineModule extends Component {
   };
 
   itemClickHandler = (item) => {
-    const { isStudent, isTeacher } = this.props.currentUser;
-    if (isStudent || isTeacher) {
+    if (this.props.currentUser.isStudentOrTeacher) {
       this.props.currentModule.getRunningModuleDetails(item);
     }
   };

@@ -15,7 +15,7 @@ import withMobileDialog from '@material-ui/core/withMobileDialog';
 
 @inject('timeline')
 @observer
-class SelectClassDialog extends React.Component {
+class SelectArchivedClassDialog extends React.Component {
 
   handleClick = (groupName) => {
     this.props.onSelect(groupName);
@@ -23,17 +23,19 @@ class SelectClassDialog extends React.Component {
 
   renderListItems() {
     const { groups } = this.props.timeline;
-    return groups.map(({ group_name }) => {
-      const number = group_name.match(/(\d+)$/)[1];
-      return (
-        <div key={group_name} >
-          <ListItem button onClick={() => this.handleClick(group_name)}>
-            <ListItemText primary={`Class ${number}`} />
-          </ListItem>
-          <Divider />
-        </div>
-      );
-    });
+    return groups
+      .filter(group => group.archived !== 0)
+      .map(({ group_name }) => {
+        const number = group_name.match(/(\d+)$/)[1];
+        return (
+          <div key={group_name} >
+            <ListItem button onClick={() => this.handleClick(group_name)}>
+              <ListItemText primary={`Class ${number}`} />
+            </ListItem>
+            <Divider />
+          </div>
+        );
+      });
   }
 
   render() {
@@ -64,7 +66,7 @@ class SelectClassDialog extends React.Component {
   }
 }
 
-SelectClassDialog.wrappedComponent.propTypes = {
+SelectArchivedClassDialog.wrappedComponent.propTypes = {
   fullScreen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   onSelect: PropTypes.func.isRequired,
@@ -72,4 +74,4 @@ SelectClassDialog.wrappedComponent.propTypes = {
   timeline: PropTypes.object.isRequired,
 };
 
-export default withMobileDialog()(SelectClassDialog);
+export default withMobileDialog()(SelectArchivedClassDialog);

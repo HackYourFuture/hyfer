@@ -4,7 +4,7 @@ import { inject, observer } from 'mobx-react';
 import Grid from '@material-ui/core/Grid';
 import MarkdownViewer from '../../components/MarkdownViewer';
 
-async function fetchJSON(path) {
+async function fetchText(path) {
   const headers = { 'Content-Type': 'text/plain' };
   const res = await fetch(path, headers);
   return res.status === 200 ? res.text() : undefined;
@@ -18,9 +18,9 @@ export default class AboutPage extends React.Component {
   }
 
   componentDidMount() {
-    fetchJSON('./content/about.md')
+    fetchText('./content/about.md')
       .then(markdown => this.setState({ markdown }))
-      .catch(this.props.notification.setLastError);
+      .catch(this.props.notification.reportError);
   }
 
   render() {
@@ -38,7 +38,6 @@ export default class AboutPage extends React.Component {
     );
   }
 }
-
 
 AboutPage.wrappedComponent.propTypes = {
   notification: PropTypes.object.isRequired,
